@@ -29,11 +29,25 @@ npm run start
 ```
 
 ## Backend
+- NODEJS
+- ExpressJs
+- Prisma - PostgresSQL/MySQL
+
+## Technologie FE
+- REACT
+- Redux
+- Storybook
+- ReactHookForm
+- TanstackQuery
+- Axios
+- MUI
+- Prettier
+- Eslint
 
 ---
 
 ## UX Design aktuální
-https://www.figma.com/proto/o3vTKSvA8oRV1SaflMLK4Z/Untitled?node-id=57-881&t=y09TiNlpIO6SdZ8V-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=46%3A662
+- https://www.figma.com/proto/o3vTKSvA8oRV1SaflMLK4Z/Untitled?node-id=57-881&t=y09TiNlpIO6SdZ8V-0&scaling=scale-down&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=46%3A662
 
 ##  🗂️ Celková struktura modulů
 
