@@ -38,12 +38,12 @@ https://www.figma.com/proto/o3vTKSvA8oRV1SaflMLK4Z/Untitled?node-id=57-881&t=y09
 ##  🗂️ Celková struktura modulů
 
 ```
-| Fáze | Moduly                              | Co přináší                 |
-| ---- | ----------------------------------- | -------------------------- |
-| 1.   | Klientky, návštěvy, služby, postupy | Základní funkčnost         |
-| 2.   | Fotky, SMS notifikace               | Komfort a péče o zákazníka |
-| 3.   | Věrnostní program, sklad            | Udržení klientely, náklady |
-| 4.   | Tržby, reporting, napojení API      | Efektivita podnikání       |
+| Fáze | Moduly                                      | Co přináší                 |
+| ---- | ------------------------------------------- | -------------------------- |
+| 1.   | Klientky, návštěvy, služby, postupy, sklad  | Základní funkčnost         |
+| 2.   | Fotky, SMS notifikace                       | Komfort a péče o zákazníka |
+| 3.   | Věrnostní program, sklad                    | Udržení klientely, náklady |
+| 4.   | Tržby, reporting, napojení API platby       | Efektivita podnikání       |
 ```
 
 #### 🔹 FÁZE 1: MVP – Základní evidence klientek a návštěv, postupů
@@ -55,7 +55,8 @@ https://www.figma.com/proto/o3vTKSvA8oRV1SaflMLK4Z/Untitled?node-id=57-881&t=y09
 3. Základní seznam služeb a jejich ceny
 5. Implementace 0Auth loginu
 6. Postupy na klientce gramy, časy, problémy
-7. Jedna fotka před a jedna fotka po návštěvě
+7. Sklad
+8. Jedna fotka před a jedna fotka po návštěvě
 
 ##### 🗃️ Relační databáze:
 ```sql
@@ -66,7 +67,9 @@ services(id, name, base_price)
 visit_services(id, visit_id, service_id)
 photos(id, visit_id, url)
 procedures(id,visit_id,step_order,description,stock_item_id,,grams_used,time_minutes,issue,created_at)
-photos(id,visit_id,url,uploaded_at,description popis,)
+photos(id,visit_id,url,uploaded_at,description popis)
+stock_items(id, name, unit, quantity, threshold, is_active)
+stock_allowances(id,user_id,stock_id)
 ```
 
 
@@ -78,15 +81,13 @@ photos(id,visit_id,url,uploaded_at,description popis,)
 1. SMS notifikace (ruční odesílání s návrhy zpráv v aplikaci, odeslání na 2 kliknutí, zdarma)
 2. Věrnostní program: sleva po X návštěvách
 3. Kalendář nebo přehled blížících se notifikací návštěv
-4. Sklad
-5. Nákupní košík
+4. Nákupní košík
 
 ##### 🗃️ Databázové tabulky:
 ```sql
 notifications(id, client_id, type, message, date, sent, sent_at)
 loyalty(id, client_id, visit_count, last_reward_date)
-stock_items(id, name, unit, quantity, threshold, is_active)
-stock_allowances(id,user_id,stock_id)
+
 ```
 
 ##### 🛠️ Backend:
