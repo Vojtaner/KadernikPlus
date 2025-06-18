@@ -30,6 +30,7 @@ npm run start
 
 ## Backend
 
+---
 
 ##  🗂️ Celková struktura modulů
 
