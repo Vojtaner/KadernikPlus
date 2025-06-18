@@ -5,6 +5,6 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <React.StrictMode>
-    <p>Hello world</p>
+    <p>Hello world 11</p>
   </React.StrictMode>
 )
