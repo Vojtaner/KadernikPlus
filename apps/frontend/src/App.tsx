@@ -1,4 +1,5 @@
-import { createTheme, ThemeProvider } from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import MobileTabletLayout from './components/layouts/MobileTabletLayout'
 
 const theme = createTheme({
   palette: {
@@ -22,12 +23,17 @@ const theme = createTheme({
     text: {
       primary: '#132847',
       secondary: '#797979',
+      disabled: '#79797940',
     },
   },
 })
 
 function App() {
-  return <ThemeProvider theme={theme}></ThemeProvider>
+  return (
+    <ThemeProvider theme={theme}>
+      <MobileTabletLayout />
+    </ThemeProvider>
+  )
 }
 
 export default App
