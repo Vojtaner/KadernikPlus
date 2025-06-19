@@ -1,0 +1,10 @@
+{
+  "name": "kadernik-plus",
+  "version": "1.0.0",
+  "scripts": {
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  }
+}
