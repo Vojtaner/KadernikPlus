@@ -1,7 +1,5 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import MobileTabletLayout from './components/MobileTabletLayout'
-import { Height } from '@mui/icons-material'
-import { Box, Typography } from '@mui/material'
 
 const theme = createTheme({
   palette: {
