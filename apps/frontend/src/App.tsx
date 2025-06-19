@@ -1,5 +1,7 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles'
-import MobileTabletLayout from './components/layouts/MobileTabletLayout'
+import MobileTabletLayout from './components/MobileTabletLayout'
+import { Height } from '@mui/icons-material'
+import { Box, Typography } from '@mui/material'
 
 const theme = createTheme({
   palette: {
@@ -31,7 +33,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <MobileTabletLayout />
+      <MobileTabletLayout>
+        <Typography variant="h6">Hello World</Typography>
+      </MobileTabletLayout>
     </ThemeProvider>
   )
 }
