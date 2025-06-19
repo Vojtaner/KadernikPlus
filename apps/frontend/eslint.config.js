@@ -22,7 +22,7 @@ export default defineConfig([
   {
     settings: {
       react: {
-        version: 'detect', // automaticky zjistí verzi z package.json
+        version: 'detect',
       },
     },
     rules: {
@@ -31,5 +31,4 @@ export default defineConfig([
       curly: ['error', 'all'],
     },
   },
-  // { rules: { 'prefer-const': 'error', 'react/react-in-jsx-scope': 'off' } },
 ])
