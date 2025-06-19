@@ -1,5 +1,6 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import MobileTabletLayout from './components/MobileTabletLayout'
+import { Typography } from '@mui/material'
 
 const theme = createTheme({
   palette: {
