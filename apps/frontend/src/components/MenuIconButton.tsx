@@ -1,10 +1,14 @@
 import { IconButton, Typography } from '@mui/material'
-import { Check } from '@mui/icons-material'
+import type { AppPaletteColor } from '../entity'
 
-const MenuIconButton = () => {
+type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor }
+
+const MenuIconButton = (props: MenuIconButtonProps) => {
+  const { title, icon, color = 'text.secondary' } = props
+
   return (
     <IconButton
-      aria-label="menu"
+      aria-label={title}
       sx={{
         flexDirection: 'column',
         display: 'flex',
@@ -13,9 +17,9 @@ const MenuIconButton = () => {
         padding: 1,
         gap: 0.5,
       }}>
-      <Check fontSize="large" />
-      <Typography variant="caption" component="span">
-        Menu
+      {icon}
+      <Typography variant="caption" component="span" color={color}>
+        {title}
       </Typography>
     </IconButton>
   )

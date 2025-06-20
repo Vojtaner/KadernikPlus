@@ -29,14 +29,12 @@ function TopBar() {
           sx={{ height: '100%' }}
           display="flex"
           direction={'row'}
-          spacing={1}
+          spacing={4}
           alignItems={'center'}
-          justifyContent={'space-between'}>
-          {[...Array(4)].map((_, i) => (
-            <Typography key={i} sx={{ flex: 1, color: 'white' }}>
-              Ahoj
-            </Typography>
-          ))}
+          justifyContent={'flex-start'}>
+          <Typography sx={{ color: 'white', minWidth: 'max-content', width: 'auto' }}>Všichni zákazníci</Typography>
+          <Typography sx={{ color: 'white', minWidth: 'max-content', width: 'auto' }}>Pavla</Typography>
+          <Typography sx={{ color: 'white', minWidth: 'max-content', width: 'auto' }}>Monika</Typography>
         </Stack>
       </Stack>
     </Stack>
