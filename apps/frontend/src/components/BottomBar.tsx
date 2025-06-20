@@ -18,6 +18,8 @@ const BottomBar = () => {
         paddingX,
         paddingY,
         height: '8vh',
+        position: 'sticky',
+        bottom: 'env(safe-area-inset-bottom)',
       }}>
       {[...Array(4)].map((_, i) => (
         <MenuIconButton key={i} />

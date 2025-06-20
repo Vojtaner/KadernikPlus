@@ -3,6 +3,7 @@ import BottomBar from './BottomBar'
 import SectionHeader from './SectionHeader'
 import TopBar from './TopBar'
 import type { PropsWithChildren } from 'react'
+import { Box } from '@mui/material'
 
 const MobileTabletLayout = (props: PropsWithChildren) => {
   const { children } = props
@@ -11,18 +12,19 @@ const MobileTabletLayout = (props: PropsWithChildren) => {
 
   return (
     <Stack sx={{ minHeight: '100vh' }}>
-      <TopBar />
       <Stack
         sx={{
-          bgcolor: 'white',
-          paddingX,
-          paddingY,
-          borderRadius: '15px 15px 0 0',
-          flex: 1,
+          position: 'sticky',
+          top: 0,
+          zIndex: 1200,
+          width: '100%',
         }}>
+        <TopBar />
         <SectionHeader />
-        {children}
       </Stack>
+      <Box paddingX={paddingX} paddingY={paddingY} bgcolor={'white'} marginTop={'-1px'}>
+        {children}
+      </Box>
       <BottomBar />
     </Stack>
   )
