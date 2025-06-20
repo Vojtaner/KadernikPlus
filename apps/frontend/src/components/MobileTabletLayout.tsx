@@ -22,7 +22,7 @@ const MobileTabletLayout = (props: PropsWithChildren) => {
         <TopBar />
         <SectionHeader />
       </Stack>
-      <Box paddingX={paddingX} paddingY={paddingY} bgcolor={'white'} marginTop={'-1px'}>
+      <Box paddingX={paddingX} paddingY={paddingY} bgcolor={'white'} marginTop={'-1px'} flex={1}>
         {children}
       </Box>
       <BottomBar />

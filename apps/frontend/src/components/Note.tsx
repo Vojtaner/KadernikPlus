@@ -4,7 +4,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 
 const Note = () => {
   return (
-    <Stack direction="column" spacing={1}>
+    <Stack direction="column" spacing={1} paddingY={1}>
       <Stack direction={'row'} spacing={1} alignItems="flex-end">
         <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1, padding: 0, margin: 0 }}>
           Poznámka

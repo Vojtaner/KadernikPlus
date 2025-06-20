@@ -1,14 +1,13 @@
 import { ThemeProvider } from '@mui/material/styles'
 import MobileTabletLayout from './components/MobileTabletLayout'
 import AppTheme from './AppTheme'
-import VisitPage from './pages/VisitPage'
+import VisitCard from './pages/VisitCard'
+import ClientPage from './pages/ClientPage'
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={AppTheme}>
-      <MobileTabletLayout>
-        <VisitPage />
-      </MobileTabletLayout>
+      <MobileTabletLayout></MobileTabletLayout>
     </ThemeProvider>
   )
 }

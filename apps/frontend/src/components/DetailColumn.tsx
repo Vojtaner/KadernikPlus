@@ -2,11 +2,11 @@ import { Stack, Typography } from '@mui/material'
 
 type DetailColumnProps = {
   label: string
-  value: string
+  input: React.ReactNode
 }
 
 const DetailColumn = (props: DetailColumnProps) => {
-  const { label, value } = props
+  const { label, input } = props
 
   return (
     <Stack direction="column">
@@ -14,7 +14,7 @@ const DetailColumn = (props: DetailColumnProps) => {
         {label}
       </Typography>
       <Typography variant="h6" color={'text.primary'}>
-        {value}
+        {input}
       </Typography>
     </Stack>
   )
