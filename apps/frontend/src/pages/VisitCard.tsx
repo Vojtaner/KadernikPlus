@@ -61,6 +61,10 @@ const VisitCard = () => {
       </Divider>
       <ProcedureCard />
       <ProcedureCard />
+      <ProcedureCard />
+      <ProcedureCard />
+      <ProcedureCard />
+      <ProcedureCard />
     </>
   )
 }

@@ -11,6 +11,12 @@ const VisitPage = () => {
       <Note />
       <VisitDetailCard />
       <VisitDetailCard />
+      <VisitDetailCard />
+      <VisitDetailCard />
+      <VisitDetailCard />
+      <VisitDetailCard />
+      <VisitDetailCard />
+      <VisitDetailCard />
     </Stack>
   )
 }
