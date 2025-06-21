@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import MenuIcon from '@mui/icons-material/Menu'
 import { useDispatch } from 'react-redux'
-import { toggleDrawer } from '../store/appSlice'
+import { toggleDrawer } from '../store/appUiSlice'
 
 const MenuBox = () => {
   const dispatch = useDispatch()

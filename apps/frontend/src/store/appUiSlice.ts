@@ -1,23 +1,22 @@
-// src/store/appSlice.ts
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 type AppLanguage = 'cs' | 'en'
 
-interface AppState {
+interface AppUiState {
   isDrawerOpen: boolean
   language: AppLanguage
   searchText: string
 }
 
-const initialState: AppState = {
+const initialState: AppUiState = {
   isDrawerOpen: true,
   language: 'cs',
   searchText: '',
 }
 
-const appSlice = createSlice({
-  name: 'app',
+const appUiSlice = createSlice({
+  name: 'appUi',
   initialState,
   reducers: {
     toggleDrawer: (state) => {
@@ -38,6 +37,6 @@ const appSlice = createSlice({
   },
 })
 
-export const { toggleDrawer, setDrawerOpen, setLanguage, setSearchText } = appSlice.actions
+export const { toggleDrawer, setDrawerOpen, setLanguage, setSearchText } = appUiSlice.actions
 
-export default appSlice.reducer
+export default appUiSlice.reducer

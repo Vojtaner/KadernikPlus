@@ -1,10 +1,10 @@
 // src/store/index.ts
 import { configureStore } from '@reduxjs/toolkit'
 
-import appSlice from './appSlice'
+import appUiSlice from './appUiSlice'
 
 const rootReducer = {
-  app: appSlice,
+  appUi: appUiSlice,
 }
 
 const store = configureStore({

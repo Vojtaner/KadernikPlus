@@ -13,12 +13,12 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { AppRoutes } from '../routes/AppRoutes'
 import type { RootState } from '../store'
-import { toggleDrawer, setDrawerOpen } from '../store/appSlice'
+import { toggleDrawer, setDrawerOpen } from '../store/appUiSlice'
 import SettingsIcon from '@mui/icons-material/Settings'
 import CloseIcon from '@mui/icons-material/Close'
 
 export const SideMenu: React.FC = () => {
-  const isDrawerOpen = useSelector((state: RootState) => state.app.isDrawerOpen)
+  const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
   const dispatch = useDispatch()
 
   const handleDrawerToggle = (open: boolean) => () => {
