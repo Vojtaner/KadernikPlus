@@ -4,8 +4,9 @@ import SectionHeader from './SectionHeader'
 import TopBar from './TopBar'
 import type { PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
+import { SideMenu } from './SideMenu'
 
-const MobileTabletLayout = (props: PropsWithChildren) => {
+export const MobileTabletLayout = (props: PropsWithChildren) => {
   const { children } = props
   const paddingX = '10px'
   const paddingY = '12px'
@@ -26,8 +27,7 @@ const MobileTabletLayout = (props: PropsWithChildren) => {
         {children}
       </Box>
       <BottomBar />
+      <SideMenu />
     </Stack>
   )
 }
-
-export default MobileTabletLayout
