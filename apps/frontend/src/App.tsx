@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles'
 import { MobileTabletLayout } from './components/MobileTabletLayout'
 import AppTheme from './AppTheme'
-import VisitPage from './pages/VisitPage'
+import CustomerVisitsList from './pages/CustomerVisitsList'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppRoutes } from './routes/AppRoutes'
 import { OverviewPage } from './pages/OverviewPage'
@@ -15,7 +15,7 @@ function App() {
         <BrowserRouter>
           <MobileTabletLayout>
             <Routes>
-              <Route path={AppRoutes.VisitDetail} element={<VisitPage />} />
+              <Route path={AppRoutes.VisitDetail} element={<CustomerVisitsList />} />
               <Route path={AppRoutes.HomeOverview} element={<OverviewPage />} />
             </Routes>
           </MobileTabletLayout>

@@ -10,7 +10,7 @@ interface AppUiState {
 }
 
 const initialState: AppUiState = {
-  isDrawerOpen: true,
+  isDrawerOpen: false,
   language: 'cs',
   searchText: '',
 }
