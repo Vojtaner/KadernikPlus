@@ -1,7 +1,8 @@
 export const AppRoutes = {
   HomeOverview: '/',
-  VisitDetail: '/visit/:visitId',
+  CustomerVisitsList: '/customerVisits/:customerId',
+  VisitsList: '/visitsList',
   NotFound: '*',
 }
 
-export const generateVisitDetailPath = (visitId: string) => AppRoutes.VisitDetail.replace(':visitId', visitId)
+export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerVisitsList.replace(':customerId', visitId)

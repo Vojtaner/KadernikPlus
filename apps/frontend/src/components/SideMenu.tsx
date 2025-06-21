@@ -50,6 +50,14 @@ export const SideMenu: React.FC = () => {
             <ListItemText primary="Přehledy" />
           </ListItemButton>
         </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to={AppRoutes.VisitsList}>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary="Návštěvy" />
+          </ListItemButton>
+        </ListItem>
       </List>
       <Divider />
       <List>
