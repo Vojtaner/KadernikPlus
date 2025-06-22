@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-type AppLanguage = 'cs' | 'en'
+export type AppLanguage = 'cs' | 'en'
 
 interface AppUiState {
   isDrawerOpen: boolean

@@ -13,9 +13,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { AppRoutes } from '../routes/AppRoutes'
 import type { RootState } from '../store'
-import { toggleDrawer, setDrawerOpen } from '../store/appUiSlice'
+import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
 import SettingsIcon from '@mui/icons-material/Settings'
+import LanguageIcon from '@mui/icons-material/Language'
 import CloseIcon from '@mui/icons-material/Close'
+import { useIntl } from 'react-intl'
 
 export const SideMenu: React.FC = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
@@ -29,6 +31,14 @@ export const SideMenu: React.FC = () => {
       dispatch(setDrawerOpen(open))
     }
   }
+
+  const handleLanguageChange = (lang: AppLanguage) => {
+    dispatch(setLanguage(lang))
+    dispatch(setDrawerOpen(false)) // Close drawer after language change
+  }
+
+  const currentLanguage = useSelector((state: RootState) => state.appUi.language)
+  const intl = useIntl()
 
   const drawerList = (
     <Box
@@ -47,7 +57,7 @@ export const SideMenu: React.FC = () => {
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary="Přehledy" />
+            <ListItemText primary={intl.formatMessage({ id: 'overviewsSideMenuItem' })} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -55,7 +65,7 @@ export const SideMenu: React.FC = () => {
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary="Návštěvy" />
+            <ListItemText primary={intl.formatMessage({ id: 'visitsSideMenuItem' })} />
           </ListItemButton>
         </ListItem>
       </List>
@@ -69,7 +79,24 @@ export const SideMenu: React.FC = () => {
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
-            <ListItemText primary="Settings" />
+            <ListItemText primary={intl.formatMessage({ id: 'settingsSideMenuItem' })} />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
+            }}>
+            <ListItemIcon>
+              <LanguageIcon />
+            </ListItemIcon>
+            <ListItemText
+              primary={intl.formatMessage(
+                { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
+                { lang: currentLanguage }
+              )}
+            />
           </ListItemButton>
         </ListItem>
       </List>
