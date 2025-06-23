@@ -84,7 +84,7 @@ async function main() {
       create: { name: "Deep Conditioning", basePrice: 45.0 },
     });
     console.log(
-      `Created services: ${service1.name}, ${service2.name}, ${service3.name}`
+      `Created services: ${service1.name}, ${service2.name}, ${service3.name}`,
     );
 
     // --- Create Stock Items ---
@@ -166,7 +166,7 @@ async function main() {
       },
     });
     console.log(
-      `Created visit services: ${visitService1.id}, ${visitService2.id}`
+      `Created visit services: ${visitService1.id}, ${visitService2.id}`,
     );
 
     // --- Create Procedures (linking to visits) ---
@@ -227,7 +227,7 @@ async function main() {
       },
     });
     console.log(
-      `Created stock allowances: ${stockAllowance1.id}, ${stockAllowance2.id}`
+      `Created stock allowances: ${stockAllowance1.id}, ${stockAllowance2.id}`,
     );
 
     // --- Create Photos (linking to visits) ---

@@ -1,11 +1,26 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { PrismaClient } from '@prisma/client';
+// src/index.ts
+import express from "express";
+import dotenv from "dotenv";
+import { PrismaClient } from "./generated/prisma"; // Adjusted import path for custom output
+
+// Infrastructure Layer - Data Access (Prisma Adapter)
+import { PrismaUserRepository } from "./infrastructure/data/prisma/prisma-user-repository";
+
+// Application Layer - Use Cases
+import { AddUser } from "./application/use-cases/add-user";
+import { GetUserById } from "./application/use-cases/get-user-by-id";
+
+// Infrastructure Layer - Controllers (Presentation Adapter)
+import { UserController } from "./infrastructure/controllers/user-controller";
+import { makeExpressCallback } from "./utils/make-express-callback";
+
+// Frameworks Layer - Express Utilities
 
 // Load environment variables from .env file
 dotenv.config();
 
 // Initialize Prisma Client
+// This client instance will be shared across your application.
 const prisma = new PrismaClient();
 
 const app = express();
@@ -14,51 +29,62 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse JSON request bodies
 app.use(express.json());
 
+// --- Dependency Injection Setup ---
+// 1. Initialize data access layer (Prisma implementation of repository)
+const prismaUserRepository = new PrismaUserRepository(prisma);
+
+// 2. Initialize application layer use cases with their dependencies
+const addUserUseCase = new AddUser(prismaUserRepository);
+const getUserByIdUseCase = new GetUserById(prismaUserRepository);
+
+// 3. Initialize controllers with their use cases
+const userController = new UserController({
+  addUser: addUserUseCase,
+  getUserById: getUserByIdUseCase,
+});
+
+// --- API Routes ---
+
 // Basic route to check if the server is running
-app.get('/', (req, res) => {
-  res.send('Order App Backend is running!');
+app.get("/", (req, res) => {
+  res.send("Backend is running!");
 });
 
-// --- Database Connection Test Route (Temporary for setup verification) ---
-app.get('/test-db', async (req, res) => {
-  try {
-    // Attempt to connect to the database and perform a simple query
-    await prisma.$connect();
-    // Perform a simple read query (e.g., count users)
-    const userCount = await prisma.user.count();
-    res.status(200).json({ message: 'Database connection successful!', userCount });
-  } catch (error: any) {
-    console.error('Database connection error:', error);
-    res.status(500).json({ message: 'Database connection failed', error: error.message });
-  } finally {
-    // It's good practice to disconnect in a specific test route like this,
-    // but typically you keep the client connected for the app's lifetime.
-    await prisma.$disconnect();
-  }
-});
-// --- End of Temporary DB Test Route ---
+// User routes
+// POST /api/users - To create a new user
+app.post("/api/users", makeExpressCallback(userController.addUserController));
 
+// GET /api/users/:id - To get a user by ID
+app.get(
+  "/api/users/:id",
+  makeExpressCallback(userController.getUserByIdController),
+);
+
+// --- Removed: Database Connection Test Route (Temporary for setup verification) ---
+// This route was for initial setup validation and is no longer needed in the main app.
+// If you still need a health check, consider a simpler one that doesn't disconnect/reconnect.
 
 // Start the server and connect to the database
 const startServer = async () => {
   try {
     await prisma.$connect(); // Connect Prisma Client to the database
-    console.log('Connected to the database successfully!');
+    console.log("Connected to the database successfully!");
 
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to connect to the database or start server:', error);
-    process.exit(1); // Exit the process if unable to connect or start
+    console.error("Failed to connect to the database or start server:", error);
+    // It's crucial to exit if the database connection fails at startup for a robust app.
+    process.exit(1);
   }
 };
 
 // Start the server
 startServer();
 
-// Graceful shutdown
-process.on('beforeExit', async () => {
-  await prisma.$disconnect(); // Disconnect Prisma Client before exiting
-  console.log('Disconnected from the database.');
+// Graceful shutdown: Disconnect Prisma when the Node.js process is about to exit.
+process.on("beforeExit", async () => {
+  await prisma.$disconnect();
+  console.log("Disconnected from the database.");
 });
