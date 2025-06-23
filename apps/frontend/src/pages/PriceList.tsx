@@ -56,7 +56,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     headerName: '',
     width: 20,
     editable: false,
-    flex: 1,
+    display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
       <BoxIcon

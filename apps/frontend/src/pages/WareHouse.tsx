@@ -14,12 +14,12 @@ const WareHouse = () => {
 
 export default WareHouse
 
-type WareHouseItemType = { id: number; item: string; price: number; amount: number; minAmount: number; unit: 'g' }
+type WareHouseItemType = { id: number; item: string; price: number; amount: number; minAmount: number; unit: string }
 
 const rows: WareHouseItemType[] = [
   { id: 1, item: 'Blondor', price: 123000, amount: 1200, minAmount: 400, unit: 'g' },
   { id: 2, item: 'Blondor', price: 1230, amount: 1200, minAmount: 400, unit: 'g' },
-  { id: 3, item: 'Alondord', price: 1230, amount: 1200, minAmount: 400, unit: 'g' },
+  { id: 3, item: 'Alondord', price: 1230, amount: 1200, minAmount: 400, unit: 'ml' },
   { id: 4, item: 'Blondor', price: 1230, amount: 1200, minAmount: 400, unit: 'g' },
   { id: 5, item: 'Blondor', price: 1230, amount: 1200, minAmount: 400, unit: 'g' },
   { id: 6, item: 'Blondor', price: 1230, amount: 1200, minAmount: 400, unit: 'g' },
@@ -47,27 +47,31 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
   {
     field: 'amount',
     headerName: 'Množ.',
-    minWidth: 60,
+    minWidth: 85,
     disableColumnMenu: true,
+    renderCell: (params) => (
+      <>
+        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
+      </>
+    ),
   },
   {
     field: 'minAmount',
     headerName: 'Min.',
     type: 'number',
     disableColumnMenu: true,
-  },
-  {
-    field: 'unit',
-    headerName: 'Jdn.',
-    type: 'number',
-    disableColumnMenu: true,
+    renderCell: (params) => (
+      <>
+        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
+      </>
+    ),
   },
   {
     field: 'edit',
     headerName: '',
     width: 20,
     editable: false,
-    flex: 1,
+    display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
       <BoxIcon

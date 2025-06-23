@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import React from 'react'
 
-const CHAR_WIDTH_PX = 7
+const CHAR_WIDTH_PX = 6.5
 
 function getMaxWordLength<T>(rows: readonly T[], field: keyof T): number {
   let longest = String(field).length

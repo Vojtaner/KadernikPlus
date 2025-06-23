@@ -17,17 +17,15 @@ const SectionHeader = () => {
           .filter(Boolean)
           .filter((p): p is AppRoutePath => p in breadCrumbNameMap)
 
-  console.log({ pathNamef: getNthPathName(pathNames, 0), pathname, pathNames })
-
   return (
     <Stack
-      direction={'row'}
-      bgcolor={'white'}
+      direction="row"
+      bgcolor="white"
       alignItems="center"
       padding={1}
       borderRadius={'15px 15px 0 0'}
       zIndex={1300}
-      marginTop={'-11px'}>
+      marginTop="-11px">
       <Box
         sx={{
           display: 'flex',
@@ -47,6 +45,7 @@ const SectionHeader = () => {
           width: 'fit-content',
           textAlign: 'center',
           paddingY: 1,
+          fontWeight: 600,
           paddingX: 2,
         }}>
         {getNthPathName(pathNames, 0)}

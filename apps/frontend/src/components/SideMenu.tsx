@@ -1,4 +1,4 @@
-import { Box, IconButton, List, Divider, Drawer } from '@mui/material'
+import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
 import { AppRoutes } from '../routes/AppRoutes'
 import type { RootState } from '../store'
@@ -38,7 +38,7 @@ export const SideMenu = () => {
   const intl = useIntl()
 
   const drawerList = (
-    <Box
+    <Stack
       sx={{ width: 250 }}
       role="presentation"
       onClick={handleDrawerToggle(false)}
@@ -48,52 +48,44 @@ export const SideMenu = () => {
           <CloseIcon />
         </IconButton>
       </Box>
-      <List>
-        <SideMenuButton to={AppRoutes.MyProfile} title={intl.formatMessage({ id: 'myProfile' })} icon={<Face4Icon />} />
-        <Divider />
-        <SideMenuButton
-          to={AppRoutes.Dashboard}
-          title={intl.formatMessage({ id: 'dashboard' })}
-          icon={<DashboardIcon />}
-        />
-        <SideMenuButton to={AppRoutes.Sms} title={intl.formatMessage({ id: 'sms' })} icon={<SmsOutlinedIcon />} />
-        <SideMenuButton
-          to={AppRoutes.ShoppingList}
-          title={intl.formatMessage({ id: 'shoppingList' })}
-          icon={<ProductionQuantityLimitsIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.Consumption}
-          title={intl.formatMessage({ id: 'consumption' })}
-          icon={<ContentCutIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.PriceList}
-          title={intl.formatMessage({ id: 'pricing' })}
-          icon={<LocalOfferIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.Logs}
-          title={intl.formatMessage({ id: 'logs' })}
-          icon={<LightbulbOutlineIcon />}
-        />
-        <SideMenuButton to={AppRoutes.Warehouse} title={intl.formatMessage({ id: 'stock' })} icon={<WarehouseIcon />} />
-      </List>
+      <SideMenuButton to={AppRoutes.MyProfile} title={intl.formatMessage({ id: 'myProfile' })} icon={<Face4Icon />} />
       <Divider />
-      <List>
-        <SideMenuButton
-          onClick={() => {
-            return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
-          }}
-          to={AppRoutes.Dashboard}
-          title={intl.formatMessage(
-            { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
-            { lang: currentLanguage }
-          )}
-          icon={<LanguageIcon />}
-        />
-      </List>
-    </Box>
+      <SideMenuButton
+        to={AppRoutes.Dashboard}
+        title={intl.formatMessage({ id: 'dashboard' })}
+        icon={<DashboardIcon />}
+      />
+      <SideMenuButton to={AppRoutes.Sms} title={intl.formatMessage({ id: 'sms' })} icon={<SmsOutlinedIcon />} />
+      <SideMenuButton
+        to={AppRoutes.ShoppingList}
+        title={intl.formatMessage({ id: 'shoppingList' })}
+        icon={<ProductionQuantityLimitsIcon />}
+      />
+      <SideMenuButton
+        to={AppRoutes.Consumption}
+        title={intl.formatMessage({ id: 'consumption' })}
+        icon={<ContentCutIcon />}
+      />
+      <SideMenuButton
+        to={AppRoutes.PriceList}
+        title={intl.formatMessage({ id: 'pricing' })}
+        icon={<LocalOfferIcon />}
+      />
+      <SideMenuButton to={AppRoutes.Logs} title={intl.formatMessage({ id: 'logs' })} icon={<LightbulbOutlineIcon />} />
+      <SideMenuButton to={AppRoutes.Warehouse} title={intl.formatMessage({ id: 'stock' })} icon={<WarehouseIcon />} />
+      <Divider />
+      <SideMenuButton
+        onClick={() => {
+          return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
+        }}
+        to={AppRoutes.Dashboard}
+        title={intl.formatMessage(
+          { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
+          { lang: currentLanguage }
+        )}
+        icon={<LanguageIcon />}
+      />
+    </Stack>
   )
 
   return (
