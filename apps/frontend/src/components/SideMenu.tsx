@@ -6,7 +6,6 @@ import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../s
 import LanguageIcon from '@mui/icons-material/Language'
 import CloseIcon from '@mui/icons-material/Close'
 import { useIntl } from 'react-intl'
-import React from 'react'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
@@ -17,7 +16,7 @@ import Face4Icon from '@mui/icons-material/Face4'
 import SideMenuButton from './SideMenuListItem'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 
-export const SideMenu: React.FC = () => {
+export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
   const dispatch = useDispatch()
 
