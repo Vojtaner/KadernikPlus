@@ -1,6 +1,16 @@
 import { createTheme } from '@mui/material/styles'
 
+import { type LinkProps } from '@mui/material/Link'
+import { LinkBehavior } from './components/LinkBehaviour'
+
 const AppTheme = createTheme({
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+      } as LinkProps,
+    },
+  },
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h4: {

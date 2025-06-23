@@ -8,22 +8,24 @@ import { SideMenu } from './SideMenu'
 
 export const MobileTabletLayout = (props: PropsWithChildren) => {
   const { children } = props
-  const paddingX = '10px'
-  const paddingY = '12px'
 
   return (
-    <Stack sx={{ minHeight: '100vh' }}>
+    <Stack>
       <Stack
         sx={{
           position: 'sticky',
           top: 0,
-          zIndex: 1200,
           width: '100%',
         }}>
         <TopBar />
         <SectionHeader />
       </Stack>
-      <Box paddingX={paddingX} paddingY={paddingY} bgcolor={'white'} marginTop={'-1px'}>
+      <Box
+        paddingX="10px"
+        paddingY="12px"
+        bgcolor="white"
+        marginTop="-1px"
+        sx={{ bgcolor: 'white', height: '100%', minHeight: '100vh' }}>
         {children}
       </Box>
       <BottomBar />

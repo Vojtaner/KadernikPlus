@@ -1,23 +1,21 @@
-import {
-  Box,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  Drawer,
-} from '@mui/material'
+import { Box, IconButton, List, Divider, Drawer } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { AppRoutes } from '../routes/AppRoutes'
 import type { RootState } from '../store'
 import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
-import SettingsIcon from '@mui/icons-material/Settings'
 import LanguageIcon from '@mui/icons-material/Language'
 import CloseIcon from '@mui/icons-material/Close'
 import { useIntl } from 'react-intl'
+import React from 'react'
+import WarehouseIcon from '@mui/icons-material/Warehouse'
+import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import ContentCutIcon from '@mui/icons-material/ContentCut'
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import Face4Icon from '@mui/icons-material/Face4'
+import SideMenuButton from './SideMenuListItem'
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 
 export const SideMenu: React.FC = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
@@ -52,53 +50,56 @@ export const SideMenu: React.FC = () => {
         </IconButton>
       </Box>
       <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to={AppRoutes.HomeOverview}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage({ id: 'overviewsSideMenuItem' })} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to={AppRoutes.VisitsList}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage({ id: 'visitsSideMenuItem' })} />
-          </ListItemButton>
-        </ListItem>
+        <SideMenuButton
+          to={AppRoutes.Dashboard}
+          onClick={() => {
+            dispatch(setDrawerOpen(false))
+          }}
+          title={intl.formatMessage({ id: 'myProfile' })}
+          icon={<Face4Icon />}
+        />
+        <Divider />
+        <SideMenuButton
+          to={AppRoutes.Dashboard}
+          title={intl.formatMessage({ id: 'dashboard' })}
+          icon={<DashboardIcon />}
+        />
+        <SideMenuButton to={AppRoutes.Sms} title={intl.formatMessage({ id: 'sms' })} icon={<SmsOutlinedIcon />} />
+        <SideMenuButton
+          to={AppRoutes.ShoppingList}
+          title={intl.formatMessage({ id: 'shoppingList' })}
+          icon={<ProductionQuantityLimitsIcon />}
+        />
+        <SideMenuButton
+          to={AppRoutes.Consumption}
+          title={intl.formatMessage({ id: 'consumption' })}
+          icon={<ContentCutIcon />}
+        />
+        <SideMenuButton
+          to={AppRoutes.PriceList}
+          title={intl.formatMessage({ id: 'pricing' })}
+          icon={<LocalOfferIcon />}
+        />
+        <SideMenuButton
+          to={AppRoutes.Logs}
+          title={intl.formatMessage({ id: 'logs' })}
+          icon={<LightbulbOutlineIcon />}
+        />
+        <SideMenuButton to={AppRoutes.Warehouse} title={intl.formatMessage({ id: 'stock' })} icon={<WarehouseIcon />} />
       </List>
       <Divider />
       <List>
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => {
-              dispatch(setDrawerOpen(false))
-            }}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={intl.formatMessage({ id: 'settingsSideMenuItem' })} />
-          </ListItemButton>
-        </ListItem>
-
-        <ListItem disablePadding>
-          <ListItemButton
-            onClick={() => {
-              return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
-            }}>
-            <ListItemIcon>
-              <LanguageIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary={intl.formatMessage(
-                { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
-                { lang: currentLanguage }
-              )}
-            />
-          </ListItemButton>
-        </ListItem>
+        <SideMenuButton
+          onClick={() => {
+            return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
+          }}
+          to={AppRoutes.Dashboard}
+          title={intl.formatMessage(
+            { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
+            { lang: currentLanguage }
+          )}
+          icon={<LanguageIcon />}
+        />
       </List>
     </Box>
   )

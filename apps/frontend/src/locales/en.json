@@ -1,5 +1,5 @@
 {
   "visitsSideMenuItem": "Visits",
-  "overviewsSideMenuItem": "Dashboard",
+  "dashboard": "Dashboard",
   "settingsSideMenuItem": "Settings"
 }

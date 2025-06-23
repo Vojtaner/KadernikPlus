@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material'
 
-export const OverviewPage = () => {
+export const Dashboard = () => {
   return <Stack spacing={2}>Overview Page</Stack>
 }

@@ -3,7 +3,7 @@ import CustomerProfileGrid from '../components/CustomerProfileGrid'
 import VisitDetailCard from '../components/VisitDetailCard'
 import Note from '../components/Note'
 
-const CustomerVisitsList = () => {
+const CustomerProfile = () => {
   return (
     <Stack spacing={2}>
       <CustomerProfileGrid />
@@ -22,4 +22,4 @@ const CustomerVisitsList = () => {
     </Stack>
   )
 }
-export default CustomerVisitsList
+export default CustomerProfile
