@@ -11,3 +11,14 @@ Quick look to last state of logs is by
 ```
 docker compose logs db
 ```
+
+Error Error: P3014 risma Migrate could not create the shadow database.
+
+```
+docker exec -it mysql-db-hairdresser mysql -u root -p
+```
+
+```
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+```
