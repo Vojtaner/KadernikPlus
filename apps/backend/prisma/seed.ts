@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../src/generated/prisma"; // Direct import from generated path
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -13,7 +13,7 @@ async function main() {
     const hashedPassword2 = await bcrypt.hash("securepass", 10);
 
     const user1 = await prisma.user.upsert({
-      where: { email: "john.doe@example.com" },
+      where: { email: "john.doe@example.com" }, // email is @unique now
       update: {},
       create: {
         name: "John Doe",
@@ -26,7 +26,7 @@ async function main() {
     });
 
     const user2 = await prisma.user.upsert({
-      where: { email: "jane.smith@example.com" },
+      where: { email: "jane.smith@example.com" }, // email is @unique now
       update: {},
       create: {
         name: "Jane Smith",
@@ -40,21 +40,22 @@ async function main() {
 
     // --- Create Clients ---
     const client1 = await prisma.client.upsert({
-      where: { email: "alice.customer@example.com" },
+      where: { email: "alice.customer@example.com" }, // email is @unique now
       update: {},
       create: {
         name: "Alice Johnson",
         phone: "123-456-7890",
         email: "alice.customer@example.com",
         note: "Likes specific color brands.",
-        birthDate: new Date("1990-05-15T00:00:00.000Z"), // Ensure ISO string or Date object
+        birthDate: new Date("1990-05-15T00:00:00.000Z"),
       },
     });
 
     const client2 = await prisma.client.upsert({
-      where: { name: "Bob Williams" }, // Using name for upsert as email is optional
+      where: { id: "client-2-uuid" }, // <--- FIXED: Using ID for upsert as email is optional and name is not unique
       update: {},
       create: {
+        id: "client-2-uuid", // Manually providing a UUID for this client
         name: "Bob Williams",
         phone: "098-765-4321",
         email: null, // No email
@@ -114,10 +115,10 @@ async function main() {
 
     // --- Create Visits (linking users and clients) ---
     const visit1 = await prisma.visit.upsert({
-      where: { id: "visit-1-uuid" }, // Use a consistent ID for upsert or ensure unique criteria
+      where: { id: "visit-1-uuid" },
       update: {},
       create: {
-        id: "visit-1-uuid", // Manually providing a UUID for upsert where:
+        id: "visit-1-uuid",
         clientId: client1.id,
         userId: user1.id,
         date: new Date("2025-06-20T00:00:00.000Z"),
@@ -144,7 +145,7 @@ async function main() {
     const visitService1 = await prisma.visitService.upsert({
       where: {
         visitId_serviceId: { visitId: visit1.id, serviceId: service1.id },
-      }, // Unique composite key
+      },
       update: {},
       create: {
         visitId: visit1.id,
@@ -200,14 +201,17 @@ async function main() {
 
     // --- Create Stock Allowances (linking to users, stock items, and optionally procedures) ---
     const stockAllowance1 = await prisma.stockAllowance.upsert({
-      where: { id: "sa-1-uuid" }, // Unique ID for upsert
+      where: { id: "sa-1-uuid" },
       update: {},
       create: {
         id: "sa-1-uuid",
         userId: user1.id,
         stockId: stockItem1.id,
-        procedureId: procedure1.id, // Link to a procedure
-        quantity: 150.0, // 150ml of dye
+        // <--- FIXED: Use `connect` for the relationship, not `procedureId` scalar field
+        procedure: {
+          connect: { id: procedure1.id },
+        },
+        quantity: 150.0,
       },
     });
 
@@ -218,8 +222,8 @@ async function main() {
         id: "sa-2-uuid",
         userId: user2.id,
         stockId: stockItem2.id,
-        // No procedureId for this allowance (e.g., general use)
-        quantity: 50.0, // 50ml of conditioner
+        // No procedure for this allowance, so simply omit the 'procedure' field
+        quantity: 50.0,
       },
     });
     console.log(
@@ -253,7 +257,17 @@ async function main() {
     console.log("Seeding finished.");
   } catch (e: any) {
     console.error("Error during seeding:", e);
+    process.exit(1);
   } finally {
     await prisma.$disconnect();
   }
 }
+
+main()
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

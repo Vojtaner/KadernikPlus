@@ -16,9 +16,23 @@ Error Error: P3014 risma Migrate could not create the shadow database.
 
 ```
 docker exec -it mysql-db-hairdresser mysql -u root -p
+my_secret_password
 ```
 
 ```
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
+```
+
+After migration
+
+```
+docker exec -it mysql-db-hairdresser mysql -u root -p
+my_secret_password
+```
+
+```
+USE my_app_db;
+SHOW TABLES;
+Select * from users;
 ```
