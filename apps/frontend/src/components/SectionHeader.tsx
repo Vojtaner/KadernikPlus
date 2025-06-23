@@ -3,19 +3,10 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { IconButton } from '@mui/material'
-import { breadCrumbNameMap, type AppRoutePath } from '../routes/AppRoutes'
-import { useTypedLocation } from '../routes/reactRouter'
+import { getNthPathName, getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
 
 const SectionHeader = () => {
   const { pathname } = useTypedLocation()
-
-  const pathNames: AppRoutePath[] =
-    pathname === '/'
-      ? [pathname]
-      : pathname
-          .split('/')
-          .filter(Boolean)
-          .filter((p): p is AppRoutePath => p in breadCrumbNameMap)
 
   return (
     <Stack
@@ -48,14 +39,10 @@ const SectionHeader = () => {
           fontWeight: 600,
           paddingX: 2,
         }}>
-        {getNthPathName(pathNames, 0)}
+        {getNthPathName(getPathNameWithOutSlash(pathname), 0)}
       </Typography>
     </Stack>
   )
 }
 
 export default SectionHeader
-
-const getNthPathName = (pathNames: AppRoutePath[], order: number) => {
-  return breadCrumbNameMap[pathNames[order]]
-}

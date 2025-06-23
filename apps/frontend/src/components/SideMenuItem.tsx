@@ -6,14 +6,24 @@ type SideMenuListItemProps = {
   to: AppRoutePath
   onClick?: React.MouseEventHandler<HTMLDivElement> | undefined
   icon: React.JSX.Element
+  isActive: boolean
 }
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
-  const { title, to, icon } = props
+  const { title, to, icon, isActive } = props
 
   return (
-    <ListItem disablePadding>
-      <ListItemButton href={to}>
+    <ListItem disablePadding sx={isActive ? { bgcolor: 'primary.main', fontWeight: 700 } : {}}>
+      <ListItemButton
+        href={to}
+        sx={
+          isActive
+            ? {
+                color: 'common.white',
+                '& .MuiListItemIcon-root': { color: 'common.white' },
+              }
+            : {}
+        }>
         <ListItemIcon>{icon}</ListItemIcon>
         <ListItemText primary={title} />
       </ListItemButton>
