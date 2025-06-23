@@ -50,14 +50,7 @@ export const SideMenu: React.FC = () => {
         </IconButton>
       </Box>
       <List>
-        <SideMenuButton
-          to={AppRoutes.Dashboard}
-          onClick={() => {
-            dispatch(setDrawerOpen(false))
-          }}
-          title={intl.formatMessage({ id: 'myProfile' })}
-          icon={<Face4Icon />}
-        />
+        <SideMenuButton to={AppRoutes.MyProfile} title={intl.formatMessage({ id: 'myProfile' })} icon={<Face4Icon />} />
         <Divider />
         <SideMenuButton
           to={AppRoutes.Dashboard}
