@@ -1,0 +1,157 @@
+// prisma/schema.prisma
+
+// Datasource definition: Specifies the database type and connection URL.
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Generator definition: Tells Prisma to generate the Prisma Client for Node.js.
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma" // Your custom output path
+}
+
+
+/// User who performs visits and manages stock allowances (e.g., a hairdresser)
+model User {
+  id              String           @id @default(uuid())
+  name            String
+  email           String           @unique
+  passwordHash    String           @map("password_hash")
+  authProvider    String?          @map("auth_provider")
+  createdAt       DateTime         @default(now())
+  lastLogin       DateTime?        @map("last_login")
+  
+  visits          Visit[]
+  stockAllowances StockAllowance[]
+
+  @@map("users")
+}
+
+/// Client of the hairdresser (the customer)
+model Client {
+  id        String    @id @default(uuid())
+  name      String
+  phone     String?
+  email     String?
+  note      String?   @db.Text
+  birthDate DateTime? @map("birth_date") @db.Date
+  
+  visits    Visit[]
+
+  @@map("clients")
+}
+
+/// Represents a single visit/appointment
+model Visit {
+  id             String         @id @default(uuid())
+  clientId       String         @map("client_id")
+  userId         String         @map("user_id")
+  date           DateTime       @db.Date
+  note           String?        @db.Text
+  paidPrice      Decimal        @map("paid_price") @db.Decimal(10, 2)
+  
+  client         Client         @relation(fields: [clientId], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
+  
+  visitServices  VisitService[]
+  photos         Photo[]
+  procedures     Procedure[]
+
+  @@map("visits")
+}
+
+/// Defines a specific service offered (e.g., "Haircut", "Color")
+model Service {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  basePrice     Decimal        @map("base_price") @db.Decimal(10, 2)
+  
+  visitServices VisitService[]
+
+  @@map("services")
+}
+
+/// Junction table for the many-to-many relationship between Visit and Service
+model VisitService {
+  id                String  @id @default(uuid())
+  visitId           String  @map("visit_id")
+  serviceId         String  @map("service_id")
+  minutesPerformed  Int     @map("minutes_performed")
+
+  visit             Visit   @relation(fields: [visitId], references: [id])
+  service           Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([visitId, serviceId])
+  @@map("visit_services")
+}
+
+/// Photos related to a specific visit
+model Photo {
+  id          String   @id @default(uuid())
+  visitId     String   @map("visit_id")
+  url         String
+  uploadedAt  DateTime @map("uploaded_at") @default(now())
+  description String?
+
+  visit       Visit    @relation(fields: [visitId], references: [id])
+
+  @@map("photos")
+}
+
+/// Detailed steps or actions performed during a visit
+model Procedure {
+  id              String        @id @default(uuid())
+  visitId         String        @map("visit_id")
+  stepOrder       Int           @map("step_order")
+  description     String?       @db.Text
+  
+  // This side holds the foreign key and defines the relation.
+  // 'references: [id]' tells Prisma that 'stockAllowanceId' refers to 'StockAllowance.id'.
+  // The 'name' is optional but good for clarity in 1-1 relations with multiple keys.
+  stockAllowanceId String?      @unique // It's unique to enforce 1-1 relationship (nullable for optional 1-1)
+  stockAllowance  StockAllowance? @relation(fields: [stockAllowanceId], references: [id])
+  
+  gramsUsed       Decimal?      @map("grams_used") @db.Decimal(10, 2)
+  timeMinutes     Int?          @map("time_minutes")
+  issue           String?       @db.Text
+  createdAt       DateTime      @map("created_at") @default(now())
+
+  visit           Visit         @relation(fields: [visitId], references: [id])
+
+  @@map("procedures")
+}
+
+/// Represents an item in stock (e.g., a dye, shampoo bottle)
+model StockItem {
+  id              String           @id @default(uuid())
+  name            String           @unique
+  unit            String
+  quantity        Int
+  threshold       Int
+  isActive        Boolean          @map("is_active") @default(true)
+  
+  stockAllowances StockAllowance[]
+
+  @@map("stock_items")
+}
+
+/// Represents an allowance of stock from a StockItem to a User for a specific Procedure
+model StockAllowance {
+  id          String    @id @default(uuid())
+  userId      String    @map("user_id")
+  stockId     String    @map("stock_id")
+  
+  // This side is the "referencing" side. It only needs the relation field name.
+  // The foreign key is on the 'Procedure' model.
+  procedure   Procedure? // No `fields` or `references` here, as `Procedure` owns the FK.
+
+  quantity    Decimal   @db.Decimal(10, 2)
+  createdAt   DateTime  @map("created_at") @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  stockItem   StockItem @relation(fields: [stockId], references: [id])
+
+  @@map("stock_allowances")
+}
