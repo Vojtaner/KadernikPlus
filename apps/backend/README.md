@@ -12,6 +12,12 @@ Quick look to last state of logs is by
 docker compose logs db
 ```
 
+When schema.prisma is changed
+```
+npx prisma migrate dev --name NAME_OF_MIGRATION
+npx prisma generate
+```
+
 Error Error: P3014 risma Migrate could not create the shadow database.
 
 ```
