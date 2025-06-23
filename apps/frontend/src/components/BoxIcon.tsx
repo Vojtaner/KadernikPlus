@@ -6,13 +6,16 @@ export type BoxIconProps = {
   boxColor?: AppPaletteColorString
   sx?: object
   size?: number
+  key?: string | number
+  onClick?: () => void
 }
 
 const BoxIcon = (props: BoxIconProps) => {
-  const { boxColor = 'primary.light', sx, icon, size = 20 } = props
+  const { boxColor = 'primary.light', sx, icon, size = 20, onClick, key } = props
 
   return (
     <Box
+      key={key}
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -23,7 +26,8 @@ const BoxIcon = (props: BoxIconProps) => {
       }}
       bgcolor={boxColor}
       width={size}
-      height={size}>
+      height={size}
+      onClick={onClick}>
       {icon}
     </Box>
   )

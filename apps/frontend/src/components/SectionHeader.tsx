@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { IconButton } from '@mui/material'
 
 const SectionHeader = () => {
   return (
@@ -19,7 +20,9 @@ const SectionHeader = () => {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <ArrowBackIcon fontSize="medium" />
+        <IconButton href="/">
+          <ArrowBackIcon fontSize="medium" />
+        </IconButton>
       </Box>
       <Typography
         sx={{

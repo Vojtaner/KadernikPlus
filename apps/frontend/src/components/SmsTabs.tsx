@@ -21,7 +21,7 @@ const SmsTabs = () => {
             <Tab label="Zálohy" value="2" />
           </TabList>
         </Box>
-        <TabPanel value="1" sx={{ padding: 0 }}>
+        <TabPanel value="1" sx={{ paddingY: '10px', paddingX: 0 }}>
           <SmsCard
             text="Další návštěva je za tři dny. Doražte. Případně se omluvte."
             customerName="Jitka Straková"
