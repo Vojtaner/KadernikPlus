@@ -16,7 +16,10 @@ export const MobileTabletLayout = (props: PropsWithChildren) => {
           position: 'sticky',
           top: 0,
           width: '100%',
-        }}>
+          transition: 'padding-bottom 0.7s ease',
+        }}
+        borderRadius="15px 15px 0 0"
+        spacing={0.5}>
         <TopBar />
         <SectionHeader />
       </Stack>

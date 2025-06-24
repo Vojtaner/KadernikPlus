@@ -14,26 +14,32 @@ import PriceList from './pages/PriceList'
 import Logs from './pages/Logs'
 import MyProfile from './pages/MyProfile'
 import VisitDetail from './pages/VisitDetail'
+import { useAppForm } from './reactHookForm/store'
+import { FormProvider } from 'react-hook-form'
 
 function App() {
+  const methods = useAppForm()
+
   return (
     <ThemeProvider theme={AppTheme}>
       <BrowserRouter>
-        <MobileTabletLayout>
-          <Routes>
-            <Route path={AppRoutes.MyProfile} element={<MyProfile />} />
-            <Route path={AppRoutes.Dashboard} element={<Dashboard />} />
-            <Route path={AppRoutes.Sms} element={<SmsPage />} />
-            <Route path={AppRoutes.ShoppingList} element={<ShoppingList />} />
-            <Route path={AppRoutes.Consumption} element={<Consumption />} />
-            <Route path={AppRoutes.PriceList} element={<PriceList />} />
-            <Route path={AppRoutes.Logs} element={<Logs />} />
-            <Route path={AppRoutes.VisitsList} element={<VisitsList />} />
-            <Route path={AppRoutes.CustomerProfile} element={<CustomerProfile />} />
-            <Route path={AppRoutes.Warehouse} element={<WareHouse />} />
-            <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
-          </Routes>
-        </MobileTabletLayout>
+        <FormProvider {...methods}>
+          <MobileTabletLayout>
+            <Routes>
+              <Route path={AppRoutes.MyProfile} element={<MyProfile />} />
+              <Route path={AppRoutes.Dashboard} element={<Dashboard />} />
+              <Route path={AppRoutes.Sms} element={<SmsPage />} />
+              <Route path={AppRoutes.ShoppingList} element={<ShoppingList />} />
+              <Route path={AppRoutes.Consumption} element={<Consumption />} />
+              <Route path={AppRoutes.PriceList} element={<PriceList />} />
+              <Route path={AppRoutes.Logs} element={<Logs />} />
+              <Route path={AppRoutes.VisitsList} element={<VisitsList />} />
+              <Route path={AppRoutes.CustomerProfile} element={<CustomerProfile />} />
+              <Route path={AppRoutes.Warehouse} element={<WareHouse />} />
+              <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
+            </Routes>
+          </MobileTabletLayout>
+        </FormProvider>
       </BrowserRouter>
     </ThemeProvider>
   )

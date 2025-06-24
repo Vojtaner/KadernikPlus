@@ -20,7 +20,7 @@ const SectionHeader = () => {
       bgcolor="white"
       alignItems="center"
       padding={1}
-      borderRadius={'15px 15px 0 0'}
+      borderRadius="15px 15px 0 0"
       zIndex={1300}
       marginTop="-11px">
       <Box
