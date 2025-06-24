@@ -1,4 +1,4 @@
-import { Link as RouterLink, type LinkProps as RouterLinkProps } from 'react-router'
+import { Link as RouterLink, type LinkProps as RouterLinkProps } from 'react-router-dom'
 import React from 'react'
 
 export const LinkBehavior = React.forwardRef<
