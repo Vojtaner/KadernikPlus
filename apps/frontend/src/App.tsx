@@ -18,7 +18,7 @@ import VisitDetail from './pages/VisitDetail'
 function App() {
   return (
     <ThemeProvider theme={AppTheme}>
-      <HashRouter basename="/KadernikPlus/#/">
+      <HashRouter>
         <MobileTabletLayout>
           <Routes>
             <Route path={AppRoutes.MyProfile} element={<MyProfile />} />
