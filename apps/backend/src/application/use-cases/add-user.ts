@@ -1,5 +1,3 @@
-// src/application/use-cases/add-user.ts
-
 import { User, UserCreateData } from "@/domain/entities/user";
 import { UserRepository } from "@/application/ports/user-repository";
 

@@ -13,6 +13,7 @@ docker compose logs db
 ```
 
 When schema.prisma is changed
+
 ```
 npx prisma migrate dev --name NAME_OF_MIGRATION
 npx prisma generate

@@ -1,5 +1,4 @@
-
-Visit https://mermaid.live/edit and paste there this value to see diagram. 
+Visit https://mermaid.live/edit and paste there this value to see diagram.
 
 ```
 

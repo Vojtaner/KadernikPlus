@@ -1,5 +1,3 @@
-// src/application/use-cases/get-user-by-id.ts
-
 import { User } from "@/domain/entities/user";
 import { UserRepository } from "@/application/ports/user-repository";
 
