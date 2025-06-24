@@ -1,13 +1,15 @@
 import { IconButton, Typography } from '@mui/material'
 import type { AppPaletteColor } from '../entity'
-type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor }
+
+type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor; onClick?: () => void }
 
 const MenuIconButton = (props: MenuIconButtonProps) => {
-  const { title, icon, color = 'text.secondary' } = props
+  const { title, icon, color = 'text.secondary', onClick } = props
 
   return (
     <IconButton
       aria-label={title}
+      onClick={onClick}
       sx={{
         flexDirection: 'column',
         display: 'flex',

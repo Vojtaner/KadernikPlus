@@ -1,9 +1,5 @@
 import Stack from '@mui/material/Stack'
-import MenuIconButton from './MenuIconButton'
-import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined'
-import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
-import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
+import { AddBuyStockItemButton, AddClientItemButton, AddVisitItemButton, AddWarehouseItemButton } from './Dialog'
 
 const BottomBar = () => {
   const paddingX = '10px'
@@ -26,10 +22,10 @@ const BottomBar = () => {
         position: 'sticky',
         bottom: 'env(safe-area-inset-bottom)',
       }}>
-      <MenuIconButton icon={<PersonAddAlt1OutlinedIcon />} title="Přidat klienta" />
-      <MenuIconButton icon={<MoreTimeOutlinedIcon />} title="Přidat čas" />
-      <MenuIconButton color={'primary'} icon={<AddShoppingCartOutlinedIcon color="primary" />} title="Přidat položku" />
-      <MenuIconButton icon={<ShoppingCartOutlinedIcon />} title="Nákupní košík" />
+      <AddBuyStockItemButton />
+      <AddClientItemButton />
+      <AddVisitItemButton />
+      <AddWarehouseItemButton />
     </Stack>
   )
 }

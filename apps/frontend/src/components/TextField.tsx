@@ -1,16 +1,13 @@
 import { Controller } from 'react-hook-form'
-import { TextField as MuiTextField, type SxProps, type Theme } from '@mui/material'
+import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material'
 import { useAppFormContext, type AppFieldPath } from '../reactHookForm/store'
 
-type TextFieldProps = {
+type TextFieldProps = MuiTextFieldProps & {
   fieldPath: AppFieldPath
-  sx?: SxProps<Theme>
-  placeholder?: string
-  onClick?: () => void
 }
 
 const TextField = (props: TextFieldProps) => {
-  const { fieldPath, sx, placeholder, onClick } = props
+  const { fieldPath, ...rest } = props
   const { control } = useAppFormContext()
 
   return (
@@ -18,14 +15,7 @@ const TextField = (props: TextFieldProps) => {
       control={control}
       name={fieldPath}
       render={({ field: { onChange, onBlur, value } }) => (
-        <MuiTextField
-          onClick={onClick}
-          onChange={onChange}
-          onBlur={onBlur}
-          value={value}
-          sx={sx}
-          placeholder={placeholder}
-        />
+        <MuiTextField onChange={onChange} onBlur={onBlur} value={value} {...rest} />
       )}
     />
   )
