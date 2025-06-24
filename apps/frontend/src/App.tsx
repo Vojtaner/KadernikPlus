@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@mui/material/styles'
 import { MobileTabletLayout } from './components/MobileTabletLayout'
 import AppTheme from './AppTheme'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { AppRoutes } from './routes/AppRoutes'
 import VisitsList from './pages/VisitsList'
 import CustomerProfile from './pages/CustomerProfile'
@@ -18,7 +18,7 @@ import VisitDetail from './pages/VisitDetail'
 function App() {
   return (
     <ThemeProvider theme={AppTheme}>
-      <HashRouter basename="KadernikPlus/#/">
+      <BrowserRouter basename="/KadernikPlus/#/">
         <MobileTabletLayout>
           <Routes>
             <Route path={AppRoutes.MyProfile} element={<MyProfile />} />
@@ -34,7 +34,7 @@ function App() {
             <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
           </Routes>
         </MobileTabletLayout>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   )
 }

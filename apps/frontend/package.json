@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://https://vojtaner.github.io/",
+  "homepage": "https://https://vojtaner.github.io/KadernikPlus/#/",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
