@@ -75,7 +75,7 @@ const columns: GridColDef<(typeof rows)[number]>[] = [
     disableColumnMenu: true,
     renderCell: (params) => (
       <BoxIcon
-        size={20}
+        size={'small'}
         key={params.id}
         onClick={() => console.log(params.id)}
         icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
