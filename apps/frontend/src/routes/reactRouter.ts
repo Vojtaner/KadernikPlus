@@ -19,10 +19,8 @@ export const getNthPathName = (pathNames: AppRoutePath[], order: number) => {
   return breadCrumbNameMap[pathNames[order]]
 }
 
-export const getPathNameWithOutSlash = (pathname: AppRoutePath) =>
-  pathname === '/'
-    ? [pathname]
-    : pathname
-        .split('/')
-        .filter(Boolean)
-        .filter((p): p is AppRoutePath => p in breadCrumbNameMap)
+export const getPathNameWithOutSlash = (pathname: AppRoutePath): string[] =>
+  pathname
+    .split('/')
+    .filter(Boolean)
+    .filter((segment) => !segment.startsWith(':'))

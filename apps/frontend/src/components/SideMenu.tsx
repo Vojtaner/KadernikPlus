@@ -16,6 +16,7 @@ import Face4Icon from '@mui/icons-material/Face4'
 import SideMenuButton from './SideMenuItem'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
@@ -63,6 +64,12 @@ export const SideMenu = () => {
         to={AppRoutes.Dashboard}
         title={intl.formatMessage({ id: 'dashboard' })}
         icon={<DashboardIcon />}
+      />
+      <SideMenuButton
+        isActive={pathNameTransformed === AppRoutes.VisitsList}
+        to={AppRoutes.VisitsList}
+        title={intl.formatMessage({ id: 'visitsList' })}
+        icon={<PhotoCameraFrontOutlinedIcon />}
       />
       <SideMenuButton
         isActive={pathNameTransformed === AppRoutes.Sms}

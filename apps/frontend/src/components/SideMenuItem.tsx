@@ -1,5 +1,6 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import type { AppRoutePath } from '../routes/AppRoutes'
+import AppTheme from '../AppTheme'
 
 type SideMenuListItemProps = {
   title: string
@@ -13,7 +14,7 @@ const SideMenuButton = (props: SideMenuListItemProps) => {
   const { title, to, icon, isActive } = props
 
   return (
-    <ListItem disablePadding sx={isActive ? { bgcolor: 'primary.main', fontWeight: 700 } : {}}>
+    <ListItem disablePadding sx={isActive ? { bgcolor: AppTheme.palette.primary.main, fontWeight: 700 } : {}}>
       <ListItemButton
         href={to}
         sx={

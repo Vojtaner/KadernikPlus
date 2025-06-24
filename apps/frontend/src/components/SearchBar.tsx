@@ -2,13 +2,15 @@ import Stack from '@mui/material/Stack'
 import SearchIcon from '@mui/icons-material/Search'
 import { IconButton } from '@mui/material'
 import TextField from './TextField'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
 type SearchBarProps = {
   onClick: () => void
+  isSearchActive: boolean
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const { onClick } = props
+  const { onClick, isSearchActive } = props
 
   return (
     <Stack
@@ -18,12 +20,18 @@ const SearchBar = (props: SearchBarProps) => {
       <IconButton
         sx={{
           width: 48,
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          display: 'flex',
+          transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isSearchActive ? 'rotate(-180deg)' : 'rotate(0deg)',
         }}
         onClick={onClick}>
-        <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        {isSearchActive ? (
+          <ArrowForwardIosIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        ) : (
+          <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        )}
       </IconButton>
       <TextField
         fieldPath="searchBar"

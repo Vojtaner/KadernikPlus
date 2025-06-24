@@ -1,12 +1,16 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography, type SxProps, type Theme } from '@mui/material'
 import MenuBox from './MenuBox'
 import SearchBar from './SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
-import { useState } from 'react'
 
-function TopBar() {
-  const [active, setActive] = useState(false)
+type TopBarProps = {
+  onActiveSearch: () => void
+  isSearchActive: boolean
+}
+
+function TopBar(props: TopBarProps) {
+  const { onActiveSearch, isSearchActive } = props
 
   return (
     <Stack
@@ -14,7 +18,7 @@ function TopBar() {
         height: '11vh',
         paddingX: '10px',
         paddingY: '10px',
-        paddingBottom: active ? '0px' : '8px',
+        paddingBottom: isSearchActive ? '0px' : '8px',
         position: 'sticky',
         top: 0,
         zIndex: 1100,
@@ -28,12 +32,26 @@ function TopBar() {
       )`,
       }}>
       <Stack direction="column" sx={{ height: '100%', minHeight: '60px' }} spacing={1}>
-        {!active && <AppLogo />}
+        {!isSearchActive && (
+          <AppLogo
+            sx={{
+              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: isSearchActive ? 'rotate(-80deg) scale(0.7)' : 'rotate(0deg) scale(1)',
+              opacity: isSearchActive ? 0 : 1,
+            }}
+          />
+        )}
         <Stack direction="row" sx={{ height: '100%' }} spacing={1}>
-          <SearchBar onClick={() => setActive((prev) => !prev)} />
-          <MenuBox />
+          <SearchBar onClick={onActiveSearch} isSearchActive={isSearchActive} />
+          {!isSearchActive && <MenuBox />}
         </Stack>
-        {active && <TopBarFilterButtonsStack />}
+        {isSearchActive && (
+          <TopBarFilterButtonsStack
+            sx={{
+              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
+        )}
       </Stack>
     </Stack>
   )
@@ -41,10 +59,16 @@ function TopBar() {
 
 export default TopBar
 
-const TopBarFilterButtonsStack = () => {
+type TopBarFilterButtonsStackProps = {
+  sx: SxProps<Theme>
+}
+
+const TopBarFilterButtonsStack = (props: TopBarFilterButtonsStackProps) => {
+  const { sx } = props
+
   return (
     <Stack
-      sx={{ height: '100%' }}
+      sx={{ height: '100%', ...sx }}
       display="flex"
       direction="row"
       spacing={4}
@@ -82,10 +106,13 @@ const TopBarFilterButton = (props: TopBarFilterButtonProps) => {
     </Box>
   )
 }
+type AppLogoProps = { sx?: SxProps<Theme> }
 
-const AppLogo = () => {
+const AppLogo = (props: AppLogoProps) => {
+  const { sx } = props
+
   return (
-    <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center">
+    <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
       <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="small" />
       <Typography color="common.white">Kadeřník+</Typography>
     </Stack>

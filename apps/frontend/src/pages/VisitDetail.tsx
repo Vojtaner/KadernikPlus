@@ -1,5 +1,11 @@
+import VisitDetailCard from '../components/VisitDetailCard'
+
 const VisitDetail = () => {
-  return <div>VisitDetail</div>
+  return (
+    <>
+      <VisitDetailCard />
+    </>
+  )
 }
 
 export default VisitDetail

@@ -8,14 +8,14 @@ import CustomerProfile from './pages/CustomerProfile'
 import SmsPage from './pages/SmsPage'
 import WareHouse from './pages/WareHouse'
 import ShoppingList from './pages/ShoppingList'
-import { Dashboard } from '@mui/icons-material'
 import Consumption from './pages/Consumption'
 import PriceList from './pages/PriceList'
 import Logs from './pages/Logs'
 import MyProfile from './pages/MyProfile'
-import VisitDetail from './pages/VisitDetail'
 import { useAppForm } from './reactHookForm/store'
 import { FormProvider } from 'react-hook-form'
+import { Dashboard } from './pages/Dashboard'
+import VisitDetail from './pages/VisitDetail'
 
 function App() {
   const methods = useAppForm()
@@ -34,9 +34,9 @@ function App() {
               <Route path={AppRoutes.PriceList} element={<PriceList />} />
               <Route path={AppRoutes.Logs} element={<Logs />} />
               <Route path={AppRoutes.VisitsList} element={<VisitsList />} />
+              <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
               <Route path={AppRoutes.CustomerProfile} element={<CustomerProfile />} />
               <Route path={AppRoutes.Warehouse} element={<WareHouse />} />
-              <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
             </Routes>
           </MobileTabletLayout>
         </FormProvider>

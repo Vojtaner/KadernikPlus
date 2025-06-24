@@ -30,7 +30,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
     () =>
       columns.map((col) => ({
         ...col,
-        width: getMaxWordLength(rows, col.field as keyof T[number]) * CHAR_WIDTH_PX,
+        width: col.width ?? getMaxWordLength(rows, col.field as keyof T[number]) * CHAR_WIDTH_PX,
         minWidth: col.minWidth ?? 60,
         field: col.field as string,
       })),
