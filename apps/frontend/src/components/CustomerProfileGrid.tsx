@@ -23,19 +23,19 @@ const CustomerProfileGrid = () => {
       </Grid>
       <Grid size={8} alignContent={'center'} justifyContent={'center'}>
         <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'center'}>
-          <BoxIcon size={30} icon={<SmsOutlinedIcon fontSize="small" color="info" />} boxColor="info.light" />
+          <BoxIcon size={'medium'} icon={<SmsOutlinedIcon fontSize="small" color="info" />} boxColor="info.light" />
           <BoxIcon
-            size={30}
+            size={'medium'}
             icon={<DeleteOutlineOutlinedIcon fontSize="small" color="primary" />}
             boxColor="primary.light"
           />
           <BoxIcon
-            size={30}
+            size={'medium'}
             icon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}
             boxColor="success.light"
           />
           <BoxIcon
-            size={30}
+            size={'medium'}
             icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
             boxColor="secondary.light"
           />

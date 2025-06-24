@@ -12,9 +12,8 @@ const Note = () => {
         <BoxIcon icon={<EditOutlinedIcon fontSize="inherit" color="primary" />} />
       </Stack>
       <Typography variant="body2" textAlign={'left'} color="text.primary">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor quam similique! Vero aut rem quae!
-        Voluptatem nostrum, quis, cumque laboriosam molestiae dolorem ratione veniam magnam, velit fugiat assumenda
-        exercitationem? Dolores.
+        Barva chytla rovnoměrně, vlasy byly mírně suché, doporučeno hloubkové ošetření. Nechala si zkrátit konečky,
+        spokojená s výsledkem, příště znovu studený odstín.
       </Typography>
     </Stack>
   )

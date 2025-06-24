@@ -1,20 +1,21 @@
-import { Box } from '@mui/material'
+import { IconButton } from '@mui/material'
 import type { AppPaletteColorString } from '../entity'
 
 export type BoxIconProps = {
   icon: React.ReactNode
   boxColor?: AppPaletteColorString
   sx?: object
-  size?: number
+  size?: 'small' | 'large' | 'medium'
   key?: string | number
   onClick?: () => void
+  href?: string
 }
 
 const BoxIcon = (props: BoxIconProps) => {
-  const { boxColor = 'primary.light', sx, icon, size = 20, onClick, key } = props
+  const { boxColor = 'primary.light', sx, icon, size = 'small', onClick, key, href } = props
 
   return (
-    <Box
+    <IconButton
       key={key}
       sx={{
         display: 'flex',
@@ -22,14 +23,14 @@ const BoxIcon = (props: BoxIconProps) => {
         justifyContent: 'center',
         borderRadius: '5px',
         boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.12)',
+        backgroundColor: boxColor,
         ...sx,
       }}
-      bgcolor={boxColor}
-      width={size}
-      height={size}
+      size={size}
+      {...(href ? { href } : {})}
       onClick={onClick}>
       {icon}
-    </Box>
+    </IconButton>
   )
 }
 

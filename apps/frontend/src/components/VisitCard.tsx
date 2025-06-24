@@ -12,11 +12,15 @@ const VisitPage = () => {
       <VisitDetailGrid />
       <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'flex-start'} paddingY={2}>
         <BoxIcon
-          size={30}
+          size={'medium'}
           icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
           boxColor="primary.light"
         />
-        <BoxIcon size={30} icon={<EditOutlinedIcon fontSize="small" color="secondary" />} boxColor="secondary.light" />
+        <BoxIcon
+          size={'medium'}
+          icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
+          boxColor="secondary.light"
+        />
       </Stack>
       <Divider />
       <Note />

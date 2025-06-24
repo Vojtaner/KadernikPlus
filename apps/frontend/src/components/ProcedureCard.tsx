@@ -19,8 +19,8 @@ const ProcedureCard = () => {
         </Box>
         <Stack direction={'column'}>
           <Typography variant="body1" sx={{ padding: 1 }}>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo omnis aperiam fugiat beatae recusandae quod
-            hic nisi sit commodi voluptatem ullam.
+            Před aplikací provedeno mytí jemným šamponem, vysušeno ručníkem. Barva míchána 1:1 s 6% oxidantem, nanesena
+            nejprve na odrosty, poté do délek, působení 30 minut.
           </Typography>
           <Stack
             direction={'row'}
@@ -44,6 +44,9 @@ const ProcedureCard = () => {
                 Blondor 30 ml
               </Typography>
             </Box>
+            <Typography fontWeight={600} color="primary.main">
+              + Přidat
+            </Typography>
           </Stack>
         </Stack>
       </Stack>
