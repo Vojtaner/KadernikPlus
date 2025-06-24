@@ -8,6 +8,12 @@ import { getNthPathName, getPathNameWithOutSlash, useTypedLocation } from '../ro
 const SectionHeader = () => {
   const { pathname } = useTypedLocation()
 
+  console.log({
+    pathname,
+    x: getNthPathName(getPathNameWithOutSlash(pathname), 0),
+    k: getPathNameWithOutSlash(pathname),
+  })
+
   return (
     <Stack
       direction="row"
