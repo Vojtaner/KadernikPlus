@@ -10,16 +10,16 @@ const CustomerProfileGrid = () => {
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4} padding={0}>
-        <DetailColumn label={'Jméno a příjmení'} value={'Monika Laurinová'} />
+        <DetailColumn label={'Jméno a příjmení'} input={'Monika Laurinová'} />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label={'Telefon'} value={'732 358 754'} />
+        <DetailColumn label={'Telefon'} input={'732 358 754'} />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label={'Tržby celkem'} value={'12 000,00 Kč'} />
+        <DetailColumn label={'Tržby celkem'} input={'12 000,00 Kč'} />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label={'Náštěvy v půl roce'} value={'6'} />
+        <DetailColumn label={'Náštěvy v půl roce'} input={'6'} />
       </Grid>
       <Grid size={8} alignContent={'center'} justifyContent={'center'}>
         <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'center'}>

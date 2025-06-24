@@ -12,8 +12,8 @@ const VisitDetailCard = () => {
         <Typography variant="h6" sx={{ padding: 1 }} color="primary">
           1.
         </Typography>
-        <DetailColumn label="Datum" value="12.3.2025" />
-        <DetailColumn label="Section" value="1230,00 Kč" />
+        <DetailColumn label="Datum" input="12.3.2025" />
+        <DetailColumn label="Section" input="1230,00 Kč" />
         <IconButton>
           <PhotoCameraFrontOutlinedIcon fontSize="large" color="primary" />
         </IconButton>
