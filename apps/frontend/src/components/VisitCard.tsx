@@ -1,12 +1,12 @@
-import { Divider, Stack } from '@mui/material'
-import VisitDetailGrid from './VisitDetailGrid'
-import BoxIcon from '../components/BoxIcon'
+import { Stack, Divider } from '@mui/material'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
-import ProcedureCard from '../components/ProcedureCard'
-import Note from '../components/Note'
+import BoxIcon from './BoxIcon'
+import Note from './Note'
+import ProcedureCard from './ProcedureCard'
+import VisitDetailGrid from '../pages/VisitDetailGrid'
 
-const VisitDetail = () => {
+const VisitPage = () => {
   return (
     <>
       <VisitDetailGrid />
@@ -40,4 +40,4 @@ const VisitDetail = () => {
   )
 }
 
-export default VisitDetail
+export default VisitPage

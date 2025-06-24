@@ -21,9 +21,9 @@ const SmsCard = (props: SmsCardProps) => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack sx={{ borderRadius: 0, padding: '1rem' }} spacing={1}>
           <Stack direction="row" spacing={2}>
-            <DetailColumn label="Jméno" value={customerName} fontSize={12} />
-            <DetailColumn label="Návštěva" value="před 2 dny" fontSize={12} />
-            <DetailColumn label="Účes" value={haircut} fontSize={12} />
+            <DetailColumn label="Jméno" input={customerName} fontSize={12} />
+            <DetailColumn label="Návštěva" input="před 2 dny" fontSize={12} />
+            <DetailColumn label="Účes" input={haircut} fontSize={12} />
           </Stack>
           <Typography variant="body1" fontSize="12px">
             {text}

@@ -14,6 +14,7 @@ const MenuBox = () => {
       sx={{
         width: 48,
         display: 'flex',
+        height: '100%',
         alignItems: 'center',
         bgcolor: '#ffffff38',
         borderRadius: '10px',

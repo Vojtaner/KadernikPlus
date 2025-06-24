@@ -15,7 +15,7 @@ export const useTypedLocation = () => {
   return useLocation() as Location<AppLocationState>
 }
 
-export const getNthPathName = (pathNames: AppRoutePath[], order: number) => {
+export const getNthPathName = (pathNames: string[], order: number) => {
   return breadCrumbNameMap[pathNames[order]]
 }
 

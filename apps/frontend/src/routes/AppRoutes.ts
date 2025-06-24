@@ -15,7 +15,7 @@ export const AppRoutes = {
 
 export type AppRoutePath = (typeof AppRoutes)[keyof typeof AppRoutes]
 
-export const breadCrumbNameMap: Record<AppRoutePath, string> = {
+export const breadCrumbNameMap: Record<string, string> = {
   '/': 'Dashboard',
   'customer-profile': 'Profil zákazníka',
   'visits-list': 'Návštěvy',
@@ -28,4 +28,16 @@ export const breadCrumbNameMap: Record<AppRoutePath, string> = {
   'shopping-list': 'Nákupní seznam',
   '*': 'Stránka nenalezena',
 }
+
 export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerProfile.replace(':customerId', visitId)
+
+export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
+  if (route === '*') {
+    return false
+  }
+  if (route.includes('/:')) {
+    const base = route.split('/:')[0]
+    return pathname.startsWith(base)
+  }
+  return pathname === route.split('/')[1]
+}

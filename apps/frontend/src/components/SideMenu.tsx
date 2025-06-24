@@ -1,6 +1,6 @@
 import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { AppRoutes } from '../routes/AppRoutes'
+import { AppRoutes, isActiveRoute } from '../routes/AppRoutes'
 import type { RootState } from '../store'
 import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
 import LanguageIcon from '@mui/icons-material/Language'
@@ -41,6 +41,8 @@ export const SideMenu = () => {
   const { pathname } = useTypedLocation()
   const pathNameTransformed = getPathNameWithOutSlash(pathname)[0]
 
+  console.log({ pathNameTransformed, AppRoutes })
+
   const drawerList = (
     <Stack
       sx={{ width: 250 }}
@@ -53,63 +55,63 @@ export const SideMenu = () => {
         </IconButton>
       </Box>
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.MyProfile}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
         to={AppRoutes.MyProfile}
         title={intl.formatMessage({ id: 'myProfile' })}
         icon={<Face4Icon />}
       />
       <Divider />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.Dashboard}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Dashboard)}
         to={AppRoutes.Dashboard}
         title={intl.formatMessage({ id: 'dashboard' })}
         icon={<DashboardIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.VisitsList}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.VisitsList)}
         to={AppRoutes.VisitsList}
         title={intl.formatMessage({ id: 'visitsList' })}
         icon={<PhotoCameraFrontOutlinedIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.Sms}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Sms)}
         to={AppRoutes.Sms}
         title={intl.formatMessage({ id: 'sms' })}
         icon={<SmsOutlinedIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.ShoppingList}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.ShoppingList)}
         to={AppRoutes.ShoppingList}
         title={intl.formatMessage({ id: 'shoppingList' })}
         icon={<ProductionQuantityLimitsIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.Consumption}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Consumption)}
         to={AppRoutes.Consumption}
         title={intl.formatMessage({ id: 'consumption' })}
         icon={<ContentCutIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.PriceList}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.PriceList)}
         to={AppRoutes.PriceList}
         title={intl.formatMessage({ id: 'pricing' })}
         icon={<LocalOfferIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.Logs}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Logs)}
         to={AppRoutes.Logs}
         title={intl.formatMessage({ id: 'logs' })}
         icon={<LightbulbOutlineIcon />}
       />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.Warehouse}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Warehouse)}
         to={AppRoutes.Warehouse}
         title={intl.formatMessage({ id: 'stock' })}
         icon={<WarehouseIcon />}
       />
       <Divider />
       <SideMenuButton
-        isActive={pathNameTransformed === AppRoutes.MyProfile}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
         onClick={() => {
           return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
         }}

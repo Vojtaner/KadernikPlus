@@ -7,16 +7,14 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 type SearchBarProps = {
   onClick: () => void
   isSearchActive: boolean
+  onFocus: () => void
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const { onClick, isSearchActive } = props
+  const { onClick, isSearchActive, onFocus } = props
 
   return (
-    <Stack
-      direction={'row'}
-      sx={{ flex: 85, bgcolor: '#ffffff38', borderRadius: '10px' }}
-      justifyContent={'space-between'}>
+    <Stack direction="row" sx={{ flex: 85, bgcolor: '#ffffff38', borderRadius: '10px' }} justifyContent="space-between">
       <IconButton
         sx={{
           width: 48,
@@ -36,6 +34,7 @@ const SearchBar = (props: SearchBarProps) => {
       <TextField
         fieldPath="searchBar"
         placeholder="Vyhledej zákazníka..."
+        onClick={onFocus}
         sx={{
           width: '100%',
           background: 'none',

@@ -31,7 +31,7 @@ const AppTheme = createTheme({
       fontWeight: 500,
     },
     body1: {
-      fontSize: '0.67rem',
+      fontSize: '0.87rem',
       lineHeight: 1.5,
     },
     caption: {

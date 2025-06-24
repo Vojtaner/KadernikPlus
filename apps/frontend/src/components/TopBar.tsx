@@ -15,7 +15,8 @@ function TopBar(props: TopBarProps) {
   return (
     <Stack
       sx={{
-        height: '11vh',
+        height: '10vh',
+
         paddingX: '10px',
         paddingY: '10px',
         paddingBottom: isSearchActive ? '0px' : '8px',
@@ -41,8 +42,8 @@ function TopBar(props: TopBarProps) {
             }}
           />
         )}
-        <Stack direction="row" sx={{ height: '100%' }} spacing={1}>
-          <SearchBar onClick={onActiveSearch} isSearchActive={isSearchActive} />
+        <Stack direction="row" spacing={1} alignItems="center">
+          <SearchBar onClick={onActiveSearch} isSearchActive={isSearchActive} onFocus={onActiveSearch} />
           {!isSearchActive && <MenuBox />}
         </Stack>
         {isSearchActive && (
@@ -113,8 +114,10 @@ const AppLogo = (props: AppLogoProps) => {
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
-      <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="small" />
-      <Typography color="common.white">Kadeřník+</Typography>
+      <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+      <Typography color="common.white" variant="body2">
+        Kadeřník+
+      </Typography>
     </Stack>
   )
 }

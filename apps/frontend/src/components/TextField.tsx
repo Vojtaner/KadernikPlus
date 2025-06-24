@@ -6,10 +6,11 @@ type TextFieldProps = {
   fieldPath: AppFieldPath
   sx?: SxProps<Theme>
   placeholder?: string
+  onClick?: () => void
 }
 
 const TextField = (props: TextFieldProps) => {
-  const { fieldPath, sx, placeholder } = props
+  const { fieldPath, sx, placeholder, onClick } = props
   const { control } = useAppFormContext()
 
   return (
@@ -17,7 +18,14 @@ const TextField = (props: TextFieldProps) => {
       control={control}
       name={fieldPath}
       render={({ field: { onChange, onBlur, value } }) => (
-        <MuiTextField onChange={onChange} onBlur={onBlur} value={value} sx={sx} placeholder={placeholder} />
+        <MuiTextField
+          onClick={onClick}
+          onChange={onChange}
+          onBlur={onBlur}
+          value={value}
+          sx={sx}
+          placeholder={placeholder}
+        />
       )}
     />
   )
