@@ -13,6 +13,7 @@ const BottomBar = () => {
     <Stack
       display="flex"
       direction={'row'}
+      zIndex={1200}
       spacing={1}
       alignItems={'center'}
       justifyContent={'space-between'}

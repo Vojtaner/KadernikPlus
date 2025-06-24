@@ -1,38 +1,54 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import SearchIcon from '@mui/icons-material/Search';
+import Stack from '@mui/material/Stack'
+import SearchIcon from '@mui/icons-material/Search'
+import { IconButton } from '@mui/material'
+import TextField from './TextField'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
-const SearchBar = () => {
+type SearchBarProps = {
+  onClick: () => void
+  isSearchActive: boolean
+}
+
+const SearchBar = (props: SearchBarProps) => {
+  const { onClick, isSearchActive } = props
+
   return (
     <Stack
       direction={'row'}
       sx={{ flex: 85, bgcolor: '#ffffff38', borderRadius: '10px' }}
-      justifyContent={'space-between'}
-    >
-      <Typography
-        alignContent={'center'}
-        color="#f0f0f0"
-        sx={{
-          textAlign: 'left',
-          paddingY: 1,
-          paddingX: 2,
-        }}
-      >
-        Vyhledej zákazníka...
-      </Typography>
-      <Box
+      justifyContent={'space-between'}>
+      <IconButton
         sx={{
           width: 48,
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          display: 'flex',
+          transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)',
+          transform: isSearchActive ? 'rotate(-180deg)' : 'rotate(0deg)',
         }}
-      >
-        <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
-      </Box>
+        onClick={onClick}>
+        {isSearchActive ? (
+          <ArrowForwardIosIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        ) : (
+          <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        )}
+      </IconButton>
+      <TextField
+        fieldPath="searchBar"
+        placeholder="Vyhledej zákazníka..."
+        sx={{
+          width: '100%',
+          background: 'none',
+          '& .MuiInputBase-root': {
+            color: 'white',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: 'none',
+          },
+        }}
+      />
     </Stack>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar

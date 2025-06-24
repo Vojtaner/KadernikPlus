@@ -1,6 +1,29 @@
 import { createTheme } from '@mui/material/styles'
+import { type LinkProps } from '@mui/material/Link'
+import { LinkBehavior } from './components/LinkBehaviour'
 
 const AppTheme = createTheme({
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+      } as LinkProps,
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0px 2px 6px rgba(0,0,0,0.2)',
+          borderRadius: '10px',
+          color: '#D02964',
+          textTransform: 'none',
+          '&:hover': {
+            backgroundColor: '#D02964',
+            color: 'white',
+          },
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h4: {
