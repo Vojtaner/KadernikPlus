@@ -1,13 +1,10 @@
-import { Box, Paper, Stack, Typography } from '@mui/material'
+import { Box, Typography, Stack } from '@mui/material'
 import AppTheme from '../AppTheme'
+import Paper from './Paper'
 
 const ProcedureCard = () => {
   return (
-    <Paper
-      sx={{
-        boxShadow: '0px 1px 7px 0px rgba(0,0,0,0.12)',
-        padding: 1,
-      }}>
+    <Paper>
       <Stack spacing={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
         <Box
           sx={{

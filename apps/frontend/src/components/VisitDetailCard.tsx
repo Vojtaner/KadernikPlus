@@ -1,13 +1,11 @@
-import { IconButton, Paper, Stack, Typography } from '@mui/material'
+import { IconButton, Stack, Typography } from '@mui/material'
 import DetailColumn from './DetailColumn'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import Paper from './Paper'
 
 const VisitDetailCard = () => {
   return (
-    <Paper
-      sx={{
-        boxShadow: '0px 1px 7px 0px rgba(0,0,0,0.12)',
-      }}>
+    <Paper>
       <Stack direction={'row'} sx={{ padding: 1 }} justifyContent={'space-between'} alignItems={'center'}>
         <Typography variant="h6" sx={{ padding: 1 }} color="primary">
           1.

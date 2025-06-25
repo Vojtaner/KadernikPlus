@@ -1,5 +1,8 @@
 import Stack from '@mui/material/Stack'
-import { AddBuyStockItemButton, AddClientItemButton, AddVisitItemButton, AddWarehouseItemButton } from './Dialog'
+import { AddBuyStockItemButton } from './AddBuyStockItemButton'
+import AddClientItemButton from './AddClientItemButton'
+import { AddVisitItemButton } from './AddVisitItemButton'
+import AddWarehouseItemButton from './AddWarehouseItemButton'
 
 const BottomBar = () => {
   const paddingX = '10px'

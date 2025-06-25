@@ -1,7 +1,8 @@
-import { IconButton, Paper, Stack, Typography } from '@mui/material'
+import { IconButton, Stack, Typography } from '@mui/material'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import DetailColumn from './DetailColumn'
 import AppTheme from '../AppTheme'
+import Paper from './Paper'
 
 type SmsCardProps = {
   text: string
@@ -13,11 +14,7 @@ const SmsCard = (props: SmsCardProps) => {
   const { text, customerName, haircut } = props
 
   return (
-    <Paper
-      sx={{
-        boxShadow: '0px 1px 7px 0px rgba(0,0,0,0.12)',
-        borderRadius: '10px',
-      }}>
+    <Paper>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack sx={{ borderRadius: 0, padding: '1rem' }} spacing={1}>
           <Stack direction="row" spacing={2}>

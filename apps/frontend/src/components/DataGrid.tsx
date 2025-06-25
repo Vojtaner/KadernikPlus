@@ -14,9 +14,9 @@ function getMaxWordLength<T>(rows: readonly T[], field: keyof T): number {
   return longest
 }
 
-import type { GridValidRowModel } from '@mui/x-data-grid'
+import type { DataGridProps, GridValidRowModel } from '@mui/x-data-grid'
 
-type AppDataGridProps<T extends readonly GridValidRowModel[]> = {
+type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & {
   rows: T
   columns: GridColDef<T[number]>[]
   sx?: object
@@ -24,7 +24,7 @@ type AppDataGridProps<T extends readonly GridValidRowModel[]> = {
 }
 
 function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridProps<T>) {
-  const { rows, columns } = props
+  const { rows, columns, columnHeaderHeight, hideFooter } = props
 
   const gridColumns: readonly GridColDef[] = React.useMemo(
     () =>
@@ -42,7 +42,13 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
       <DataGrid
         rows={rows}
         columns={gridColumns}
-        sx={{ fontSize: '12px' }}
+        sx={{
+          fontSize: '12px',
+          border: 'none',
+          '& .MuiDataGrid-columnSeparator': {
+            display: 'none',
+          },
+        }}
         initialState={{
           pagination: {
             paginationModel: {
@@ -53,6 +59,8 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         density="compact"
+        columnHeaderHeight={columnHeaderHeight}
+        hideFooter={hideFooter}
       />
     </Box>
   )
