@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import { IconButton } from '@mui/material'
 import TextField from './TextField'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import { useState } from 'react'
 
 type SearchBarProps = {
   onClick: () => void
@@ -11,7 +12,8 @@ type SearchBarProps = {
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const { onClick, isSearchActive, onFocus } = props
+  const { onClick, onFocus, isSearchActive } = props
+  const [isFieldFocused, setIsFieldFocused] = useState(false)
 
   return (
     <Stack direction="row" sx={{ flex: 85, bgcolor: '#ffffff38', borderRadius: '10px' }} justifyContent="space-between">
@@ -22,10 +24,10 @@ const SearchBar = (props: SearchBarProps) => {
           justifyContent: 'center',
           display: 'flex',
           transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: isSearchActive ? 'rotate(-180deg)' : 'rotate(0deg)',
+          transform: isFieldFocused ? 'rotate(-180deg)' : 'rotate(0deg)',
         }}
         onClick={onClick}>
-        {isSearchActive ? (
+        {isFieldFocused || isSearchActive ? (
           <ArrowForwardIosIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
         ) : (
           <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
@@ -34,7 +36,11 @@ const SearchBar = (props: SearchBarProps) => {
       <TextField
         fieldPath="searchBar"
         placeholder="Vyhledej zákazníka..."
-        onClick={onFocus}
+        onFocus={() => {
+          setIsFieldFocused(true)
+          onFocus()
+        }}
+        onBlur={() => setIsFieldFocused(false)}
         sx={{
           width: '100%',
           background: 'none',

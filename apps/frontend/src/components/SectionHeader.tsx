@@ -40,7 +40,7 @@ const SectionHeader = () => {
           fontWeight: 600,
           paddingX: 2,
         }}>
-        {getNthPathName(getPathNameWithOutSlash(pathname), 0)}
+        {getNthPathName(getPathNameWithOutSlash(pathname), 0) ?? 'Přehled'}
       </Typography>
     </Stack>
   )
