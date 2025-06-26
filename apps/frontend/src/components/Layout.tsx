@@ -20,7 +20,7 @@ const Layout = (props: PropsWithChildren) => {
   return (
     <Stack
       spacing={isSearchActive ? 1 : 0}
-      sx={{ minWidth: { md: '50vw', xs: 0 } }}
+      sx={{ minWidth: { md: '50vw', xs: 0 }, bgcolor: '#c81f5b' }}
       boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}>
       <Stack
         sx={{

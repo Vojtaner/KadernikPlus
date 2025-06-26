@@ -16,7 +16,7 @@ const MenuBox = () => {
         display: 'flex',
         height: '100%',
         alignItems: 'center',
-        bgcolor: '#ffffff38',
+        bgcolor: '#140f1124',
         borderRadius: '10px',
         justifyContent: 'center',
       }}>

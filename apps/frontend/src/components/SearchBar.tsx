@@ -16,7 +16,7 @@ const SearchBar = (props: SearchBarProps) => {
   const [isFieldFocused, setIsFieldFocused] = useState(false)
 
   return (
-    <Stack direction="row" sx={{ flex: 85, bgcolor: '#ffffff38', borderRadius: '10px' }} justifyContent="space-between">
+    <Stack direction="row" sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }} justifyContent="space-between">
       <IconButton
         sx={{
           width: 48,

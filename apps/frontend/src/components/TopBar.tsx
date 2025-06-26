@@ -15,8 +15,7 @@ function TopBar(props: TopBarProps) {
   return (
     <Stack
       sx={{
-        height: '10vh',
-
+        height: '14vh',
         paddingX: '10px',
         paddingY: '10px',
         paddingBottom: isSearchActive ? '0px' : '8px',
@@ -24,15 +23,9 @@ function TopBar(props: TopBarProps) {
         top: 0,
         zIndex: 1100,
         transition: 'padding-bottom 0.7s ease',
-        background: `linear-gradient(
-        270deg,
-        rgba(227, 63, 92, 1) 0%,
-        rgba(195, 54, 79, 1) 25%,
-        rgba(154, 43, 63, 1) 86%,
-        rgba(125, 35, 51, 1) 100%
-      )`,
+        background: '#c81f5b',
       }}>
-      <Stack direction="column" sx={{ height: '100%', minHeight: '60px' }} spacing={1}>
+      <Stack direction="column" spacing={1}>
         {!isSearchActive && (
           <AppLogo
             sx={{
