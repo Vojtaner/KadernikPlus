@@ -1,6 +1,3 @@
-// import { http, HttpResponse } from 'msw'
-// import hairToolApi from '../axios/axios'
+import { mockGetUser, mockGetUserLogs, mockGetWareHouseItems } from '../api/api'
 
-import { mockGetUser } from '../api/api'
-
-export const handlers = [mockGetUser()]
+export const handlers = [mockGetUser(), mockGetUserLogs(), mockGetWareHouseItems()]

@@ -1,10 +1,10 @@
 import { Stack, Typography } from '@mui/material'
+import type { UserLog } from '../api/entity'
 
-export const LogLine = () => {
-  const description = 'Peroxid 6% - 1L'
-  const userName = 'Standa Novák'
-  const actionType = 'přidání skladové položky'
-  const dateTime = '12.5.2025 - 13:45'
+type LogLineProps = Omit<UserLog, 'id'>
+
+export const LogLine = (props: LogLineProps) => {
+  const { actionType, dateTime, description, userName } = props
 
   return (
     <Stack

@@ -15,13 +15,7 @@ const Layout = (props: PropsWithChildren) => {
     setIsSearchActive((prev) => !prev)
   }
 
-  document.body.style.background = ` linear-gradient(
-        270deg,
-        rgba(227, 63, 92, 1) 0%,
-        rgba(195, 54, 79, 1) 25%,
-        rgb(200, 49, 77) 86%,
-        rgb(202, 24, 57) 100%
-      )`
+  document.body.style.background = '#4b4b4b'
 
   return (
     <Stack

@@ -8,5 +8,5 @@ export async function enableMocking() {
     return
   }
 
-  return worker.start()
+  return worker.start({ onUnhandledRequest: 'error' })
 }
