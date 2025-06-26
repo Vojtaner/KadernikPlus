@@ -11,6 +11,7 @@ export const AppRoutes = {
   Consumption: '/consumption',
   MyProfile: '/my-profile',
   ShoppingList: '/shopping-list',
+  Login: '/login',
 } as const
 
 export type AppRoutePath = (typeof AppRoutes)[keyof typeof AppRoutes]

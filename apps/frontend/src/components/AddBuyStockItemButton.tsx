@@ -5,12 +5,15 @@ import TextField from './TextField'
 import { useState } from 'react'
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined'
 import BuyItemAutoComplete from './BuyItemAutoComplete'
+import { hairToolApi } from '../axios/axios'
 
 export const AddBuyStockItemButton = () => {
   const [open, setOpen] = useState(false)
 
-  const handleClickOpen = () => {
+  const handleClickOpen = async () => {
     setOpen(true)
+    const { data } = await hairToolApi.get('todos/1')
+    console.log(data)
   }
 
   const handleClose = () => {
@@ -34,7 +37,11 @@ export const AddBuyStockItemButton = () => {
         </>
       }
       onOpenButton={
-        <MenuIconButton icon={<AddShoppingCartOutlinedIcon />} onClick={handleClickOpen} title="Přidat nákup" />
+        <MenuIconButton
+          icon={<AddShoppingCartOutlinedIcon fontSize="large" />}
+          onClick={handleClickOpen}
+          title="Přidat nákup"
+        />
       }
       title="Přidat nákup"
       dialogHelperText="Zde přidáte nakoupenou položku."

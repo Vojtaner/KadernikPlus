@@ -7,7 +7,7 @@ import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
 
-export const MobileTabletLayout = (props: PropsWithChildren) => {
+const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
 
@@ -15,13 +15,24 @@ export const MobileTabletLayout = (props: PropsWithChildren) => {
     setIsSearchActive((prev) => !prev)
   }
 
+  document.body.style.background = ` linear-gradient(
+        270deg,
+        rgba(227, 63, 92, 1) 0%,
+        rgba(195, 54, 79, 1) 25%,
+        rgb(200, 49, 77) 86%,
+        rgb(202, 24, 57) 100%
+      )`
+
   return (
-    <Stack spacing={isSearchActive ? 1 : 0}>
+    <Stack
+      spacing={isSearchActive ? 1 : 0}
+      sx={{ minWidth: { md: '50vw', xs: 0 } }}
+      boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}>
       <Stack
         sx={{
           position: 'sticky',
           top: 0,
-          width: '100%',
+          width: { md: '100%' },
         }}
         borderRadius="15px 15px 0 0"
         spacing={0.5}>
@@ -42,3 +53,5 @@ export const MobileTabletLayout = (props: PropsWithChildren) => {
     </Stack>
   )
 }
+
+export default Layout

@@ -36,7 +36,11 @@ export const AddVisitItemButton = () => {
         </>
       }
       onOpenButton={
-        <MenuIconButton icon={<MoreTimeOutlinedIcon />} onClick={handleClickOpen} title="Přidat návštěvu" />
+        <MenuIconButton
+          icon={<MoreTimeOutlinedIcon fontSize="large" />}
+          onClick={handleClickOpen}
+          title="Přidat návštěvu"
+        />
       }
       title="Přidat návštěvu"
     />

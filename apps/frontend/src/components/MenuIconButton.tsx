@@ -4,7 +4,7 @@ import type { AppPaletteColor } from '../entity'
 type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor; onClick?: () => void }
 
 const MenuIconButton = (props: MenuIconButtonProps) => {
-  const { title, icon, color = 'text.secondary', onClick } = props
+  const { title, icon, color = 'common.white', onClick } = props
 
   return (
     <IconButton
@@ -17,9 +17,10 @@ const MenuIconButton = (props: MenuIconButtonProps) => {
         justifyContent: 'center',
         padding: 1,
         gap: 0.5,
+        color: `${color}`,
       }}>
       {icon}
-      <Typography variant="caption" component="span" color={color}>
+      <Typography fontWeight={500} color={color}>
         {title}
       </Typography>
     </IconButton>

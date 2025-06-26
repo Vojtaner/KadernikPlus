@@ -109,7 +109,7 @@ const TopBarFilterButton = (props: TopBarFilterButtonProps) => {
 }
 type AppLogoProps = { sx?: SxProps<Theme> }
 
-const AppLogo = (props: AppLogoProps) => {
+export const AppLogo = (props: AppLogoProps) => {
   const { sx } = props
 
   return (

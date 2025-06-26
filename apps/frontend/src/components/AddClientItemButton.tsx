@@ -34,7 +34,11 @@ const AddClientItemButton = () => {
         </>
       }
       onOpenButton={
-        <MenuIconButton icon={<PersonAddAlt1OutlinedIcon />} onClick={handleClickOpen} title="Přidat klienta" />
+        <MenuIconButton
+          icon={<PersonAddAlt1OutlinedIcon fontSize="large" />}
+          onClick={handleClickOpen}
+          title="Přidat klienta"
+        />
       }
       title="Přidat klienta"
     />

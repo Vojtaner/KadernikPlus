@@ -11,14 +11,14 @@ const BottomBar = () => {
   return (
     <Stack
       display="flex"
-      direction={'row'}
-      zIndex={1200}
+      direction="row"
       spacing={1}
-      alignItems={'center'}
-      justifyContent={'space-between'}
+      alignItems="center"
+      justifyContent="space-between"
+      boxShadow={'0px -4px 19px 10px rgba(0,0,0,0.15)'}
       sx={{
         borderTop: (theme) => `1px solid ${theme.palette.text.disabled}`,
-        bgcolor: 'white',
+        bgcolor: '#c81f5b',
         paddingX,
         paddingY,
         height: '8vh',

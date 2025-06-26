@@ -46,7 +46,9 @@ const AddWarehouseItemButton = () => {
           />
         </>
       }
-      onOpenButton={<MenuIconButton icon={<WarehouseIcon />} onClick={handleClickOpen} title="Přidat sklad" />}
+      onOpenButton={
+        <MenuIconButton icon={<WarehouseIcon fontSize="large" />} onClick={handleClickOpen} title="Přidat sklad" />
+      }
       title="Přidat položku na sklad"
       dialogHelperText="Toto není nákup. Zde přidáváte nový materiál."
     />
