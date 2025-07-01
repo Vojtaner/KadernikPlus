@@ -1,6 +1,5 @@
 import { IconButton, Typography } from '@mui/material'
 import type { AppPaletteColor } from '../entity'
-
 type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor }
 
 const MenuIconButton = (props: MenuIconButtonProps) => {
