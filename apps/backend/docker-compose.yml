@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -14,6 +14,17 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+
+  adminer:
+    image: adminer
+    container_name: adminer-gui
+    restart: always
+    ports:
+      - "8080:8080" # Access Adminer on your host at http://localhost:8080
+    environment:
+      ADMINER_DEFAULT_SERVER: db # This connects to the 'db' service in the same compose file
+    depends_on:
+      - db # Ensures 'db' starts before 'adminer'
 
 volumes:
   db_data:
