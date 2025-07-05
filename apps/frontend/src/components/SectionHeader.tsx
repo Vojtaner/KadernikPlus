@@ -2,24 +2,30 @@ import Stack from '@mui/material/Stack'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import { IconButton } from '@mui/material'
+import { getNthPathName, getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
 
 const SectionHeader = () => {
+  const { pathname } = useTypedLocation()
+
   return (
     <Stack
-      direction={'row'}
-      bgcolor={'white'}
+      direction="row"
+      bgcolor="white"
       alignItems="center"
       padding={1}
-      borderRadius={'15px 15px 0 0'}
+      borderRadius="15px 15px 0 0"
       zIndex={1300}
-      marginTop={'-11px'}>
+      marginTop="-11px">
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-        <ArrowBackIcon fontSize="medium" />
+        <IconButton href="/">
+          <ArrowBackIcon fontSize="medium" />
+        </IconButton>
       </Box>
       <Typography
         sx={{
@@ -30,9 +36,11 @@ const SectionHeader = () => {
           width: 'fit-content',
           textAlign: 'center',
           paddingY: 1,
+          fontSize: '15px',
+          fontWeight: 600,
           paddingX: 2,
         }}>
-        Přehled
+        {getNthPathName(getPathNameWithOutSlash(pathname), 0) ?? 'Přehled'}
       </Typography>
     </Stack>
   )

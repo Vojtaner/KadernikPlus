@@ -1,13 +1,14 @@
 import { Stack, Typography } from '@mui/material'
+import type { ReactNode } from 'react'
 
 type DetailColumnProps = {
   label: string
-  value: string
+  input: string | ReactNode
   fontSize?: number
 }
 
 const DetailColumn = (props: DetailColumnProps) => {
-  const { label, value, fontSize } = props
+  const { label, input, fontSize } = props
   const valueFontSize = fontSize ?? 14
   const labelFontSize = valueFontSize - 2
 
@@ -17,7 +18,7 @@ const DetailColumn = (props: DetailColumnProps) => {
         {label}
       </Typography>
       <Typography variant="h6" color={'text.primary'} fontSize={valueFontSize}>
-        {value}
+        {input}
       </Typography>
     </Stack>
   )

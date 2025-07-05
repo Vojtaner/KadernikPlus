@@ -17,8 +17,6 @@ const CustomerProfile = () => {
       <VisitDetailCard />
       <VisitDetailCard />
       <VisitDetailCard />
-      <VisitDetailCard />
-      <VisitDetailCard />
     </Stack>
   )
 }

@@ -22,15 +22,12 @@ const appUiSlice = createSlice({
     toggleDrawer: (state) => {
       state.isDrawerOpen = !state.isDrawerOpen
     },
-
     setDrawerOpen: (state, action: PayloadAction<boolean>) => {
       state.isDrawerOpen = action.payload
     },
-
     setLanguage: (state, action: PayloadAction<AppLanguage>) => {
       state.language = action.payload
     },
-
     setSearchText: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload
     },

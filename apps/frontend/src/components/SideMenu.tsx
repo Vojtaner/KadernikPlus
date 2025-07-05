@@ -1,12 +1,11 @@
-import { Box, IconButton, List, Divider, Drawer } from '@mui/material'
+import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { AppRoutes } from '../routes/AppRoutes'
+import { AppRoutes, isActiveRoute } from '../routes/AppRoutes'
 import type { RootState } from '../store'
 import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
 import LanguageIcon from '@mui/icons-material/Language'
 import CloseIcon from '@mui/icons-material/Close'
 import { useIntl } from 'react-intl'
-import React from 'react'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
@@ -14,10 +13,12 @@ import ContentCutIcon from '@mui/icons-material/ContentCut'
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import Face4Icon from '@mui/icons-material/Face4'
-import SideMenuButton from './SideMenuListItem'
+import SideMenuButton from './SideMenuItem'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
+import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 
-export const SideMenu: React.FC = () => {
+export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
   const dispatch = useDispatch()
 
@@ -37,9 +38,13 @@ export const SideMenu: React.FC = () => {
 
   const currentLanguage = useSelector((state: RootState) => state.appUi.language)
   const intl = useIntl()
+  const { pathname } = useTypedLocation()
+  const pathNameTransformed = getPathNameWithOutSlash(pathname)[0]
+
+  console.log({ pathNameTransformed, AppRoutes })
 
   const drawerList = (
-    <Box
+    <Stack
       sx={{ width: 250 }}
       role="presentation"
       onClick={handleDrawerToggle(false)}
@@ -49,59 +54,75 @@ export const SideMenu: React.FC = () => {
           <CloseIcon />
         </IconButton>
       </Box>
-      <List>
-        <SideMenuButton
-          to={AppRoutes.Dashboard}
-          onClick={() => {
-            dispatch(setDrawerOpen(false))
-          }}
-          title={intl.formatMessage({ id: 'myProfile' })}
-          icon={<Face4Icon />}
-        />
-        <Divider />
-        <SideMenuButton
-          to={AppRoutes.Dashboard}
-          title={intl.formatMessage({ id: 'dashboard' })}
-          icon={<DashboardIcon />}
-        />
-        <SideMenuButton to={AppRoutes.Sms} title={intl.formatMessage({ id: 'sms' })} icon={<SmsOutlinedIcon />} />
-        <SideMenuButton
-          to={AppRoutes.ShoppingList}
-          title={intl.formatMessage({ id: 'shoppingList' })}
-          icon={<ProductionQuantityLimitsIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.Consumption}
-          title={intl.formatMessage({ id: 'consumption' })}
-          icon={<ContentCutIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.PriceList}
-          title={intl.formatMessage({ id: 'pricing' })}
-          icon={<LocalOfferIcon />}
-        />
-        <SideMenuButton
-          to={AppRoutes.Logs}
-          title={intl.formatMessage({ id: 'logs' })}
-          icon={<LightbulbOutlineIcon />}
-        />
-        <SideMenuButton to={AppRoutes.Warehouse} title={intl.formatMessage({ id: 'stock' })} icon={<WarehouseIcon />} />
-      </List>
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
+        to={AppRoutes.MyProfile}
+        title={intl.formatMessage({ id: 'myProfile' })}
+        icon={<Face4Icon />}
+      />
       <Divider />
-      <List>
-        <SideMenuButton
-          onClick={() => {
-            return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
-          }}
-          to={AppRoutes.Dashboard}
-          title={intl.formatMessage(
-            { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
-            { lang: currentLanguage }
-          )}
-          icon={<LanguageIcon />}
-        />
-      </List>
-    </Box>
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Dashboard)}
+        to={AppRoutes.Dashboard}
+        title={intl.formatMessage({ id: 'dashboard' })}
+        icon={<DashboardIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.VisitsList)}
+        to={AppRoutes.VisitsList}
+        title={intl.formatMessage({ id: 'visitsList' })}
+        icon={<PhotoCameraFrontOutlinedIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Sms)}
+        to={AppRoutes.Sms}
+        title={intl.formatMessage({ id: 'sms' })}
+        icon={<SmsOutlinedIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.ShoppingList)}
+        to={AppRoutes.ShoppingList}
+        title={intl.formatMessage({ id: 'shoppingList' })}
+        icon={<ProductionQuantityLimitsIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Consumption)}
+        to={AppRoutes.Consumption}
+        title={intl.formatMessage({ id: 'consumption' })}
+        icon={<ContentCutIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.PriceList)}
+        to={AppRoutes.PriceList}
+        title={intl.formatMessage({ id: 'pricing' })}
+        icon={<LocalOfferIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Logs)}
+        to={AppRoutes.Logs}
+        title={intl.formatMessage({ id: 'logs' })}
+        icon={<LightbulbOutlineIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Warehouse)}
+        to={AppRoutes.Warehouse}
+        title={intl.formatMessage({ id: 'stock' })}
+        icon={<WarehouseIcon />}
+      />
+      <Divider />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
+        onClick={() => {
+          return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
+        }}
+        to={AppRoutes.Dashboard}
+        title={intl.formatMessage(
+          { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
+          { lang: currentLanguage }
+        )}
+        icon={<LanguageIcon />}
+      />
+    </Stack>
   )
 
   return (

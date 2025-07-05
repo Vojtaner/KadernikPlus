@@ -7,6 +7,7 @@ import csMessages from './locales/cs.json'
 import enMessages from './locales/en.json'
 import { IntlProvider } from 'react-intl'
 import store from './store/index.ts'
+import { enableMocking } from './mswWorkerSetup/browser.ts'
 
 const messages: { [key: string]: Record<string, string> } = {
   cs: csMessages,
@@ -24,10 +25,12 @@ const AppWithIntl: React.FC = () => {
   )
 }
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Provider store={store}>
-      <AppWithIntl />
-    </Provider>
-  </StrictMode>
-)
+enableMocking().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <Provider store={store}>
+        <AppWithIntl />
+      </Provider>
+    </StrictMode>
+  )
+})
