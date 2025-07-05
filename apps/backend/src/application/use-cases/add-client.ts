@@ -1,4 +1,4 @@
-import { Client, ClientCreateData } from "@/domain/entities/client";
+import { Client, ClientCreateData } from "@/entities/client";
 import { ClientRepository } from "@/application/ports/client-repository";
 
 // Custom error for application layer

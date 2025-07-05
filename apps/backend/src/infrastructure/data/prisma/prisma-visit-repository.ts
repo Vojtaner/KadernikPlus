@@ -1,4 +1,4 @@
-import { Visit, VisitCreateData } from "@/domain/entities/visit";
+import { Visit, VisitCreateData } from "@/entities/visit";
 import { VisitRepository } from "@/application/ports/visit-repository";
 import { PrismaClient } from "@prisma/client";
 

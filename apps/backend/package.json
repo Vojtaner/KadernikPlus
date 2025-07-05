@@ -10,7 +10,8 @@
     "prisma:migrate": "npx prisma migrate dev --name init",
     "prisma:generate": "npx prisma generate",
     "prisma:push": "npx prisma db push",
-    "seed": "ts-node -P tsconfig.json -r tsconfig-paths/register prisma/seed.ts"
+    "seed": "ts-node -P tsconfig.json -r tsconfig-paths/register prisma/seed.ts",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md,html,yaml}\" --ignore-path ./.prettierignore"
   },
   "author": "",
   "license": "ISC",

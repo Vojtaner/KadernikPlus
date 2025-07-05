@@ -1,4 +1,4 @@
-import { Client, ClientCreateData } from "@/domain/entities/client";
+import { Client, ClientCreateData } from "@/entities/client";
 
 /**
  * Defines the interface for client data persistence operations (a "Port").

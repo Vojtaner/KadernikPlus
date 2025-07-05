@@ -1,6 +1,6 @@
 import { AddClient } from "@/application/use-cases/add-client";
 import { GetClientById } from "@/application/use-cases/get-client-by-id";
-import { ClientCreateData } from "@/domain/entities/client";
+import { ClientCreateData } from "@/entities/client";
 import { ControllerFunction } from "@/utils/make-express-callback";
 
 /**

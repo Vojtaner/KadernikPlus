@@ -1,6 +1,6 @@
 import { AddVisit } from "@/application/use-cases/add-visit";
 import { GetVisits } from "@/application/use-cases/get-visits";
-import { VisitCreateData } from "@/domain/entities/visit";
+import { VisitCreateData } from "@/entities/visit";
 import { ControllerFunction } from "@/utils/make-express-callback";
 
 /**

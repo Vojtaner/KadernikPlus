@@ -1,4 +1,4 @@
-import { User, UserCreateData } from "@/domain/entities/user";
+import { User, UserCreateData } from "@/entities/user";
 
 /**
  * Defines the interface for user data persistence operations (a "Port").

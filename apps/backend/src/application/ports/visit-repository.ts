@@ -1,4 +1,4 @@
-import { Visit, VisitCreateData } from "@/domain/entities/visit";
+import { Visit, VisitCreateData } from "@/entities/visit";
 
 /**
  * Defines the interface for visit data persistence operations (a "Port").

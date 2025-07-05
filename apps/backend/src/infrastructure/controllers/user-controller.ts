@@ -2,7 +2,7 @@
 
 import { AddUser } from "@/application/use-cases/add-user";
 import { GetUserById } from "@/application/use-cases/get-user-by-id";
-import { UserCreateData } from "@/domain/entities/user";
+import { UserCreateData } from "@/entities/user";
 import { ControllerFunction } from "@/utils/make-express-callback";
 
 /**

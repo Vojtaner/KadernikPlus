@@ -1,4 +1,4 @@
-import { User } from "@/domain/entities/user";
+import { User } from "@/entities/user";
 import { UserRepository } from "@/application/ports/user-repository";
 import bcrypt from "bcryptjs"; // For password comparison
 

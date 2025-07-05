@@ -1,4 +1,4 @@
-import { Visit } from "@/domain/entities/visit";
+import { Visit } from "@/entities/visit";
 import { VisitRepository } from "@/application/ports/visit-repository";
 import { ClientRepository } from "@/application/ports/client-repository";
 import { ClientNotFoundError } from "./add-visit";

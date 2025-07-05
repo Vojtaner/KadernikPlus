@@ -1,4 +1,4 @@
-import { Visit, VisitCreateData } from "@/domain/entities/visit";
+import { Visit, VisitCreateData } from "@/entities/visit";
 import { VisitRepository } from "@/application/ports/visit-repository";
 import { UserRepository } from "@/application/ports/user-repository"; // To validate userId
 import { ClientRepository } from "@/application/ports/client-repository"; // To validate clientId

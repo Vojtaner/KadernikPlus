@@ -1,5 +1,5 @@
 // src/infrastructure/data/prisma/prisma-user-repository.ts
-import { User, UserCreateData } from "@/domain/entities/user";
+import { User, UserCreateData } from "@/entities/user";
 import { UserRepository } from "@/application/ports/user-repository";
 import { PrismaClient } from "@prisma/client";
 
