@@ -1,5 +1,3 @@
-// src/domain/entities/client.ts
-
 /**
  * Represents a Client entity in the domain.
  * This interface defines the core properties of a client (customer).
