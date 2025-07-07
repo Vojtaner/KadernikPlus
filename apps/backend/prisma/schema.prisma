@@ -11,7 +11,10 @@ datasource db {
 // Generator definition: Tells Prisma to generate the Prisma Client for Node.js.
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma" // Your custom output path
+  // CORRECTED OUTPUT PATH:
+  // This path is relative from the 'prisma' directory (where schema.prisma is).
+  // It goes up one level (..) to 'KadernikPlus/', then down into 'apps/backend/node_modules/@prisma/client'.
+  output   = "../apps/backend/node_modules/@prisma/client"
 }
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
@@ -23,7 +26,7 @@ model User {
   authProvider    String?          @map("auth_provider") // Optional: e.g., "google", "email/password"
   createdAt       DateTime         @default(now()) // Timestamp when the user was created
   lastLogin       DateTime?        @map("last_login") // Optional: Timestamp of the last login
-  
+
   visits          Visit[]          // A user (hairdresser) can perform many visits
   stockAllowances StockAllowance[] // A user can have many stock allowances
 
@@ -38,7 +41,7 @@ model Client {
   email     String?   @unique // <--- FIXED: Added @unique to email for upsert capability
   note      String?   @db.Text // Optional notes about the client, use @db.Text for potentially long text
   birthDate DateTime? @map("birth_date") @db.Date // Optional: Client's birth date (date only)
-  
+
   visits    Visit[]   // A client can have many visits
 
   @@map("clients") // Maps this model to a table named 'clients'
@@ -46,29 +49,29 @@ model Client {
 
 /// Represents a single visit/appointment
 model Visit {
-  id             String         @id @default(uuid()) // Unique identifier for the visit (UUID)
-  clientId       String         @map("client_id") // Foreign key to the Client model
-  userId         String         @map("user_id")   // Foreign key to the User model (who performed the visit)
-  date           DateTime       @db.Date // Date of the visit (date only, assuming no time component needed for the main visit date)
-  note           String?        @db.Text // Optional notes about the visit
-  paidPrice      Decimal        @map("paid_price") @db.Decimal(10, 2) // Price paid for the visit
-  
-  client         Client         @relation(fields: [clientId], references: [id]) // Relationship to Client
-  user           User           @relation(fields: [userId], references: [id])   // Relationship to User (hairdresser)
-  
-  visitServices  VisitService[] // A visit can include many services (many-to-many relationship via VisitService)
-  photos         Photo[]        // A visit can have many associated photos
-  procedures     Procedure[]    // A visit can have many procedures (steps performed)
+  id            String         @id @default(uuid()) // Unique identifier for the visit (UUID)
+  clientId      String         @map("client_id") // Foreign key to the Client model
+  userId        String         @map("user_id") // Foreign key to the User model (who performed the visit)
+  date          DateTime       @db.Date // Date of the visit (date only, assuming no time component needed for the main visit date)
+  note          String?        @db.Text // Optional notes about the visit
+  paidPrice     Decimal        @map("paid_price") @db.Decimal(10, 2) // Price paid for the visit
+
+  client        Client         @relation(fields: [clientId], references: [id]) // Relationship to Client
+  user          User           @relation(fields: [userId], references: [id]) // Relationship to User (hairdresser)
+
+  visitServices VisitService[] // A visit can include many services (many-to-many relationship via VisitService)
+  photos        Photo[]        // A visit can have many associated photos
+  procedures    Procedure[]    // A visit can have many procedures (steps performed)
 
   @@map("visits") // Maps this model to a table named 'visits'
 }
 
 /// Defines a specific service offered (e.g., "Haircut", "Color")
 model Service {
-  id            String         @id @default(uuid()) // Unique identifier for the service (UUID)
-  name          String         @unique // Name of the service, must be unique
-  basePrice     Decimal        @map("base_price") @db.Decimal(10, 2) // Base price of the service
-  
+  id          String         @id @default(uuid()) // Unique identifier for the service (UUID)
+  name        String         @unique // Name of the service, must be unique
+  basePrice   Decimal        @map("base_price") @db.Decimal(10, 2) // Base price of the service
+
   visitServices VisitService[] // A service can be part of many visit services
 
   @@map("services") // Maps this model to a table named 'services'
@@ -76,13 +79,13 @@ model Service {
 
 /// Junction table for the many-to-many relationship between Visit and Service
 model VisitService {
-  id                String  @id @default(uuid()) // Unique identifier for this entry (UUID)
-  visitId           String  @map("visit_id") // Foreign key to Visit
-  serviceId         String  @map("service_id") // Foreign key to Service
-  minutesPerformed  Int     @map("minutes_performed") // Duration in minutes for this specific service within the visit
+  id               String @id @default(uuid()) // Unique identifier for this entry (UUID)
+  visitId          String @map("visit_id") // Foreign key to Visit
+  serviceId        String @map("service_id") // Foreign key to Service
+  minutesPerformed Int    @map("minutes_performed") // Duration in minutes for this specific service within the visit
 
-  visit             Visit   @relation(fields: [visitId], references: [id])
-  service           Service @relation(fields: [serviceId], references: [id])
+  visit   Visit  @relation(fields: [visitId], references: [id])
+  service Service @relation(fields: [serviceId], references: [id])
 
   @@unique([visitId, serviceId])
   @@map("visit_services")
@@ -90,33 +93,33 @@ model VisitService {
 
 /// Photos related to a specific visit
 model Photo {
-  id          String   @id @default(uuid()) // Unique identifier for the photo (UUID)
-  visitId     String   @map("visit_id") // Foreign key to Visit
-  url         String
-  uploadedAt  DateTime @map("uploaded_at") @default(now())
+  id         String   @id @default(uuid()) // Unique identifier for the photo (UUID)
+  visitId    String   @map("visit_id") // Foreign key to Visit
+  url        String
+  uploadedAt DateTime @map("uploaded_at") @default(now())
   description String?
 
-  visit       Visit    @relation(fields: [visitId], references: [id])
+  visit      Visit    @relation(fields: [visitId], references: [id])
 
   @@map("photos")
 }
 
 /// Detailed steps or actions performed during a visit
 model Procedure {
-  id              String        @id @default(uuid())
-  visitId         String        @map("visit_id")
-  stepOrder       Int           @map("step_order")
-  description     String?       @db.Text
-  
-  stockAllowanceId String?      @unique // Unique FK for 1-1 relationship (nullable for optional 1-1)
-  stockAllowance  StockAllowance? @relation(fields: [stockAllowanceId], references: [id])
-  
-  gramsUsed       Decimal?      @map("grams_used") @db.Decimal(10, 2)
-  timeMinutes     Int?          @map("time_minutes")
-  issue           String?       @db.Text
-  createdAt       DateTime      @map("created_at") @default(now())
+  id               String         @id @default(uuid())
+  visitId          String         @map("visit_id")
+  stepOrder        Int            @map("step_order")
+  description      String?        @db.Text
 
-  visit           Visit         @relation(fields: [visitId], references: [id])
+  stockAllowanceId String?        @unique // Unique FK for 1-1 relationship (nullable for optional 1-1)
+  stockAllowance   StockAllowance? @relation(fields: [stockAllowanceId], references: [id])
+
+  gramsUsed        Decimal?       @map("grams_used") @db.Decimal(10, 2)
+  timeMinutes      Int?           @map("time_minutes")
+  issue            String?        @db.Text
+  createdAt        DateTime       @map("created_at") @default(now())
+
+  visit            Visit          @relation(fields: [visitId], references: [id])
 
   @@map("procedures")
 }
@@ -129,7 +132,9 @@ model StockItem {
   quantity        Int
   threshold       Int
   isActive        Boolean          @map("is_active") @default(true)
-  
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
   stockAllowances StockAllowance[]
 
   @@map("stock_items")
@@ -140,9 +145,9 @@ model StockAllowance {
   id          String    @id @default(uuid())
   userId      String    @map("user_id")
   stockId     String    @map("stock_id")
-  
+
   procedure   Procedure? // No `fields` or `references` here; the foreign key is on `Procedure`
-  
+
   quantity    Decimal   @db.Decimal(10, 2)
   createdAt   DateTime  @map("created_at") @default(now())
 

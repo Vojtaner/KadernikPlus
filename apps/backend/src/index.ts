@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import { PrismaClient } from "@prisma/client"; // Corrected import path for PrismaClient
 
 // Infrastructure Layer - Data Access (Prisma Adapters)
 import { PrismaUserRepository } from "./infrastructure/data/prisma/prisma-user-repository";
@@ -27,6 +26,7 @@ import { ClientController } from "./infrastructure/controllers/client-controller
 import { StockItemController } from "./infrastructure/controllers/stock-item-controller";
 import { VisitController } from "./infrastructure/controllers/visit-controller";
 import { makeExpressCallback } from "./utils/make-express-callback";
+import { PrismaClient } from "./generated/prisma/client";
 
 // Load environment variables from .env file
 dotenv.config();
