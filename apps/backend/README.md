@@ -49,3 +49,30 @@ Select * from users;
 ```
 localhost:8080
 ```
+
+# Project overview
+
+```
+src/
+├─ application/
+│ ├─ ports/
+│ │ ├─ visit-repository.ts    # Interface for data access
+│ │ ├─ email-service.ts    # Interface for email sending
+│ ├─ use-cases/
+│ │ └─ add-visit.ts    # Business logic (use case)
+├─ infrastructure/
+│ ├─ data/
+│ │ ├─ prisma/
+│ │ │  └─ prisma-visit-repository.ts    # DB - Prisma implementation of order repo
+└─ controllers/
+│ │ └─ visit-controller.ts
+└─ routes/
+```
+
+### How flow works
+
+1. REST API targets specific endpoint in routes
+2. Controller handles incomming request
+3. Calles UseCase scenario
+4. UseCase function handles business logic adds visit, sends email...
+5. Controller returns response to user

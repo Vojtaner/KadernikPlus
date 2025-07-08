@@ -28,3 +28,7 @@ export interface VisitRepository {
 
   // Add more methods as needed (update, delete, filter by date range, etc.)
 }
+
+export type VisitRepositoryPort = {
+  add: (vistiData: VisitCreateData) => Promise<Visit>;
+};

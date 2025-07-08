@@ -1,7 +1,11 @@
 import { Visit, VisitCreateData } from "@/entities/visit";
-import { VisitRepository } from "@/application/ports/visit-repository";
+import {
+  VisitRepository,
+  VisitRepositoryPort,
+} from "@/application/ports/visit-repository";
 import { UserRepository } from "@/application/ports/user-repository"; // To validate userId
 import { ClientRepository } from "@/application/ports/client-repository"; // To validate clientId
+import { prismaVisitRepository } from "@/infrastructure/data/prisma/prisma-visit-repository";
 
 // Custom errors for application layer
 class UserNotFoundError extends Error {
@@ -38,7 +42,7 @@ export class AddVisit {
   constructor(
     visitRepository: VisitRepository,
     userRepository: UserRepository,
-    clientRepository: ClientRepository,
+    clientRepository: ClientRepository
   ) {
     this.visitRepository = visitRepository;
     this.userRepository = userRepository;
@@ -61,7 +65,7 @@ export class AddVisit {
 
     // 2. Business rule: Ensure the associated client exists.
     const clientExists = await this.clientRepository.findById(
-      visitData.clientId,
+      visitData.clientId
     );
     if (!clientExists) {
       throw new ClientNotFoundError(visitData.clientId);
@@ -73,3 +77,16 @@ export class AddVisit {
     return newVisit;
   }
 }
+
+const createAddVisitUseCase = (visitRepository: VisitRepositoryPort) => ({
+  execute: async (visitData: VisitCreateData): Promise<Visit> => {
+    const visit = await visitRepository.add(visitData);
+
+    return visit;
+  },
+});
+
+export type CreateAddVisitUseCaseType = ReturnType<
+  typeof createAddVisitUseCase
+>;
+export const addVisitUseCase = createAddVisitUseCase(prismaVisitRepository);

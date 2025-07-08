@@ -34,7 +34,7 @@ export class AddClient {
     // Business rule: If an email is provided, it must be unique.
     if (clientData.email) {
       const existingClient = await this.clientRepository.findByEmail(
-        clientData.email,
+        clientData.email
       );
       if (existingClient) {
         throw new ClientAlreadyExistsError(clientData.email);
