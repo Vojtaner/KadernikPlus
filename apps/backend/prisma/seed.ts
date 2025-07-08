@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient } from "../src/generated/prisma"; // Direct import from generated path
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -69,22 +69,22 @@ async function main() {
     const service1 = await prisma.service.upsert({
       where: { name: "Haircut" },
       update: {},
-      create: { name: "Haircut", basePrice: 35.0 },
+      create: { name: "Haircut", basePrice: 35 },
     });
 
     const service2 = await prisma.service.upsert({
       where: { name: "Hair Coloring (Full)" },
       update: {},
-      create: { name: "Hair Coloring (Full)", basePrice: 120.0 },
+      create: { name: "Hair Coloring (Full)", basePrice: 120 },
     });
 
     const service3 = await prisma.service.upsert({
       where: { name: "Deep Conditioning" },
       update: {},
-      create: { name: "Deep Conditioning", basePrice: 45.0 },
+      create: { name: "Deep Conditioning", basePrice: 45 },
     });
     console.log(
-      `Created services: ${service1.name}, ${service2.name}, ${service3.name}`,
+      `Created services: ${service1.name}, ${service2.name}, ${service3.name}`
     );
 
     // --- Create Stock Items ---
@@ -123,7 +123,7 @@ async function main() {
         userId: user1.id,
         date: new Date("2025-06-20T00:00:00.000Z"),
         note: "Standard haircut and styling.",
-        paidPrice: 35.0,
+        paidPrice: 35,
       },
     });
 
@@ -136,7 +136,7 @@ async function main() {
         userId: user2.id,
         date: new Date("2025-06-21T00:00:00.000Z"),
         note: "Full color change, requires extra dye.",
-        paidPrice: 120.0,
+        paidPrice: 120,
       },
     });
     console.log(`Created visits: ${visit1.id}, ${visit2.id}`);
@@ -166,7 +166,7 @@ async function main() {
       },
     });
     console.log(
-      `Created visit services: ${visitService1.id}, ${visitService2.id}`,
+      `Created visit services: ${visitService1.id}, ${visitService2.id}`
     );
 
     // --- Create Procedures (linking to visits) ---
@@ -227,7 +227,7 @@ async function main() {
       },
     });
     console.log(
-      `Created stock allowances: ${stockAllowance1.id}, ${stockAllowance2.id}`,
+      `Created stock allowances: ${stockAllowance1.id}, ${stockAllowance2.id}`
     );
 
     // --- Create Photos (linking to visits) ---

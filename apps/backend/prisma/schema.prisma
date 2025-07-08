@@ -14,7 +14,6 @@ generator client {
   // CORRECTED OUTPUT PATH:
   // This path is relative from the 'prisma' directory (where schema.prisma is).
   // It goes up one level (..) to 'KadernikPlus/', then down into 'apps/backend/node_modules/@prisma/client'.
-  output   = "../apps/backend/node_modules/@prisma/client"
 }
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)

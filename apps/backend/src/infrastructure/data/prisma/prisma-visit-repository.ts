@@ -30,7 +30,7 @@ export class PrismaVisitRepository implements VisitRepository {
       },
     });
     // Map Prisma model to domain entity
-    return this.toDomainVisit(newVisit);
+    return this.toDomainVisit(newVisit as any);
   }
 
   /**
@@ -41,13 +41,14 @@ export class PrismaVisitRepository implements VisitRepository {
     const visit = await this.prisma.visit.findUnique({
       where: { id },
     });
-    return visit ? this.toDomainVisit(visit) : null;
+    return visit ? this.toDomainVisit(visit as any) : null;
   }
 
   /**
    * Retrieves all visits from the database using Prisma, optionally filtered by client ID.
    * Maps Prisma's Visit models back to domain Visit entities.
    */
+
   async findAll(clientId?: string): Promise<Visit[]> {
     const whereClause = clientId ? { clientId } : {};
     const visits = await this.prisma.visit.findMany({
@@ -55,7 +56,7 @@ export class PrismaVisitRepository implements VisitRepository {
       // You might want to include related data here, e.g., include: { client: true, user: true }
       // This would require updating the Visit domain entity to include these relationships.
     });
-    return visits.map(this.toDomainVisit);
+    return visits.map(this.toDomainVisit as any);
   }
 
   /**
