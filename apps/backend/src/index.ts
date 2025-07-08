@@ -36,10 +36,11 @@ import { PrismaClient } from "@prisma/client";
 // } from "./infrastructure/controllers/visit-controller";
 // import { makeExpressCallback } from "./utils/make-express-callback";
 // import { PrismaClient } from "./generated/prisma/client";
-import { clientRoutes } from "./routes/client-routes";
-import { stockItemRoutes } from "./routes/stock-item-routes";
-import { userRoutes } from "./routes/user-routes";
-import { visitRoutes } from "./routes/visit-routes";
+import stockItemRoutes from "./routes/stock-item-routes";
+import userRoutes from "./routes/user-routes";
+import visitRoutes from "./routes/visit-routes";
+import prisma from "./infrastructure/data/prisma/prisma";
+import clientRoutes from "./routes/client-routes";
 
 // Load environment variables from .env file
 dotenv.config();

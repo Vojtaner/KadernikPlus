@@ -109,3 +109,7 @@ export const createVisitRepositoryDb = (
     });
   },
 });
+
+const visitRepository = createVisitRepositoryDb(prisma);
+
+export default visitRepository;

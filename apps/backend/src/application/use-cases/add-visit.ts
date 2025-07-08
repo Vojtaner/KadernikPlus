@@ -5,7 +5,7 @@ import {
 } from "@/application/ports/visit-repository";
 import { UserRepository } from "@/application/ports/user-repository"; // To validate userId
 import { ClientRepository } from "@/application/ports/client-repository"; // To validate clientId
-import { prismaVisitRepository } from "@/infrastructure/data/prisma/prisma-visit-repository";
+import visitRepository from "../../infrastructure/data/prisma/prisma-visit-repository";
 
 // Custom errors for application layer
 class UserNotFoundError extends Error {
@@ -89,4 +89,5 @@ const createAddVisitUseCase = (visitRepository: VisitRepositoryPort) => ({
 export type CreateAddVisitUseCaseType = ReturnType<
   typeof createAddVisitUseCase
 >;
-export const addVisitUseCase = createAddVisitUseCase(prismaVisitRepository);
+
+export const addVisitUseCase = createAddVisitUseCase(visitRepository);

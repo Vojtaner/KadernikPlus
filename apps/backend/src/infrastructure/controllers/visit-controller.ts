@@ -2,7 +2,7 @@ import {
   AddVisit,
   addVisitUseCase,
   CreateAddVisitUseCaseType,
-} from "@/application/use-cases/add-visit";
+} from "../../application/use-cases/add-visit";
 import { GetVisits } from "@/application/use-cases/get-visits";
 import { Visit, VisitCreateData } from "@/entities/visit";
 import { ControllerFunction } from "@/utils/make-express-callback";
