@@ -9,7 +9,7 @@ import type { WareHouseItemStateType } from '../api/entity'
 import Loader from './Loader'
 
 const WareHouse = () => {
-  const { data, isError, isLoading } = useWareHouseQuery('1')
+  const { data, isError, isLoading } = useWareHouseQuery()
 
   if (isLoading) {
     return <Loader />

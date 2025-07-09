@@ -6,6 +6,6 @@ export const hairToolApi = axios.create(
   apiUrl
     ? {}
     : {
-        baseURL: 'http://kadernikplus.cz/',
+        baseURL: `http://localhost:${import.meta.env.VITE_PORT}`,
       }
 )

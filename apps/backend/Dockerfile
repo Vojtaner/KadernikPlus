@@ -12,8 +12,6 @@ COPY entities/ ../entities/
 
 RUN npm run prisma:generate
 
-RUN npm run prisma:migrate
-
 RUN npm run build
 
 # CMD ["sh", "-c", "echo Running migrations... && npx prisma migrate deploy && echo Starting server... && npm run start:deploy"]

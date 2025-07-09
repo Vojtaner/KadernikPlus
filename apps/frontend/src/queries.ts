@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { getUserLogs, getWarehouseItems } from './api/api'
+import { getUserLogs, getStockItems } from './api/api'
 import type { UserLog, WareHouseItemStateType } from './api/entity'
 
 export const useUserLogsQuery = (userId: string) => {
@@ -10,10 +10,9 @@ export const useUserLogsQuery = (userId: string) => {
   })
 }
 
-export const useWareHouseQuery = (userId: string) => {
+export const useWareHouseQuery = () => {
   return useQuery<WareHouseItemStateType[]>({
-    queryKey: ['warehouse', userId],
-    queryFn: () => getWarehouseItems(userId),
-    enabled: !!userId,
+    queryKey: ['warehouse'],
+    queryFn: getStockItems,
   })
 }

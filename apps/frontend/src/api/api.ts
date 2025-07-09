@@ -25,10 +25,8 @@ export const mockGetUserLogs = () =>
     return HttpResponse.json(mockUserLogs)
   })
 
-export const getWarehouseItems = async (userId: string) => {
-  const response = await hairToolApi.get('/api/user/warehouse', {
-    params: { userId },
-  })
+export const getStockItems = async () => {
+  const response = await hairToolApi.get('/api/stock-items')
   return response.data
 }
 

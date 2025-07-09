@@ -41,10 +41,15 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
+      args:
+        VITE_IS_DEVELOPMENT: "false"
+        VITE_ENABLE_MOCKS: "false"
+        VITE_PORT: "3021"
     container_name: frontend-hairdresser
     restart: always
     ports:
       - "3004:8089" # host:container
+
     depends_on:
       - backend
 
