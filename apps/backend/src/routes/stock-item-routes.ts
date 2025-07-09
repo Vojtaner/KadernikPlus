@@ -1,24 +1,24 @@
 import { Router } from "express";
 import { makeExpressCallback } from "../utils/make-express-callback";
-import { stockItemController } from "..";
+import { StockItemController } from "../infrastructure/controllers";
 
 const stockItemRoutes = Router();
 
-// stockItemRoutes.post(
-//   "/",
-//   makeExpressCallback(stockItemController.addStockItemController)
-// );
-// stockItemRoutes.get(
-//   "/",
-//   makeExpressCallback(stockItemController.getAllStockItemsController)
-// );
-// stockItemRoutes.get(
-//   "/:id",
-//   makeExpressCallback(stockItemController.getStockItemByIdController)
-// );
-// stockItemRoutes.get(
-//   "/by-name",
-//   makeExpressCallback(stockItemController.findStockItemByNameController)
-// );
+stockItemRoutes.post(
+  "/",
+  makeExpressCallback(StockItemController.addStockItemController)
+);
+stockItemRoutes.get(
+  "/",
+  makeExpressCallback(StockItemController.getAllStockItemsController)
+);
+stockItemRoutes.get(
+  "/:id",
+  makeExpressCallback(StockItemController.getStockItemByIdController)
+);
+stockItemRoutes.get(
+  "/by-name",
+  makeExpressCallback(StockItemController.findStockItemByNameController)
+);
 
 export default stockItemRoutes;

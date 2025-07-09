@@ -1,5 +1,9 @@
 import { Client } from "@/entities/client";
-import { ClientRepository } from "@/application/ports/client-repository";
+import {
+  ClientRepository,
+  ClientRepositoryPort,
+} from "../../application/ports/client-repository";
+import clientRepositoryDb from "../../infrastructure/data/prisma/prisma-client-repository";
 
 // Custom error for application layer
 class ClientNotFoundError extends Error {
@@ -12,6 +16,7 @@ class ClientNotFoundError extends Error {
 /**
  * Use case to retrieve a client by their unique ID.
  */
+
 export class GetClientById {
   private readonly clientRepository: ClientRepository;
 
@@ -38,3 +43,27 @@ export class GetClientById {
     return client;
   }
 }
+
+const createGetClientByIdUseCase = (dependencies: {
+  clientRepositoryDb: ClientRepositoryPort;
+}) => {
+  return {
+    execute: async (clientId: string): Promise<Client> => {
+      const client = await dependencies.clientRepositoryDb.findById(clientId);
+
+      if (!client) {
+        throw new ClientNotFoundError(clientId);
+      }
+
+      return client;
+    },
+  };
+};
+
+export type CreateGetClientByIdUseCaseType = ReturnType<
+  typeof createGetClientByIdUseCase
+>;
+
+const getClientByIdUseCase = createGetClientByIdUseCase({ clientRepositoryDb });
+
+export default getClientByIdUseCase;

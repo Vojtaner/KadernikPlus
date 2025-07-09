@@ -1,42 +1,33 @@
-// src/infrastructure/controllers/user-controller.ts
-
-import { AddUser } from "@/application/use-cases/add-user";
-import { GetUserById } from "@/application/use-cases/get-user-by-id";
+import addUserUseCase, {
+  AddUserUseCaseType,
+} from "../../application/use-cases/add-user";
+import getUserByIdUseCase, {
+  GetUserByIdUseCaseType,
+} from "../../application/use-cases/get-user-by-id";
 import { UserCreateData } from "@/entities/user";
+import { HasId } from "@/domain/entity";
 import { ControllerFunction } from "@/utils/make-express-callback";
 
-/**
- * Interface defining the dependencies for the UserController.
- * This allows for easy dependency injection and testing.
- */
-interface UserControllerDependencies {
-  addUser: AddUser;
-  getUserById: GetUserById;
-  // Add other user-related use cases here as they are created
-  // getAllUsers: GetAllUsers;
-}
+type CreateUserControllerType = {
+  addUserController: ControllerFunction<AddUserControllerType>;
+  getUserByIdController: ControllerFunction<GetUserByIdControllerType>;
+};
 
-/**
- * UserController handles HTTP requests related to User entities.
- * It translates HTTP requests into calls to application layer use cases
- * and translates use case results back into HTTP responses.
- */
-export class UserController {
-  private readonly addUserUseCase: AddUser;
-  private readonly getUserByIdUseCase: GetUserById;
+type AddUserControllerType = {
+  body: UserCreateData;
+};
 
-  constructor(dependencies: UserControllerDependencies) {
-    this.addUserUseCase = dependencies.addUser;
-    this.getUserByIdUseCase = dependencies.getUserById;
-  }
+type GetUserByIdControllerType = { params: HasId };
 
-  /**
-   * Handles the HTTP POST request to create a new user.
-   * Expects user data in the request body.
-   */
-  addUserController: ControllerFunction = async (httpRequest) => {
+const createUserController = (dependencies: {
+  getUserByIdUseCase: GetUserByIdUseCaseType;
+  addUserUseCase: AddUserUseCaseType;
+}): CreateUserControllerType => {
+  const addUserController: ControllerFunction<AddUserControllerType> = async (
+    httpRequest
+  ) => {
     try {
-      const userData: UserCreateData = httpRequest.body;
+      const userData = httpRequest.body;
 
       // Input validation (basic example - use a validation library in real app)
       if (!userData.name || !userData.email || !userData.passwordHash) {
@@ -49,7 +40,7 @@ export class UserController {
       }
 
       // Call the AddUser use case (application layer)
-      const newUser = await this.addUserUseCase.execute(userData);
+      const newUser = await dependencies.addUserUseCase.execute(userData);
 
       return {
         statusCode: 201, // 201 Created
@@ -68,14 +59,11 @@ export class UserController {
       throw error; // Let makeExpressCallback handle the generic 500 error
     }
   };
-
-  /**
-   * Handles the HTTP GET request to retrieve a user by ID.
-   * Expects the user ID in the request parameters.
-   */
-  getUserByIdController: ControllerFunction = async (httpRequest) => {
+  const getUserByIdController: ControllerFunction<
+    GetUserByIdControllerType
+  > = async (httpRequest) => {
     try {
-      const { id } = httpRequest.params; // Get ID from URL parameters
+      const { id } = httpRequest.params;
 
       if (!id) {
         return {
@@ -84,26 +72,30 @@ export class UserController {
         };
       }
 
-      // Call the GetUserById use case (application layer)
-      const user = await this.getUserByIdUseCase.execute(id);
+      const user = await dependencies.getUserByIdUseCase.execute(id);
 
       return {
-        statusCode: 200, // OK
+        statusCode: 200,
         body: user,
       };
     } catch (error: any) {
-      // Handle specific application-level errors
       if (error.name === "UserNotFoundError") {
         return {
-          statusCode: 404, // Not Found
+          statusCode: 404,
           body: { error: error.message },
         };
       }
-      // Re-throw or handle other unexpected errors
       console.error("Error in getUserByIdController:", error);
-      throw error; // Let makeExpressCallback handle the generic 500 error
+      throw error;
     }
   };
 
-  //  getAllUsersController, updateUserController, deleteUserController
-}
+  return { addUserController, getUserByIdController };
+};
+
+const userController = createUserController({
+  getUserByIdUseCase,
+  addUserUseCase,
+});
+
+export default userController;

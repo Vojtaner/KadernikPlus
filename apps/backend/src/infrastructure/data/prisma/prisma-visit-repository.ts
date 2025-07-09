@@ -6,12 +6,13 @@ import {
 import { PrismaClient } from "@prisma/client";
 import mapToDomainVisit from "../../mappers/visit-mapper";
 import prisma from "./prisma";
+import { ClientRepositoryPort } from "@/application/ports/client-repository";
 
-// /**
-//  * Prisma-based implementation of the VisitRepository interface.
-//  * This class acts as an adapter, translating generic VisitRepository operations
-//  * into specific Prisma Client operations for the 'Visit' model.
-//  */
+/**
+ * Prisma-based implementation of the VisitRepository interface.
+ * This class acts as an adapter, translating generic VisitRepository operations
+ * into specific Prisma Client operations for the 'Visit' model.
+ */
 // export class PrismaVisitRepository implements VisitRepository {
 //   private prisma: PrismaClient;
 
@@ -108,8 +109,25 @@ export const createVisitRepositoryDb = (
       paidPrice: newVisit.paidPrice as unknown as number,
     });
   },
+
+  findAll: async (clientId?: string): Promise<Visit[]> => {
+    const whereClause = clientId ? { clientId } : {};
+    const visits = await prismaVisitRepository.visit.findMany({
+      where: whereClause,
+      // You might want to include related data here, e.g., include: { client: true, user: true }
+      // This would require updating the Visit domain entity to include these relationships.
+    });
+    return visits.map((visit) => mapToDomainVisit(visit as unknown as any));
+  },
+
+  findById: async (id: string): Promise<Visit | null> => {
+    const visit = await prismaVisitRepository.visit.findUnique({
+      where: { id },
+    });
+    return visit ? mapToDomainVisit(visit as unknown as any) : null;
+  },
 });
 
-const visitRepository = createVisitRepositoryDb(prisma);
+const visitRepositoryDb = createVisitRepositoryDb(prisma);
 
-export default visitRepository;
+export default visitRepositoryDb;

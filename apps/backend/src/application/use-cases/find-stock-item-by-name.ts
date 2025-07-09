@@ -1,25 +1,25 @@
 import { StockItem } from "@/entities/stock-item";
-import { IStockItemRepository } from "../ports/stock-item-repository";
+import { StockItemRepositoryPort } from "../ports/stock-item-repository";
+import stockItemRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-item-repository";
 
-/**
- * Represents the use case for finding a single stock item by its unique name.
- */
-export class FindStockItemByNameUseCase {
-  private stockItemRepository: IStockItemRepository;
+const createFindStockItemByNameUseCase = (dependencies: {
+  stockItemRepositoryDb: StockItemRepositoryPort;
+}) => {
+  return {
+    execute: async (name: string): Promise<StockItem | null> => {
+      if (!name || name.trim() === "") {
+        throw new Error("Stock item name cannot be empty for lookup.");
+      }
+      return dependencies.stockItemRepositoryDb.findStockItemByName(name);
+    },
+  };
+};
 
-  constructor(stockItemRepository: IStockItemRepository) {
-    this.stockItemRepository = stockItemRepository;
-  }
+export type FindStockItemByNameUseCaseType = ReturnType<
+  typeof createFindStockItemByNameUseCase
+>;
+const findStockItemByNameUseCase = createFindStockItemByNameUseCase({
+  stockItemRepositoryDb,
+});
 
-  /**
-   * Executes the use case to find a stock item by name.
-   * @param name The name of the stock item to find.
-   * @returns A promise that resolves to the StockItem if found, otherwise null.
-   */
-  async execute(name: string): Promise<StockItem | null> {
-    if (!name || name.trim() === "") {
-      throw new Error("Stock item name cannot be empty for lookup.");
-    }
-    return this.stockItemRepository.findStockItemByName(name);
-  }
-}
+export default findStockItemByNameUseCase;

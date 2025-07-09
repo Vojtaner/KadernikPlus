@@ -1,21 +1,23 @@
 import { StockItem } from "@/entities/stock-item";
-import { IStockItemRepository } from "../ports/stock-item-repository";
+import { StockItemRepositoryPort } from "../ports/stock-item-repository";
+import stockItemRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-item-repository";
 
-/**
- * Represents the use case for retrieving all stock items.
- */
-export class GetAllStockItemsUseCase {
-  private stockItemRepository: IStockItemRepository;
+const createGetAllStockItemsUseCaseType = (dependencies: {
+  stockItemRepositoryDb: StockItemRepositoryPort;
+}) => {
+  return {
+    execute: async (): Promise<StockItem[]> => {
+      return dependencies.stockItemRepositoryDb.getAllStockItems();
+    },
+  };
+};
 
-  constructor(stockItemRepository: IStockItemRepository) {
-    this.stockItemRepository = stockItemRepository;
-  }
+export type GetAllStockItemsUseCaseType = ReturnType<
+  typeof createGetAllStockItemsUseCaseType
+>;
 
-  /**
-   * Executes the use case to get all stock items.
-   * @returns A promise that resolves to an array of StockItem entities.
-   */
-  async execute(): Promise<StockItem[]> {
-    return this.stockItemRepository.getAllStockItems();
-  }
-}
+const getAllStockItemsUseCase = createGetAllStockItemsUseCaseType({
+  stockItemRepositoryDb,
+});
+
+export default getAllStockItemsUseCase;

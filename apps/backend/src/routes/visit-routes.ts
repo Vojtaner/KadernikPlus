@@ -1,10 +1,14 @@
 import { Router } from "express";
 import { makeExpressCallback } from "../utils/make-express-callback";
-import visitController from "../infrastructure/controllers/visit-controller";
+import { VisitController } from "../infrastructure/controllers/index";
 
 const visitRoutes = Router();
 
-visitRoutes.post("/", makeExpressCallback(visitController.addVisitController));
-// visitRoutes.get("/", makeExpressCallback(visitController.getVisitsController));
+visitRoutes.post("/", makeExpressCallback(VisitController.addVisitController));
+visitRoutes.get("/", makeExpressCallback(VisitController.getVisitsController));
+visitRoutes.get(
+  "/",
+  makeExpressCallback(VisitController.findVisitByIdController)
+);
 
 export default visitRoutes;

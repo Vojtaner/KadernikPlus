@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { makeExpressCallback } from "../utils/make-express-callback";
-import { userController } from "..";
+import { UserController } from "../infrastructure/controllers/index";
 
 const userRoutes = Router();
 
-// userRoutes.post("/", makeExpressCallback(userController.addUserController));
-// userRoutes.get(
-//   "/:id",
-//   makeExpressCallback(userController.getUserByIdController)
-// );
+userRoutes.post("/", makeExpressCallback(UserController.addUserController));
+userRoutes.get(
+  "/:id",
+  makeExpressCallback(UserController.getUserByIdController)
+);
 
 export default userRoutes;

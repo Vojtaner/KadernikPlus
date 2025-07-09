@@ -31,4 +31,6 @@ export interface VisitRepository {
 
 export type VisitRepositoryPort = {
   add: (vistiData: VisitCreateData) => Promise<Visit>;
+  findAll: (clientId?: string) => Promise<Visit[]>;
+  findById: (id: string) => Promise<Visit | null>;
 };

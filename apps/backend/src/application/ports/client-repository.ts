@@ -34,3 +34,10 @@ export interface ClientRepository {
 
   // Add more methods here as needed (update, delete, search by name/phone, etc.)
 }
+
+export type ClientRepositoryPort = {
+  add: (clientData: ClientCreateData) => Promise<Client>;
+  findById: (id: string) => Promise<Client | null>;
+  findByEmail: (email: string) => Promise<Client | null>;
+  findAll: () => Promise<Client[]>;
+};
