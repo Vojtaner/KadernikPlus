@@ -1,5 +1,5 @@
 import { User } from "@/entities/user";
-import { UserRepository } from "@/application/ports/user-repository";
+import { UserRepositoryPort } from "@/application/ports/user-repository";
 import bcrypt from "bcryptjs"; // For password comparison
 
 // Custom errors for application layer
@@ -15,9 +15,9 @@ class InvalidCredentialsError extends Error {
  * It verifies credentials and returns the user if successful.
  */
 export class LoginUser {
-  private readonly userRepository: UserRepository;
+  private readonly userRepository: UserRepositoryPort;
 
-  constructor(userRepository: UserRepository) {
+  constructor(userRepository: UserRepositoryPort) {
     this.userRepository = userRepository;
   }
 
