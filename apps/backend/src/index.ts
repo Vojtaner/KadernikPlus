@@ -8,11 +8,19 @@ import {
 } from "./routes";
 import prisma from "./infrastructure/data/prisma/prisma";
 import cors from "cors";
+import { auth } from "express-oauth2-jwt-bearer";
+import errorHandler from "./utils/errorHandler";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+const jwtCheck = auth({
+  audience: "http://localhost:3021",
+  issuerBaseURL: "https://dev-ri7i8tb9.us.auth0.com/",
+  tokenSigningAlg: "RS256",
+});
 
 app.use(cors());
 app.use(express.json());
@@ -20,10 +28,13 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Hairdresser App Backend is running!");
 });
+
+app.use(jwtCheck);
+app.use("/api/visits", visitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
-app.use("/api/visits", visitRoutes);
 app.use("/api/stock-items", stockItemRoutes);
+app.use(errorHandler);
 
 const startServer = async () => {
   try {
