@@ -17,9 +17,12 @@ import SideMenuButton from './SideMenuItem'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import { useAuth0 } from '@auth0/auth0-react'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
+  const { logout } = useAuth0()
   const dispatch = useDispatch()
 
   const handleDrawerToggle = (open: boolean) => () => {
@@ -41,7 +44,7 @@ export const SideMenu = () => {
   const { pathname } = useTypedLocation()
   const pathNameTransformed = getPathNameWithOutSlash(pathname)[0]
 
-  console.log({ pathNameTransformed, AppRoutes })
+  console.log({ pathNameTransformed, AppRoutes, vite: 'sddfs' })
 
   const drawerList = (
     <Stack
@@ -111,7 +114,6 @@ export const SideMenu = () => {
       />
       <Divider />
       <SideMenuButton
-        isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
         onClick={() => {
           return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
         }}
@@ -121,6 +123,12 @@ export const SideMenu = () => {
           { lang: currentLanguage }
         )}
         icon={<LanguageIcon />}
+      />
+      <SideMenuButton
+        onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+        to={AppRoutes.Dashboard}
+        title={intl.formatMessage({ id: 'logOut', defaultMessage: `Odhlásit se` })}
+        icon={<LogoutIcon />}
       />
     </Stack>
   )

@@ -19,7 +19,7 @@ import VisitDetail from './pages/VisitDetail'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import Login from './pages/Login'
+import { AuthenticationGuard } from './components/AuthenticationGuard'
 
 function App() {
   const methods = useAppForm()
@@ -29,27 +29,21 @@ function App() {
       <BrowserRouter>
         <FormProvider {...methods}>
           <QueryClientProvider client={queryClient}>
-            {location.pathname === AppRoutes.Login ? (
+            <Layout>
               <Routes>
-                <Route path={AppRoutes.Login} element={<Login />} />
+                <Route path={AppRoutes.MyProfile} element={<AuthenticationGuard component={MyProfile} />} />
+                <Route path={AppRoutes.Dashboard} element={<AuthenticationGuard component={Dashboard} />} />
+                <Route path={AppRoutes.Sms} element={<AuthenticationGuard component={SmsPage} />} />
+                <Route path={AppRoutes.ShoppingList} element={<AuthenticationGuard component={ShoppingList} />} />
+                <Route path={AppRoutes.Consumption} element={<AuthenticationGuard component={Consumption} />} />
+                <Route path={AppRoutes.PriceList} element={<AuthenticationGuard component={PriceList} />} />
+                <Route path={AppRoutes.Logs} element={<AuthenticationGuard component={Logs} />} />
+                <Route path={AppRoutes.VisitsList} element={<AuthenticationGuard component={VisitsList} />} />
+                <Route path={AppRoutes.VisitDetail} element={<AuthenticationGuard component={VisitDetail} />} />
+                <Route path={AppRoutes.CustomerProfile} element={<AuthenticationGuard component={CustomerProfile} />} />
+                <Route path={AppRoutes.Warehouse} element={<AuthenticationGuard component={WareHouse} />} />
               </Routes>
-            ) : (
-              <Layout>
-                <Routes>
-                  <Route path={AppRoutes.MyProfile} element={<MyProfile />} />
-                  <Route path={AppRoutes.Dashboard} element={<Dashboard />} />
-                  <Route path={AppRoutes.Sms} element={<SmsPage />} />
-                  <Route path={AppRoutes.ShoppingList} element={<ShoppingList />} />
-                  <Route path={AppRoutes.Consumption} element={<Consumption />} />
-                  <Route path={AppRoutes.PriceList} element={<PriceList />} />
-                  <Route path={AppRoutes.Logs} element={<Logs />} />
-                  <Route path={AppRoutes.VisitsList} element={<VisitsList />} />
-                  <Route path={AppRoutes.VisitDetail} element={<VisitDetail />} />
-                  <Route path={AppRoutes.CustomerProfile} element={<CustomerProfile />} />
-                  <Route path={AppRoutes.Warehouse} element={<WareHouse />} />
-                </Routes>
-              </Layout>
-            )}
+            </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </FormProvider>

@@ -11,8 +11,6 @@ export type AppFormState = {
   newWarehouseItemUnit: typeof Units
   newBuyItemName: string
   newBuyItemAmount: number
-  loginName: string
-  loginPassword: string
 }
 
 export const Units = {

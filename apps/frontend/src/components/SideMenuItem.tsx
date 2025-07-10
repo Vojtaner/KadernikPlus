@@ -8,11 +8,11 @@ type SideMenuListItemProps = {
   to: AppRoutePath
   onClick?: React.MouseEventHandler<HTMLDivElement> | undefined
   icon: React.JSX.Element
-  isActive: boolean
+  isActive?: boolean
 }
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
-  const { title, to, icon, isActive } = props
+  const { title, to, icon, isActive = false } = props
   //dočasně pro test api spojení
   const { data: stockItems } = useWareHouseQuery()
 
