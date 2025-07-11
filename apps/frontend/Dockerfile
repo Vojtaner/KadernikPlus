@@ -33,8 +33,7 @@ RUN npm install -g serve
 COPY --from=build /app/dist ./dist
 
 # Set container port
-ENV PORT=8089
-EXPOSE 8089
+ENV PORT=8083
 
 # Start server
-CMD ["serve", "-s", "dist", "-l", "8089"]
+CMD ["serve", "-s", "dist", "-l", "8083"]

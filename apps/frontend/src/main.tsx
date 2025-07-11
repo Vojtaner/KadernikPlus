@@ -33,6 +33,7 @@ enableMocking().then(() => {
       clientId="IXBSMrmYutHAC8gNTXg1hCyavwnEczbo"
       authorizationParams={{
         redirect_uri: window.location.origin,
+        audience: 'http://localhost:3021',
       }}>
       <StrictMode>
         <Provider store={store}>

@@ -18,6 +18,7 @@ export const Dashboard = () => {
       <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
         <AppBarChart />
       </DashBoardCard>
+
       <DashBoardCard
         title="Přehled návštěv"
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}

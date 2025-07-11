@@ -10,9 +10,15 @@ COPY backend/ .
 
 COPY entities/ ../entities/
 
-RUN npm run prisma:generate
+COPY backend/init.sh ./init.sh
+
+RUN chmod +x ./init.sh
+
+# running init.sh file to make 
+    # 1. grant priviledges to database 
+    # 2. prisma migrate, 
+    # 3. prisma generate
 
 RUN npm run build
 
-# CMD ["sh", "-c", "echo Running migrations... && npx prisma migrate deploy && echo Starting server... && npm run start:deploy"]
 CMD ["npm", "run" ,"start"]

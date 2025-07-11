@@ -12,6 +12,7 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./backend/mysql/mysql-init.sql:/docker-entrypoint-initdb.d/init.sql
 
   adminer:
     image: adminer
@@ -37,6 +38,8 @@ services:
       PORT: 3021
     depends_on:
       - db
+    command: sh ./init.sh
+
   frontend:
     build:
       context: .
@@ -48,7 +51,7 @@ services:
     container_name: frontend-hairdresser
     restart: always
     ports:
-      - "3004:8089" # host:container
+      - "3004:8083" # host:container
 
     depends_on:
       - backend
