@@ -1,0 +1,23 @@
+import { User } from "@/entities/user";
+
+const mapToDomainUser = (prismaUser: {
+  id: string;
+  name: string;
+  email: string;
+  passwordHash: string;
+  authProvider: string | null;
+  createdAt: Date;
+  lastLogin: Date | null;
+}): User => {
+  return {
+    id: prismaUser.id,
+    name: prismaUser.name,
+    email: prismaUser.email,
+    passwordHash: prismaUser.passwordHash,
+    authProvider: prismaUser.authProvider,
+    createdAt: prismaUser.createdAt,
+    lastLogin: prismaUser.lastLogin,
+  };
+};
+
+export default mapToDomainUser;
