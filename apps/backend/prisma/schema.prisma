@@ -19,17 +19,20 @@ generator client {
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
-  id              String           @unique
+  id              String           @id @default(uuid())
   name            String
-  email           String           @unique // User's email, must be unique
-  authProvider    String?          @map("auth_provider") // Optional: e.g., "google", "email"
-  createdAt       DateTime         @default(now()) // Timestamp when the user was created
-  lastLogin       DateTime?        @map("last_login") // Optional: Timestamp of the last login
+  email           String           @unique
+  authProvider    String?          @map("auth_provider")
+  createdAt       DateTime         @default(now())
+  lastLogin       DateTime?        @map("last_login")
 
-  visits          Visit[]          // A user (hairdresser) can perform many visits
-  stockAllowances StockAllowance[] // A user can have many stock allowances
-  clients Client[] // 👈 one-to-many: one user has many clients
-  @@map("users") // Maps this model to a table named 'users' in the database
+  visits          Visit[]
+  ownedStocks     Stock[]          @relation("OwnedStocks")
+  stockAllowances StockAllowance[]
+  clients         Client[]
+
+  sharedStocks    StockSharedUser[]
+  @@map("users")
 }
 
 /// Client of the hairdresser (the customer)
@@ -154,4 +157,38 @@ model StockAllowance {
   stockItem   StockItem @relation(fields: [stockId], references: [id])
 
   @@map("stock_allowances")
+}
+
+model Stock {
+  id          String   @id @default(uuid()) 
+  name        String                             
+  createdAt   DateTime @default(now())
+  ownerId     String
+
+  owner       User     @relation("OwnedStocks", fields: [ownerId], references: [id])
+  sharedUsers StockSharedUser[]
+  materials   Material[]
+
+  @@map("stocks")
+}
+
+model StockSharedUser {
+  stockId String
+  userId  String
+
+  stock   Stock @relation(fields: [stockId], references: [id])
+  user    User  @relation(fields: [userId],  references: [id])
+  @@id([stockId, userId])          /// composite PK
+  @@map("stock_shared_users")      /// actual table name
+}
+
+model Material {
+  id        String   @id @default(uuid())
+  name      String
+  quantity  Int
+  unit      String   
+  stockId   String
+  stock     Stock    @relation(fields: [stockId], references: [id])
+
+  @@map("materials")
 }
