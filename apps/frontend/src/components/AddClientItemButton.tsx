@@ -4,9 +4,14 @@ import MenuIconButton from './MenuIconButton'
 import { useState } from 'react'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import TextField from './TextField'
+import { useCreateNewClientMutation } from '../queries'
+import type { ClientCreateData } from '../../../entities/client'
+import { useAppFormContext } from '../reactHookForm/store'
 
 const AddClientItemButton = () => {
   const [open, setOpen] = useState(false)
+  const { mutate: createNewClientMutation } = useCreateNewClientMutation()
+  const { control } = useAppFormContext()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -26,11 +31,33 @@ const AddClientItemButton = () => {
           <Button type="submit">Uložit</Button>
         </>
       }
+      onSubmitEndpoint={(clientData: ClientCreateData) => createNewClientMutation(clientData)}
       formFields={
         <>
-          <TextField fieldPath="newClientFirstName" label="Jméno" type="text" fullWidth />
-          <TextField fieldPath="newClientSecondName" label="Přijmení" type="text" fullWidth />
-          <TextField fieldPath="newClientPhone" label="Telefon" type="number" fullWidth />
+          <TextField
+            fieldPath="firstName"
+            control={control}
+            label="Jméno"
+            type="text"
+            fullWidth
+            rules={firstNameValidationrule}
+          />
+          <TextField
+            fieldPath="lastName"
+            control={control}
+            label="Přijmení"
+            type="text"
+            fullWidth
+            rules={firstNameValidationrule}
+          />
+          <TextField
+            fieldPath="phone"
+            control={control}
+            label="Telefon"
+            type="tel"
+            fullWidth
+            rules={phoneValidationRule}
+          />
         </>
       }
       onOpenButton={
@@ -46,3 +73,16 @@ const AddClientItemButton = () => {
 }
 
 export default AddClientItemButton
+
+const phoneValidationRule = {
+  pattern: {
+    value: /^\+?[0-9]{7,15}$/,
+    message: 'Zadejte platné telefonní číslo.',
+  },
+}
+const firstNameValidationrule = {
+  minLength: {
+    value: 3,
+    message: 'Jméno musí mít alespoň 3 znaky.',
+  },
+}

@@ -36,11 +36,10 @@ model User {
 /// Client of the hairdresser (the customer)
 model Client {
   id        String    @id @default(uuid()) // Unique identifier for the client (UUID)
-  name      String
-  phone     String?   // Optional phone number
-  email     String?   @unique // <--- FIXED: Added @unique to email for upsert capability
+  firstName String
+  lastName  String
+  phone     String?   @unique 
   note      String?   @db.Text // Optional notes about the client, use @db.Text for potentially long text
-  birthDate DateTime? @map("birth_date") @db.Date // Optional: Client's birth date (date only)
 
   visits    Visit[]   // A client can have many visits
 

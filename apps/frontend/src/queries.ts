@@ -1,10 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
 import type { UserLog, WareHouseItemStateType } from './api/entity'
-import { useAxios } from './axios/axios'
 import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
 import { apiRoutes } from './api/apiRoutes'
-import { getStockItems, getUserLogs } from './api/api'
+import { getStockItems, getUserLogs, postCreateNewClient } from './api/api'
+
+import { type UseMutationResult, useMutation } from '@tanstack/react-query'
+import { useAxios } from './axios/axios'
+import type { ClientCreateData } from '../../entities/client'
+
+export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
+  const axios = useAxios()
+
+  return useMutation<ClientCreateData, Error, ClientCreateData>({
+    mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
+  })
+}
 
 export const useUserLogsQuery = (userId: string) => {
   const axios = useAxios()

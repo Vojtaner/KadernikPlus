@@ -6,6 +6,7 @@ import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
 } from "../../application/use-cases/get-client-by-id";
 import { ControllerFunction } from "../../utils/make-express-callback";
+import { Client, ClientCreateData } from "@/entities/client";
 
 type GetClientByIdControllerType = { params: HasId };
 type AddClientControllerType = {};
@@ -17,7 +18,7 @@ const createClientController = (dependencies: {
     AddClientControllerType
   > = async (httpRequest) => {
     try {
-      const clientData = httpRequest.body;
+      const clientData: ClientCreateData = httpRequest.body;
       //ověřit body requestu, queries
       //provése usecase
       //vrátit výsledek

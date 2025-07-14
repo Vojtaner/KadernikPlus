@@ -19,3 +19,5 @@ export interface VisitCreateData {
     note?: string;
     paidPrice: number;
 }
+export interface IVisitRepository {
+}

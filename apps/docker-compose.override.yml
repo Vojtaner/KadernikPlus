@@ -8,8 +8,9 @@ services:
         VITE_ENABLE_MOCKS: true
         VITE_PORT: 3021
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/app/frontend
+      - ./entities:/app/entities
+      - /app/frontend/node_modules
     environment:
       - HOST=0.0.0.0
 

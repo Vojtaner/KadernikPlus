@@ -4,7 +4,7 @@ import FormDialog from './Dialog'
 import MenuIconButton from './MenuIconButton'
 import TextField from './TextField'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
-import { unitList } from '../reactHookForm/store'
+import { unitList } from '../reactHookForm/entity'
 import SelectField from './SelectField'
 
 const AddWarehouseItemButton = () => {

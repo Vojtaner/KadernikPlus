@@ -5,6 +5,9 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Stack } from '@mui/material'
+import type { FieldErrors } from 'react-hook-form'
+import { useAppFormContext } from '../reactHookForm/store'
+import type { AppFormState } from '../reactHookForm/entity'
 
 type FormDialogProps = {
   actions: React.ReactNode
@@ -14,10 +17,22 @@ type FormDialogProps = {
   onOpenButton: React.ReactNode
   isOpen: boolean
   onClose: () => void
+  onSubmitEndpoint: (data: AppFormState) => void
 }
 
 export default function FormDialog(props: FormDialogProps) {
-  const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose } = props
+  const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose, onSubmitEndpoint } = props
+
+  const { handleSubmit } = useAppFormContext()
+
+  const handleValidSubmit = (data: AppFormState) => {
+    onSubmitEndpoint(data)
+    onClose()
+  }
+
+  const handleInvalidSubmit = (errors: FieldErrors) => {
+    console.warn('Form has errors:', errors)
+  }
 
   return (
     <>
@@ -28,14 +43,7 @@ export default function FormDialog(props: FormDialogProps) {
         slotProps={{
           paper: {
             component: 'form',
-            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-              event.preventDefault()
-              const formData = new FormData(event.currentTarget)
-              const formJson = Object.fromEntries(formData.entries())
-              const email = formJson.email
-              console.log(email)
-              onClose()
-            },
+            onSubmit: handleSubmit(handleValidSubmit, handleInvalidSubmit),
             sx: {
               minWidth: '70vw',
             },

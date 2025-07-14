@@ -38,6 +38,6 @@ export interface ClientRepository {
 export type ClientRepositoryPort = {
   add: (clientData: ClientCreateData) => Promise<Client>;
   findById: (id: string) => Promise<Client | null>;
-  findByEmail: (email: string) => Promise<Client | null>;
   findAll: () => Promise<Client[]>;
+  findByPhone: (phone: string) => Promise<Client | null>;
 };

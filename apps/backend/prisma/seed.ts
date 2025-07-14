@@ -40,14 +40,13 @@ async function main() {
 
     // --- Create Clients ---
     const client1 = await prisma.client.upsert({
-      where: { email: "alice.customer@example.com" }, // email is @unique now
+      where: { phone: "alice.customer@example.com" }, // phone is @unique now
       update: {},
       create: {
-        name: "Alice Johnson",
+        firstName: "Alice",
+        lastName: "Johnson",
         phone: "123-456-7890",
-        email: "alice.customer@example.com",
         note: "Likes specific color brands.",
-        birthDate: new Date("1990-05-15T00:00:00.000Z"),
       },
     });
 
@@ -55,15 +54,14 @@ async function main() {
       where: { id: "client-2-uuid" }, // <--- FIXED: Using ID for upsert as email is optional and name is not unique
       update: {},
       create: {
-        id: "client-2-uuid", // Manually providing a UUID for this client
-        name: "Bob Williams",
+        id: "client-2-uuid",
+        firstName: "Bob",
+        lastName: "Williams",
         phone: "098-765-4321",
-        email: null, // No email
         note: "Prefers short, no-fuss haircuts.",
-        birthDate: new Date("1985-11-01T00:00:00.000Z"),
       },
     });
-    console.log(`Created clients: ${client1.name}, ${client2.name}`);
+    console.log(`Created clients: ${client1.lastName}, ${client2.lastName}`);
 
     // --- Create Services ---
     const service1 = await prisma.service.upsert({

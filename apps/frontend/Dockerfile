@@ -19,6 +19,8 @@ RUN npm install
 # Copy the rest of the frontend app
 COPY frontend .
 
+COPY entities/ ../entities/
+
 # Build Vite app
 RUN npm run build
 
