@@ -5,7 +5,7 @@ import addClientUseCase, {
 import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
 } from "../../application/use-cases/get-client-by-id";
-import { ControllerFunction } from "../../utils/make-express-callback";
+import { ControllerFunction } from "../../adapters/express/make-express-callback";
 import { Client, ClientCreateData } from "@/entities/client";
 
 type GetClientByIdControllerType = { params: HasId };

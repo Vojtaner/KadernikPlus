@@ -10,17 +10,19 @@ import prisma from "./infrastructure/data/prisma/prisma";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import errorHandler from "./utils/errorHandler";
-import { ensureUserExists } from "./utils/ensureUserExists";
+import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
+import ensureUserExistsUseCase from "./application/use-cases/ensure-user-exists";
+import { getEnvVar } from "./utils/getEnvVar";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = getEnvVar("PORT") || 3000;
 
 const jwtCheck = auth({
-  audience: "http://localhost:3021",
-  issuerBaseURL: "https://dev-ri7i8tb9.us.auth0.com/",
-  tokenSigningAlg: "RS256",
+  audience: getEnvVar("AUDIENCE"),
+  issuerBaseURL: getEnvVar("AUTH0_ISSUER_BASE_URL"),
+  tokenSigningAlg: getEnvVar("AUTH0_TOKE_SIGNING_ALG"),
 });
 
 app.use(cors());
@@ -31,7 +33,8 @@ app.get("/", (req, res) => {
 });
 
 app.use(jwtCheck);
-app.use(ensureUserExists(prisma));
+app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
+
 app.use("/api/visits", visitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);

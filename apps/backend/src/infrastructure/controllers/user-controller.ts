@@ -6,7 +6,7 @@ import getUserByIdUseCase, {
 } from "../../application/use-cases/get-user-by-id";
 import { UserCreateData } from "@/entities/user";
 import { HasId } from "@/domain/entity";
-import { ControllerFunction } from "@/utils/make-express-callback";
+import { ControllerFunction } from "@/adapters/express/make-express-callback";
 
 type CreateUserControllerType = {
   addUserController: ControllerFunction<AddUserControllerType>;

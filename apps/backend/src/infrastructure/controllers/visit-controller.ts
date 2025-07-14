@@ -4,7 +4,7 @@ import {
 } from "../../application/use-cases/add-visit";
 import { CreateGetVisitsUseCaseType } from "@/application/use-cases/get-visits";
 import { Visit, VisitCreateData } from "@/entities/visit";
-import { ControllerFunction } from "@/utils/make-express-callback";
+import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getVisitsUseCase from "../../application/use-cases/get-visits";
 import findVisitByIdUseCase, {
   CreateFindVisitByIdType,

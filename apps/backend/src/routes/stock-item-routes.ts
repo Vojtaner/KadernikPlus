@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { makeExpressCallback } from "../utils/make-express-callback";
+import { makeExpressCallback } from "../adapters/express/make-express-callback";
 import { StockItemController } from "../infrastructure/controllers";
 
 const stockItemRoutes = Router();

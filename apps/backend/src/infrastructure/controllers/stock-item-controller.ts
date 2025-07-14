@@ -2,7 +2,7 @@ import addStockItemUseCase, {
   AddStockItemUseCaseType,
 } from "../../application/use-cases/add-stock-item";
 import { StockItemCreateData } from "@/entities/stock-item";
-import { ControllerFunction } from "@/utils/make-express-callback";
+import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import { HasId } from "@/domain/entity";
 import getStockItemByIdUseCase, {
   GetStockItemByIdUseCaseType,
