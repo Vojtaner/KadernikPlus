@@ -1,24 +1,21 @@
-/**
- * Represents a StockItem entity in the domain.
- */
-export interface StockItem {
+export type StockItem = {
     id: string;
-    name: string;
+    itemName: string;
     unit: string;
     quantity: number;
     threshold: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
-}
-/**
- * Interface for creating a new StockItem.
- * 'isActive' can be optional here, with a default value set in Prisma.
- */
-export interface StockItemCreateData {
-    name: string;
-    unit: string;
-    quantity: number;
-    threshold: number;
-    isActive?: boolean;
-}
+};
+export type StockItemCreateData = Pick<StockItem, "unit" | "itemName" | "quantity" | "threshold">;
+export declare const Units: {
+    readonly G: "g";
+    readonly MG: "mg";
+    readonly L: "l";
+    readonly ML: "ml";
+    readonly CM: "cm";
+    readonly MM: "mm";
+    readonly KS: "ks";
+    readonly BALENI: "balení";
+};

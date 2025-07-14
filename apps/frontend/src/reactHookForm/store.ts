@@ -1,5 +1,5 @@
 import { useForm, useFormContext } from 'react-hook-form'
-import type { AppFormState, AppFieldPath, ClientForm } from './entity'
+import type { AppFormState, AppFieldPath } from './entity'
 
 export const useAppForm = () => {
   const methods = useForm<AppFormState>()
@@ -8,7 +8,7 @@ export const useAppForm = () => {
 }
 
 export const useAppFormContext = () => {
-  const methods = useFormContext<ClientForm>()
+  const methods = useFormContext<AppFormState>()
 
   return methods
 }

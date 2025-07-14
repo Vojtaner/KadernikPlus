@@ -5,7 +5,6 @@ import { useState } from 'react'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import TextField from './TextField'
 import { useCreateNewClientMutation } from '../queries'
-import type { ClientCreateData } from '../../../entities/client'
 import { useAppFormContext } from '../reactHookForm/store'
 
 const AddClientItemButton = () => {
@@ -31,7 +30,7 @@ const AddClientItemButton = () => {
           <Button type="submit">Uložit</Button>
         </>
       }
-      onSubmitEndpoint={(clientData: ClientCreateData) => createNewClientMutation(clientData)}
+      onSubmitEndpoint={(clientData) => createNewClientMutation(clientData)}
       formFields={
         <>
           <TextField

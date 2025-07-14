@@ -1,4 +1,9 @@
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select, type SxProps, type Theme } from '@mui/material'
+import { Controller, type Control, type FieldPath } from 'react-hook-form'
+import { UnitsObject } from '../../../entities/stock-item'
+import type { AppFormState } from '../reactHookForm/entity'
+import { MenuItem, Select, type SxProps, type Theme } from '@mui/material'
+
+export type Unit = (typeof UnitsObject)[keyof typeof UnitsObject]
 
 type Identifiable = {
   id: string | number
@@ -6,37 +11,30 @@ type Identifiable = {
 }
 
 type SelectFieldProps<T extends Identifiable> = {
+  control: Control<AppFormState>
+  fieldPath: FieldPath<AppFormState>
+  sx?: SxProps<Theme>
   items: T[]
-  value: T['id']
-  onChange: (value: T['id']) => void
+  label: string
   keyExtractor: (item: T) => T['id']
   labelExtractor: (item: T) => string
-  sx?: SxProps<Theme>
 }
 
-const SelectField = <T extends Identifiable>({
-  items,
-  keyExtractor,
-  labelExtractor,
-  value,
-  onChange,
-  sx,
-}: SelectFieldProps<T>) => {
+const SelectField = <T extends Identifiable>(props: SelectFieldProps<T>) => {
   return (
-    <FormControl>
-      <InputLabel id="demo-multiple-name-label">Jednotka</InputLabel>
-      <Select
-        input={<OutlinedInput label="Jednotka" />}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        sx={sx}>
-        {items.map((item) => (
-          <MenuItem key={keyExtractor(item)} value={keyExtractor(item)}>
-            {labelExtractor(item)}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <Controller
+      name={props.fieldPath}
+      control={props.control}
+      render={({ field }) => (
+        <Select {...field} label={props.label}>
+          {props.items.map((item) => (
+            <MenuItem key={props.keyExtractor(item)} value={props.keyExtractor(item)}>
+              {props.labelExtractor(item)}
+            </MenuItem>
+          ))}
+        </Select>
+      )}
+    />
   )
 }
 

@@ -2,12 +2,12 @@ import { StockItem, StockItemCreateData } from "@/entities/stock-item";
 import { StockItemRepositoryPort } from "../ports/stock-item-repository";
 import stockItemRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-item-repository";
 
-const createAddStockItemUseCase = (dependencies: {
+const createCreateStockItemUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;
 }) => {
   return {
     execute: async (data: StockItemCreateData): Promise<StockItem> => {
-      if (!data.name || data.name.trim() === "") {
+      if (!data.itemName || data.itemName.trim() === "") {
         throw new Error("Stock item name cannot be empty.");
       }
       if (!data.unit || data.unit.trim() === "") {
@@ -19,24 +19,21 @@ const createAddStockItemUseCase = (dependencies: {
       if (data.threshold < 0) {
         throw new Error("Stock item threshold cannot be negative.");
       }
-      if (typeof data.isActive !== "boolean" && data.isActive !== undefined) {
-        throw new Error("Stock item isActive must be a boolean.");
-      }
 
       const newStockItem =
-        await dependencies.stockItemRepositoryDb.addStockItem(data);
+        await dependencies.stockItemRepositoryDb.createStockItem(data);
 
       return newStockItem;
     },
   };
 };
 
-export type AddStockItemUseCaseType = ReturnType<
-  typeof createAddStockItemUseCase
+export type CreateStockItemUseCaseType = ReturnType<
+  typeof createCreateStockItemUseCase
 >;
 
-const addStockItemUseCase = createAddStockItemUseCase({
+const createStockItemUseCase = createCreateStockItemUseCase({
   stockItemRepositoryDb,
 });
 
-export default addStockItemUseCase;
+export default createStockItemUseCase;

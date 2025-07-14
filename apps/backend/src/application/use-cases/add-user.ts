@@ -1,6 +1,8 @@
 import { User, UserCreateData } from "@/entities/user";
 import { UserRepositoryPort } from "../../application/ports/user-repository";
 import userRepositoryDb from "../../infrastructure/data/prisma/prisma-user-repository";
+import { StockRepositoryPort } from "../ports/stock-repository";
+import stockRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-repository";
 
 class UserAlreadyExistsError extends Error {
   constructor(email: string) {
@@ -11,17 +13,22 @@ class UserAlreadyExistsError extends Error {
 
 const createAddUserUseCase = (dependencies: {
   userRepositoryDb: UserRepositoryPort;
+  stockRepositoryDb: StockRepositoryPort;
 }) => {
   return {
     execute: async (userData: UserCreateData): Promise<User> => {
       const existingUser = await dependencies.userRepositoryDb.findById(
         userData.id
       );
+
       if (existingUser) {
         throw new UserAlreadyExistsError(userData.email);
       }
 
       const newUser = await dependencies.userRepositoryDb.add(userData);
+      const newStock = await dependencies.stockRepositoryDb.createStock(
+        newUser.id
+      );
 
       return newUser;
     },
@@ -29,6 +36,9 @@ const createAddUserUseCase = (dependencies: {
 };
 
 export type AddUserUseCaseType = ReturnType<typeof createAddUserUseCase>;
-const addUserUseCase = createAddUserUseCase({ userRepositoryDb });
+const addUserUseCase = createAddUserUseCase({
+  userRepositoryDb,
+  stockRepositoryDb,
+});
 
 export default addUserUseCase;

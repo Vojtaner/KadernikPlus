@@ -4,6 +4,7 @@ import { mockUserLogs, mockUser, mockWarehouseState } from './mocks'
 import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
 import type { ClientCreateData } from '../../../entities/client'
+import type { StockItemCreateData } from '../../../entities/stock-item'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -45,5 +46,13 @@ export const postCreateNewClient = async (
   clientData: ClientCreateData
 ): Promise<ClientCreateData> => {
   const response = await axios.post(apiRoutes.getCreateNewClientUrl(), clientData)
+  return response.data
+}
+
+export const postCreateNewStockItem = async (
+  axios: AxiosInstance,
+  stockItem: StockItemCreateData
+): Promise<StockItemCreateData> => {
+  const response = await axios.post(apiRoutes.getCreateStockItemUrl(), stockItem)
   return response.data
 }

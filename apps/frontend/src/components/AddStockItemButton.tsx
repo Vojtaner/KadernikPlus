@@ -6,10 +6,13 @@ import TextField from './TextField'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import { unitList } from '../reactHookForm/entity'
 import SelectField from './SelectField'
+import { useCreateStockItemMutation } from '../queries'
+import { useAppFormContext } from '../reactHookForm/store'
 
-const AddWarehouseItemButton = () => {
+const AddStockItemButton = () => {
   const [open, setOpen] = useState(false)
-  const [unit, setUnit] = useState('g')
+  const { mutate: createStockItemMutation } = useCreateStockItemMutation()
+  const { control } = useAppFormContext()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -19,14 +22,11 @@ const AddWarehouseItemButton = () => {
     setOpen(false)
   }
 
-  const onSelectUnit = (unit: string) => {
-    setUnit(unit)
-  }
-
   return (
     <FormDialog
       isOpen={open}
       onClose={handleClose}
+      onSubmitEndpoint={(stockItemData) => createStockItemMutation(stockItemData)}
       actions={
         <>
           <Button onClick={handleClose}>Zavřít</Button>
@@ -35,15 +35,18 @@ const AddWarehouseItemButton = () => {
       }
       formFields={
         <>
-          <TextField fieldPath="newWarehouseItemName" label="Skladová položka" type="text" fullWidth />
-          <SelectField<{ id: string; name: string }>
+          <TextField fieldPath="itemName" label="Skladová položka" type="text" fullWidth />
+          <SelectField
             items={unitList}
-            keyExtractor={(unit) => unit.id}
+            control={control}
+            sx={{ color: 'red' }}
+            label={'Ahon'}
+            keyExtractor={(unit) => unit.name}
             labelExtractor={(unit) => unit.name}
-            value={unit}
-            onChange={onSelectUnit}
-            // fieldPath="newWarehouseItemUnit"
+            fieldPath="unit"
           />
+          <TextField fieldPath="quantity" label="Množství" type="number" fullWidth />
+          <TextField fieldPath="threshold" label="Minimální množství" type="number" fullWidth />
         </>
       }
       onOpenButton={
@@ -55,4 +58,4 @@ const AddWarehouseItemButton = () => {
   )
 }
 
-export default AddWarehouseItemButton
+export default AddStockItemButton

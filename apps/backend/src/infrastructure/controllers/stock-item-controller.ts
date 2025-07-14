@@ -1,6 +1,6 @@
-import addStockItemUseCase, {
-  AddStockItemUseCaseType,
-} from "../../application/use-cases/add-stock-item";
+import createStockItemUseCase, {
+  CreateStockItemUseCaseType,
+} from "../../application/use-cases/create-stock-item";
 import { StockItemCreateData } from "@/entities/stock-item";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import { HasId } from "@/domain/entity";
@@ -14,31 +14,30 @@ import getAllStockItemsUseCase, {
   GetAllStockItemsUseCaseType,
 } from "../../application/use-cases/get-all-stock-items";
 
-type AddStockItemControllerType = { body: StockItemCreateData };
+type CreateStockItemControllerType = { body: StockItemCreateData };
 type GetStockItemByIdControllerType = { params: HasId };
 type FindStockItemByNameControllerType = {};
 type GetAllStockItemsControllerType = {};
 
 const createStockItemController = (dependencies: {
-  addStockItemUseCase: AddStockItemUseCaseType;
+  createStockItemUseCase: CreateStockItemUseCaseType;
   getStockItemByIdUseCase: GetStockItemByIdUseCaseType;
   findStockItemByNameUseCase: FindStockItemByNameUseCaseType;
   getAllStockItemsUseCase: GetAllStockItemsUseCaseType;
 }) => {
-  const addStockItemController: ControllerFunction<
-    AddStockItemControllerType
+  const createStockItemController: ControllerFunction<
+    CreateStockItemControllerType
   > = async (httpRequest) => {
-    const { name, unit, quantity, threshold, isActive } = httpRequest.body;
+    const { itemName, unit, quantity, threshold } = httpRequest.body;
 
     const stockItemData = {
-      name,
+      itemName,
       unit,
-      quantity,
-      threshold,
-      isActive,
+      quantity: Number(quantity),
+      threshold: Number(threshold),
     };
 
-    const newStockItem = await dependencies.addStockItemUseCase.execute(
+    const newStockItem = await dependencies.createStockItemUseCase.execute(
       stockItemData
     );
 
@@ -101,7 +100,7 @@ const createStockItemController = (dependencies: {
   };
 
   return {
-    addStockItemController,
+    createStockItemController,
     getAllStockItemsController,
     findStockItemByNameController,
     getStockItemByIdController,
@@ -109,7 +108,7 @@ const createStockItemController = (dependencies: {
 };
 
 const stockItemController = createStockItemController({
-  addStockItemUseCase,
+  createStockItemUseCase,
   getStockItemByIdUseCase,
   findStockItemByNameUseCase,
   getAllStockItemsUseCase,

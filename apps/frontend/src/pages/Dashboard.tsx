@@ -22,16 +22,17 @@ export const Dashboard = () => {
       <DashBoardCard
         title="Přehled návštěv"
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}
-        action={
-          <SelectField<DateListType>
-            items={DatesList}
-            keyExtractor={(date) => date.id}
-            labelExtractor={(date) => date.name}
-            value={selectedId}
-            onChange={onSelectDate}
-            sx={{ height: '30px' }}
-          />
-        }>
+        // action={
+        //   <SelectField<DateListType>
+        //     items={DatesList}
+        //     keyExtractor={(date) => date.id}
+        //     labelExtractor={(date) => date.name}
+        //     value={selectedId}
+        //     onChange={onSelectDate}
+        //     sx={{ height: '30px' }}
+        //   />
+        // }
+      >
         {<VisitsList columnHeaderHeight={0} hideFooter={true} />}
       </DashBoardCard>
     </Stack>

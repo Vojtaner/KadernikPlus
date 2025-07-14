@@ -45,7 +45,7 @@ async function main() {
         lastName: "Johnson",
         phone: "123-456-7890",
         note: "Likes specific color brands.",
-        userId: "122",
+        userId: "google-oauth2|113238590142888685973",
       },
     });
 
@@ -55,7 +55,7 @@ async function main() {
       create: {
         id: "client-2-uuid",
         firstName: "Bob",
-        userId: "12242",
+        userId: "google-oauth2|113238590142888685973",
         lastName: "Williams",
         phone: "098-765-4321",
         note: "Prefers short, no-fuss haircuts.",
@@ -85,13 +85,25 @@ async function main() {
       `Created services: ${service1.name}, ${service2.name}, ${service3.name}`
     );
 
-    // --- Create Stock Items ---
-    const stockItem1 = await prisma.stockItem.upsert({
-      where: { name: "Blonde Dye (Type A)" },
+    const stock2 = await prisma.stock.upsert({
+      where: { id: "1" },
       update: {},
       create: {
-        name: "Blonde Dye (Type A)",
+        id: "1",
+        ownerId: user2.id,
+        stockName: "Stock 1",
+      },
+    });
+    console.log(`Created stock: ${stock2.id}`);
+
+    // --- Create Stock Items ---
+    const stockItem1 = await prisma.stockItem.upsert({
+      where: { itemName: "Blonde Dye (Type A)" },
+      update: {},
+      create: {
+        itemName: "Blonde Dye (Type A)",
         unit: "ml",
+        stockId: "1",
         quantity: 500,
         threshold: 100,
         isActive: true,
@@ -99,17 +111,20 @@ async function main() {
     });
 
     const stockItem2 = await prisma.stockItem.upsert({
-      where: { name: "Conditioner (Pro)" },
+      where: { itemName: "Conditioner (Pro)" },
       update: {},
       create: {
-        name: "Conditioner (Pro)",
+        itemName: "Conditioner (Pro)",
         unit: "ml",
         quantity: 2000,
+        stockId: "1",
         threshold: 500,
         isActive: true,
       },
     });
-    console.log(`Created stock items: ${stockItem1.name}, ${stockItem2.name}`);
+    console.log(
+      `Created stock items: ${stockItem1.itemName}, ${stockItem2.itemName}`
+    );
 
     // --- Create Visits (linking users and clients) ---
     const visit1 = await prisma.visit.upsert({
@@ -204,8 +219,7 @@ async function main() {
       create: {
         id: "sa-1-uuid",
         userId: user1.id,
-        stockId: stockItem1.id,
-        // <--- FIXED: Use `connect` for the relationship, not `procedureId` scalar field
+        stockItemId: stockItem1.id,
         procedure: {
           connect: { id: procedure1.id },
         },
@@ -219,7 +233,7 @@ async function main() {
       create: {
         id: "sa-2-uuid",
         userId: user2.id,
-        stockId: stockItem2.id,
+        stockItemId: stockItem2.id,
         // No procedure for this allowance, so simply omit the 'procedure' field
         quantity: 50.0,
       },

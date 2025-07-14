@@ -128,7 +128,7 @@ model Procedure {
 
 model Stock {
   id          String       @id @default(uuid())
-  name        String
+  stockName   String
   createdAt   DateTime     @default(now())
   ownerId     String
 
@@ -141,7 +141,7 @@ model Stock {
 
 model StockItem {
   id          String          @id @default(uuid())
-  name        String          @unique
+  itemName        String          @unique
   unit        String
   quantity    Int
   threshold   Int

@@ -1,5 +1,9 @@
 import { PrismaClient } from "@prisma/client";
-import { StockItem, StockItemCreateData } from "@/entities/stock-item";
+import {
+  StockItem,
+  StockItemCreateData,
+  UnitsObject,
+} from "../../../../../entities/stock-item";
 import { StockItemRepositoryPort } from "@/application/ports/stock-item-repository";
 import mapToDomainStockItem from "../../../infrastructure/mappers/stockItem-mapper";
 import prisma from "./prisma";
@@ -8,16 +12,20 @@ const createStockItemRepositoryDb = (
   prismaStockRepository: PrismaClient
 ): StockItemRepositoryPort => {
   return {
-    addStockItem: async (data: StockItemCreateData): Promise<StockItem> => {
+    createStockItem: async (data: StockItemCreateData): Promise<StockItem> => {
       const stockItem = await prismaStockRepository.stockItem.create({
         data: {
-          name: data.name,
+          itemName: data.itemName,
           unit: data.unit,
           quantity: data.quantity,
           threshold: data.threshold,
-          isActive: data.isActive ?? true,
+          isActive: true,
+          stock: {
+            connect: { id: "1" },
+          },
         },
       });
+
       return mapToDomainStockItem(stockItem);
     },
 
@@ -28,16 +36,18 @@ const createStockItemRepositoryDb = (
       return stockItem ? mapToDomainStockItem(stockItem) : null;
     },
 
-    findStockItemByName: async (name: string): Promise<StockItem | null> => {
+    findStockItemByName: async (
+      itemName: string
+    ): Promise<StockItem | null> => {
       const stockItem = await prismaStockRepository.stockItem.findUnique({
-        where: { name },
+        where: { itemName },
       });
       return stockItem ? mapToDomainStockItem(stockItem) : null;
     },
 
     getAllStockItems: async (): Promise<StockItem[]> => {
       const stockItems = await prismaStockRepository.stockItem.findMany();
-      return stockItems.map(mapToDomainStockItem);
+      return stockItems.map((stockItem) => mapToDomainStockItem(stockItem));
     },
   };
 };

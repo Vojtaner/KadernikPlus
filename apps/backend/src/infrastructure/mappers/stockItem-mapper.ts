@@ -1,8 +1,8 @@
-import { StockItem } from "@/entities/stock-item";
+import { StockItem, type Units } from "@/entities/stock-item";
 
 const mapToDomainStockItem = (prismaStockItem: {
   id: string;
-  name: string;
+  itemName: string;
   unit: string;
   quantity: number;
   threshold: number;
@@ -12,7 +12,7 @@ const mapToDomainStockItem = (prismaStockItem: {
 }): StockItem => {
   return {
     id: prismaStockItem.id,
-    name: prismaStockItem.name,
+    itemName: prismaStockItem.itemName,
     unit: prismaStockItem.unit,
     quantity: prismaStockItem.quantity,
     threshold: prismaStockItem.threshold,

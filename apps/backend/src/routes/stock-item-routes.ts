@@ -6,7 +6,7 @@ const stockItemRoutes = Router();
 
 stockItemRoutes.post(
   "/",
-  makeExpressCallback(StockItemController.addStockItemController)
+  makeExpressCallback(StockItemController.createStockItemController)
 );
 stockItemRoutes.get(
   "/",
