@@ -3,25 +3,24 @@ CREATE TABLE `users` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
-    `password_hash` VARCHAR(191) NOT NULL,
     `auth_provider` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `last_login` DATETIME(3) NULL,
 
-    UNIQUE INDEX `users_email_key`(`email`),
-    PRIMARY KEY (`id`)
+    UNIQUE INDEX `users_id_key`(`id`),
+    UNIQUE INDEX `users_email_key`(`email`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
 CREATE TABLE `clients` (
     `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
+    `firstName` VARCHAR(191) NOT NULL,
+    `lastName` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
-    `email` VARCHAR(191) NULL,
     `note` TEXT NULL,
-    `birth_date` DATE NULL,
+    `userId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `clients_email_key`(`email`),
+    UNIQUE INDEX `clients_phone_key`(`phone`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -110,6 +109,9 @@ CREATE TABLE `stock_allowances` (
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `clients` ADD CONSTRAINT `clients_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `visits` ADD CONSTRAINT `visits_client_id_fkey` FOREIGN KEY (`client_id`) REFERENCES `clients`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

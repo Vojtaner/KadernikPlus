@@ -1,11 +1,9 @@
 import { Client, ClientCreateData } from "@/entities/client";
-import {
-  ClientRepository,
-  ClientRepositoryPort,
-} from "@/application/ports/client-repository";
+import { ClientRepositoryPort } from "../../../application/ports/client-repository";
 import { PrismaClient } from "@prisma/client";
 import prisma from "./prisma";
 import mapToDomainClient from "../../../infrastructure/mappers/client-mapper";
+import { WithUserId } from "@/entities/user";
 
 const createClientRepositoryDb = (
   prismaVisitRepository: PrismaClient
@@ -15,16 +13,17 @@ const createClientRepositoryDb = (
       const clients = await prismaVisitRepository.client.findMany();
       return clients.map((client) => mapToDomainClient(client));
     },
-    add: async (clientData: ClientCreateData): Promise<Client> => {
+    add: async (clientData: WithUserId<ClientCreateData>): Promise<Client> => {
       const newClient = await prismaVisitRepository.client.create({
         data: {
           firstName: clientData.firstName,
           lastName: clientData.lastName,
           phone: clientData.phone,
           note: clientData.note,
+          userId: clientData.userId,
         },
       });
-      // Map Prisma model to domain entity
+
       return mapToDomainClient(newClient);
     },
     findById: async (id: string): Promise<Client | null> => {

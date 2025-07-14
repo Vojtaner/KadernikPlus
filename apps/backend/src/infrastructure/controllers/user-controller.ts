@@ -30,11 +30,11 @@ const createUserController = (dependencies: {
       const userData = httpRequest.body;
 
       // Input validation (basic example - use a validation library in real app)
-      if (!userData.name || !userData.email || !userData.passwordHash) {
+      if (!userData.name || !userData.email) {
         return {
           statusCode: 400,
           body: {
-            error: "Missing required user fields: name, email, passwordHash.",
+            error: "Missing required user fields: name, email.",
           },
         };
       }

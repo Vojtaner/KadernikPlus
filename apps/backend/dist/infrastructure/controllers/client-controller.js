@@ -9,10 +9,9 @@ const createClientController = (dependencies) => {
     const addClientController = async (httpRequest) => {
         try {
             const clientData = httpRequest.body;
-            //ověřit body requestu, queries
-            //provése usecase
-            //vrátit výsledek
-            const client = dependencies.addClientUseCase.execute(clientData);
+            const userId = httpRequest.userId;
+            const clientDataWithUserId = { ...clientData, userId };
+            const client = dependencies.addClientUseCase.execute(clientDataWithUserId);
             return {
                 statusCode: 201,
                 body: client,

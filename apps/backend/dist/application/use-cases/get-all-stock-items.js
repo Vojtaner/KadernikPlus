@@ -1,19 +1,17 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetAllStockItemsUseCase = void 0;
-/**
- * Represents the use case for retrieving all stock items.
- */
-class GetAllStockItemsUseCase {
-    constructor(stockItemRepository) {
-        this.stockItemRepository = stockItemRepository;
-    }
-    /**
-     * Executes the use case to get all stock items.
-     * @returns A promise that resolves to an array of StockItem entities.
-     */
-    async execute() {
-        return this.stockItemRepository.getAllStockItems();
-    }
-}
-exports.GetAllStockItemsUseCase = GetAllStockItemsUseCase;
+const prisma_stock_item_repository_1 = __importDefault(require("../../infrastructure/data/prisma/prisma-stock-item-repository"));
+const createGetAllStockItemsUseCaseType = (dependencies) => {
+    return {
+        execute: async () => {
+            return dependencies.stockItemRepositoryDb.getAllStockItems();
+        },
+    };
+};
+const getAllStockItemsUseCase = createGetAllStockItemsUseCaseType({
+    stockItemRepositoryDb: prisma_stock_item_repository_1.default,
+});
+exports.default = getAllStockItemsUseCase;

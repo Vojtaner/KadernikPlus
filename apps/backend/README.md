@@ -76,3 +76,8 @@ src/
 3. Calles UseCase scenario
 4. UseCase function handles business logic adds visit, sends email...
 5. Controller returns response to user
+
+## Změna v entities
+
+Pokud v entities udělám změnu musím udělat build - npx tsx v adresáři entities
+Pokud změní prisma.schema musím udělat např. npx prisma migrate dev (migrace + generování zároveň)

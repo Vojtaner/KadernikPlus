@@ -1,75 +1,39 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrismaUserRepository = void 0;
-/**
- * Prisma-based implementation of the UserRepository interface.
- * This class acts as an adapter, translating the generic UserRepository operations
- * into specific Prisma Client operations.
- */
-class PrismaUserRepository {
-    constructor(prismaClient) {
-        this.prisma = prismaClient;
-    }
-    /**
-     * Inserts a new user into the database using Prisma.
-     * Maps Prisma's User model back to the domain User entity.
-     */
-    async add(userData) {
-        const newUser = await this.prisma.user.create({
+const user_mapper_1 = __importDefault(require("../../../infrastructure/mappers/user-mapper"));
+const prisma_1 = __importDefault(require("./prisma"));
+const createUserRepositoryDb = (prismaUserRepository) => ({
+    add: async (userData) => {
+        const newUser = await prismaUserRepository.user.create({
             data: {
+                id: userData.id,
                 name: userData.name,
                 email: userData.email,
-                passwordHash: userData.passwordHash,
                 authProvider: userData.authProvider,
                 lastLogin: userData.lastLogin,
-                // createdAt is @default(now()) in Prisma schema, so it's automatically handled
             },
         });
-        // Map Prisma model to domain entity
-        return this.toDomainUser(newUser);
-    }
-    /**
-     * Finds a user by ID using Prisma.
-     * Maps Prisma's User model back to the domain User entity.
-     */
-    async findById(id) {
-        const user = await this.prisma.user.findUnique({
+        return (0, user_mapper_1.default)(newUser);
+    },
+    findById: async (id) => {
+        const user = await prismaUserRepository.user.findUnique({
             where: { id },
         });
-        return user ? this.toDomainUser(user) : null;
-    }
-    /**
-     * Finds a user by email using Prisma.
-     * Maps Prisma's User model back to the domain User entity.
-     */
-    async findByEmail(email) {
-        const user = await this.prisma.user.findUnique({
+        return user ? (0, user_mapper_1.default)(user) : null;
+    },
+    findByEmail: async (email) => {
+        const user = await prismaUserRepository.user.findUnique({
             where: { email },
         });
-        return user ? this.toDomainUser(user) : null;
-    }
-    /**
-     * Retrieves all users using Prisma.
-     * Maps Prisma's User models back to domain User entities.
-     */
-    async findAll() {
-        const users = await this.prisma.user.findMany();
-        return users.map(this.toDomainUser);
-    }
-    /**
-     * Helper method to map a Prisma User object to a domain User entity.
-     * This is important to ensure the domain layer only deals with its own defined types.
-     */
-    toDomainUser(prismaUser) {
-        return {
-            id: prismaUser.id,
-            name: prismaUser.name,
-            email: prismaUser.email,
-            passwordHash: prismaUser.passwordHash,
-            authProvider: prismaUser.authProvider,
-            createdAt: prismaUser.createdAt,
-            lastLogin: prismaUser.lastLogin,
-        };
-    }
-}
-exports.PrismaUserRepository = PrismaUserRepository;
+        return user ? (0, user_mapper_1.default)(user) : null;
+    },
+    findAll: async () => {
+        const users = await prismaUserRepository.user.findMany();
+        return users.map(user_mapper_1.default);
+    },
+});
+const userRepositoryDb = createUserRepositoryDb(prisma_1.default);
+exports.default = userRepositoryDb;

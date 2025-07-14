@@ -1,44 +1,33 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AddStockItemUseCase = void 0;
-/**
- * Represents the use case for adding a new stock item.
- * This orchestrates the business logic and interacts with the repository.
- */
-class AddStockItemUseCase {
-    constructor(stockItemRepository) {
-        this.stockItemRepository = stockItemRepository;
-    }
-    /**
-     * Executes the use case to add a new stock item.
-     * @param data The data for the new stock item.
-     * @returns A promise that resolves to the created StockItem.
-     * @throws {Error} If validation fails or the repository operation fails.
-     */
-    async execute(data) {
-        // --- Business Logic & Validation ---
-        if (!data.name || data.name.trim() === "") {
-            throw new Error("Stock item name cannot be empty.");
-        }
-        if (!data.unit || data.unit.trim() === "") {
-            throw new Error("Stock item unit cannot be empty.");
-        }
-        if (data.quantity < 0) {
-            throw new Error("Stock item quantity cannot be negative.");
-        }
-        if (data.threshold < 0) {
-            throw new Error("Stock item threshold cannot be negative.");
-        }
-        // isActive is a boolean, so simple presence check or default is enough,
-        // but you could add specific checks if needed (e.g., must be true/false explicitly)
-        if (typeof data.isActive !== "boolean" && data.isActive !== undefined) {
-            throw new Error("Stock item isActive must be a boolean.");
-        }
-        // The repository handles the unique name check,
-        // so this use case can rely on that error propagation.
-        // --- Interact with Repository ---
-        const newStockItem = await this.stockItemRepository.addStockItem(data);
-        return newStockItem;
-    }
-}
-exports.AddStockItemUseCase = AddStockItemUseCase;
+const prisma_stock_item_repository_1 = __importDefault(require("../../infrastructure/data/prisma/prisma-stock-item-repository"));
+const createAddStockItemUseCase = (dependencies) => {
+    return {
+        execute: async (data) => {
+            if (!data.name || data.name.trim() === "") {
+                throw new Error("Stock item name cannot be empty.");
+            }
+            if (!data.unit || data.unit.trim() === "") {
+                throw new Error("Stock item unit cannot be empty.");
+            }
+            if (data.quantity < 0) {
+                throw new Error("Stock item quantity cannot be negative.");
+            }
+            if (data.threshold < 0) {
+                throw new Error("Stock item threshold cannot be negative.");
+            }
+            if (typeof data.isActive !== "boolean" && data.isActive !== undefined) {
+                throw new Error("Stock item isActive must be a boolean.");
+            }
+            const newStockItem = await dependencies.stockItemRepositoryDb.addStockItem(data);
+            return newStockItem;
+        },
+    };
+};
+const addStockItemUseCase = createAddStockItemUseCase({
+    stockItemRepositoryDb: prisma_stock_item_repository_1.default,
+});
+exports.default = addStockItemUseCase;

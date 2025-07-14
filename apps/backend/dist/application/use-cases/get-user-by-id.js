@@ -1,35 +1,24 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetUserById = void 0;
-// You might define custom errors for your domain/application layer
-class UserNotFoundError extends Error {
-    constructor(id) {
-        super(`User with ID ${id} not found.`);
-        this.name = "UserNotFoundError";
-    }
-}
-/**
- * Use case to retrieve a user by their ID.
- */
-class GetUserById {
-    /**
-     * @param userRepository An implementation of the UserRepository interface.
-     */
-    constructor(userRepository) {
-        this.userRepository = userRepository;
-    }
-    /**
-     * Executes the use case.
-     * @param userId The ID of the user to retrieve.
-     * @returns A Promise that resolves to the User entity.
-     * @throws UserNotFoundError if no user with the given ID is found.
-     */
-    async execute(userId) {
-        const user = await this.userRepository.findById(userId);
-        if (!user) {
-            throw new UserNotFoundError(userId);
-        }
-        return user;
-    }
-}
-exports.GetUserById = GetUserById;
+const prisma_user_repository_1 = __importDefault(require("../../infrastructure/data/prisma/prisma-user-repository"));
+const UserNotFoundError = (id) => {
+    const error = new Error(`User with ID ${id} not found.`);
+    error.name = "UserNotFoundError";
+    throw error;
+};
+const createGetUserByIdUseCase = (dependencies) => {
+    return {
+        execute: async (userId) => {
+            const user = await dependencies.userRepositoryDb.findById(userId);
+            if (!user) {
+                return UserNotFoundError(userId);
+            }
+            return user;
+        },
+    };
+};
+const getUserByIdUseCase = createGetUserByIdUseCase({ userRepositoryDb: prisma_user_repository_1.default });
+exports.default = getUserByIdUseCase;

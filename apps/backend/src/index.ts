@@ -10,6 +10,7 @@ import prisma from "./infrastructure/data/prisma/prisma";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import errorHandler from "./utils/errorHandler";
+import { ensureUserExists } from "./utils/ensureUserExists";
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(jwtCheck);
+app.use(ensureUserExists(prisma));
 app.use("/api/visits", visitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);

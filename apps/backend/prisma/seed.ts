@@ -9,30 +9,28 @@ async function main() {
     console.log("Start seeding...");
 
     // --- Create Users (Hairdressers) ---
-    const hashedPassword1 = await bcrypt.hash("password123", 10);
-    const hashedPassword2 = await bcrypt.hash("securepass", 10);
 
     const user1 = await prisma.user.upsert({
-      where: { email: "john.doe@example.com" }, // email is @unique now
+      where: { id: "auth0-id-223" },
       update: {},
       create: {
+        id: "auth0-id-223",
         name: "John Doe",
         email: "john.doe@example.com",
-        passwordHash: hashedPassword1,
-        authProvider: "email/password",
+        authProvider: "auth0",
         createdAt: new Date(),
         lastLogin: new Date(),
       },
     });
 
     const user2 = await prisma.user.upsert({
-      where: { email: "jane.smith@example.com" }, // email is @unique now
+      where: { id: "google-oauth2|113238590142888685973" },
       update: {},
       create: {
+        id: "google-oauth2|113238590142888685973",
         name: "Jane Smith",
         email: "jane.smith@example.com",
-        passwordHash: hashedPassword2,
-        authProvider: "email/password",
+        authProvider: "auth0",
         createdAt: new Date(),
       },
     });
@@ -40,13 +38,14 @@ async function main() {
 
     // --- Create Clients ---
     const client1 = await prisma.client.upsert({
-      where: { phone: "alice.customer@example.com" }, // phone is @unique now
+      where: { phone: "123-456-7890" }, // phone is @unique now
       update: {},
       create: {
         firstName: "Alice",
         lastName: "Johnson",
         phone: "123-456-7890",
         note: "Likes specific color brands.",
+        userId: "122",
       },
     });
 
@@ -56,6 +55,7 @@ async function main() {
       create: {
         id: "client-2-uuid",
         firstName: "Bob",
+        userId: "12242",
         lastName: "Williams",
         phone: "098-765-4321",
         note: "Prefers short, no-fuss haircuts.",

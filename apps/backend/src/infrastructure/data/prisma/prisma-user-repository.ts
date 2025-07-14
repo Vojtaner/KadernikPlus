@@ -10,9 +10,9 @@ const createUserRepositoryDb = (
   add: async (userData: UserCreateData): Promise<User> => {
     const newUser = await prismaUserRepository.user.create({
       data: {
+        id: userData.id,
         name: userData.name,
         email: userData.email,
-        passwordHash: userData.passwordHash,
         authProvider: userData.authProvider,
         lastLogin: userData.lastLogin,
       },

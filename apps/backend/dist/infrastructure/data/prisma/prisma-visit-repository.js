@@ -102,8 +102,6 @@ const createVisitRepositoryDb = (prismaVisitRepository) => ({
         const whereClause = clientId ? { clientId } : {};
         const visits = await prismaVisitRepository.visit.findMany({
             where: whereClause,
-            // You might want to include related data here, e.g., include: { client: true, user: true }
-            // This would require updating the Visit domain entity to include these relationships.
         });
         return visits.map((visit) => (0, visit_mapper_1.default)(visit));
     },

@@ -14,8 +14,8 @@ const createAddUserUseCase = (dependencies: {
 }) => {
   return {
     execute: async (userData: UserCreateData): Promise<User> => {
-      const existingUser = await dependencies.userRepositoryDb.findByEmail(
-        userData.email
+      const existingUser = await dependencies.userRepositoryDb.findById(
+        userData.id
       );
       if (existingUser) {
         throw new UserAlreadyExistsError(userData.email);

@@ -1,23 +1,20 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetStockItemByIdUseCase = void 0;
-/**
- * Represents the use case for retrieving a single stock item by its ID.
- */
-class GetStockItemByIdUseCase {
-    constructor(stockItemRepository) {
-        this.stockItemRepository = stockItemRepository;
-    }
-    /**
-     * Executes the use case to get a stock item by ID.
-     * @param id The ID of the stock item to retrieve.
-     * @returns A promise that resolves to the StockItem if found, otherwise null.
-     */
-    async execute(id) {
-        if (!id || id.trim() === "") {
-            throw new Error("Stock item ID cannot be empty.");
-        }
-        return this.stockItemRepository.getStockItemById(id);
-    }
-}
-exports.GetStockItemByIdUseCase = GetStockItemByIdUseCase;
+const prisma_stock_item_repository_1 = __importDefault(require("../../infrastructure/data/prisma/prisma-stock-item-repository"));
+const createGetStockItemByIdUseCase = (dependencies) => {
+    return {
+        execute: async (id) => {
+            if (!id || id.trim() === "") {
+                throw new Error("Stock item ID cannot be empty.");
+            }
+            return dependencies.stockItemRepositoryDb.getStockItemById(id);
+        },
+    };
+};
+const getStockItemByIdUseCase = createGetStockItemByIdUseCase({
+    stockItemRepositoryDb: prisma_stock_item_repository_1.default,
+});
+exports.default = getStockItemByIdUseCase;

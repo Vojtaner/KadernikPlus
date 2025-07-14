@@ -1,21 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
+const make_express_callback_1 = require("../utils/make-express-callback");
+const controllers_1 = require("../infrastructure/controllers");
 const stockItemRoutes = (0, express_1.Router)();
-// stockItemRoutes.post(
-//   "/",
-//   makeExpressCallback(stockItemController.addStockItemController)
-// );
-// stockItemRoutes.get(
-//   "/",
-//   makeExpressCallback(stockItemController.getAllStockItemsController)
-// );
-// stockItemRoutes.get(
-//   "/:id",
-//   makeExpressCallback(stockItemController.getStockItemByIdController)
-// );
-// stockItemRoutes.get(
-//   "/by-name",
-//   makeExpressCallback(stockItemController.findStockItemByNameController)
-// );
+stockItemRoutes.post("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.addStockItemController));
+stockItemRoutes.get("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getAllStockItemsController));
+stockItemRoutes.get("/:id", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getStockItemByIdController));
+stockItemRoutes.get("/by-name", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.findStockItemByNameController));
 exports.default = stockItemRoutes;

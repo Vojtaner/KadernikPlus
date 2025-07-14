@@ -24,6 +24,7 @@ export type ControllerFunction<T = { body?: any; params?: any; query?: any }> =
       ip: string;
       method: string;
       path: string;
+      userId: string;
       headers: {
         [key: string]: string | string[] | undefined;
       };
@@ -44,6 +45,7 @@ export const makeExpressCallback = <T>(controller: ControllerFunction<T>) => {
         ip: req.ip || "ipError",
         method: req.method,
         path: req.path,
+        userId: req.auth?.payload.sub,
         headers: req.headers,
       } as any;
 

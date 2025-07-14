@@ -19,17 +19,16 @@ generator client {
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
-  id              String           @id @default(uuid()) // Unique identifier for the user (UUID)
+  id              String           @unique
   name            String
   email           String           @unique // User's email, must be unique
-  passwordHash    String           @map("password_hash") // Stores hashed password
-  authProvider    String?          @map("auth_provider") // Optional: e.g., "google", "email/password"
+  authProvider    String?          @map("auth_provider") // Optional: e.g., "google", "email"
   createdAt       DateTime         @default(now()) // Timestamp when the user was created
   lastLogin       DateTime?        @map("last_login") // Optional: Timestamp of the last login
 
   visits          Visit[]          // A user (hairdresser) can perform many visits
   stockAllowances StockAllowance[] // A user can have many stock allowances
-
+  clients Client[] // 👈 one-to-many: one user has many clients
   @@map("users") // Maps this model to a table named 'users' in the database
 }
 
@@ -40,8 +39,9 @@ model Client {
   lastName  String
   phone     String?   @unique 
   note      String?   @db.Text // Optional notes about the client, use @db.Text for potentially long text
-
   visits    Visit[]   // A client can have many visits
+  userId    String // 👈 foreign key
+  user     User   @relation(fields: [userId], references: [id]) // 👈 relation
 
   @@map("clients") // Maps this model to a table named 'clients'
 }

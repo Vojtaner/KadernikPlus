@@ -6,7 +6,7 @@ const mapToDomainClient = (prismaClient: {
   lastName: string;
   phone: string | null;
   note: string | null;
-}): Client => {
+}): Omit<Client, "userId"> => {
   return {
     id: prismaClient.id,
     firstName: prismaClient.firstName,

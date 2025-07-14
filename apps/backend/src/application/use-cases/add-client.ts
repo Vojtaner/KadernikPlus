@@ -1,9 +1,7 @@
 import { Client, ClientCreateData } from "@/entities/client";
-import {
-  ClientRepository,
-  ClientRepositoryPort,
-} from "@/application/ports/client-repository";
+import { ClientRepositoryPort } from "../../application/ports/client-repository";
 import clientRepositoryDb from "../../infrastructure/data/prisma/prisma-client-repository";
+import { WithUserId } from "@/entities/user";
 
 // Custom error for application layer
 class ClientAlreadyExistsError extends Error {
@@ -17,7 +15,9 @@ const createAddClientUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
 }) => {
   return {
-    execute: async (clientData: ClientCreateData): Promise<Client> => {
+    execute: async (
+      clientData: WithUserId<ClientCreateData>
+    ): Promise<Client> => {
       if (clientData.phone) {
         const existingClient =
           await dependencies.clientRepositoryDb.findByPhone(clientData.phone);
