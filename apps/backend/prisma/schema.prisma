@@ -126,50 +126,51 @@ model Procedure {
   @@map("procedures")
 }
 
-/// Represents an item in stock (e.g., a dye, shampoo bottle)
-model StockItem {
-  id              String           @id @default(uuid())
-  name            String           @unique
-  unit            String
-  quantity        Int
-  threshold       Int
-  isActive        Boolean          @map("is_active") @default(true)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+model Stock {
+  id          String       @id @default(uuid())
+  name        String
+  createdAt   DateTime     @default(now())
+  ownerId     String
 
+  owner       User         @relation("OwnedStocks", fields: [ownerId], references: [id])
+  sharedUsers StockSharedUser[]
+  stockItems  StockItem[]  // <-- new relation to stock items
+
+  @@map("stocks")
+}
+
+model StockItem {
+  id          String          @id @default(uuid())
+  name        String          @unique
+  unit        String
+  quantity    Int
+  threshold   Int
+  isActive    Boolean         @map("is_active") @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  stockId     String
+  stock       Stock           @relation(fields: [stockId], references: [id])
+  
   stockAllowances StockAllowance[]
 
   @@map("stock_items")
 }
 
-/// Represents an allowance of stock from a StockItem to a User for a specific Procedure
 model StockAllowance {
-  id          String    @id @default(uuid())
-  userId      String    @map("user_id")
-  stockId     String    @map("stock_id")
+  id          String      @id @default(uuid())
+  userId      String      @map("user_id")
+  stockItemId String      @map("stock_item_id")   // renamed to clarify relation to StockItem
 
-  procedure   Procedure? // No `fields` or `references` here; the foreign key is on `Procedure`
+  procedure   Procedure?  // no `fields` or `references` here; FK on Procedure
 
-  quantity    Decimal   @db.Decimal(10, 2)
-  createdAt   DateTime  @map("created_at") @default(now())
+  quantity    Decimal     @db.Decimal(10, 2)
+  createdAt   DateTime    @map("created_at") @default(now())
 
-  user        User      @relation(fields: [userId], references: [id])
-  stockItem   StockItem @relation(fields: [stockId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+  stockItem   StockItem   @relation(fields: [stockItemId], references: [id])
 
   @@map("stock_allowances")
-}
-
-model Stock {
-  id          String   @id @default(uuid()) 
-  name        String                             
-  createdAt   DateTime @default(now())
-  ownerId     String
-
-  owner       User     @relation("OwnedStocks", fields: [ownerId], references: [id])
-  sharedUsers StockSharedUser[]
-  materials   Material[]
-
-  @@map("stocks")
 }
 
 model StockSharedUser {
@@ -177,18 +178,7 @@ model StockSharedUser {
   userId  String
 
   stock   Stock @relation(fields: [stockId], references: [id])
-  user    User  @relation(fields: [userId],  references: [id])
-  @@id([stockId, userId])          /// composite PK
-  @@map("stock_shared_users")      /// actual table name
-}
-
-model Material {
-  id        String   @id @default(uuid())
-  name      String
-  quantity  Int
-  unit      String   
-  stockId   String
-  stock     Stock    @relation(fields: [stockId], references: [id])
-
-  @@map("materials")
+  user    User  @relation(fields: [userId], references: [id])
+  @@id([stockId, userId])
+  @@map("stock_shared_users")
 }
