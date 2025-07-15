@@ -13,6 +13,7 @@ import errorHandler from "./utils/errorHandler";
 import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
 import ensureUserExistsUseCase from "./application/use-cases/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
+import serviceRoutes from "./routes/services-routes";
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use("/api/visits", visitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);
+app.use("/api/services", serviceRoutes);
 app.use(errorHandler);
 
 const startServer = async () => {

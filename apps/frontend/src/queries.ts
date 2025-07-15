@@ -3,12 +3,20 @@ import type { Stock, UserLog } from './api/entity'
 import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
 import { apiRoutes } from './api/apiRoutes'
-import { getStockItems, getStocks, getUserLogs, postCreateNewClient, postCreateNewStockItem } from './api/api'
+import {
+  getStockItems,
+  getStocks,
+  getUserLogs,
+  postCreateNewClient,
+  postCreateNewStockItem,
+  postCreateService,
+} from './api/api'
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
 import type { ClientCreateData } from '../../entities/client'
 import type { StockItemCreateData } from '../../entities/stock-item'
+import type { ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 
@@ -19,6 +27,17 @@ export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+    },
+  })
+}
+
+export const useCreateServiceMutation = (): UseMutationResult<ServiceCreateData, Error, ServiceCreateData> => {
+  const axios = useAxios()
+
+  return useMutation<ServiceCreateData, Error, ServiceCreateData>({
+    mutationFn: (serviceData: ServiceCreateData) => postCreateService(axios, serviceData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['services'] })
     },
   })
 }

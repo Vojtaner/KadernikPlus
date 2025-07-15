@@ -31,7 +31,7 @@ export const breadCrumbNameMap: Record<string, string> = {
 }
 
 export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerProfile.replace(':customerId', visitId)
-export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':id', stockId)
+export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':stockId', stockId)
 
 export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
   if (route === '*') {
@@ -41,7 +41,12 @@ export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
   if (route.includes('/:')) {
     const base = route.split('/:')[0]
 
+    if (!pathname) {
+      return false
+    }
+
     return pathname.startsWith(base)
   }
+
   return pathname === route.split('/')[1]
 }

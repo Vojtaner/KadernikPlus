@@ -6,6 +6,7 @@ import { apiRoutes } from './apiRoutes'
 import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
+import type { ServiceCreateData } from '../../../entities/service'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -51,6 +52,14 @@ export const postCreateNewClient = async (
   clientData: ClientCreateData
 ): Promise<ClientCreateData> => {
   const response = await axios.post(apiRoutes.getCreateNewClientUrl(), clientData)
+  return response.data
+}
+
+export const postCreateService = async (
+  axios: AxiosInstance,
+  serviceData: ServiceCreateData
+): Promise<ServiceCreateData> => {
+  const response = await axios.post(apiRoutes.getCreateServiceUrl(), serviceData)
   return response.data
 }
 

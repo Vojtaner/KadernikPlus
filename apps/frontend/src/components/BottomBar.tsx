@@ -2,7 +2,8 @@ import Stack from '@mui/material/Stack'
 import { AddBuyStockItemButton } from './AddBuyStockItemButton'
 import AddClientItemButton from './AddClientItemButton'
 import { AddVisitItemButton } from './AddVisitItemButton'
-import AddWarehouseItemButton from './AddStockItemButton'
+import AddStockItemButton from './AddStockItemButton'
+import AddServiceItemButton from './AddServiceItemButton'
 
 const BottomBar = () => {
   const paddingX = '10px'
@@ -25,10 +26,11 @@ const BottomBar = () => {
         position: 'sticky',
         bottom: 'env(safe-area-inset-bottom)',
       }}>
+      <AddServiceItemButton />
       <AddBuyStockItemButton />
       <AddClientItemButton />
       <AddVisitItemButton />
-      <AddWarehouseItemButton />
+      <AddStockItemButton />
     </Stack>
   )
 }

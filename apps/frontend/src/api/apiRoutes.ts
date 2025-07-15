@@ -7,4 +7,5 @@ export const apiRoutes = {
   getCreateNewClientUrl: () => `/api/clients`,
   getCreateStockItemUrl: () => `/api/stock`,
   getStocksUrl: () => `/api/stock`,
+  getCreateServiceUrl: () => `/api/services`,
 }

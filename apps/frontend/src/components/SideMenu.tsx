@@ -44,8 +44,6 @@ export const SideMenu = () => {
   const { pathname } = useTypedLocation()
   const pathNameTransformed = getPathNameWithOutSlash(pathname)[0]
 
-  console.log({ pathNameTransformed, AppRoutes, vite: 'sddfs' })
-
   const drawerList = (
     <Stack
       sx={{ width: 250 }}
