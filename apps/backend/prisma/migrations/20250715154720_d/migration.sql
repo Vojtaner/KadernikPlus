@@ -39,10 +39,11 @@ CREATE TABLE `visits` (
 -- CreateTable
 CREATE TABLE `services` (
     `id` VARCHAR(191) NOT NULL,
-    `name` VARCHAR(191) NOT NULL,
+    `serviceName` VARCHAR(191) NOT NULL,
     `base_price` DECIMAL(10, 2) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `services_name_key`(`name`),
+    UNIQUE INDEX `services_userId_serviceName_key`(`userId`, `serviceName`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -100,13 +101,14 @@ CREATE TABLE `stock_items` (
     `itemName` VARCHAR(191) NOT NULL,
     `unit` VARCHAR(191) NOT NULL,
     `quantity` INTEGER NOT NULL,
+    `price` INTEGER NOT NULL,
     `threshold` INTEGER NOT NULL,
     `is_active` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `stockId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `stock_items_itemName_key`(`itemName`),
+    UNIQUE INDEX `stock_items_stockId_itemName_key`(`stockId`, `itemName`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -137,6 +139,9 @@ ALTER TABLE `visits` ADD CONSTRAINT `visits_client_id_fkey` FOREIGN KEY (`client
 
 -- AddForeignKey
 ALTER TABLE `visits` ADD CONSTRAINT `visits_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `services` ADD CONSTRAINT `services_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `visit_services` ADD CONSTRAINT `visit_services_visit_id_fkey` FOREIGN KEY (`visit_id`) REFERENCES `visits`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

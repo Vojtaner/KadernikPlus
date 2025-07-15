@@ -64,25 +64,52 @@ async function main() {
     console.log(`Created clients: ${client1.lastName}, ${client2.lastName}`);
 
     // --- Create Services ---
-    const service1 = await prisma.service.upsert({
-      where: { name: "Haircut" },
-      update: {},
-      create: { name: "Haircut", basePrice: 35 },
+    const existingService = await prisma.service.findFirst({
+      where: { serviceName: "Haircut" },
     });
 
-    const service2 = await prisma.service.upsert({
-      where: { name: "Hair Coloring (Full)" },
-      update: {},
-      create: { name: "Hair Coloring (Full)", basePrice: 120 },
+    let service1;
+    if (existingService) {
+      service1 = existingService;
+    } else {
+      service1 = await prisma.service.create({
+        data: {
+          serviceName: "Haircut",
+          basePrice: 35,
+          userId: "google-oauth2|113238590142888685973",
+        },
+      });
+    }
+
+    let service2 = await prisma.service.findFirst({
+      where: { serviceName: "Hair Coloring (Full)" },
     });
 
-    const service3 = await prisma.service.upsert({
-      where: { name: "Deep Conditioning" },
-      update: {},
-      create: { name: "Deep Conditioning", basePrice: 45 },
+    if (!service2) {
+      service2 = await prisma.service.create({
+        data: {
+          serviceName: "Hair Coloring (Full)",
+          basePrice: 120,
+          userId: "google-oauth2|113238590142888685973",
+        },
+      });
+    }
+
+    let service3 = await prisma.service.findFirst({
+      where: { serviceName: "Deep Conditioning" },
     });
+
+    if (!service3) {
+      service3 = await prisma.service.create({
+        data: {
+          serviceName: "Deep Conditioning",
+          basePrice: 45,
+          userId: "auth0-id-223",
+        },
+      });
+    }
     console.log(
-      `Created services: ${service1.name}, ${service2.name}, ${service3.name}`
+      `Created services: ${service1.serviceName}, ${service2.serviceName}, ${service3.serviceName}`
     );
 
     const stock2 = await prisma.stock.upsert({
@@ -97,33 +124,42 @@ async function main() {
     console.log(`Created stock: ${stock2.id}`);
 
     // --- Create Stock Items ---
-    const stockItem1 = await prisma.stockItem.upsert({
+    let stockItem1 = await prisma.stockItem.findFirst({
       where: { itemName: "Blonde Dye (Type A)" },
-      update: {},
-      create: {
-        itemName: "Blonde Dye (Type A)",
-        unit: "ml",
-        stockId: "1",
-        price: 22,
-        quantity: 500,
-        threshold: 100,
-        isActive: true,
-      },
     });
 
-    const stockItem2 = await prisma.stockItem.upsert({
+    if (!stockItem1) {
+      stockItem1 = await prisma.stockItem.create({
+        data: {
+          itemName: "Blonde Dye (Type A)",
+          unit: "ml",
+          stockId: "1",
+          price: 22,
+          quantity: 500,
+          threshold: 100,
+          isActive: true,
+        },
+      });
+    }
+
+    let stockItem2 = await prisma.stockItem.findFirst({
       where: { itemName: "Conditioner (Pro)" },
-      update: {},
-      create: {
-        itemName: "Conditioner (Pro)",
-        unit: "ml",
-        price: 44,
-        quantity: 2000,
-        stockId: "1",
-        threshold: 500,
-        isActive: true,
-      },
     });
+
+    if (!stockItem2) {
+      stockItem2 = await prisma.stockItem.create({
+        data: {
+          itemName: "Conditioner (Pro)",
+          unit: "ml",
+          price: 44,
+          quantity: 2000,
+          stockId: "1",
+          threshold: 500,
+          isActive: true,
+        },
+      });
+    }
+
     console.log(
       `Created stock items: ${stockItem1.itemName}, ${stockItem2.itemName}`
     );

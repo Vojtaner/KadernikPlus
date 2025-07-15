@@ -26,6 +26,7 @@ model User {
   createdAt       DateTime         @default(now())
   lastLogin       DateTime?        @map("last_login")
 
+  services        Service[]  // One user has many services
   visits          Visit[]
   ownedStocks     Stock[]          @relation("OwnedStocks")
   stockAllowances StockAllowance[]
@@ -68,15 +69,18 @@ model Visit {
   @@map("visits") // Maps this model to a table named 'visits'
 }
 
-/// Defines a specific service offered (e.g., "Haircut", "Color")
 model Service {
-  id          String         @id @default(uuid()) // Unique identifier for the service (UUID)
-  name        String         @unique // Name of the service, must be unique
-  basePrice   Decimal        @map("base_price") @db.Decimal(10, 2) // Base price of the service
+  id          String         @id @default(uuid())
+  serviceName String         
+  basePrice   Decimal        @map("base_price") @db.Decimal(10, 2)
 
-  visitServices VisitService[] // A service can be part of many visit services
+  userId      String         
+  user        User           @relation(fields: [userId], references: [id])
 
-  @@map("services") // Maps this model to a table named 'services'
+  visitServices VisitService[]
+
+  @@unique([userId, serviceName]) // ⬅️ Enforce uniqueness of service names per user
+  @@map("services")
 }
 
 /// Junction table for the many-to-many relationship between Visit and Service
@@ -155,6 +159,7 @@ model StockItem {
   
   stockAllowances StockAllowance[]
 
+  @@unique([stockId, itemName]) // 👈 Ensure itemName is unique within each stock
   @@map("stock_items")
 }
 

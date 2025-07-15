@@ -53,8 +53,9 @@ const createStockItemRepositoryDb = (
     findStockItemByName: async (
       itemName: string
     ): Promise<StockItem | null> => {
-      const stockItem = await prismaStockRepository.stockItem.findUnique({
-        where: { itemName },
+      //tady ten endpoint asi nebude potřeba
+      const stockItem = await prismaStockRepository.stockItem.findFirst({
+        where: { itemName: itemName },
       });
       return stockItem ? mapToDomainStockItem(stockItem) : null;
     },
