@@ -1,6 +1,6 @@
 import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { AppRoutes, isActiveRoute } from '../routes/AppRoutes'
+import { AppRoutes, generateStockPath, isActiveRoute } from '../routes/AppRoutes'
 import type { RootState } from '../store'
 import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
 import LanguageIcon from '@mui/icons-material/Language'
@@ -107,8 +107,8 @@ export const SideMenu = () => {
         icon={<LightbulbOutlineIcon />}
       />
       <SideMenuButton
-        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Warehouse)}
-        to={AppRoutes.Warehouse}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.stock)}
+        to={generateStockPath('1')}
         title={intl.formatMessage({ id: 'stock' })}
         icon={<WarehouseIcon />}
       />

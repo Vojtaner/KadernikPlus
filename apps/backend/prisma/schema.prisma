@@ -14,7 +14,7 @@ generator client {
   // CORRECTED OUTPUT PATH:
   // This path is relative from the 'prisma' directory (where schema.prisma is).
   // It goes up one level (..) to 'KadernikPlus/', then down into 'apps/backend/node_modules/@prisma/client'.
-  // output   = "../apps/backend/node_modules/@prisma/client"
+
 }
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
@@ -141,9 +141,10 @@ model Stock {
 
 model StockItem {
   id          String          @id @default(uuid())
-  itemName        String          @unique
+  itemName    String          
   unit        String
   quantity    Int
+  price       Int
   threshold   Int
   isActive    Boolean         @map("is_active") @default(true)
   createdAt   DateTime        @default(now())

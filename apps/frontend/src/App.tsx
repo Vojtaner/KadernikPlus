@@ -6,7 +6,7 @@ import { AppRoutes } from './routes/AppRoutes'
 import VisitsList from './pages/VisitsList'
 import CustomerProfile from './pages/CustomerProfile'
 import SmsPage from './pages/SmsPage'
-import WareHouse from './pages/WareHouse'
+import Stock from './pages/Stock'
 import ShoppingList from './pages/ShoppingList'
 import Consumption from './pages/Consumption'
 import PriceList from './pages/PriceList'
@@ -46,7 +46,7 @@ function App() {
                     path={AppRoutes.CustomerProfile}
                     element={<AuthenticationGuard component={CustomerProfile} />}
                   />
-                  <Route path={AppRoutes.Warehouse} element={<AuthenticationGuard component={WareHouse} />} />
+                  <Route path={AppRoutes.stock} element={<AuthenticationGuard component={Stock} />} />
                 </Routes>
               </Layout>
               <ReactQueryDevtools initialIsOpen={false} />

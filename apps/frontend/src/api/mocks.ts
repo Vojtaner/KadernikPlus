@@ -1,4 +1,5 @@
-import type { UserLog, UserType, WareHouseItemStateType } from './entity'
+import { UnitsObject, type StockItem } from '../../../entities/stock-item'
+import type { UserLog, UserType } from './entity'
 
 export const mockUserLogs: UserLog[] = [
   {
@@ -80,25 +81,46 @@ export const mockUser: UserType = {
   email: 'marie@email.cz',
 }
 
-export const mockWarehouseState: WareHouseItemStateType[] = [
-  { id: 1, item: 'Blondor ztmavovač', price: 1290, amount: 1000, minAmount: 300, unit: 'g' },
-  { id: 2, item: 'Wella Koleston 6/0', price: 180, amount: 120, minAmount: 50, unit: 'ml' },
-  { id: 3, item: 'Londa Peroxid 6%', price: 150, amount: 800, minAmount: 200, unit: 'ml' },
-  { id: 4, item: 'Goldwell Topchic 9N', price: 200, amount: 90, minAmount: 40, unit: 'ml' },
-  { id: 5, item: 'Wella Fixace', price: 220, amount: 500, minAmount: 150, unit: 'ml' },
-  { id: 6, item: 'Olaplex No.3', price: 890, amount: 300, minAmount: 100, unit: 'ml' },
-  { id: 7, item: 'Londa Šampon na barvené vlasy', price: 250, amount: 1000, minAmount: 400, unit: 'ml' },
-  { id: 8, item: 'Londa Kondicionér', price: 270, amount: 850, minAmount: 300, unit: 'ml' },
-  { id: 9, item: 'L’Oréal Majirel 5.1', price: 190, amount: 100, minAmount: 30, unit: 'ml' },
-  { id: 10, item: 'Schwarzkopf Igora 10-0', price: 185, amount: 130, minAmount: 40, unit: 'ml' },
-  { id: 11, item: 'Alpecin Kofeinový šampon', price: 320, amount: 700, minAmount: 250, unit: 'ml' },
-  { id: 12, item: 'Kerastase Maska Nutritive', price: 950, amount: 250, minAmount: 100, unit: 'ml' },
-  { id: 13, item: 'Barva Londa 8/3', price: 170, amount: 110, minAmount: 40, unit: 'ml' },
-  { id: 14, item: 'Wella EIMI Lak na vlasy', price: 390, amount: 300, minAmount: 100, unit: 'ml' },
-  { id: 15, item: 'Londa Blondoran', price: 980, amount: 950, minAmount: 350, unit: 'g' },
-  { id: 16, item: 'Wella Koleston 8/1', price: 185, amount: 100, minAmount: 50, unit: 'ml' },
-  { id: 17, item: 'Londa Vyživující olej', price: 310, amount: 150, minAmount: 60, unit: 'ml' },
-  { id: 18, item: 'Maska na vlasy Goldwell Rich Repair', price: 690, amount: 500, minAmount: 200, unit: 'ml' },
-  { id: 19, item: 'Londa Fénovací sprej', price: 210, amount: 400, minAmount: 150, unit: 'ml' },
-  { id: 20, item: 'Schwarzkopf Blondme Premium zesvětlovač', price: 1450, amount: 800, minAmount: 300, unit: 'g' },
+export const mockWarehouseState: Pick<StockItem, 'id' | 'price' | 'quantity' | 'itemName' | 'unit' | 'threshold'>[] = [
+  { id: '1', itemName: 'Blondor ztmavovač', price: 1290, quantity: 1000, threshold: 300, unit: UnitsObject.CM },
+  { id: '2', itemName: 'Wella Koleston 6/0', price: 180, quantity: 120, threshold: 50, unit: UnitsObject.CM },
+  { id: '3', itemName: 'Londa Peroxid 6%', price: 150, quantity: 800, threshold: 200, unit: UnitsObject.CM },
+  { id: '4', itemName: 'Goldwell Topchic 9N', price: 200, quantity: 90, threshold: 40, unit: UnitsObject.CM },
+  { id: '5', itemName: 'Wella Fixace', price: 220, quantity: 500, threshold: 150, unit: UnitsObject.CM },
+  { id: '6', itemName: 'Olaplex No.3', price: 890, quantity: 300, threshold: 100, unit: UnitsObject.CM },
+  {
+    id: '7',
+    itemName: 'Londa Šampon na barvené vlasy',
+    price: 250,
+    quantity: 1000,
+    threshold: 400,
+    unit: UnitsObject.CM,
+  },
+  { id: '8', itemName: 'Londa Kondicionér', price: 270, quantity: 850, threshold: 300, unit: UnitsObject.CM },
+  { id: '9', itemName: 'L’Oréal Majirel 5.1', price: 190, quantity: 100, threshold: 30, unit: UnitsObject.CM },
+  { id: '10', itemName: 'Schwarzkopf Igora 10-0', price: 185, quantity: 130, threshold: 40, unit: UnitsObject.CM },
+  { id: '11', itemName: 'Alpecin Kofeinový šampon', price: 320, quantity: 700, threshold: 250, unit: UnitsObject.CM },
+  { id: '12', itemName: 'Kerastase Maska Nutritive', price: 950, quantity: 250, threshold: 100, unit: UnitsObject.CM },
+  { id: '13', itemName: 'Barva Londa 8/3', price: 170, quantity: 110, threshold: 40, unit: UnitsObject.CM },
+  { id: '14', itemName: 'Wella EIMI Lak na vlasy', price: 390, quantity: 300, threshold: 100, unit: UnitsObject.G },
+  { id: '15', itemName: 'Londa Blondoran', price: 980, quantity: 950, threshold: 350, unit: UnitsObject.G },
+  { id: '16', itemName: 'Wella Koleston 8/1', price: 185, quantity: 100, threshold: 50, unit: UnitsObject.G },
+  { id: '17', itemName: 'Londa Vyživující olej', price: 310, quantity: 150, threshold: 60, unit: UnitsObject.G },
+  {
+    id: '18',
+    itemName: 'Maska na vlasy Goldwell Rich Repair',
+    price: 690,
+    quantity: 500,
+    threshold: 200,
+    unit: UnitsObject.G,
+  },
+  { id: '19', itemName: 'Londa Fénovací sprej', price: 210, quantity: 400, threshold: 150, unit: UnitsObject.G },
+  {
+    id: '20',
+    itemName: 'Schwarzkopf Blondme Premium zesvětlovač',
+    price: 1450,
+    quantity: 800,
+    threshold: 300,
+    unit: 'g',
+  },
 ]

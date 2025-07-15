@@ -80,4 +80,4 @@ src/
 ## Změna v entities
 
 Pokud v entities udělám změnu musím udělat build - npx tsx v adresáři entities
-Pokud změní prisma.schema musím udělat např. npx prisma migrate dev (migrace + generování zároveň)
+Pokud změní prisma.schema musím udělat např. npx prisma migrate reset a pak npx prisma migrate dev (migrace + generování zároveň)

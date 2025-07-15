@@ -32,10 +32,11 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         ...col,
         width: col.width ?? getMaxWordLength(rows, col.field as keyof T[number]) * CHAR_WIDTH_PX,
         minWidth: col.minWidth ?? 60,
-        field: col.field as string,
+        field: col.field,
       })),
     [columns, rows]
   )
+
 
   return (
     <Box sx={{ height: '100%' }}>

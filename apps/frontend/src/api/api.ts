@@ -1,10 +1,11 @@
 import { http, HttpResponse, type PathParams } from 'msw'
-import type { UserLog, UserType, WareHouseItemStateType } from './entity'
+import type { Stock, UserLog, UserType } from './entity'
 import { mockUserLogs, mockUser, mockWarehouseState } from './mocks'
 import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
-import type { ClientCreateData } from '../../../entities/client'
+import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
+import { type StockItem } from '../../../entities/stock-item'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -31,12 +32,16 @@ export const getUserLogs = async (axios: AxiosInstance, userId: string): Promise
   return response.data
 }
 
-export const getStockItems = async (axios: AxiosInstance): Promise<WareHouseItemStateType[]> => {
-  const response = await axios.get(apiRoutes.getStockItemsUrl())
+export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<StockItem[]> => {
+  const response = await axios.get(apiRoutes.getStockItemsUrl(stockId))
+  return response.data
+}
+export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
+  const response = await axios.get(apiRoutes.getStocksUrl())
   return response.data
 }
 
-export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<WareHouseItemStateType[]> => {
+export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<Client[]> => {
   const response = await axios.get(apiRoutes.getClientByIdUrl(clientId))
   return response.data
 }

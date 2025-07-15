@@ -39,7 +39,7 @@ const rows: ConsumptionItemType[] = [
 ]
 
 const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'item', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
+  { field: 'item', headerName: 'Položkas', disableColumnMenu: true, minWidth: 90 },
   {
     field: 'price',
     headerName: 'Cena',

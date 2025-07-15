@@ -1,21 +1,25 @@
 export type StockItem = {
     id: string;
     itemName: string;
-    unit: string;
+    unit: Units;
+    price: number;
     quantity: number;
     threshold: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
 };
-export type StockItemCreateData = Pick<StockItem, "unit" | "itemName" | "quantity" | "threshold">;
-export declare const Units: {
-    readonly G: "g";
-    readonly MG: "mg";
-    readonly L: "l";
-    readonly ML: "ml";
-    readonly CM: "cm";
-    readonly MM: "mm";
-    readonly KS: "ks";
-    readonly BALENI: "balení";
+export type StockItemCreateData = Omit<StockItem, "createdAt" | "updatedAt" | "isActive" | "id"> & {
+    stockId: string;
+};
+export type Units = (typeof UnitsObject)[keyof typeof UnitsObject];
+export declare const UnitsObject: {
+    G: string;
+    MG: string;
+    L: string;
+    ML: string;
+    CM: string;
+    MM: string;
+    KS: string;
+    BALENI: string;
 };

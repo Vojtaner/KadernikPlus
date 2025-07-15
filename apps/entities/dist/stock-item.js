@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Units = void 0;
-exports.Units = {
+exports.UnitsObject = void 0;
+exports.UnitsObject = {
     G: "g",
     MG: "mg",
     L: "l",

@@ -10,12 +10,19 @@ stockItemRoutes.post(
 );
 stockItemRoutes.get(
   "/",
-  makeExpressCallback(StockItemController.getAllStockItemsController)
+  makeExpressCallback(StockItemController.getStocksByUserIdController)
 );
+
 stockItemRoutes.get(
-  "/:id",
+  "/:stockId/items",
+  makeExpressCallback(StockItemController.getStockItemsByStockIdController)
+);
+
+stockItemRoutes.get(
+  "/item/:stockItemId",
   makeExpressCallback(StockItemController.getStockItemByIdController)
 );
+
 stockItemRoutes.get(
   "/by-name",
   makeExpressCallback(StockItemController.findStockItemByNameController)

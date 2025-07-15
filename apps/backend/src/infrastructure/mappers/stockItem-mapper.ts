@@ -5,6 +5,7 @@ const mapToDomainStockItem = (prismaStockItem: {
   itemName: string;
   unit: string;
   quantity: number;
+  price: number;
   threshold: number;
   isActive: boolean;
   createdAt: Date;
@@ -15,6 +16,7 @@ const mapToDomainStockItem = (prismaStockItem: {
     itemName: prismaStockItem.itemName,
     unit: prismaStockItem.unit,
     quantity: prismaStockItem.quantity,
+    price: prismaStockItem.price,
     threshold: prismaStockItem.threshold,
     isActive: prismaStockItem.isActive,
     createdAt: prismaStockItem.createdAt,

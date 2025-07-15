@@ -38,7 +38,7 @@ app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 app.use("/api/visits", visitRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
-app.use("/api/stock-items", stockItemRoutes);
+app.use("/api/stock", stockItemRoutes);
 app.use(errorHandler);
 
 const startServer = async () => {

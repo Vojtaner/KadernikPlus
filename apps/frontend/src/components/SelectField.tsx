@@ -15,7 +15,6 @@ type SelectFieldProps<T extends Identifiable> = {
   fieldPath: FieldPath<AppFormState>
   sx?: SxProps<Theme>
   items: T[]
-  label: string
   keyExtractor: (item: T) => T['id']
   labelExtractor: (item: T) => string
 }
@@ -26,7 +25,7 @@ const SelectField = <T extends Identifiable>(props: SelectFieldProps<T>) => {
       name={props.fieldPath}
       control={props.control}
       render={({ field }) => (
-        <Select {...field} label={props.label}>
+        <Select {...field}>
           {props.items.map((item) => (
             <MenuItem key={props.keyExtractor(item)} value={props.keyExtractor(item)}>
               {props.labelExtractor(item)}

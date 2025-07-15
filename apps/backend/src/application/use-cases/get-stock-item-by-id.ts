@@ -6,11 +6,11 @@ const createGetStockItemByIdUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;
 }) => {
   return {
-    execute: async (id: string): Promise<StockItem | null> => {
-      if (!id || id.trim() === "") {
-        throw new Error("Stock item ID cannot be empty.");
+    execute: async (stockItemId: string): Promise<StockItem | null> => {
+      if (!stockItemId || stockItemId.trim() === "") {
+        throw new Error("Stock item ID or Stock ID cannot be empty.");
       }
-      return dependencies.stockItemRepositoryDb.getStockItemById(id);
+      return dependencies.stockItemRepositoryDb.getStockItemById(stockItemId);
     },
   };
 };

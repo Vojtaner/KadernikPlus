@@ -33,8 +33,8 @@ const SearchBar = (props: SearchBarProps) => {
           <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
         )}
       </IconButton>
-      <TextField
-        fieldPath="searchBar"
+      {/* <TextField
+        fieldPath=""
         placeholder="Vyhledej zákazníka..."
         onFocus={() => {
           setIsFieldFocused(true)
@@ -51,7 +51,7 @@ const SearchBar = (props: SearchBarProps) => {
             border: 'none',
           },
         }}
-      />
+      /> */}
     </Stack>
   )
 }

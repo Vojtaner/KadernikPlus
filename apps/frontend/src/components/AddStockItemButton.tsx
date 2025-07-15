@@ -6,12 +6,13 @@ import TextField from './TextField'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import { unitList } from '../reactHookForm/entity'
 import SelectField from './SelectField'
-import { useCreateStockItemMutation } from '../queries'
+import { useCreateStockItemMutation, useStocksQuery } from '../queries'
 import { useAppFormContext } from '../reactHookForm/store'
 
 const AddStockItemButton = () => {
   const [open, setOpen] = useState(false)
   const { mutate: createStockItemMutation } = useCreateStockItemMutation()
+  const { data: stocks } = useStocksQuery()
   const { control } = useAppFormContext()
 
   const handleClickOpen = () => {
@@ -20,6 +21,10 @@ const AddStockItemButton = () => {
 
   const handleClose = () => {
     setOpen(false)
+  }
+
+  if (!stocks) {
+    return null
   }
 
   return (
@@ -35,17 +40,25 @@ const AddStockItemButton = () => {
       }
       formFields={
         <>
-          <TextField fieldPath="itemName" label="Skladová položka" type="text" fullWidth />
+          <SelectField
+            items={stocks.map((stock) => {
+              return { name: stock.stockName, id: stock.id }
+            })}
+            control={control}
+            keyExtractor={(stock) => stock.id}
+            labelExtractor={(stock) => stock.name}
+            fieldPath="stockId"
+          />
+          <TextField fieldPath="itemName" label="Skladová položka" type="text" fullWidth required />
           <SelectField
             items={unitList}
             control={control}
-            sx={{ color: 'red' }}
-            label={'Ahon'}
             keyExtractor={(unit) => unit.name}
             labelExtractor={(unit) => unit.name}
             fieldPath="unit"
           />
-          <TextField fieldPath="quantity" label="Množství" type="number" fullWidth />
+          <TextField fieldPath="quantity" label="Množství" type="number" fullWidth required />
+          <TextField fieldPath="price" label="Cena celkem" type="number" fullWidth />
           <TextField fieldPath="threshold" label="Minimální množství" type="number" fullWidth />
         </>
       }

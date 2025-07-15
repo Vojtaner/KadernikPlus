@@ -3,38 +3,49 @@ import createStockItemUseCase, {
 } from "../../application/use-cases/create-stock-item";
 import { StockItemCreateData } from "@/entities/stock-item";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
-import { HasId } from "@/domain/entity";
 import getStockItemByIdUseCase, {
   GetStockItemByIdUseCaseType,
 } from "../../application/use-cases/get-stock-item-by-id";
 import findStockItemByNameUseCase, {
   FindStockItemByNameUseCaseType,
 } from "../../application/use-cases/find-stock-item-by-name";
-import getAllStockItemsUseCase, {
-  GetAllStockItemsUseCaseType,
-} from "../../application/use-cases/get-all-stock-items";
+import getStockItemsByStockIdUseCase, {
+  GetStockItemsByStockIdUseCaseType,
+} from "../../application/use-cases/get-stock-items-by-stock-id";
+import getStocksByUserIdUseCase, {
+  GetStocksByUserIdUseCaseType,
+} from "../../application/use-cases/get-stocks-by-user-id";
 
-type CreateStockItemControllerType = { body: StockItemCreateData };
-type GetStockItemByIdControllerType = { params: HasId };
+type CreateStockItemControllerType = {
+  body: StockItemCreateData;
+};
+type GetStockItemByIdControllerType = {};
 type FindStockItemByNameControllerType = {};
-type GetAllStockItemsControllerType = {};
+type GetStockItemsByStockIdControllerType = {};
+type GetStocksByUserIdControllerType = {};
 
 const createStockItemController = (dependencies: {
   createStockItemUseCase: CreateStockItemUseCaseType;
   getStockItemByIdUseCase: GetStockItemByIdUseCaseType;
   findStockItemByNameUseCase: FindStockItemByNameUseCaseType;
-  getAllStockItemsUseCase: GetAllStockItemsUseCaseType;
+  getStockItemsByStockIdUseCase: GetStockItemsByStockIdUseCaseType;
+  getStocksByUserIdUseCase: GetStocksByUserIdUseCaseType;
 }) => {
   const createStockItemController: ControllerFunction<
     CreateStockItemControllerType
   > = async (httpRequest) => {
-    const { itemName, unit, quantity, threshold } = httpRequest.body;
+    const { itemName, unit, quantity, threshold, price, stockId } =
+      httpRequest.body;
+
+    console.log({ data: httpRequest.body });
 
     const stockItemData = {
       itemName,
       unit,
       quantity: Number(quantity),
+      price: Number(price),
       threshold: Number(threshold),
+      stockId,
     };
 
     const newStockItem = await dependencies.createStockItemUseCase.execute(
@@ -46,14 +57,15 @@ const createStockItemController = (dependencies: {
       body: newStockItem,
     };
   };
-  const getAllStockItemsController: ControllerFunction<
-    GetAllStockItemsControllerType
-  > = async () => {
-    const stockItems = await dependencies.getAllStockItemsUseCase.execute();
+  const getStocksByUserIdController: ControllerFunction<
+    CreateStockItemControllerType
+  > = async (httpRequest) => {
+    const userId = httpRequest.userId;
+    const stocks = await dependencies.getStocksByUserIdUseCase.execute(userId);
 
     return {
       statusCode: 200,
-      body: stockItems,
+      body: stocks,
     };
   };
 
@@ -85,12 +97,31 @@ const createStockItemController = (dependencies: {
   const getStockItemByIdController: ControllerFunction<
     GetStockItemByIdControllerType
   > = async (httpRequest) => {
-    const { id } = httpRequest.params;
-
-    const stockItem = await dependencies.getStockItemByIdUseCase.execute(id);
+    const { stockItemId } = httpRequest.params;
+    const stockItem = await dependencies.getStockItemByIdUseCase.execute(
+      stockItemId
+    );
 
     if (!stockItem) {
-      throw new Error(`Stock item with ID "${id}" not found.`);
+      throw new Error(`Stock item with ID "${stockItemId}" not found.`);
+    }
+
+    return {
+      statusCode: 200,
+      body: stockItem,
+    };
+  };
+  const getStockItemsByStockIdController: ControllerFunction<
+    GetStockItemsByStockIdControllerType
+  > = async (httpRequest) => {
+    const { stockId } = httpRequest.params;
+
+    const stockItem = await dependencies.getStockItemsByStockIdUseCase.execute(
+      stockId
+    );
+
+    if (!stockItem) {
+      throw new Error(`Stock item with ID "${stockId}" not found.`);
     }
 
     return {
@@ -101,9 +132,10 @@ const createStockItemController = (dependencies: {
 
   return {
     createStockItemController,
-    getAllStockItemsController,
     findStockItemByNameController,
     getStockItemByIdController,
+    getStockItemsByStockIdController,
+    getStocksByUserIdController,
   };
 };
 
@@ -111,6 +143,7 @@ const stockItemController = createStockItemController({
   createStockItemUseCase,
   getStockItemByIdUseCase,
   findStockItemByNameUseCase,
-  getAllStockItemsUseCase,
+  getStockItemsByStockIdUseCase,
+  getStocksByUserIdUseCase,
 });
 export default stockItemController;

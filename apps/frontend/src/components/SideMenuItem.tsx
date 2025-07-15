@@ -4,7 +4,7 @@ import AppTheme from '../AppTheme'
 
 type SideMenuListItemProps = {
   title: string
-  to: AppRoutePath
+  to: AppRoutePath | string
   onClick?: React.MouseEventHandler<HTMLDivElement> | undefined
   icon: React.JSX.Element
   isActive?: boolean

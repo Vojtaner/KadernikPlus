@@ -1,20 +1,25 @@
 import { useQuery } from '@tanstack/react-query'
-import type { UserLog, WareHouseItemStateType } from './api/entity'
+import type { Stock, UserLog } from './api/entity'
 import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
 import { apiRoutes } from './api/apiRoutes'
-import { getStockItems, getUserLogs, postCreateNewClient, postCreateNewStockItem } from './api/api'
+import { getStockItems, getStocks, getUserLogs, postCreateNewClient, postCreateNewStockItem } from './api/api'
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
 import type { ClientCreateData } from '../../entities/client'
 import type { StockItemCreateData } from '../../entities/stock-item'
+import { type StockItem } from '../../entities/stock-item'
+import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 
 export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
 
   return useMutation<ClientCreateData, Error, ClientCreateData>({
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+    },
   })
 }
 
@@ -36,16 +41,31 @@ export const useUserLogsQuery = (userId: string) => {
   })
 }
 
+export const useStockItemsQuery = (stockId: string | undefined) => {
+  const axios = useAxios()
+
+  return useQuery<StockItem[]>({
+    queryKey: ['stockItems', stockId],
+    queryFn: () => {
+      if (!stockId) {
+        throw new Error('Stock ID is required to fetch stock items.')
+      }
+      return getStockItems(axios, stockId)
+    },
+    enabled: !!stockId,
+  })
+}
+
+export const useStocksQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Stock[]>({
+    queryKey: ['stocks'],
+    queryFn: () => getStocks(axios),
+  })
+}
+
 export const mockGetUserLogs = () =>
   http.get<object, PathParams<string>, UserLog[]>(apiRoutes.getUserLogsUrl('unique-user-1'), () => {
     return HttpResponse.json(mockUserLogs)
   })
-
-export const useWareHouseQuery = () => {
-  const axios = useAxios()
-
-  return useQuery<WareHouseItemStateType[]>({
-    queryKey: ['warehouse'],
-    queryFn: () => getStockItems(axios),
-  })
-}

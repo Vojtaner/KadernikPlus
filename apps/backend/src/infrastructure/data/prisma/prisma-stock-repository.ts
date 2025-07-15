@@ -1,4 +1,4 @@
-import { PrismaClient, Stock } from ".prisma/client";
+import { PrismaClient, Stock, StockItem } from ".prisma/client";
 import { StockRepositoryPort } from "../../../application/ports/stock-repository";
 import mapToDomainStock from "../../../infrastructure/mappers/stock-mapper";
 import prisma from "./prisma";
@@ -19,6 +19,16 @@ const createStockRepositoryDb = (
       });
 
       return mapToDomainStock(stock);
+    },
+
+    getStocks: async (userId: string): Promise<Stock[]> => {
+      const stocks = await prismaStockRepository.stock.findMany({
+        where: {
+          ownerId: userId,
+        },
+      });
+
+      return stocks.map((stock) => mapToDomainStock(stock));
     },
   };
 };

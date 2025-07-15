@@ -2,36 +2,50 @@ import { PrismaClient } from "@prisma/client";
 import {
   StockItem,
   StockItemCreateData,
-  UnitsObject,
 } from "../../../../../entities/stock-item";
-import { StockItemRepositoryPort } from "@/application/ports/stock-item-repository";
+import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import mapToDomainStockItem from "../../../infrastructure/mappers/stockItem-mapper";
 import prisma from "./prisma";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import StockItemAlreadyExistsError from "../../../domain/errors/stock-item-errors";
 
 const createStockItemRepositoryDb = (
   prismaStockRepository: PrismaClient
 ): StockItemRepositoryPort => {
   return {
     createStockItem: async (data: StockItemCreateData): Promise<StockItem> => {
-      const stockItem = await prismaStockRepository.stockItem.create({
-        data: {
-          itemName: data.itemName,
-          unit: data.unit,
-          quantity: data.quantity,
-          threshold: data.threshold,
-          isActive: true,
-          stock: {
-            connect: { id: "1" },
+      try {
+        const stockItem = await prismaStockRepository.stockItem.create({
+          data: {
+            itemName: data.itemName,
+            unit: data.unit,
+            quantity: data.quantity,
+            price: data.price,
+            threshold: data.threshold,
+            isActive: true,
+            stock: {
+              connect: { id: data.stockId },
+            },
           },
-        },
-      });
+        });
+        return mapToDomainStockItem(stockItem);
+      } catch (err) {
+        if (
+          err instanceof PrismaClientKnownRequestError &&
+          err.code === "P2002"
+        ) {
+          throw StockItemAlreadyExistsError(data.itemName);
+        }
 
-      return mapToDomainStockItem(stockItem);
+        throw err;
+      }
     },
 
-    getStockItemById: async (id: string): Promise<StockItem | null> => {
+    getStockItemById: async (
+      stockItemId: string
+    ): Promise<StockItem | null> => {
       const stockItem = await prismaStockRepository.stockItem.findUnique({
-        where: { id },
+        where: { id: stockItemId },
       });
       return stockItem ? mapToDomainStockItem(stockItem) : null;
     },
@@ -45,8 +59,10 @@ const createStockItemRepositoryDb = (
       return stockItem ? mapToDomainStockItem(stockItem) : null;
     },
 
-    getAllStockItems: async (): Promise<StockItem[]> => {
-      const stockItems = await prismaStockRepository.stockItem.findMany();
+    getStockItemsByStockId: async (stockId: string): Promise<StockItem[]> => {
+      const stockItems = await prismaStockRepository.stockItem.findMany({
+        where: { stockId: stockId },
+      });
       return stockItems.map((stockItem) => mapToDomainStockItem(stockItem));
     },
   };

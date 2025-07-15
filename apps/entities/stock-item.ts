@@ -2,6 +2,7 @@ export type StockItem = {
   id: string;
   itemName: string;
   unit: Units;
+  price: number;
   quantity: number;
   threshold: number;
   isActive: boolean;
@@ -9,10 +10,10 @@ export type StockItem = {
   updatedAt: Date;
 };
 
-export type StockItemCreateData = Pick<
+export type StockItemCreateData = Omit<
   StockItem,
-  "unit" | "itemName" | "quantity" | "threshold"
->;
+  "createdAt" | "updatedAt" | "isActive" | "id"
+> & { stockId: string };
 
 export type Units = (typeof UnitsObject)[keyof typeof UnitsObject];
 

@@ -3,13 +3,15 @@ import { type GridColDef } from '@mui/x-data-grid'
 import BoxIcon from '../components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../components/DataGrid'
-import { useWareHouseQuery } from '../queries'
+import { useStockItemsQuery } from '../queries'
 import ErrorBoundary from './ErrorBoundary'
-import type { WareHouseItemStateType } from '../api/entity'
+import { type StockItem } from '../../../entities/stock-item'
 import Loader from './Loader'
+import { useParams } from 'react-router-dom'
 
-const WareHouse = () => {
-  const { data, isError, isLoading } = useWareHouseQuery()
+const Stock = () => {
+  const { stockId } = useParams()
+  const { data, isError, isLoading } = useStockItemsQuery(stockId)
 
   if (isLoading) {
     return <Loader />
@@ -18,7 +20,6 @@ const WareHouse = () => {
   if (isError || !data) {
     return <ErrorBoundary />
   }
-  console.log({ data })
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -27,10 +28,10 @@ const WareHouse = () => {
   )
 }
 
-export default WareHouse
+export default Stock
 
-const columns: GridColDef<WareHouseItemStateType[][number]>[] = [
-  { field: 'item', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
+const columns: GridColDef<StockItem[][number]>[] = [
+  { field: 'itemName', headerName: 'Položkas', disableColumnMenu: true, minWidth: 90 },
   {
     field: 'price',
     headerName: 'Cena',
@@ -38,7 +39,7 @@ const columns: GridColDef<WareHouseItemStateType[][number]>[] = [
     minWidth: 80,
   },
   {
-    field: 'amount',
+    field: 'quantity',
     headerName: 'Množ.',
     minWidth: 85,
     disableColumnMenu: true,
@@ -49,7 +50,7 @@ const columns: GridColDef<WareHouseItemStateType[][number]>[] = [
     ),
   },
   {
-    field: 'minAmount',
+    field: 'threshold',
     headerName: 'Min.',
     type: 'number',
     disableColumnMenu: true,

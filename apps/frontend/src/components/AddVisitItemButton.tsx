@@ -35,6 +35,9 @@ export const AddVisitItemButton = () => {
           <HairCutAutoComplete />
         </>
       }
+      onSubmitEndpoint={() => {
+        console.log('x')
+      }}
       onOpenButton={
         <MenuIconButton
           icon={<MoreTimeOutlinedIcon fontSize="large" />}

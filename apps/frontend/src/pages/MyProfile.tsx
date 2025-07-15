@@ -9,7 +9,6 @@ const MyProfile = () => {
   if (isLoading) {
     return <Loader />
   }
-  console.log({ isAuthenticated })
 
   return (
     isAuthenticated && (

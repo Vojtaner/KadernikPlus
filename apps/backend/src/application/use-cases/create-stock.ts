@@ -1,4 +1,4 @@
-import stockRepositoryDb from "@/infrastructure/data/prisma/prisma-stock-repository";
+import stockRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-repository";
 import { StockRepositoryPort } from "../ports/stock-repository";
 
 const createCreateStockUseCase = (dependencies: {
@@ -11,4 +11,9 @@ const createCreateStockUseCase = (dependencies: {
   };
 };
 
-const createStockUseCase = createCreateStockUseCase({ stockRepositoryDb });
+export type useGetStocksQueryUseCaseType = ReturnType<
+  typeof createCreateStockUseCase
+>;
+const useGetStocksQuery = createCreateStockUseCase({ stockRepositoryDb });
+
+export default useGetStocksQuery;

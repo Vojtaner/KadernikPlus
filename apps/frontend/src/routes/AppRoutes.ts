@@ -6,7 +6,7 @@ export const AppRoutes = {
   NotFound: '*',
   Sms: '/sms',
   Logs: '/logs',
-  Warehouse: '/warehouse',
+  stock: '/stock/:stockId',
   PriceList: '/prices',
   Consumption: '/consumption',
   MyProfile: '/my-profile',
@@ -22,7 +22,7 @@ export const breadCrumbNameMap: Record<string, string> = {
   'visits-list': 'Návštěvy',
   sms: 'SMS',
   logs: 'Záznamy o aktivitě',
-  warehouse: 'Sklad',
+  stock: 'Sklad',
   prices: 'Ceník',
   consumption: 'Spotřeba',
   'my-profile': 'Můj profil',
@@ -31,13 +31,16 @@ export const breadCrumbNameMap: Record<string, string> = {
 }
 
 export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerProfile.replace(':customerId', visitId)
+export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':id', stockId)
 
 export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
   if (route === '*') {
     return false
   }
+
   if (route.includes('/:')) {
     const base = route.split('/:')[0]
+
     return pathname.startsWith(base)
   }
   return pathname === route.split('/')[1]

@@ -104,6 +104,7 @@ async function main() {
         itemName: "Blonde Dye (Type A)",
         unit: "ml",
         stockId: "1",
+        price: 22,
         quantity: 500,
         threshold: 100,
         isActive: true,
@@ -116,6 +117,7 @@ async function main() {
       create: {
         itemName: "Conditioner (Pro)",
         unit: "ml",
+        price: 44,
         quantity: 2000,
         stockId: "1",
         threshold: 500,
