@@ -11,7 +11,7 @@ import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } f
 import { type AppFormState } from '../reactHookForm/entity'
 
 export type TextFieldProps<
-  TFieldValues extends Record<string, string | number | null> = AppFormState, //formulářový state,
+  TFieldValues extends Record<string, string | number | null | Date | string[]> = AppFormState, //formulářový state,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
 > = Omit<MuiTextFieldProps, 'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'> & {
   fieldPath: TName
@@ -22,7 +22,7 @@ export type TextFieldProps<
 }
 
 function TextField<
-  TFieldValues extends Record<string, string | number | null> = AppFormState,
+  TFieldValues extends Record<string, string | number | null | Date | string[]> = AppFormState,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: TextFieldProps<TFieldValues, TName>) {
   const { fieldPath, control, rules, defaultValue, disabled, ...rest } = props

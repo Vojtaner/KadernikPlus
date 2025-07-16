@@ -41,8 +41,10 @@ const createServiceController = (dependencies: {
 
   const getAllServicesController: ControllerFunction<
     GetAllServicesControllerType
-  > = async () => {
-    const services = await dependencies.getAllServicesUseCase.execute();
+  > = async (httpRequest) => {
+    const userId = httpRequest.userId;
+
+    const services = await dependencies.getAllServicesUseCase.execute(userId);
 
     return {
       statusCode: 200,

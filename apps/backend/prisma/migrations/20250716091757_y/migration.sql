@@ -31,7 +31,7 @@ CREATE TABLE `visits` (
     `user_id` VARCHAR(191) NOT NULL,
     `date` DATE NOT NULL,
     `note` TEXT NULL,
-    `paid_price` DECIMAL(10, 2) NOT NULL,
+    `paid_price` DECIMAL(10, 2) NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -52,7 +52,6 @@ CREATE TABLE `visit_services` (
     `id` VARCHAR(191) NOT NULL,
     `visit_id` VARCHAR(191) NOT NULL,
     `service_id` VARCHAR(191) NOT NULL,
-    `minutes_performed` INTEGER NOT NULL,
 
     UNIQUE INDEX `visit_services_visit_id_service_id_key`(`visit_id`, `service_id`),
     PRIMARY KEY (`id`)

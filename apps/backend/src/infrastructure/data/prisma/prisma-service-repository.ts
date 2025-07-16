@@ -10,8 +10,10 @@ const createServiceRepositoryDb = (
   prismaServiceRepository: PrismaClient
 ): ServiceRepositoryPort => {
   return {
-    getAllServices: async (): Promise<Service[]> => {
-      const services = await prismaServiceRepository.service.findMany();
+    getAllServices: async (userId: string): Promise<Service[]> => {
+      const services = await prismaServiceRepository.service.findMany({
+        where: { userId },
+      });
       return services.map(mapToDomainService);
     },
     findByName: async (

@@ -2,8 +2,8 @@
 
 // Datasource definition: Specifies the database type and connection URL.
 datasource db {
-  provider = "mysql" // Or "postgresql", "sqlite" depending on your actual DB
-  url      = env("DATABASE_URL")
+  provider          = "mysql" // Or "postgresql", "sqlite" depending on your actual DB
+  url               = env("DATABASE_URL")
   // Explicitly define the shadow database URL for migrations
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
@@ -14,83 +14,82 @@ generator client {
   // CORRECTED OUTPUT PATH:
   // This path is relative from the 'prisma' directory (where schema.prisma is).
   // It goes up one level (..) to 'KadernikPlus/', then down into 'apps/backend/node_modules/@prisma/client'.
-
 }
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
-  id              String           @id @default(uuid())
-  name            String
-  email           String           @unique
-  authProvider    String?          @map("auth_provider")
-  createdAt       DateTime         @default(now())
-  lastLogin       DateTime?        @map("last_login")
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  authProvider String?   @map("auth_provider")
+  createdAt    DateTime  @default(now())
+  lastLogin    DateTime? @map("last_login")
 
-  services        Service[]  // One user has many services
+  services        Service[] // One user has many services
   visits          Visit[]
   ownedStocks     Stock[]          @relation("OwnedStocks")
   stockAllowances StockAllowance[]
   clients         Client[]
 
-  sharedStocks    StockSharedUser[]
+  sharedStocks StockSharedUser[]
+
   @@map("users")
 }
 
 /// Client of the hairdresser (the customer)
 model Client {
-  id        String    @id @default(uuid()) // Unique identifier for the client (UUID)
+  id        String  @id @default(uuid()) // Unique identifier for the client (UUID)
   firstName String
   lastName  String
-  phone     String?   @unique 
-  note      String?   @db.Text // Optional notes about the client, use @db.Text for potentially long text
-  visits    Visit[]   // A client can have many visits
+  phone     String? @unique
+  note      String? @db.Text // Optional notes about the client, use @db.Text for potentially long text
+  visits    Visit[] // A client can have many visits
   userId    String // 👈 foreign key
-  user     User   @relation(fields: [userId], references: [id]) // 👈 relation
+  user      User    @relation(fields: [userId], references: [id]) // 👈 relation
 
   @@map("clients") // Maps this model to a table named 'clients'
 }
 
 /// Represents a single visit/appointment
 model Visit {
-  id            String         @id @default(uuid()) // Unique identifier for the visit (UUID)
-  clientId      String         @map("client_id") // Foreign key to the Client model
-  userId        String         @map("user_id") // Foreign key to the User model (who performed the visit)
-  date          DateTime       @db.Date // Date of the visit (date only, assuming no time component needed for the main visit date)
-  note          String?        @db.Text // Optional notes about the visit
-  paidPrice     Decimal        @map("paid_price") @db.Decimal(10, 2) // Price paid for the visit
+  id         String   @id @default(uuid())
+  clientId   String   @map("client_id")
+  userId     String   @map("user_id")
+  date       DateTime @db.Date
+  note       String?  @db.Text
+  paidPrice  Decimal? @map("paid_price") @db.Decimal(10, 2)
 
-  client        Client         @relation(fields: [clientId], references: [id]) // Relationship to Client
-  user          User           @relation(fields: [userId], references: [id]) // Relationship to User (hairdresser)
+  // Relations
+  client        Client         @relation(fields: [clientId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+  visitServices VisitService[] // ✅ many-to-many via junction
+  photos        Photo[]
+  procedures    Procedure[]
 
-  visitServices VisitService[] // A visit can include many services (many-to-many relationship via VisitService)
-  photos        Photo[]        // A visit can have many associated photos
-  procedures    Procedure[]    // A visit can have many procedures (steps performed)
-
-  @@map("visits") // Maps this model to a table named 'visits'
+  @@map("visits")
 }
 
-model Service {
-  id          String         @id @default(uuid())
-  serviceName String         
-  basePrice   Decimal        @map("base_price") @db.Decimal(10, 2)
 
-  userId      String         
-  user        User           @relation(fields: [userId], references: [id])
+model Service {
+  id          String   @id @default(uuid())
+  serviceName String
+  basePrice   Decimal @map("base_price") @db.Decimal(10, 2)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
 
   visitServices VisitService[]
 
-  @@unique([userId, serviceName]) // ⬅️ Enforce uniqueness of service names per user
+  @@unique([userId, serviceName])
   @@map("services")
 }
 
 /// Junction table for the many-to-many relationship between Visit and Service
 model VisitService {
-  id               String @id @default(uuid()) // Unique identifier for this entry (UUID)
-  visitId          String @map("visit_id") // Foreign key to Visit
-  serviceId        String @map("service_id") // Foreign key to Service
-  minutesPerformed Int    @map("minutes_performed") // Duration in minutes for this specific service within the visit
+  id        String @id @default(uuid()) // Unique identifier for this entry (UUID)
+  visitId   String @map("visit_id") // Foreign key to Visit
+  serviceId String @map("service_id") // Foreign key to Service
 
-  visit   Visit  @relation(fields: [visitId], references: [id])
+  visit   Visit   @relation(fields: [visitId], references: [id])
   service Service @relation(fields: [serviceId], references: [id])
 
   @@unique([visitId, serviceId])
@@ -99,64 +98,64 @@ model VisitService {
 
 /// Photos related to a specific visit
 model Photo {
-  id         String   @id @default(uuid()) // Unique identifier for the photo (UUID)
-  visitId    String   @map("visit_id") // Foreign key to Visit
-  url        String
-  uploadedAt DateTime @map("uploaded_at") @default(now())
+  id          String   @id @default(uuid()) // Unique identifier for the photo (UUID)
+  visitId     String   @map("visit_id") // Foreign key to Visit
+  url         String
+  uploadedAt  DateTime @default(now()) @map("uploaded_at")
   description String?
 
-  visit      Visit    @relation(fields: [visitId], references: [id])
+  visit Visit @relation(fields: [visitId], references: [id])
 
   @@map("photos")
 }
 
 /// Detailed steps or actions performed during a visit
 model Procedure {
-  id               String         @id @default(uuid())
-  visitId          String         @map("visit_id")
-  stepOrder        Int            @map("step_order")
-  description      String?        @db.Text
+  id          String  @id @default(uuid())
+  visitId     String  @map("visit_id")
+  stepOrder   Int     @map("step_order")
+  description String? @db.Text
 
-  stockAllowanceId String?        @unique // Unique FK for 1-1 relationship (nullable for optional 1-1)
+  stockAllowanceId String?         @unique // Unique FK for 1-1 relationship (nullable for optional 1-1)
   stockAllowance   StockAllowance? @relation(fields: [stockAllowanceId], references: [id])
 
-  gramsUsed        Decimal?       @map("grams_used") @db.Decimal(10, 2)
-  timeMinutes      Int?           @map("time_minutes")
-  issue            String?        @db.Text
-  createdAt        DateTime       @map("created_at") @default(now())
+  gramsUsed   Decimal? @map("grams_used") @db.Decimal(10, 2)
+  timeMinutes Int?     @map("time_minutes")
+  issue       String?  @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  visit            Visit          @relation(fields: [visitId], references: [id])
+  visit Visit @relation(fields: [visitId], references: [id])
 
   @@map("procedures")
 }
 
 model Stock {
-  id          String       @id @default(uuid())
-  stockName   String
-  createdAt   DateTime     @default(now())
-  ownerId     String
+  id        String   @id @default(uuid())
+  stockName String
+  createdAt DateTime @default(now())
+  ownerId   String
 
-  owner       User         @relation("OwnedStocks", fields: [ownerId], references: [id])
+  owner       User              @relation("OwnedStocks", fields: [ownerId], references: [id])
   sharedUsers StockSharedUser[]
-  stockItems  StockItem[]  // <-- new relation to stock items
+  stockItems  StockItem[] // <-- new relation to stock items
 
   @@map("stocks")
 }
 
 model StockItem {
-  id          String          @id @default(uuid())
-  itemName    String          
-  unit        String
-  quantity    Int
-  price       Int
-  threshold   Int
-  isActive    Boolean         @map("is_active") @default(true)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id        String   @id @default(uuid())
+  itemName  String
+  unit      String
+  quantity  Int
+  price     Int
+  threshold Int
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  stockId     String
-  stock       Stock           @relation(fields: [stockId], references: [id])
-  
+  stockId String
+  stock   Stock  @relation(fields: [stockId], references: [id])
+
   stockAllowances StockAllowance[]
 
   @@unique([stockId, itemName]) // 👈 Ensure itemName is unique within each stock
@@ -164,17 +163,17 @@ model StockItem {
 }
 
 model StockAllowance {
-  id          String      @id @default(uuid())
-  userId      String      @map("user_id")
-  stockItemId String      @map("stock_item_id")   // renamed to clarify relation to StockItem
+  id          String @id @default(uuid())
+  userId      String @map("user_id")
+  stockItemId String @map("stock_item_id") // renamed to clarify relation to StockItem
 
-  procedure   Procedure?  // no `fields` or `references` here; FK on Procedure
+  procedure Procedure? // no `fields` or `references` here; FK on Procedure
 
-  quantity    Decimal     @db.Decimal(10, 2)
-  createdAt   DateTime    @map("created_at") @default(now())
+  quantity  Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
 
-  user        User        @relation(fields: [userId], references: [id])
-  stockItem   StockItem   @relation(fields: [stockItemId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  stockItem StockItem @relation(fields: [stockItemId], references: [id])
 
   @@map("stock_allowances")
 }
@@ -183,8 +182,9 @@ model StockSharedUser {
   stockId String
   userId  String
 
-  stock   Stock @relation(fields: [stockId], references: [id])
-  user    User  @relation(fields: [userId], references: [id])
+  stock Stock @relation(fields: [stockId], references: [id])
+  user  User  @relation(fields: [userId], references: [id])
+
   @@id([stockId, userId])
   @@map("stock_shared_users")
 }

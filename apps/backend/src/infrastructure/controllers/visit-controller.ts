@@ -25,18 +25,14 @@ const createVisitController = (dependencies: {
   ) => {
     try {
       const visitData = httpRequest.body;
+      const userId = httpRequest.userId;
+      const visitDataWithUserId = { ...visitData, userId };
 
-      if (
-        !visitData.clientId ||
-        !visitData.userId ||
-        !visitData.date ||
-        visitData.paidPrice === undefined
-      ) {
+      if (!visitData.clientId || !visitData.date || !userId) {
         return {
           statusCode: 400,
           body: {
-            error:
-              "Missing required visit fields: clientId, userId, date, paidPrice.",
+            error: "Missing required visit fields: clientId, userId, date.",
           },
         };
       }
@@ -51,7 +47,9 @@ const createVisitController = (dependencies: {
         };
       }
 
-      const newVisit = await dependencies.addVisitUseCase.execute(visitData);
+      const newVisit = await dependencies.addVisitUseCase.execute(
+        visitDataWithUserId
+      );
 
       return {
         statusCode: 201,

@@ -6,8 +6,10 @@ const createGetAllServicesUseCase = (dependencies: {
   serviceRepositoryDb: ServiceRepositoryPort;
 }) => {
   return {
-    execute: async (): Promise<Service[]> => {
-      const services = await dependencies.serviceRepositoryDb.getAllServices();
+    execute: async (userId: string): Promise<Service[]> => {
+      const services = await dependencies.serviceRepositoryDb.getAllServices(
+        userId
+      );
       return services;
     },
   };

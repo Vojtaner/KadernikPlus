@@ -4,21 +4,25 @@ import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
 import { apiRoutes } from './api/apiRoutes'
 import {
+  getClients,
+  getServices,
   getStockItems,
   getStocks,
   getUserLogs,
   postCreateNewClient,
   postCreateNewStockItem,
   postCreateService,
+  postCreateVisit,
 } from './api/api'
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
-import type { ClientCreateData } from '../../entities/client'
+import type { Client, ClientCreateData } from '../../entities/client'
 import type { StockItemCreateData } from '../../entities/stock-item'
-import type { ServiceCreateData } from '../../entities/service'
+import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
+import type { VisitCreateData } from '../../entities/visit'
 
 export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
@@ -26,8 +30,17 @@ export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData
   return useMutation<ClientCreateData, Error, ClientCreateData>({
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
     },
+  })
+}
+
+export const useClietsQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Client[]>({
+    queryKey: ['clients'],
+    queryFn: () => getClients(axios),
   })
 }
 
@@ -38,6 +51,16 @@ export const useCreateServiceMutation = (): UseMutationResult<ServiceCreateData,
     mutationFn: (serviceData: ServiceCreateData) => postCreateService(axios, serviceData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['services'] })
+    },
+  })
+}
+export const useCreateVisitMutation = (): UseMutationResult<VisitCreateData, Error, VisitCreateData> => {
+  const axios = useAxios()
+
+  return useMutation<VisitCreateData, Error, VisitCreateData>({
+    mutationFn: (visitData: VisitCreateData) => postCreateVisit(axios, visitData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
     },
   })
 }
@@ -72,6 +95,14 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
       return getStockItems(axios, stockId)
     },
     enabled: !!stockId,
+  })
+}
+export const useServicesQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Service[]>({
+    queryKey: ['services'],
+    queryFn: () => getServices(axios),
   })
 }
 

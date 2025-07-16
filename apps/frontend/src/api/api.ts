@@ -6,7 +6,8 @@ import { apiRoutes } from './apiRoutes'
 import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
-import type { ServiceCreateData } from '../../../entities/service'
+import type { Service, ServiceCreateData } from '../../../entities/service'
+import type { VisitCreateData } from '../../../entities/visit'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -37,6 +38,10 @@ export const getStockItems = async (axios: AxiosInstance, stockId: string): Prom
   const response = await axios.get(apiRoutes.getStockItemsUrl(stockId))
   return response.data
 }
+export const getServices = async (axios: AxiosInstance): Promise<Service[]> => {
+  const response = await axios.get(apiRoutes.getServiceUrl())
+  return response.data
+}
 export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
   const response = await axios.get(apiRoutes.getStocksUrl())
   return response.data
@@ -44,6 +49,10 @@ export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
 
 export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<Client[]> => {
   const response = await axios.get(apiRoutes.getClientByIdUrl(clientId))
+  return response.data
+}
+export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
+  const response = await axios.get(apiRoutes.getClientsUrl())
   return response.data
 }
 
@@ -59,7 +68,11 @@ export const postCreateService = async (
   axios: AxiosInstance,
   serviceData: ServiceCreateData
 ): Promise<ServiceCreateData> => {
-  const response = await axios.post(apiRoutes.getCreateServiceUrl(), serviceData)
+  const response = await axios.post(apiRoutes.getServiceUrl(), serviceData)
+  return response.data
+}
+export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCreateData): Promise<VisitCreateData> => {
+  const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
   return response.data
 }
 

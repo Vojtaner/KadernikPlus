@@ -4,15 +4,49 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import dayjs from 'dayjs'
 import 'dayjs/locale/cs'
+import { Controller, type Control } from 'react-hook-form'
+import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
 
 dayjs.locale('cs')
 
-export default function BasicDateTimePicker() {
+type DatePickerProps = {
+  control: Control<AppFormState> // or better: `Control<any>` from RHF
+  label?: string
+  fieldPath: AppFieldPath
+}
+
+export default function BasicDateTimePicker({ fieldPath, control, label }: DatePickerProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
-      {/* <DemoContainer components={['DateTimePicker']}> */}
-      <DateTimePicker label="Datum" ampm={false} />
-      {/* </DemoContainer> */}
+      <Controller
+        name={fieldPath}
+        control={control}
+        render={({ field }) => (
+          <DateTimePicker
+            label={label ?? 'Datum'}
+            ampm={false}
+            value={isStringNumberOrDate(field.value) ? dayjs(field.value) : null}
+            onChange={(date) => field.onChange(date?.toDate())}
+            slotProps={{ textField: { fullWidth: true } }}
+          />
+        )}
+      />
     </LocalizationProvider>
   )
+}
+
+export function isString(value: unknown): value is string {
+  return typeof value === 'string'
+}
+
+export function isNumber(value: unknown): value is number {
+  return typeof value === 'number' && !isNaN(value)
+}
+
+export function isDate(value: unknown): value is Date {
+  return value instanceof Date && !isNaN(value.getTime())
+}
+
+export function isStringNumberOrDate(value: unknown): value is string | number | Date {
+  return isString(value) || isNumber(value) || isDate(value)
 }

@@ -26,7 +26,6 @@ export default function FormDialog(props: FormDialogProps) {
   const { handleSubmit } = useAppFormContext()
 
   const handleValidSubmit = (data: AppFormState) => {
-    console.log({ data })
     onSubmitEndpoint(data)
     onClose()
   }

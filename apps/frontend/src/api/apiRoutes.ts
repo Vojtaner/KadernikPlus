@@ -4,8 +4,10 @@ export const apiRoutes = {
   getStockItemByIdUrl: (stockItemId: string) => `/item/${encodeURIComponent(stockItemId)}`,
   getUserUrl: (userId: string) => `/api/user?userId=${encodeURIComponent(userId)}`,
   getClientByIdUrl: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
+  getClientsUrl: () => `/api/clients/`,
   getCreateNewClientUrl: () => `/api/clients`,
   getCreateStockItemUrl: () => `/api/stock`,
   getStocksUrl: () => `/api/stock`,
-  getCreateServiceUrl: () => `/api/services`,
+  getServiceUrl: () => `/api/services`,
+  getVisitUrl: () => `/api/visits`,
 }

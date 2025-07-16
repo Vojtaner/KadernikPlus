@@ -6,9 +6,13 @@ import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import BasicDateTimePicker from './DateTimePicker'
 import CustomerAutoComplete from './CustomerAutoComplete'
 import HairCutAutoComplete from './HairCutAutoComplete'
+import { useAppFormContext } from '../reactHookForm/store'
+import { useCreateVisitMutation } from '../queries'
 
 export const AddVisitItemButton = () => {
   const [open, setOpen] = React.useState(false)
+  const { control } = useAppFormContext()
+  const { mutate: createVisitMutation } = useCreateVisitMutation()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -30,14 +34,12 @@ export const AddVisitItemButton = () => {
       }
       formFields={
         <>
-          <BasicDateTimePicker />
-          <CustomerAutoComplete />
-          <HairCutAutoComplete />
+          <BasicDateTimePicker fieldPath="date" control={control} />
+          <CustomerAutoComplete fieldPath="clientId" control={control} />
+          <HairCutAutoComplete fieldPath="serviceIds" control={control} />
         </>
       }
-      onSubmitEndpoint={() => {
-        console.log('x')
-      }}
+      onSubmitEndpoint={(visitData) => createVisitMutation(visitData)}
       onOpenButton={
         <MenuIconButton
           icon={<MoreTimeOutlinedIcon fontSize="large" />}

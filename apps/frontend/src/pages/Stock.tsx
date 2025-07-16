@@ -11,19 +11,19 @@ import { useParams } from 'react-router-dom'
 
 const Stock = () => {
   const { stockId } = useParams()
-  const { data, isError, isLoading } = useStockItemsQuery(stockId)
+  const { data: stockItemData, isError, isLoading } = useStockItemsQuery(stockId)
 
   if (isLoading) {
     return <Loader />
   }
 
-  if (isError || !data) {
+  if (isError || !stockItemData) {
     return <ErrorBoundary />
   }
 
   return (
     <Box sx={{ height: '100%' }}>
-      <AppDataGrid rows={data} columns={columns} />
+      <AppDataGrid rows={stockItemData} columns={columns} />
     </Box>
   )
 }

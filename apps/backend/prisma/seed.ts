@@ -187,7 +187,6 @@ async function main() {
         userId: user2.id,
         date: new Date("2025-06-21T00:00:00.000Z"),
         note: "Full color change, requires extra dye.",
-        paidPrice: 120,
       },
     });
     console.log(`Created visits: ${visit1.id}, ${visit2.id}`);
@@ -201,7 +200,6 @@ async function main() {
       create: {
         visitId: visit1.id,
         serviceId: service1.id,
-        minutesPerformed: 45,
       },
     });
 
@@ -213,7 +211,6 @@ async function main() {
       create: {
         visitId: visit2.id,
         serviceId: service2.id,
-        minutesPerformed: 180,
       },
     });
     console.log(

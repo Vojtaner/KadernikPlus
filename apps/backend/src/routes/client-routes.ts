@@ -8,6 +8,10 @@ clientRoutes.post(
   "/",
   makeExpressCallback(clientController.addClientController)
 );
+clientRoutes.get(
+  "/",
+  makeExpressCallback(clientController.getAllClientsByUserIdController)
+);
 
 clientRoutes.get(
   "/:id",

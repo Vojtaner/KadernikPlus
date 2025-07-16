@@ -9,8 +9,10 @@ const createClientRepositoryDb = (
   prismaVisitRepository: PrismaClient
 ): ClientRepositoryPort => {
   return {
-    findAll: async (): Promise<Client[]> => {
-      const clients = await prismaVisitRepository.client.findMany();
+    findAll: async (userId: string): Promise<Client[]> => {
+      const clients = await prismaVisitRepository.client.findMany({
+        where: { userId },
+      });
       return clients.map((client) => mapToDomainClient(client));
     },
     add: async (clientData: WithUserId<ClientCreateData>): Promise<Client> => {
