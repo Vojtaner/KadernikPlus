@@ -24,7 +24,7 @@ import type { StockItemCreateData } from '../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import type { GetVisitsType, Visit, VisitCreateData } from '../../entities/visit'
+import type { GetVisitsType, VisitCreateData } from '../../entities/visit'
 
 export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
@@ -120,7 +120,7 @@ export const useServicesQuery = () => {
 export const useVisitQuery = (visitId: string | undefined) => {
   const axios = useAxios()
 
-  return useQuery<Visit[]>({
+  return useQuery<GetVisitsType>({
     queryKey: ['visit', visitId],
     queryFn: () => {
       if (!visitId) {

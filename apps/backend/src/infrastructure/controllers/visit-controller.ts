@@ -134,7 +134,7 @@ const createVisitController = (dependencies: {
     GetVisitByIdControllerType
   > = async (httpRequest) => {
     try {
-      const { visitId } = httpRequest.query;
+      const { visitId } = httpRequest.params;
       const visit = await dependencies.getVisitByIdUseCase.execute(visitId);
 
       return {

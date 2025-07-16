@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `visits` MODIFY `deposit` INTEGER NULL,
+    MODIFY `depositStatus` ENUM('ZAPLACENO', 'NEZAPLACENO', 'NENI_NUTNE') NULL DEFAULT 'NEZAPLACENO',
+    MODIFY `visitStatus` BOOLEAN NULL;

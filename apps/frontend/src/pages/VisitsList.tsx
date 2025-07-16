@@ -102,20 +102,22 @@ const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
 
 const createVisitsTable = (visits: GetVisitsType[]): VisitListItem[] => {
   return visits.map((visit) => {
-    const date = new Date(visit.date)
-
-    const hours = date.getUTCHours()
-    const minutes = date.getUTCMinutes()
-    const day = date.getUTCDate()
-    const month = date.getUTCMonth() + 1
-    const dateTransformed = `${day}.${month} - ${hours}:${minutes}`
-
     return {
       id: visit.id,
-      date: dateTransformed,
+      date: getDateTime(visit.date),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
       serviceName: visit.services.map((service) => service.serviceName).join(','),
       visitState: false,
     }
   })
+}
+
+export const getDateTime = (date: Date) => {
+  const date2 = new Date(date)
+
+  const hours = date2.getUTCHours()
+  const minutes = date2.getUTCMinutes()
+  const day = date2.getUTCDay()
+  const month = date2.getUTCMonth() + 1
+  return `${day}.${month} - ${hours}:${minutes}`
 }

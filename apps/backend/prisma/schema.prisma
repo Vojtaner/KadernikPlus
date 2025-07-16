@@ -42,6 +42,7 @@ model Client {
   firstName String
   lastName  String
   phone     String? @unique
+  deposit   Boolean  @default(true)
   note      String? @db.Text // Optional notes about the client, use @db.Text for potentially long text
   visits    Visit[] // A client can have many visits
   userId    String // 👈 foreign key
@@ -56,7 +57,10 @@ model Visit {
   clientId   String   @map("client_id")
   userId     String   @map("user_id")
   date       DateTime 
-  note       String?  @db.Text
+  note       String?  
+  deposit    Int?
+  depositStatus DepositStatus? @default(NEZAPLACENO)
+  visitStatus     Boolean?
   paidPrice  Decimal? @map("paid_price") @db.Decimal(10, 2)
 
   // Relations
@@ -67,6 +71,12 @@ model Visit {
   procedures    Procedure[]
 
   @@map("visits")
+}
+
+enum DepositStatus {
+  ZAPLACENO      // deposit paid
+  NEZAPLACENO    // deposit not paid
+  NENI_NUTNE     // deposit should not be paid
 }
 
 

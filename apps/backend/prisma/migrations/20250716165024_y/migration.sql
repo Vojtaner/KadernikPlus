@@ -17,6 +17,7 @@ CREATE TABLE `clients` (
     `firstName` VARCHAR(191) NOT NULL,
     `lastName` VARCHAR(191) NOT NULL,
     `phone` VARCHAR(191) NULL,
+    `deposit` BOOLEAN NOT NULL DEFAULT true,
     `note` TEXT NULL,
     `userId` VARCHAR(191) NOT NULL,
 
@@ -29,8 +30,11 @@ CREATE TABLE `visits` (
     `id` VARCHAR(191) NOT NULL,
     `client_id` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
-    `date` DATE NOT NULL,
-    `note` TEXT NULL,
+    `date` DATETIME(3) NOT NULL,
+    `note` VARCHAR(191) NULL,
+    `deposit` INTEGER NOT NULL,
+    `depositStatus` ENUM('ZAPLACENO', 'NEZAPLACENO', 'NENI_NUTNE') NOT NULL DEFAULT 'NEZAPLACENO',
+    `visitStatus` BOOLEAN NOT NULL,
     `paid_price` DECIMAL(10, 2) NULL,
 
     PRIMARY KEY (`id`)

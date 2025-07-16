@@ -6,6 +6,10 @@ export type Visit = {
   id?: string;
   clientId: string;
   date: Date;
+  paidPrice?: number;
+  deposit?: number;
+  depositStatus?: "NEZAPLACENO" | "ZAPLACENO" | "BEZ ZÁLOHY";
+  visitStatus?: boolean;
   note?: string | null;
   serviceIds: string[];
 };

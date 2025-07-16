@@ -1,4 +1,4 @@
-import { Client, Prisma } from "@prisma/client";
+import { Client } from "@prisma/client";
 
 const mapToDomainClient = (prismaClient: {
   id: string;
@@ -6,6 +6,7 @@ const mapToDomainClient = (prismaClient: {
   lastName: string;
   phone: string | null;
   note: string | null;
+  deposit: boolean;
 }): Omit<Client, "userId"> => {
   return {
     id: prismaClient.id,
@@ -13,6 +14,7 @@ const mapToDomainClient = (prismaClient: {
     lastName: prismaClient.lastName,
     phone: prismaClient.phone,
     note: prismaClient.note,
+    deposit: prismaClient.deposit ?? false,
   };
 };
 
