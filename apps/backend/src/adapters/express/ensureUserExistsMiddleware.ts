@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { type EnsureUserExistsUseCaseType } from "../../application/use-cases/ensure-user-exists";
+import { type EnsureUserExistsUseCaseType } from "../../application/use-cases/user/ensure-user-exists";
 
 const ensureUserExistsMiddleware = (
   ensureUserExistsUseCase: EnsureUserExistsUseCaseType

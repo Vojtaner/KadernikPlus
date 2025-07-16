@@ -1,7 +1,7 @@
 import { ManagementClient } from "auth0";
-import { UserRepositoryPort } from "../ports/user-repository";
-import userRepositoryDb from "../../infrastructure/data/prisma/prisma-user-repository";
-import { auth0ManagementApi } from "../services/auth0ManagementApi";
+import { UserRepositoryPort } from "../../ports/user-repository";
+import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
+import { auth0ManagementApi } from "../../services/auth0ManagementApi";
 
 export const createEnsureUserExists = (dependencies: {
   userRepositoryDb: UserRepositoryPort;

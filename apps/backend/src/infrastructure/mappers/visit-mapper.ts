@@ -1,14 +1,37 @@
 import { Visit as VisitEntity } from "@/entities/visit";
-import { Visit } from "@prisma/client";
+import { Client, Prisma, Service, Visit } from "@prisma/client";
 
-const mapToDomainVisit = (prismaVisit: Visit): VisitEntity => {
+export type VisitWithServices = Prisma.VisitGetPayload<{
+  include: {
+    client: true;
+    visitServices: {
+      include: {
+        service: true;
+      };
+    };
+  };
+}>;
+
+export type CreatedVisit = Prisma.VisitGetPayload<{
+  include: {
+    visitServices: true;
+  };
+}>;
+
+const mapToDomainVisit = (
+  prismaVisit: VisitWithServices
+): Omit<VisitEntity, "serviceIds" | "clientId"> & {
+  client: Client;
+  services: Service[];
+} => {
   return {
     id: prismaVisit.id,
-    clientId: prismaVisit.clientId,
+    client: prismaVisit.client,
     date: prismaVisit.date,
-    serviceIds: [],
+    services: prismaVisit.visitServices.map(
+      (visitService) => visitService.service
+    ),
     note: prismaVisit.note,
-    // createdAt and updatedAt are typically not part of core domain entity for simple CRUD
   };
 };
 

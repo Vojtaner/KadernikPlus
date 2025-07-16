@@ -1,6 +1,6 @@
 import { Client } from "@/entities/client";
-import { ClientRepositoryPort } from "../../application/ports/client-repository";
-import clientRepositoryDb from "../../infrastructure/data/prisma/prisma-client-repository";
+import { ClientRepositoryPort } from "../../ports/client-repository";
+import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 
 const createGetAllClientsByUserIdUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;

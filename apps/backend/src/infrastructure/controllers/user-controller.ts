@@ -1,9 +1,9 @@
 import addUserUseCase, {
   AddUserUseCaseType,
-} from "../../application/use-cases/add-user";
+} from "../../application/use-cases/user/add-user";
 import getUserByIdUseCase, {
   GetUserByIdUseCaseType,
-} from "../../application/use-cases/get-user-by-id";
+} from "../../application/use-cases/user/get-user-by-id";
 import { UserCreateData } from "@/entities/user";
 import { HasId } from "@/domain/entity";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";

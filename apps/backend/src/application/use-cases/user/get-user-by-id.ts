@@ -1,6 +1,6 @@
 import { User } from "@/entities/user";
-import { UserRepositoryPort } from "../../application/ports/user-repository";
-import userRepositoryDb from "../../infrastructure/data/prisma/prisma-user-repository";
+import { UserRepositoryPort } from "../../ports/user-repository";
+import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
 
 const UserNotFoundError = (id: string) => {
   const error = new Error(`User with ID ${id} not found.`);

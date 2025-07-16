@@ -1,4 +1,4 @@
-import { Client } from "@prisma/client";
+import { Client, Prisma } from "@prisma/client";
 
 const mapToDomainClient = (prismaClient: {
   id: string;

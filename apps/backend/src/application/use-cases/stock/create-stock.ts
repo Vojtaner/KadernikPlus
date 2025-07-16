@@ -1,5 +1,5 @@
-import stockRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-repository";
-import { StockRepositoryPort } from "../ports/stock-repository";
+import stockRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-repository";
+import { StockRepositoryPort } from "../../ports/stock-repository";
 
 const createCreateStockUseCase = (dependencies: {
   stockRepositoryDb: StockRepositoryPort;

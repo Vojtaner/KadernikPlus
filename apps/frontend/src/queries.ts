@@ -9,6 +9,8 @@ import {
   getStockItems,
   getStocks,
   getUserLogs,
+  getVisitByVisitId,
+  getVisits,
   postCreateNewClient,
   postCreateNewStockItem,
   postCreateService,
@@ -22,7 +24,7 @@ import type { StockItemCreateData } from '../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import type { VisitCreateData } from '../../entities/visit'
+import type { GetVisitsType, Visit, VisitCreateData } from '../../entities/visit'
 
 export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
@@ -65,6 +67,15 @@ export const useCreateVisitMutation = (): UseMutationResult<VisitCreateData, Err
   })
 }
 
+export const useVisitsQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<GetVisitsType[]>({
+    queryKey: ['visits'],
+    queryFn: () => getVisits(axios),
+  })
+}
+
 export const useCreateStockItemMutation = (): UseMutationResult<StockItemCreateData, Error, StockItemCreateData> => {
   const axios = useAxios()
 
@@ -103,6 +114,20 @@ export const useServicesQuery = () => {
   return useQuery<Service[]>({
     queryKey: ['services'],
     queryFn: () => getServices(axios),
+  })
+}
+
+export const useVisitQuery = (visitId: string | undefined) => {
+  const axios = useAxios()
+
+  return useQuery<Visit[]>({
+    queryKey: ['visit', visitId],
+    queryFn: () => {
+      if (!visitId) {
+        throw new Error('Stock ID is required to fetch stock items.')
+      }
+      return getVisitByVisitId(axios, visitId)
+    },
   })
 }
 

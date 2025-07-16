@@ -5,10 +5,25 @@ import { VisitController } from "../infrastructure/controllers/index";
 const visitRoutes = Router();
 
 visitRoutes.post("/", makeExpressCallback(VisitController.addVisitController));
-visitRoutes.get("/", makeExpressCallback(VisitController.getVisitsController));
 visitRoutes.get(
   "/",
-  makeExpressCallback(VisitController.findVisitByIdController)
+  makeExpressCallback(VisitController.getVisitsByDatesController)
+);
+visitRoutes.patch(
+  "/:id",
+  makeExpressCallback(VisitController.updateVisitController)
+);
+visitRoutes.get(
+  "/:visitId",
+  makeExpressCallback(VisitController.getVisitByIdController)
+);
+visitRoutes.get(
+  "/client/:clientId",
+  makeExpressCallback(VisitController.getVisitsByClientIdController)
+);
+visitRoutes.delete(
+  "/client/:clientId",
+  makeExpressCallback(VisitController.deleteVisitController)
 );
 
 export default visitRoutes;

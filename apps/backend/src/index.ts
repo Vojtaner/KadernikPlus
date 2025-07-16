@@ -11,7 +11,7 @@ import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
 import errorHandler from "./utils/errorHandler";
 import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
-import ensureUserExistsUseCase from "./application/use-cases/ensure-user-exists";
+import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
 import serviceRoutes from "./routes/services-routes";
 

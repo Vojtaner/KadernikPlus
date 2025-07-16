@@ -1,7 +1,19 @@
 import { Grid, Switch, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
+import { useParams } from 'react-router-dom'
+import { useVisitQuery } from '../queries'
+import Loader from './Loader'
 
 const VisitDetailGrid = () => {
+  const { visitId } = useParams()
+  const { data: visitData } = useVisitQuery(visitId)
+
+  if (!visitData) {
+    return <Loader />
+  }
+
+  console.log({ visitData })
+
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4}>

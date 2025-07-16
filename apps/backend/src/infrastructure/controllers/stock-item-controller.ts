@@ -1,20 +1,20 @@
 import createStockItemUseCase, {
   CreateStockItemUseCaseType,
-} from "../../application/use-cases/create-stock-item";
+} from "../../application/use-cases/stock/create-stock-item";
 import { StockItemCreateData } from "@/entities/stock-item";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getStockItemByIdUseCase, {
   GetStockItemByIdUseCaseType,
-} from "../../application/use-cases/get-stock-item-by-id";
+} from "../../application/use-cases/stock/get-stock-item-by-id";
 import findStockItemByNameUseCase, {
   FindStockItemByNameUseCaseType,
-} from "../../application/use-cases/find-stock-item-by-name";
+} from "../../application/use-cases/stock/find-stock-item-by-name";
 import getStockItemsByStockIdUseCase, {
   GetStockItemsByStockIdUseCaseType,
-} from "../../application/use-cases/get-stock-items-by-stock-id";
+} from "../../application/use-cases/stock/get-stock-items-by-stock-id";
 import getStocksByUserIdUseCase, {
   GetStocksByUserIdUseCaseType,
-} from "../../application/use-cases/get-stocks-by-user-id";
+} from "../../application/use-cases/stock/get-stocks-by-user-id";
 
 type CreateStockItemControllerType = {
   body: StockItemCreateData;

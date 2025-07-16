@@ -7,7 +7,7 @@ import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
-import type { VisitCreateData } from '../../../entities/visit'
+import type { GetVisitsType, Visit, VisitCreateData } from '../../../entities/visit'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -38,10 +38,16 @@ export const getStockItems = async (axios: AxiosInstance, stockId: string): Prom
   const response = await axios.get(apiRoutes.getStockItemsUrl(stockId))
   return response.data
 }
+
 export const getServices = async (axios: AxiosInstance): Promise<Service[]> => {
   const response = await axios.get(apiRoutes.getServiceUrl())
   return response.data
 }
+export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<Visit[]> => {
+  const response = await axios.get(apiRoutes.getVisitByVisitIdUrl(visitId))
+  return response.data
+}
+
 export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
   const response = await axios.get(apiRoutes.getStocksUrl())
   return response.data
@@ -53,6 +59,10 @@ export const getClientById = async (axios: AxiosInstance, clientId: string): Pro
 }
 export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
   const response = await axios.get(apiRoutes.getClientsUrl())
+  return response.data
+}
+export const getVisits = async (axios: AxiosInstance): Promise<GetVisitsType[]> => {
+  const response = await axios.get(apiRoutes.getVisitUrl())
   return response.data
 }
 

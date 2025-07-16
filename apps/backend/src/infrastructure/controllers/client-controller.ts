@@ -1,15 +1,15 @@
 import { HasId } from "@/domain/entity";
 import addClientUseCase, {
   CreateAddClientUseCaseType,
-} from "../../application/use-cases/add-client";
+} from "../../application/use-cases/clients/add-client";
 import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
-} from "../../application/use-cases/get-client-by-id";
+} from "../../application/use-cases/clients/get-client-by-id";
 import { ControllerFunction } from "../../adapters/express/make-express-callback";
 import { Client, ClientCreateData } from "@/entities/client";
 import getAllClientsByUserIdUseCase, {
   GetAllClientsByUserIdUseCaseType,
-} from "../../application/use-cases/get-all-clients";
+} from "../../application/use-cases/clients/get-all-clients";
 
 type GetClientByIdControllerType = { params: HasId };
 type AddClientControllerType = {};

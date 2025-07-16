@@ -55,7 +55,7 @@ model Visit {
   id         String   @id @default(uuid())
   clientId   String   @map("client_id")
   userId     String   @map("user_id")
-  date       DateTime @db.Date
+  date       DateTime 
   note       String?  @db.Text
   paidPrice  Decimal? @map("paid_price") @db.Decimal(10, 2)
 

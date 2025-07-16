@@ -2,10 +2,10 @@ import { ServiceCreateData } from "@/entities/service";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getAllServicesUseCase, {
   GetAllServicesUseCaseType,
-} from "../../application/use-cases/get-all-services";
+} from "../../application/use-cases/service/get-all-services";
 import addServiceUseCase, {
   AddServiceUseCaseType,
-} from "../../application/use-cases/add-service";
+} from "../../application/use-cases/service/add-service";
 import { WithUserId } from "@/entities/user";
 
 type AddServiceControllerType = {

@@ -10,4 +10,5 @@ export const apiRoutes = {
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
   getVisitUrl: () => `/api/visits`,
+  getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
 }

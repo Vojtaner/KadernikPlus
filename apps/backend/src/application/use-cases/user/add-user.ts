@@ -1,8 +1,8 @@
 import { User, UserCreateData } from "@/entities/user";
-import { UserRepositoryPort } from "../../application/ports/user-repository";
-import userRepositoryDb from "../../infrastructure/data/prisma/prisma-user-repository";
-import { StockRepositoryPort } from "../ports/stock-repository";
-import stockRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-repository";
+import { UserRepositoryPort } from "../../ports/user-repository";
+import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
+import { StockRepositoryPort } from "../../ports/stock-repository";
+import stockRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-repository";
 
 class UserAlreadyExistsError extends Error {
   constructor(email: string) {

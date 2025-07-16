@@ -1,6 +1,6 @@
 import { StockItem } from "@/entities/stock-item";
-import { StockItemRepositoryPort } from "../ports/stock-item-repository";
-import stockItemRepositoryDb from "../../infrastructure/data/prisma/prisma-stock-item-repository";
+import { StockItemRepositoryPort } from "../../ports/stock-item-repository";
+import stockItemRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-item-repository";
 
 const createGetStockItemByIdUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;

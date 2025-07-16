@@ -1,6 +1,6 @@
 import { Client, ClientCreateData } from "@/entities/client";
-import { ClientRepositoryPort } from "../../application/ports/client-repository";
-import clientRepositoryDb from "../../infrastructure/data/prisma/prisma-client-repository";
+import { ClientRepositoryPort } from "../../ports/client-repository";
+import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { WithUserId } from "@/entities/user";
 
 // Custom error for application layer
