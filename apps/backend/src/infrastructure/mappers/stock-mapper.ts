@@ -1,6 +1,6 @@
 import { Stock } from ".prisma/client";
 
-const mapToDomainStock = (prismaStockItem: Stock): Stock => {
+const mapToDomainStock = (prismaStockItem: Stock): Omit<Stock, "teamId"> => {
   return {
     id: prismaStockItem.id,
     stockName: prismaStockItem.stockName,

@@ -37,8 +37,6 @@ const createStockItemController = (dependencies: {
     const { itemName, unit, quantity, threshold, price, stockId } =
       httpRequest.body;
 
-    console.log({ data: httpRequest.body });
-
     const stockItemData = {
       itemName,
       unit,

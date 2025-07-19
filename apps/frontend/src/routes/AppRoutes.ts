@@ -12,6 +12,7 @@ export const AppRoutes = {
   MyProfile: '/my-profile',
   ShoppingList: '/shopping-list',
   Login: '/login',
+  Team: '/team/:teamId',
 } as const
 
 export type AppRoutePath = (typeof AppRoutes)[keyof typeof AppRoutes]
@@ -28,10 +29,12 @@ export const breadCrumbNameMap: Record<string, string> = {
   'my-profile': 'Můj profil',
   'shopping-list': 'Nákupní seznam',
   '*': 'Stránka nenalezena',
+  team: 'Tým',
 }
 
 export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerProfile.replace(':customerId', visitId)
 export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':stockId', stockId)
+export const generateTeamPath = (teamId: string) => AppRoutes.Team.replace(':teamId', teamId)
 
 export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
   if (route === '*') {

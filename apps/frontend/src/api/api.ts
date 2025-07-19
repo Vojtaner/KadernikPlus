@@ -7,7 +7,10 @@ import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
-import type { GetVisitsType, VisitCreateData } from '../../../entities/visit'
+import type { GetVisitsType, VisitCreateData, VisitDetailFormType } from '../../../entities/visit'
+import type { TeamMember } from '../../../entities/team-member'
+import type { VisitDetailForm } from '../reactHookForm/entity'
+import type { User } from '@auth0/auth0-react'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -85,11 +88,36 @@ export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCrea
   const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
   return response.data
 }
+export const patchUpdateVisit = async (
+  axios: AxiosInstance,
+  visitId: string,
+  visitData: VisitDetailFormType
+): Promise<VisitDetailForm> => {
+  const response = await axios.patch(apiRoutes.getUpdateVisitUrl(visitId), visitData)
+  return response.data
+}
 
 export const postCreateNewStockItem = async (
   axios: AxiosInstance,
   stockItem: StockItemCreateData
 ): Promise<StockItemCreateData> => {
   const response = await axios.post(apiRoutes.getCreateStockItemUrl(), stockItem)
+  return response.data
+}
+
+export const getTeamMembers = async (
+  axios: AxiosInstance,
+  teamId: string
+): Promise<(TeamMember & { user: { name: string } })[]> => {
+  const response = await axios.get(apiRoutes.getTeamMembersUrl(teamId))
+  return response.data
+}
+export const getTeamMember = async (axios: AxiosInstance): Promise<TeamMember> => {
+  const response = await axios.get(apiRoutes.getTeamMemberUrl())
+  return response.data
+}
+
+export const getTeam = async (axios: AxiosInstance): Promise<User[]> => {
+  const response = await axios.get(apiRoutes.getTeamUrl())
   return response.data
 }

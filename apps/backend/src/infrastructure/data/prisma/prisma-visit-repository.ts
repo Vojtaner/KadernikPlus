@@ -1,4 +1,4 @@
-import { VisitCreateData } from "@/entities/visit";
+import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
 import { VisitRepositoryPort } from "../../../application/ports/visit-repository";
 import { PrismaClient, Service, Visit } from "@prisma/client";
 import mapToDomainVisit, {
@@ -7,14 +7,23 @@ import mapToDomainVisit, {
 } from "../../mappers/visit-mapper";
 import prisma from "./prisma";
 import { WithUserId } from "@/entities/user";
+import { HasId } from "@/domain/entity";
 
 export const createVisitRepositoryDb = (
-  prismaVisitRepository: PrismaClient
+  prismaRepository: PrismaClient
 ): VisitRepositoryPort => ({
   add: async (
     visitData: WithUserId<VisitCreateData>
   ): Promise<CreatedVisit> => {
-    const newVisit = await prismaVisitRepository.visit.create({
+    const userTeam = await prismaRepository.teamMember.findFirst({
+      where: { userId: visitData.userId },
+    });
+
+    if (!userTeam) {
+      throw new Error("User is not assigned to any team.");
+    }
+
+    const newVisit = await prismaRepository.visit.create({
       data: {
         clientId: visitData.clientId,
         userId: visitData.userId,
@@ -22,6 +31,7 @@ export const createVisitRepositoryDb = (
 
         //paid price se musí odstranit asi s migrací?
         paidPrice: 1,
+        teamId: userTeam.teamId, //teamId se musí přidat do VisitCreateData",
         visitServices: {
           create: visitData.serviceIds.map((serviceId) => ({
             service: { connect: { id: serviceId } },
@@ -38,7 +48,7 @@ export const createVisitRepositoryDb = (
 
   findAll: async (clientId?: string): Promise<any> => {
     const whereClause = clientId ? { clientId } : {};
-    const visits = await prismaVisitRepository.visit.findMany({
+    const visits = await prismaRepository.visit.findMany({
       where: whereClause,
     });
     return visits.map((visit) => mapToDomainVisit(visit as unknown as any));
@@ -47,8 +57,7 @@ export const createVisitRepositoryDb = (
   //návštěva nevrací nově přidaná políčka deposit,depositStatus etc
 
   findById: async (visitId: string): Promise<VisitWithServices | null> => {
-    console.log({ visitId });
-    const visit = await prismaVisitRepository.visit.findUnique({
+    const visit = await prismaRepository.visit.findUnique({
       where: { id: visitId },
       include: {
         client: true,
@@ -101,18 +110,17 @@ export const createVisitRepositoryDb = (
       };
     }
 
-    const visits: VisitWithServices[] =
-      await prismaVisitRepository.visit.findMany({
-        where,
-        include: {
-          client: true,
-          visitServices: {
-            include: {
-              service: true,
-            },
+    const visits: VisitWithServices[] = await prismaRepository.visit.findMany({
+      where,
+      include: {
+        client: true,
+        visitServices: {
+          include: {
+            service: true,
           },
         },
-      });
+      },
+    });
 
     return visits.map((visit) => mapToDomainVisit(visit)) as any;
 
@@ -120,28 +128,29 @@ export const createVisitRepositoryDb = (
   },
 
   delete: async (id: string): Promise<void> => {
-    await prismaVisitRepository.$transaction([
-      prismaVisitRepository.visitService.deleteMany({
+    await prismaRepository.$transaction([
+      prismaRepository.visitService.deleteMany({
         where: { visitId: id },
       }),
-      prismaVisitRepository.photo.deleteMany({
+      prismaRepository.photo.deleteMany({
         where: { visitId: id },
       }),
-      prismaVisitRepository.procedure.deleteMany({
+      prismaRepository.procedure.deleteMany({
         where: { visitId: id },
       }),
-      prismaVisitRepository.visit.delete({
+      prismaRepository.visit.delete({
         where: { id },
       }),
     ]);
   },
-  update: async (visitData: any): Promise<any> => {
-    const updatedVisit = await prismaVisitRepository.visit.update({
-      where: { id: visitData.visitId },
+  update: async (visitData: VisitDetailFormType & HasId): Promise<any> => {
+    const updatedVisit = await prismaRepository.visit.update({
+      where: { id: visitData.id },
       data: {
-        note: visitData.note,
         paidPrice: visitData.paidPrice,
         date: visitData.date,
+        deposit: visitData.deposit,
+        depositStatus: { set: visitData.depositStatus as any }, //po restartu dockeru se srovná
       },
 
       include: {

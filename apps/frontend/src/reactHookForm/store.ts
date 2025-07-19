@@ -1,8 +1,10 @@
 import { useForm, useFormContext } from 'react-hook-form'
 import type { AppFormState, AppFieldPath } from './entity'
 
-export const useAppForm = () => {
-  const methods = useForm<AppFormState>()
+export const useAppForm = (options?: { defaultValues?: Partial<AppFormState> }) => {
+  const methods = useForm<AppFormState>({
+    defaultValues: options?.defaultValues,
+  })
 
   return methods
 }

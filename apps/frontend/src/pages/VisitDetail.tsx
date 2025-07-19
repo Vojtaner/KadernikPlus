@@ -1,27 +1,23 @@
 import { Divider, Stack } from '@mui/material'
 import VisitDetailGrid from './VisitDetailGrid'
 import BoxIcon from '../components/BoxIcon'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import ProcedureCard from '../components/ProcedureCard'
 import Note from '../components/Note'
 import { AppRoutes } from '../routes/AppRoutes'
+import EditVisitDetailDialog from '../components/EditVisitDetailDialog'
 
 const VisitDetail = () => {
   return (
     <>
       <VisitDetailGrid />
-      <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'flex-start'} paddingY={2}>
+      <Stack spacing={2} direction={'row'} alignItems="center" justifyContent="flex-start" paddingY={2}>
+        <EditVisitDetailDialog />
         <BoxIcon
           size={'medium'}
           icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
           boxColor="primary.light"
           href={`${AppRoutes.CustomerProfile}`}
-        />
-        <BoxIcon
-          size={'medium'}
-          icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
-          boxColor="secondary.light"
         />
       </Stack>
       <Divider />

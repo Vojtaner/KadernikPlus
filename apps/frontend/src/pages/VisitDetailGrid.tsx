@@ -13,8 +13,6 @@ const VisitDetailGrid = () => {
     return <Loader />
   }
 
-  console.log({ visitData })
-
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4}>

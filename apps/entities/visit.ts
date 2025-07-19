@@ -8,9 +8,12 @@ export type Visit = {
   date: Date;
   paidPrice?: number;
   deposit?: number;
-  depositStatus?: "NEZAPLACENO" | "ZAPLACENO" | "BEZ ZÁLOHY";
+  depositStatus?: DepositStatus | null;
   visitStatus?: boolean;
   note?: string | null;
+  hairdresserId?: string;
+  userId?: string;
+
   serviceIds: string[];
 };
 
@@ -21,3 +24,31 @@ export type GetVisitsType = Omit<Visit, "serviceIds" | "id"> & {
   client: WithUserId<Client>;
   id: string;
 };
+
+{
+  /* záloha stav - selectfield - depositStatus
+   záloha výše - textfield - deposit
+   datum - datetimepicker - date
+   kadeřnice - autocomplete */
+}
+{
+  /* stav návštěvy*/
+}
+
+export enum DepositStatus {
+  NEZAPLACENO = "NEZAPLACENO",
+  ZAPLACENO = "ZAPLACENO",
+  BEZ_ZALOHY = "BEZ ZÁLOHY",
+}
+
+export const depositStatusOptions = Object.entries(DepositStatus).map(
+  ([key, value]) => ({
+    id: key,
+    name: value,
+  })
+);
+
+export type VisitDetailFormType = Pick<
+  Visit,
+  "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId"
+>;

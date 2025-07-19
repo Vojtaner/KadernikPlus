@@ -22,7 +22,6 @@ const createAddVisitUseCase = (dependencies: {
   execute: async (
     visitData: WithUserId<VisitCreateData>
   ): Promise<CreatedVisit> => {
-    console.log({ visitData });
     const visit = await visitRepositoryDb.add(visitData);
 
     // a další logika s přidáním návštěvy emaily, jiné databázové operace atd...

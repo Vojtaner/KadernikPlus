@@ -8,9 +8,12 @@ import {
   getServices,
   getStockItems,
   getStocks,
+  getTeamMember,
+  getTeamMembers,
   getUserLogs,
   getVisitByVisitId,
   getVisits,
+  patchUpdateVisit,
   postCreateNewClient,
   postCreateNewStockItem,
   postCreateService,
@@ -24,7 +27,8 @@ import type { StockItemCreateData } from '../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import type { GetVisitsType, VisitCreateData } from '../../entities/visit'
+import type { GetVisitsType, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
+import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
 
 export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
@@ -64,6 +68,45 @@ export const useCreateVisitMutation = (): UseMutationResult<VisitCreateData, Err
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['visits'] })
     },
+  })
+}
+export const useUpdateVisitMutation = (
+  visitId: string | undefined
+): UseMutationResult<string, Error, VisitDetailFormType> => {
+  const axios = useAxios()
+
+  return useMutation<string, Error, VisitDetailFormType>({
+    mutationFn: async (visitData: VisitDetailFormType) => {
+      if (!visitId) {
+        throw new Error('Visit ID is required to update a visit.')
+      }
+
+      await patchUpdateVisit(axios, visitId, visitData)
+      return visitId
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['visits', 'visit', visitId] })
+    },
+  })
+}
+
+export const useTeamMembersQuery = (teamId?: string) => {
+  const axios = useAxios()
+
+  const resolvedTeamId = teamId || DEFAULT_USERS_TEAM
+
+  return useQuery<(TeamMember & { user: { name: string } })[]>({
+    queryKey: ['teamMembers', resolvedTeamId],
+    queryFn: () => getTeamMembers(axios, resolvedTeamId),
+  })
+}
+
+export const useTeamMemberQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<TeamMember>({
+    queryKey: ['teamMember'],
+    queryFn: () => getTeamMember(axios),
   })
 }
 

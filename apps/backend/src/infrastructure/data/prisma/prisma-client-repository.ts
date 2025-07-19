@@ -6,36 +6,45 @@ import mapToDomainClient from "../../../infrastructure/mappers/client-mapper";
 import { WithUserId } from "@/entities/user";
 
 const createClientRepositoryDb = (
-  prismaVisitRepository: PrismaClient
+  prismaRepository: PrismaClient
 ): ClientRepositoryPort => {
   return {
     findAll: async (userId: string): Promise<Client[]> => {
-      const clients = await prismaVisitRepository.client.findMany({
+      const clients = await prismaRepository.client.findMany({
         where: { userId },
       });
       return clients.map((client) => mapToDomainClient(client));
     },
     add: async (clientData: WithUserId<ClientCreateData>): Promise<Client> => {
-      const newClient = await prismaVisitRepository.client.create({
+      const userTeam = await prismaRepository.teamMember.findFirst({
+        where: { userId: clientData.userId },
+      });
+
+      if (!userTeam) {
+        throw new Error("User is not assigned to any team.");
+      }
+
+      const newClient = await prismaRepository.client.create({
         data: {
           firstName: clientData.firstName,
           lastName: clientData.lastName,
           phone: clientData.phone,
           note: clientData.note,
           userId: clientData.userId,
+          teamId: userTeam.teamId,
         },
       });
 
       return mapToDomainClient(newClient);
     },
     findById: async (id: string): Promise<Client | null> => {
-      const client = await prismaVisitRepository.client.findUnique({
+      const client = await prismaRepository.client.findUnique({
         where: { id },
       });
       return client ? mapToDomainClient(client) : null;
     },
     findByPhone: async (phone: string): Promise<Client | null> => {
-      const client = await prismaVisitRepository.client.findUnique({
+      const client = await prismaRepository.client.findUnique({
         where: { phone }, // 'phone' is marked @unique in schema.prisma
       });
       return client ? mapToDomainClient(client) : null;

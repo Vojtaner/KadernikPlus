@@ -1,6 +1,6 @@
 import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
-import { AppRoutes, generateStockPath, isActiveRoute } from '../routes/AppRoutes'
+import { AppRoutes, generateStockPath, generateTeamPath, isActiveRoute } from '../routes/AppRoutes'
 import type { RootState } from '../store'
 import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
 import LanguageIcon from '@mui/icons-material/Language'
@@ -19,11 +19,13 @@ import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useAuth0 } from '@auth0/auth0-react'
 import LogoutIcon from '@mui/icons-material/Logout'
+import { useTeamMemberQuery } from '../queries'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
   const { logout } = useAuth0()
   const dispatch = useDispatch()
+  const { data: teamMember } = useTeamMemberQuery()
 
   const handleDrawerToggle = (open: boolean) => () => {
     // ... (keyboard event check)
@@ -59,6 +61,14 @@ export const SideMenu = () => {
         isActive={isActiveRoute(pathNameTransformed, AppRoutes.MyProfile)}
         to={AppRoutes.MyProfile}
         title={intl.formatMessage({ id: 'myProfile' })}
+        icon={<Face4Icon />}
+      />
+      <SideMenuButton
+        disabled={!teamMember}
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.Team)}
+        //vyřešit react router preloadem nebo tanstackquery prefetch
+        to={teamMember ? generateTeamPath(teamMember.teamId) : ''}
+        title={intl.formatMessage({ id: 'team' })}
         icon={<Face4Icon />}
       />
       <Divider />

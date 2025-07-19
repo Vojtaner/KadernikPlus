@@ -1,9 +1,11 @@
 import { ManagementClient } from "auth0";
-import { UserRepositoryPort } from "../../ports/user-repository";
 import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
 import { auth0ManagementApi } from "../../services/auth0ManagementApi";
+import addUserUseCase, { AddUserUseCaseType } from "./add-user";
+import { UserRepositoryPort } from "@/application/ports/user-repository";
 
 export const createEnsureUserExists = (dependencies: {
+  addUserUseCase: AddUserUseCaseType;
   userRepositoryDb: UserRepositoryPort;
   auth0ManagementApi: ManagementClient;
 }) => {
@@ -22,12 +24,19 @@ export const createEnsureUserExists = (dependencies: {
           id: userId,
         });
 
-        await dependencies.userRepositoryDb.add({
+        const user = await dependencies.addUserUseCase.execute({
+          email,
           id: userId,
-          email: email,
-          name: name,
+          name,
           authProvider: "auth0",
         });
+
+        // await dependencies.userRepositoryDb.add({
+        //   id: userId,
+        //   email: email,
+        //   name: name,
+        //   authProvider: "auth0",
+        // });
       }
     },
   };
@@ -37,6 +46,7 @@ export type EnsureUserExistsUseCaseType = ReturnType<
   typeof createEnsureUserExists
 >;
 const ensureUserExistsUseCase = createEnsureUserExists({
+  addUserUseCase,
   userRepositoryDb,
   auth0ManagementApi,
 });

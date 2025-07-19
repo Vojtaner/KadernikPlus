@@ -14,6 +14,8 @@ import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddl
 import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
 import serviceRoutes from "./routes/services-routes";
+import teamMemberRoutes from "./routes/team-member-routes";
+import teamRoutes from "./routes/team";
 
 dotenv.config();
 
@@ -37,6 +39,8 @@ app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 
 app.use("/api/visits", visitRoutes);
+app.use("/api/team-members", teamMemberRoutes);
+app.use("/api/team", teamRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);

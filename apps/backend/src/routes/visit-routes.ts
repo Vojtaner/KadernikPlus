@@ -10,7 +10,7 @@ visitRoutes.get(
   makeExpressCallback(VisitController.getVisitsByDatesController)
 );
 visitRoutes.patch(
-  "/:id",
+  "/:visitId",
   makeExpressCallback(VisitController.updateVisitController)
 );
 visitRoutes.get(

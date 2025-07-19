@@ -1,5 +1,4 @@
 import { Button } from '@mui/material'
-import React from 'react'
 import FormDialog from './Dialog'
 import MenuIconButton from './MenuIconButton'
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
@@ -8,9 +7,10 @@ import CustomerAutoComplete from './CustomerAutoComplete'
 import HairCutAutoComplete from './HairCutAutoComplete'
 import { useAppFormContext } from '../reactHookForm/store'
 import { useCreateVisitMutation } from '../queries'
+import { useState } from 'react'
 
 export const AddVisitItemButton = () => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = useState(false)
   const { control } = useAppFormContext()
   const { mutate: createVisitMutation } = useCreateVisitMutation()
 

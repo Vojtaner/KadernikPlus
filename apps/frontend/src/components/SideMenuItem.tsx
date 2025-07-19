@@ -8,14 +8,16 @@ type SideMenuListItemProps = {
   onClick?: React.MouseEventHandler<HTMLDivElement> | undefined
   icon: React.JSX.Element
   isActive?: boolean
+  disabled?: boolean
 }
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
-  const { title, to, icon, isActive = false } = props
+  const { title, to, icon, isActive = false, disabled = false } = props
 
   return (
     <ListItem disablePadding sx={isActive ? { bgcolor: AppTheme.palette.primary.main, fontWeight: 700 } : {}}>
       <ListItemButton
+        disabled={disabled}
         href={to}
         sx={
           isActive

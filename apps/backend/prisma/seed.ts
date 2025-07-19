@@ -8,8 +8,17 @@ async function main() {
   try {
     console.log("Start seeding...");
 
-    // --- Create Users (Hairdressers) ---
+    // --- Create Team ---
+    const defaultTeam = await prisma.team.upsert({
+      where: { id: "default-team-id" },
+      update: {},
+      create: {
+        id: "default-team-id",
+        name: "Default Team",
+      },
+    });
 
+    // --- Create Users ---
     const user1 = await prisma.user.upsert({
       where: { id: "auth0-id-223" },
       update: {},
@@ -34,94 +43,136 @@ async function main() {
         createdAt: new Date(),
       },
     });
+
+    // --- Create Team Members ---
+    await prisma.teamMember.upsert({
+      where: {
+        teamId_userId: {
+          teamId: defaultTeam.id,
+          userId: user1.id,
+        },
+      },
+      update: {},
+      create: {
+        teamId: defaultTeam.id,
+        userId: user1.id,
+        canAccessStocks: true,
+        canAccessClients: true,
+        canAccessVisits: true,
+      },
+    });
+
+    await prisma.teamMember.upsert({
+      where: {
+        teamId_userId: {
+          teamId: defaultTeam.id,
+          userId: user2.id,
+        },
+      },
+      update: {},
+      create: {
+        teamId: defaultTeam.id,
+        userId: user2.id,
+        canAccessStocks: true,
+        canAccessClients: true,
+        canAccessVisits: true,
+      },
+    });
+
     console.log(`Created users: ${user1.name}, ${user2.name}`);
 
     // --- Create Clients ---
     const client1 = await prisma.client.upsert({
-      where: { phone: "123-456-7890" }, // phone is @unique now
+      where: { phone: "123-456-7890" },
       update: {},
       create: {
         firstName: "Alice",
         lastName: "Johnson",
         phone: "123-456-7890",
         note: "Likes specific color brands.",
-        userId: "google-oauth2|113238590142888685973",
+        userId: user2.id,
+        teamId: defaultTeam.id,
       },
     });
 
     const client2 = await prisma.client.upsert({
-      where: { id: "client-2-uuid" }, // <--- FIXED: Using ID for upsert as email is optional and name is not unique
+      where: { id: "client-2-uuid" },
       update: {},
       create: {
         id: "client-2-uuid",
         firstName: "Bob",
-        userId: "google-oauth2|113238590142888685973",
         lastName: "Williams",
         phone: "098-765-4321",
         note: "Prefers short, no-fuss haircuts.",
+        userId: user2.id,
+        teamId: defaultTeam.id,
       },
     });
+
     console.log(`Created clients: ${client1.lastName}, ${client2.lastName}`);
 
     // --- Create Services ---
-    const existingService = await prisma.service.findFirst({
-      where: { serviceName: "Haircut" },
+    const service1 = await prisma.service.upsert({
+      where: {
+        userId_serviceName: { userId: user2.id, serviceName: "Haircut" },
+      },
+      update: {},
+      create: {
+        serviceName: "Haircut",
+        basePrice: 35,
+        userId: user2.id,
+        teamId: defaultTeam.id,
+      },
     });
 
-    let service1;
-    if (existingService) {
-      service1 = existingService;
-    } else {
-      service1 = await prisma.service.create({
-        data: {
-          serviceName: "Haircut",
-          basePrice: 35,
-          userId: "google-oauth2|113238590142888685973",
-        },
-      });
-    }
-
-    let service2 = await prisma.service.findFirst({
-      where: { serviceName: "Hair Coloring (Full)" },
-    });
-
-    if (!service2) {
-      service2 = await prisma.service.create({
-        data: {
+    const service2 = await prisma.service.upsert({
+      where: {
+        userId_serviceName: {
+          userId: user2.id,
           serviceName: "Hair Coloring (Full)",
-          basePrice: 120,
-          userId: "google-oauth2|113238590142888685973",
         },
-      });
-    }
-
-    let service3 = await prisma.service.findFirst({
-      where: { serviceName: "Deep Conditioning" },
+      },
+      update: {},
+      create: {
+        serviceName: "Hair Coloring (Full)",
+        basePrice: 120,
+        userId: user2.id,
+        teamId: defaultTeam.id,
+      },
     });
 
-    if (!service3) {
-      service3 = await prisma.service.create({
-        data: {
+    const service3 = await prisma.service.upsert({
+      where: {
+        userId_serviceName: {
+          userId: user1.id,
           serviceName: "Deep Conditioning",
-          basePrice: 45,
-          userId: "auth0-id-223",
         },
-      });
-    }
+      },
+      update: {},
+      create: {
+        serviceName: "Deep Conditioning",
+        basePrice: 45,
+        userId: user1.id,
+        teamId: defaultTeam.id,
+      },
+    });
+
     console.log(
       `Created services: ${service1.serviceName}, ${service2.serviceName}, ${service3.serviceName}`
     );
 
-    const stock2 = await prisma.stock.upsert({
+    // --- Create Stock ---
+    const stock1 = await prisma.stock.upsert({
       where: { id: "1" },
       update: {},
       create: {
         id: "1",
         ownerId: user2.id,
         stockName: "Stock 1",
+        teamId: defaultTeam.id,
       },
     });
-    console.log(`Created stock: ${stock2.id}`);
+    console.log(`Created stock: ${stock1.id}`);
 
     // --- Create Stock Items ---
     let stockItem1 = await prisma.stockItem.findFirst({
@@ -170,6 +221,7 @@ async function main() {
       update: {},
       create: {
         id: "visit-1-uuid",
+        teamId: "default-team-id",
         clientId: client1.id,
         userId: user1.id,
         deposit: 240,
@@ -186,6 +238,7 @@ async function main() {
       update: {},
       create: {
         id: "visit-2-uuid",
+        teamId: "default-team-id",
         clientId: client2.id,
         deposit: 240,
         depositStatus: "NEZAPLACENO",

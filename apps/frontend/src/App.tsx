@@ -21,6 +21,7 @@ import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AuthenticationGuard } from './components/AuthenticationGuard'
 import { AxiosProvider } from './axios/axios'
+import Team from './pages/Team'
 
 function App() {
   const methods = useAppForm()
@@ -42,6 +43,7 @@ function App() {
                   <Route path={AppRoutes.Logs} element={<AuthenticationGuard component={Logs} />} />
                   <Route path={AppRoutes.VisitsList} element={<AuthenticationGuard component={VisitsList} />} />
                   <Route path={AppRoutes.VisitDetail} element={<AuthenticationGuard component={VisitDetail} />} />
+                  <Route path={AppRoutes.Team} element={<AuthenticationGuard component={Team} />} />
                   <Route
                     path={AppRoutes.CustomerProfile}
                     element={<AuthenticationGuard component={CustomerProfile} />}

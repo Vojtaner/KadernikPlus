@@ -2,12 +2,12 @@ import {
   addVisitUseCase,
   CreateAddVisitUseCaseType,
 } from "../../application/use-cases/visits/add-visit";
-import { Visit, VisitCreateData } from "@/entities/visit";
+import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getVisitByIdUseCase, {
   CreateGetVisitByIdUseCaseType,
 } from "../../application/use-cases/visits/get-visit-by-id";
-import { HasClientId, HasId } from "@/domain/entity";
+import { HasId } from "@/domain/entity";
 import getVisitsByClientIdUseCase, {
   CreateGetVisitsByClientIdUseCaseType,
 } from "../../application/use-cases/visits/get-visits-by-client-id";
@@ -29,8 +29,8 @@ type GetVisitsByDatesControllerType = {
 type AddVisitControllerType = { body: VisitCreateData };
 type GetVisitByIdControllerType = { query: { visitId: string } };
 type UpdateVisitControllerType = {
-  params: { id: string };
-  body: Partial<Visit>;
+  params: { visitId: string };
+  body: VisitDetailFormType;
 };
 type GetVisitsByClientIdControllerType = {
   params: { clientId: string };
@@ -67,13 +67,6 @@ const createVisitController = (dependencies: {
         };
       }
 
-      // if (isNaN(visitData.date.getTime())) {
-      //   return {
-      //     statusCode: 400,
-      //     body: { error: "Invalid date format for visit date." },
-      //   };
-      // }
-      console.log({ visitDataWithUserId });
       const newVisit = await dependencies.addVisitUseCase.execute(
         visitDataWithUserId
       );
@@ -158,12 +151,14 @@ const createVisitController = (dependencies: {
     UpdateVisitControllerType
   > = async (httpRequest) => {
     try {
-      const visitId = httpRequest.params.id;
-      const updateData = httpRequest.body;
+      const visitId = httpRequest.params.visitId;
+      const visitData = httpRequest.body;
+
+      console.log("Update data:");
 
       const updatedVisit = await dependencies.updateVisitUseCase.execute({
         id: visitId,
-        ...updateData,
+        ...visitData,
       });
 
       return {

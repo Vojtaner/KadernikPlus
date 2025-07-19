@@ -13,9 +13,10 @@ type DatePickerProps = {
   control: Control<AppFormState> // or better: `Control<any>` from RHF
   label?: string
   fieldPath: AppFieldPath
+  defaultValue: Date
 }
 
-export default function BasicDateTimePicker({ fieldPath, control, label }: DatePickerProps) {
+export default function BasicDateTimePicker({ fieldPath, control, label, defaultValue }: DatePickerProps) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
       <Controller
@@ -25,7 +26,7 @@ export default function BasicDateTimePicker({ fieldPath, control, label }: DateP
           <DateTimePicker
             label={label ?? 'Datum'}
             ampm={false}
-            value={isStringNumberOrDate(field.value) ? dayjs(field.value) : null}
+            value={isStringNumberOrDate(field.value) ? dayjs(field.value) : (dayjs(defaultValue) ?? null)}
             onChange={(date) => field.onChange(date?.toDate())}
             slotProps={{ textField: { fullWidth: true } }}
           />

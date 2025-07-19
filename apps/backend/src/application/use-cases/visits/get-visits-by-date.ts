@@ -1,7 +1,6 @@
-import { Visit } from "@/entities/visit";
 import { VisitRepositoryPort } from "../../ports/visit-repository";
 import visitRepositoryDb from "../../../infrastructure/data/prisma/prisma-visit-repository";
-import { Service } from "@prisma/client";
+import { Service, Visit } from "@prisma/client";
 
 export function createGetVisitsByDatesUseCase(dependencies: {
   visitRepositoryDb: VisitRepositoryPort;

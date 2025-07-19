@@ -1,4 +1,4 @@
-import { Controller, type Control, type FieldPath } from 'react-hook-form'
+import { Controller, type Control, type FieldPath, type FieldPathValue } from 'react-hook-form'
 import { UnitsObject } from '../../../entities/stock-item'
 import type { AppFormState } from '../reactHookForm/entity'
 import { MenuItem, Select, type SxProps, type Theme } from '@mui/material'
@@ -17,6 +17,7 @@ type SelectFieldProps<T extends Identifiable> = {
   items: T[]
   keyExtractor: (item: T) => T['id']
   labelExtractor: (item: T) => string
+  defaultValue: FieldPathValue<AppFormState, FieldPath<AppFormState>>
 }
 
 const SelectField = <T extends Identifiable>(props: SelectFieldProps<T>) => {
@@ -24,6 +25,7 @@ const SelectField = <T extends Identifiable>(props: SelectFieldProps<T>) => {
     <Controller
       name={props.fieldPath}
       control={props.control}
+      defaultValue={props.defaultValue}
       render={({ field }) => (
         <Select {...field}>
           {props.items.map((item) => (

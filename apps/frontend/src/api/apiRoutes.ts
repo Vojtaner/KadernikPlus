@@ -10,5 +10,9 @@ export const apiRoutes = {
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
   getVisitUrl: () => `/api/visits`,
+  getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
+  getTeamMembersUrl: (teamId: string) => `/api/team-members/${encodeURIComponent(teamId)}`,
+  getTeamUrl: () => `/api/team/`,
+  getTeamMemberUrl: () => `/api/team-members/`,
 }
