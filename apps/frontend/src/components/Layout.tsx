@@ -5,7 +5,7 @@ import TopBar from './TopBar'
 import { useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
-import SearchResults from '../pages/SearchResults'
+import SearchResult from './SearchResult'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
@@ -38,9 +38,36 @@ const Layout = (props: PropsWithChildren) => {
         paddingY="12px"
         bgcolor="white"
         marginTop="-1px"
+        overflow={'hidden'}
         borderRadius={isSearchActive ? '15px 15px 0 0' : 'none'}
         sx={{ bgcolor: 'white', height: '100%', minHeight: '100vh' }}>
-        {!isSearchActive ? children : <SearchResults />}
+        <>
+          {!isSearchActive && children}
+          <SearchResult
+            sx={{
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+            }}
+          />
+          <SearchResult
+            sx={{
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+            }}
+          />
+          <SearchResult
+            sx={{
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+            }}
+          />
+          <SearchResult
+            sx={{
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+            }}
+          />
+        </>
       </Box>
       <BottomBar />
       <SideMenu />

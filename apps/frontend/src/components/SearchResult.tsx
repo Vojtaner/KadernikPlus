@@ -1,14 +1,20 @@
-import { IconButton, Stack, Typography } from '@mui/material'
+import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 
-const SearchResult = () => {
+const SearchResult = (props: { sx?: SxProps }) => {
   const haircut = 'Stříhání suché'
   const customerName = 'Standa Novák'
   const depositState = 'Bez zálohy'
   const dateTime = '12.5.2025 - 13:45'
 
   return (
-    <Stack marginY="5px" direction="row" alignItems="center" justifyContent="flex-start" spacing={1}>
+    <Stack
+      marginY="5px"
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-start"
+      spacing={1}
+      sx={{ ...props.sx }}>
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>

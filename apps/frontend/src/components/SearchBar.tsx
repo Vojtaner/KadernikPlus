@@ -1,7 +1,6 @@
 import Stack from '@mui/material/Stack'
 import SearchIcon from '@mui/icons-material/Search'
-import { IconButton } from '@mui/material'
-import TextField from './TextField'
+import { IconButton, type SxProps } from '@mui/material'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import { useState } from 'react'
 
@@ -9,6 +8,7 @@ type SearchBarProps = {
   onClick: () => void
   isSearchActive: boolean
   onFocus: () => void
+  sx?: SxProps
 }
 
 const SearchBar = (props: SearchBarProps) => {
@@ -19,6 +19,7 @@ const SearchBar = (props: SearchBarProps) => {
     <Stack direction="row" sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }} justifyContent="space-between">
       <IconButton
         sx={{
+          ...props.sx,
           width: 48,
           alignItems: 'center',
           justifyContent: 'center',

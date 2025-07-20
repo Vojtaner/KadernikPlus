@@ -15,41 +15,64 @@ function TopBar(props: TopBarProps) {
   return (
     <Stack
       sx={{
-        height: '14vh',
+        height: '100px',
         paddingX: '10px',
         paddingY: '10px',
         paddingBottom: isSearchActive ? '0px' : '8px',
         position: 'sticky',
+        overflow: 'hidden',
         top: 0,
         zIndex: 1100,
         transition: 'padding-bottom 0.7s ease',
         background: '#c81f5b',
       }}>
       <Stack direction="column" spacing={1}>
-        {!isSearchActive && (
-          <AppLogo
-            sx={{
-              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-              transform: isSearchActive ? 'rotate(-80deg) scale(0.7)' : 'rotate(0deg) scale(1)',
-              opacity: isSearchActive ? 0 : 1,
-            }}
-          />
-        )}
-        <Stack direction="row" spacing={1} alignItems="center">
+        <AppLogo
+          sx={{
+            transform: `${isSearchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
+            transition: 'transform 0.5s ease-in-out',
+          }}
+        />
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems="center"
+          sx={{
+            transform: `${isSearchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
+            transition: 'transform 0.5s ease-in-out',
+            position: 'relative',
+          }}>
           <SearchBar onClick={onActiveSearch} isSearchActive={isSearchActive} onFocus={onActiveSearch} />
-          {!isSearchActive && <MenuBox />}
-        </Stack>
-        {isSearchActive && (
+          <MenuBox />
           <TopBarFilterButtonsStack
             sx={{
-              transition: 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+              position: 'absolute',
+              top: '45px',
+              left: '0px',
             }}
           />
-        )}
+        </Stack>
       </Stack>
     </Stack>
   )
 }
+
+//  <Stack
+//                     gap={2}
+//                     direction={'row'}
+//                     sx={{
+//                       transform: `${!active ? 'translateX(120%)' : 'translateX(0)'}`,
+//                       transition: 'transform 0.5s ease-in-out',
+//                     }}>
+//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
+//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
+//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
+//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
+//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
+//                   </Stack>
+//                 </Stack>
 
 export default TopBar
 
@@ -107,8 +130,8 @@ export const AppLogo = (props: AppLogoProps) => {
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
-      <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
-      <Typography color="common.white" variant="body2">
+      <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
+      <Typography color="common.white" variant="h5">
         Kadeřník+
       </Typography>
     </Stack>
