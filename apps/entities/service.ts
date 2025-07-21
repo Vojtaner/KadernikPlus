@@ -3,5 +3,6 @@ export type Service = {
   serviceName: string;
   basePrice: number;
   userId?: string;
+  teamId?: string;
 };
 export type ServiceCreateData = Omit<Service, "id">;

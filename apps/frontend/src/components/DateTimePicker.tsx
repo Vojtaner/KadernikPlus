@@ -13,7 +13,7 @@ type DatePickerProps = {
   control: Control<AppFormState> // or better: `Control<any>` from RHF
   label?: string
   fieldPath: AppFieldPath
-  defaultValue: Date
+  defaultValue?: Date
 }
 
 export default function BasicDateTimePicker({ fieldPath, control, label, defaultValue }: DatePickerProps) {

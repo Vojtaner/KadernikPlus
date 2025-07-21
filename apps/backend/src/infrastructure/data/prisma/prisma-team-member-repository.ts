@@ -1,5 +1,5 @@
 import { TeamMemberRepositoryPort } from "../../../application/ports/team-member-repository";
-import { PrismaClient, Team, TeamMember } from "@prisma/client";
+import { PrismaClient, TeamMember } from ".prisma/client";
 import prisma from "./prisma";
 import { DEFAULT_USERS_TEAM } from "../../../../../entities/team-member";
 
@@ -23,6 +23,13 @@ const createTeamMemberRepositoryDb = (
       },
     });
     return newMember;
+  },
+  delete: async (teamMemberRowId: string) => {
+    await prisma.teamMember.delete({
+      where: {
+        id: teamMemberRowId,
+      },
+    });
   },
 
   findMany: async (teamId: string) => {
@@ -65,6 +72,32 @@ const createTeamMemberRepositoryDb = (
         userId,
       },
     });
+    return teamMember;
+  },
+  update: async (data) => {
+    const teamMember = await prisma.teamMember.upsert({
+      where: {
+        teamId_userId: {
+          teamId: data.teamId,
+          userId: data.userId,
+        },
+      },
+      update: {
+        canAccessClients: data.canAccessClients,
+        canAccessStocks: data.canAccessStocks,
+        canAccessVisits: data.canAccessVisits,
+      },
+      create: {
+        teamId: data.teamId,
+        userId: data.userId,
+        canAccessClients: data.canAccessClients,
+        canAccessStocks: data.canAccessStocks,
+        canAccessVisits: data.canAccessVisits,
+      },
+    });
+
+    console.log({ teamMember });
+
     return teamMember;
   },
 });

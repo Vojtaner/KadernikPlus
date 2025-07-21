@@ -7,6 +7,10 @@ teamMemberRoutes.get(
   "/",
   makeExpressCallback(teamMemberController.getTeamMemberByUserIdController)
 );
+teamMemberRoutes.patch(
+  "/:teamId",
+  makeExpressCallback(teamMemberController.updateTeamMemberSkillController)
+);
 
 teamMemberRoutes.get(
   "/:teamId",
@@ -16,6 +20,16 @@ teamMemberRoutes.get(
 teamMemberRoutes.post(
   "/",
   makeExpressCallback(teamMemberController.createTeamMemberController)
+);
+
+teamMemberRoutes.delete(
+  "/",
+  makeExpressCallback(teamMemberController.deleteTeamMemberController)
+);
+
+teamMemberRoutes.post(
+  "/invitation",
+  makeExpressCallback(teamMemberController.inviteOrSwitchTeamController)
 );
 
 export default teamMemberRoutes;

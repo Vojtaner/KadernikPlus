@@ -37,7 +37,6 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
     [columns, rows]
   )
 
-
   return (
     <Box sx={{ height: '100%' }}>
       <DataGrid

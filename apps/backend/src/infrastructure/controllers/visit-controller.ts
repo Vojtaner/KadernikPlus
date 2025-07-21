@@ -154,8 +154,6 @@ const createVisitController = (dependencies: {
       const visitId = httpRequest.params.visitId;
       const visitData = httpRequest.body;
 
-      console.log("Update data:");
-
       const updatedVisit = await dependencies.updateVisitUseCase.execute({
         id: visitId,
         ...visitData,

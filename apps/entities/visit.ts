@@ -25,6 +25,29 @@ export type GetVisitsType = Omit<Visit, "serviceIds" | "id"> & {
   id: string;
 };
 
+export type VisitWithServices = {
+  client: {
+    id: string;
+    userId: string;
+    note: string | null;
+    deposit: boolean;
+    teamId: string;
+    firstName: string;
+    lastName: string;
+    phone: string | null;
+  };
+
+  visitServices: VisitService[];
+  visitStatus: boolean;
+} & Omit<Visit, "id" | "visitStatus" | "hairdresserId">;
+
+type VisitService = {
+  id: string;
+  service: Service;
+  serviceId: string;
+  visitId: string;
+};
+
 {
   /* záloha stav - selectfield - depositStatus
    záloha výše - textfield - deposit

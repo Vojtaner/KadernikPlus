@@ -1,4 +1,4 @@
-import { TeamMember } from "@prisma/client";
+import { TeamMember } from ".prisma/client";
 
 export type TeamMemberRepositoryPort = {
   create: (data: {
@@ -26,4 +26,12 @@ export type TeamMemberRepositoryPort = {
     }[]
   >;
   findUniqueMember: (userId: string) => Promise<TeamMember | null>;
+  update: (data: {
+    canAccessStocks?: boolean;
+    canAccessClients?: boolean;
+    canAccessVisits?: boolean;
+    userId: string;
+    teamId: string;
+  }) => Promise<TeamMember | null>;
+  delete: (teamMemberRowId: string) => Promise<void>;
 };

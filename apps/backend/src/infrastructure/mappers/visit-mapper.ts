@@ -1,5 +1,5 @@
 import { Visit as VisitEntity } from "@/entities/visit";
-import { Client, Prisma, Service, Visit } from "@prisma/client";
+import { Client, Prisma, Service } from "@prisma/client";
 
 export type VisitWithServices = Prisma.VisitGetPayload<{
   include: {

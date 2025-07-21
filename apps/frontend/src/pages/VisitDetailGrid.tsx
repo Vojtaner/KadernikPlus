@@ -1,17 +1,20 @@
 import { Grid, Switch, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
 import { useParams } from 'react-router-dom'
-import { useVisitQuery } from '../queries'
+import { useTeamMembersQuery, useVisitQuery } from '../queries'
 import Loader from './Loader'
 import { getDateTime } from './VisitsList'
 
 const VisitDetailGrid = () => {
   const { visitId } = useParams()
   const { data: visitData } = useVisitQuery(visitId)
+  const { data: teamMembers } = useTeamMembersQuery()
 
   if (!visitData) {
     return <Loader />
   }
+
+  console.log({ teamMembers, visitData })
 
   return (
     <Grid container rowSpacing={2}>
@@ -19,7 +22,11 @@ const VisitDetailGrid = () => {
         <DetailColumn label={'Kadeřnice'} input={'Monika L.'} />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label={'Cena'} input={formatToCZK(visitData.paidPrice)} />
+        <DetailColumn
+          label={'Zaplacená cena'}
+          input={formatToCZK(visitData.paidPrice)}
+          helperText={formatToCZK(visitData.visitServices[0].service.basePrice)}
+        />
       </Grid>
       <Grid size={4}>
         <DetailColumn label={'Datum'} input={getDateTime(visitData.date)} />

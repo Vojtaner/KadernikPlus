@@ -35,11 +35,10 @@ model User {
 
   @@map("users")
 }
-
 model TeamMember {
   id        String   @id @default(uuid())
   teamId    String
-  userId    String
+  userId    String    @unique
 
   canAccessStocks  Boolean @default(false)
   canAccessClients Boolean @default(false)

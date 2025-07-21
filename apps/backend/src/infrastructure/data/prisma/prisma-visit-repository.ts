@@ -149,7 +149,7 @@ export const createVisitRepositoryDb = (
       data: {
         paidPrice: visitData.paidPrice,
         date: visitData.date,
-        deposit: visitData.deposit,
+        deposit: Number(visitData.deposit),
         depositStatus: { set: visitData.depositStatus as any }, //po restartu dockeru se srovná
       },
 

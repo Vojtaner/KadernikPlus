@@ -7,7 +7,7 @@ import type { Client, ClientCreateData } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
-import type { GetVisitsType, VisitCreateData, VisitDetailFormType } from '../../../entities/visit'
+import type { GetVisitsType, VisitCreateData, VisitDetailFormType, VisitWithServices } from '../../../entities/visit'
 import type { TeamMember } from '../../../entities/team-member'
 import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'
@@ -46,7 +46,7 @@ export const getServices = async (axios: AxiosInstance): Promise<Service[]> => {
   const response = await axios.get(apiRoutes.getServiceUrl())
   return response.data
 }
-export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<GetVisitsType> => {
+export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServices> => {
   const response = await axios.get(apiRoutes.getVisitByVisitIdUrl(visitId))
   return response.data
 }
@@ -96,12 +96,36 @@ export const patchUpdateVisit = async (
   const response = await axios.patch(apiRoutes.getUpdateVisitUrl(visitId), visitData)
   return response.data
 }
+export const patchTeamMemberSkill = async (
+  axios: AxiosInstance,
+  memberData: {
+    canAccessStocks: boolean
+    canAccessClients: boolean
+    canAccessVisits: boolean
+  },
+  teamId: string
+): Promise<VisitDetailForm> => {
+  const response = await axios.patch(apiRoutes.getUpdateTeamMemberUrl(teamId), memberData)
+  return response.data
+}
 
 export const postCreateNewStockItem = async (
   axios: AxiosInstance,
   stockItem: StockItemCreateData
 ): Promise<StockItemCreateData> => {
   const response = await axios.post(apiRoutes.getCreateStockItemUrl(), stockItem)
+  return response.data
+}
+
+export const postInviteTeamMember = async (
+  axios: AxiosInstance,
+  data: { email: string; consentId: string }
+): Promise<TeamMember> => {
+  const response = await axios.post(apiRoutes.getInviteTeamMemberUrl(), data)
+  return response.data
+}
+export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promise<TeamMember> => {
+  const response = await axios.delete(apiRoutes.getTeamMemberUrl(), { data: { id } })
   return response.data
 }
 
@@ -112,6 +136,7 @@ export const getTeamMembers = async (
   const response = await axios.get(apiRoutes.getTeamMembersUrl(teamId))
   return response.data
 }
+
 export const getTeamMember = async (axios: AxiosInstance): Promise<TeamMember> => {
   const response = await axios.get(apiRoutes.getTeamMemberUrl())
   return response.data

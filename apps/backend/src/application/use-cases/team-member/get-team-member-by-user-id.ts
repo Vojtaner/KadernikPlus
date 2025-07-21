@@ -8,7 +8,6 @@ const createGetTeamMemberByUserIdUseCase = (dependencies: {
     execute: async (data: { userId: string }) => {
       const teamMember =
         await dependencies.teamMemberRepositoryDb.findUniqueMember(data.userId);
-      console.log({ teamMember });
       return teamMember;
     },
   };

@@ -1,11 +1,8 @@
 export type TeamMember = {
   userId: string;
   teamId: string;
-  canAccessStocks: boolean;
-  canAccessClients: boolean;
-  canAccessVisits: boolean;
   id: string;
-};
+} & Permissions;
 
 export type TeamSettings = {
   name: string;
@@ -16,3 +13,9 @@ export type TeamSettings = {
 };
 
 export const DEFAULT_USERS_TEAM = "users-team";
+
+export type Permissions = {
+  canAccessStocks: boolean;
+  canAccessClients: boolean;
+  canAccessVisits: boolean;
+};

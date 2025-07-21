@@ -113,11 +113,11 @@ const createVisitsTable = (visits: GetVisitsType[]): VisitListItem[] => {
 }
 
 export const getDateTime = (date: Date) => {
-  const date2 = new Date(date)
+  const convertedDate = new Date(date)
 
-  const hours = date2.getUTCHours()
-  const minutes = date2.getUTCMinutes()
-  const day = date2.getUTCDay()
-  const month = date2.getUTCMonth() + 1
+  const hours = convertedDate.getUTCHours()
+  const minutes = convertedDate.getUTCMinutes().toString().padStart(2, '0')
+  const day = convertedDate.getUTCDate()
+  const month = convertedDate.getUTCMonth() + 1
   return `${day}.${month} - ${hours}:${minutes}`
 }
