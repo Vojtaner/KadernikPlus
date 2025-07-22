@@ -10,6 +10,10 @@ visitRoutes.get(
   makeExpressCallback(VisitController.getVisitsByDatesController)
 );
 visitRoutes.patch(
+  "/status",
+  makeExpressCallback(VisitController.updateVisitStatusController)
+);
+visitRoutes.patch(
   "/:visitId",
   makeExpressCallback(VisitController.updateVisitController)
 );

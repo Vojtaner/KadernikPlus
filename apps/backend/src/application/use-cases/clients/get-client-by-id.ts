@@ -1,6 +1,8 @@
 import { Client } from "@/entities/client";
 import { ClientRepositoryPort } from "../../ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
+import { VisitRepositoryPort } from "@/application/ports/visit-repository";
+import visitRepositoryDb from "../../../infrastructure/data/prisma/prisma-visit-repository";
 
 // Custom error for application layer
 class ClientNotFoundError extends Error {
@@ -12,6 +14,7 @@ class ClientNotFoundError extends Error {
 
 const createGetClientByIdUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
+  visitRepositoryDb: VisitRepositoryPort;
 }) => {
   return {
     execute: async (clientId: string): Promise<Client> => {
@@ -30,6 +33,9 @@ export type CreateGetClientByIdUseCaseType = ReturnType<
   typeof createGetClientByIdUseCase
 >;
 
-const getClientByIdUseCase = createGetClientByIdUseCase({ clientRepositoryDb });
+const getClientByIdUseCase = createGetClientByIdUseCase({
+  clientRepositoryDb,
+  visitRepositoryDb,
+});
 
 export default getClientByIdUseCase;

@@ -210,7 +210,6 @@ const createTeamMemberController = (dependencies: {
         body: updatedMember,
       };
     } catch (error) {
-      console.log({ error });
       return {
         statusCode: 500,
         body: { error: "Server error" },
@@ -220,7 +219,6 @@ const createTeamMemberController = (dependencies: {
   const deleteTeamMemberController: ControllerFunction<
     DeleteTeamMemberControllerType
   > = async (httpRequest) => {
-    console.log({ httpRequest });
     const id = httpRequest.body.id;
 
     try {
@@ -238,7 +236,6 @@ const createTeamMemberController = (dependencies: {
         body: deletedTeamMember,
       };
     } catch (error) {
-      console.log({ error });
       return {
         statusCode: 500,
         body: { error: "Server error" },

@@ -3,14 +3,15 @@ import MenuBox from './MenuBox'
 import SearchBar from './SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
+import { useState } from 'react'
 
 type TopBarProps = {
-  onActiveSearch: () => void
-  isSearchActive: boolean
+  onActiveSearch: (state: boolean) => void
 }
 
 function TopBar(props: TopBarProps) {
-  const { onActiveSearch, isSearchActive } = props
+  const { onActiveSearch } = props
+  const [searchActive, setSearchActive] = useState(false)
 
   return (
     <Stack
@@ -18,7 +19,7 @@ function TopBar(props: TopBarProps) {
         height: '100px',
         paddingX: '10px',
         paddingY: '10px',
-        paddingBottom: isSearchActive ? '0px' : '8px',
+        paddingBottom: searchActive ? '0px' : '8px',
         position: 'sticky',
         overflow: 'hidden',
         top: 0,
@@ -29,7 +30,7 @@ function TopBar(props: TopBarProps) {
       <Stack direction="column" spacing={1}>
         <AppLogo
           sx={{
-            transform: `${isSearchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
+            transform: `${searchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
             transition: 'transform 0.5s ease-in-out',
           }}
         />
@@ -38,15 +39,21 @@ function TopBar(props: TopBarProps) {
           spacing={1}
           alignItems="center"
           sx={{
-            transform: `${isSearchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
+            transform: `${searchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
             transition: 'transform 0.5s ease-in-out',
             position: 'relative',
           }}>
-          <SearchBar onClick={onActiveSearch} isSearchActive={isSearchActive} onFocus={onActiveSearch} />
+          <SearchBar
+            isActive={searchActive}
+            onToggleActive={(state) => {
+              setSearchActive(state)
+              onActiveSearch(state)
+            }}
+          />
           <MenuBox />
           <TopBarFilterButtonsStack
             sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transform: `${!searchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
               transition: 'transform 0.5s ease-in-out',
               position: 'absolute',
               top: '45px',

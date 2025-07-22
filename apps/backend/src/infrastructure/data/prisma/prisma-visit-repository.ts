@@ -45,13 +45,32 @@ export const createVisitRepositoryDb = (
 
     return newVisit;
   },
+  updateStatus: async (visitId: string, checked: boolean) => {
+    const updatedVisit = await prisma.visit.update({
+      where: { id: visitId },
+      data: {
+        visitStatus: checked,
+      },
+    });
 
-  findAll: async (clientId?: string): Promise<any> => {
+    return updatedVisit;
+  },
+
+  findAll: async (clientId?: string): Promise<VisitWithServices[]> => {
     const whereClause = clientId ? { clientId } : {};
     const visits = await prismaRepository.visit.findMany({
       where: whereClause,
+      include: {
+        client: true,
+        visitServices: {
+          include: {
+            service: true,
+          },
+        },
+      },
     });
-    return visits.map((visit) => mapToDomainVisit(visit as unknown as any));
+
+    return visits;
   },
 
   //návštěva nevrací nově přidaná políčka deposit,depositStatus etc
@@ -77,7 +96,7 @@ export const createVisitRepositoryDb = (
     from?: Date;
     to?: Date;
     userId: string;
-  }): Promise<Omit<Visit, "serviceIds"> & { services: Service[] }[]> => {
+  }): Promise<VisitWithServices[]> => {
     const { date, from, to, userId } = filter;
 
     const where: any = {
@@ -122,9 +141,7 @@ export const createVisitRepositoryDb = (
       },
     });
 
-    return visits.map((visit) => mapToDomainVisit(visit)) as any;
-
-    // return visits.map((visit) => mapToDomainVisit(visit));
+    return visits;
   },
 
   delete: async (id: string): Promise<void> => {
@@ -157,8 +174,7 @@ export const createVisitRepositoryDb = (
         visitServices: true,
       },
     });
-    //se dodělá
-    return mapToDomainVisit(updatedVisit as any);
+    return updatedVisit;
   },
 });
 

@@ -1,19 +1,46 @@
-import Stack from '@mui/material/Stack'
+import { useState, useEffect } from 'react'
+import { Stack, IconButton, type SxProps } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import { IconButton, type SxProps } from '@mui/material'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import { useState } from 'react'
+import { useAppCurrentWatch, useAppFormContext } from '../reactHookForm/store'
+import TextField from './TextField'
+import { useSearchClientsQuery } from '../queries'
 
 type SearchBarProps = {
-  onClick: () => void
-  isSearchActive: boolean
-  onFocus: () => void
+  onClick?: () => void
+  onFocus?: () => void
   sx?: SxProps
+  isActive: boolean
+  onToggleActive?: (active: boolean) => void
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const { onClick, onFocus, isSearchActive } = props
-  const [isFieldFocused, setIsFieldFocused] = useState(false)
+  const { onClick, onFocus, isActive, onToggleActive } = props
+  const [internalActive, setInternalActive] = useState(false)
+  const isFieldFocused = isActive ?? internalActive
+  const { control } = useAppFormContext()
+  const searchValue = useAppCurrentWatch('searchValue')
+  const { refetch } = useSearchClientsQuery({ nameOrPhone: searchValue as string }, !!searchValue)
+
+  useEffect(() => {
+    if (!searchValue) {
+      return
+    }
+
+    const handler = setTimeout(() => {
+      refetch()
+    }, 1000)
+
+    return () => clearTimeout(handler)
+  }, [searchValue])
+
+  const handleOpenField = () => {
+    onClick?.()
+    onFocus?.()
+    setInternalActive((prev) => {
+      onToggleActive?.(!prev)
+      return !prev
+    })
+  }
 
   return (
     <Stack direction="row" sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }} justifyContent="space-between">
@@ -24,35 +51,28 @@ const SearchBar = (props: SearchBarProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           display: 'flex',
-          transition: 'transform 1s cubic-bezier(0.4, 0, 0.2, 1)',
-          transform: isFieldFocused ? 'rotate(-180deg)' : 'rotate(0deg)',
         }}
-        onClick={onClick}>
-        {isFieldFocused || isSearchActive ? (
-          <ArrowForwardIosIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
-        ) : (
-          <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
-        )}
+        onClick={handleOpenField}>
+        <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
       </IconButton>
-      {/* <TextField
-        fieldPath=""
-        placeholder="Vyhledej zákazníka..."
-        onFocus={() => {
-          setIsFieldFocused(true)
-          onFocus()
-        }}
-        onBlur={() => setIsFieldFocused(false)}
-        sx={{
-          width: '100%',
-          background: 'none',
-          '& .MuiInputBase-root': {
-            color: 'white',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            border: 'none',
-          },
-        }}
-      /> */}
+
+      {isFieldFocused && (
+        <TextField
+          fieldPath="searchValue"
+          control={control}
+          placeholder="Vyhledej zákazníka..."
+          sx={{
+            width: '100%',
+            background: 'none',
+            '& .MuiInputBase-root': {
+              color: 'white',
+            },
+            '& .MuiOutlinedInput-notchedOutline': {
+              border: 'none',
+            },
+          }}
+        />
+      )}
     </Stack>
   )
 }

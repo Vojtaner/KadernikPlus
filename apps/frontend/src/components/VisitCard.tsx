@@ -5,11 +5,16 @@ import BoxIcon from './BoxIcon'
 import Note from './Note'
 import ProcedureCard from './ProcedureCard'
 import VisitDetailGrid from '../pages/VisitDetailGrid'
+import { useVisitQuery } from '../queries'
+import { useParams } from 'react-router-dom'
 
 const VisitPage = () => {
+  const { visitId } = useParams()
+  const { data: visitData } = useVisitQuery(visitId)
+
   return (
     <>
-      <VisitDetailGrid />
+      <VisitDetailGrid visitData={visitData} />
       <Stack spacing={2} direction={'row'} alignItems="center" justifyContent={'flex-start'} paddingY={2}>
         <BoxIcon
           size={'medium'}

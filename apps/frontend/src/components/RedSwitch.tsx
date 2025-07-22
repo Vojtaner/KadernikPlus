@@ -1,4 +1,5 @@
-import { alpha, styled, Switch } from '@mui/material'
+import { alpha, styled } from '@mui/material'
+import Switch from '../pages/SwitchButton'
 
 const RedSwitch = styled(Switch)(({ theme }) => ({
   '& .MuiSwitch-switchBase': {

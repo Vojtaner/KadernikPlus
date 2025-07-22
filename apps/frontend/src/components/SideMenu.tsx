@@ -19,13 +19,14 @@ import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useAuth0 } from '@auth0/auth0-react'
 import LogoutIcon from '@mui/icons-material/Logout'
-import { useTeamMemberQuery } from '../queries'
+import { useStocksQuery, useTeamMemberQuery } from '../queries'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
   const { logout } = useAuth0()
   const dispatch = useDispatch()
   const { data: teamMember } = useTeamMemberQuery()
+  const { data: stocks } = useStocksQuery()
 
   const handleDrawerToggle = (open: boolean) => () => {
     // ... (keyboard event check)
@@ -114,12 +115,14 @@ export const SideMenu = () => {
         title={intl.formatMessage({ id: 'logs' })}
         icon={<LightbulbOutlineIcon />}
       />
-      <SideMenuButton
-        isActive={isActiveRoute(pathNameTransformed, AppRoutes.stock)}
-        to={generateStockPath('1')}
-        title={intl.formatMessage({ id: 'stock' })}
-        icon={<WarehouseIcon />}
-      />
+      {stocks && (
+        <SideMenuButton
+          isActive={isActiveRoute(pathNameTransformed, AppRoutes.stock)}
+          to={generateStockPath(stocks[0].id)}
+          title={intl.formatMessage({ id: 'stock' })}
+          icon={<WarehouseIcon />}
+        />
+      )}
       <Divider />
       <SideMenuButton
         onClick={() => {

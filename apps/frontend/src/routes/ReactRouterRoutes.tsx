@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { AuthenticationGuard } from '../components/AuthenticationGuard'
 import Consumption from '../pages/Consumption'
-import CustomerProfile from '../pages/CustomerProfile'
 import Logs from '../pages/Logs'
 import MyProfile from '../pages/MyProfile'
 import PriceList from '../pages/PriceList'
@@ -13,6 +12,7 @@ import VisitDetail from '../pages/VisitDetail'
 import VisitsList from '../pages/VisitsList'
 import { AppRoutes } from './AppRoutes'
 import { Dashboard } from '../pages/Dashboard'
+import ClientProfile from '../pages/ClientProfile'
 
 const ReactRouterRoutes = () => {
   return (
@@ -27,7 +27,7 @@ const ReactRouterRoutes = () => {
       <Route path={AppRoutes.VisitsList} element={<AuthenticationGuard component={VisitsList} />} />
       <Route path={AppRoutes.VisitDetail} element={<AuthenticationGuard component={VisitDetail} />} />
       <Route path={AppRoutes.Team} element={<AuthenticationGuard component={Team} />} />
-      <Route path={AppRoutes.CustomerProfile} element={<AuthenticationGuard component={CustomerProfile} />} />
+      <Route path={AppRoutes.ClientProfile} element={<AuthenticationGuard component={ClientProfile} />} />
       <Route path={AppRoutes.stock} element={<AuthenticationGuard component={Stock} />} />
     </Routes>
   )

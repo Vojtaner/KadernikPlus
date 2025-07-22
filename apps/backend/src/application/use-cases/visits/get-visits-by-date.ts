@@ -1,6 +1,6 @@
 import { VisitRepositoryPort } from "../../ports/visit-repository";
 import visitRepositoryDb from "../../../infrastructure/data/prisma/prisma-visit-repository";
-import { Service, Visit } from "@prisma/client";
+import { VisitWithServices } from "../../../infrastructure/mappers/visit-mapper";
 
 export function createGetVisitsByDatesUseCase(dependencies: {
   visitRepositoryDb: VisitRepositoryPort;
@@ -11,8 +11,12 @@ export function createGetVisitsByDatesUseCase(dependencies: {
       from?: Date;
       to?: Date;
       userId: string;
-    }): Promise<Omit<Visit, "serviceIds"> & { services: Service[] }[]> => {
-      return dependencies.visitRepositoryDb.findByDate(dateOrRange);
+    }): Promise<VisitWithServices[]> => {
+      const visits = await dependencies.visitRepositoryDb.findByDate(
+        dateOrRange
+      );
+
+      return visits;
     },
   };
 }

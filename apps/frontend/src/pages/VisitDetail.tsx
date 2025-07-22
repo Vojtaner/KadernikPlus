@@ -4,21 +4,28 @@ import BoxIcon from '../components/BoxIcon'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import ProcedureCard from '../components/ProcedureCard'
 import Note from '../components/Note'
-import { AppRoutes } from '../routes/AppRoutes'
+import { generateClientDetailPath } from '../routes/AppRoutes'
 import EditVisitDetailDialog from '../components/EditVisitDetailDialog'
+import { useVisitQuery } from '../queries'
+import { useParams } from 'react-router-dom'
 
 const VisitDetail = () => {
+  const { visitId } = useParams()
+  const { data: visitData } = useVisitQuery(visitId)
+
   return (
     <>
-      <VisitDetailGrid />
-      <Stack spacing={2} direction={'row'} alignItems="center" justifyContent="flex-start" paddingY={2}>
+      <VisitDetailGrid visitData={visitData} />
+      <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-start" paddingY={2}>
         <EditVisitDetailDialog />
-        <BoxIcon
-          size={'medium'}
-          icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
-          boxColor="primary.light"
-          href={`${AppRoutes.CustomerProfile}`}
-        />
+        {visitData && (
+          <BoxIcon
+            size="medium"
+            icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
+            boxColor="primary.light"
+            href={generateClientDetailPath(visitData.clientId)}
+          />
+        )}
       </Stack>
       <Divider />
       <Note />

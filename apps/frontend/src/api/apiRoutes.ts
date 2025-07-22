@@ -10,6 +10,7 @@ export const apiRoutes = {
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
   getVisitUrl: () => `/api/visits`,
+  getUpdateVisitStatusUrl: () => `/api/visits/status`,
   getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getTeamUrl: () => `/api/team/`,
@@ -17,4 +18,5 @@ export const apiRoutes = {
   getTeamMemberUrl: () => `/api/team-members/`,
   getInviteTeamMemberUrl: () => `/api/team-members/invitation`,
   getUpdateTeamMemberUrl: (teamId: string) => `/api/team-members/${encodeURIComponent(teamId)}`,
+  getSearchClientsUrl: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
 }

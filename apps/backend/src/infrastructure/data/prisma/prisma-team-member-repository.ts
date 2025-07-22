@@ -96,8 +96,6 @@ const createTeamMemberRepositoryDb = (
       },
     });
 
-    console.log({ teamMember });
-
     return teamMember;
   },
 });

@@ -1,4 +1,4 @@
-import { useForm, useFormContext } from 'react-hook-form'
+import { useForm, useFormContext, useWatch } from 'react-hook-form'
 import type { AppFormState, AppFieldPath } from './entity'
 
 export const useAppForm = (options?: { defaultValues?: Partial<AppFormState> }) => {
@@ -16,9 +16,9 @@ export const useAppFormContext = () => {
 }
 
 export const useAppCurrentWatch = (fieldPath: AppFieldPath) => {
-  const { watch, getValues } = useAppForm()
+  const { getValues, control } = useAppFormContext()
 
-  watch(fieldPath)
+  useWatch({ control, name: fieldPath })
 
   return getValues(fieldPath)
 }

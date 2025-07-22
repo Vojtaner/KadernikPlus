@@ -1,24 +1,53 @@
-import { HasId } from "@/domain/entity";
-import addClientUseCase, {
-  CreateAddClientUseCaseType,
+import addOrUpdateClientUseCase, {
+  CreateAddOrUpdateClientUseCaseType,
 } from "../../application/use-cases/clients/add-client";
 import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
 } from "../../application/use-cases/clients/get-client-by-id";
 import { ControllerFunction } from "../../adapters/express/make-express-callback";
-import { Client, ClientCreateData } from "@/entities/client";
+import { ClientCreateData } from "@/entities/client";
 import getAllClientsByUserIdUseCase, {
   GetAllClientsByUserIdUseCaseType,
 } from "../../application/use-cases/clients/get-all-clients";
+import searchClientsUseCase, {
+  SearchClientsUseCaseType,
+} from "../../application/use-cases/clients/search-client";
 
-type GetClientByIdControllerType = { params: HasId };
+type GetClientByIdControllerType = { params: { clientId: string } };
 type AddClientControllerType = {};
 const createClientController = (dependencies: {
-  addClientUseCase: CreateAddClientUseCaseType;
+  addOrUpdateClientUseCase: CreateAddOrUpdateClientUseCaseType;
   getClientByIdUseCase: CreateGetClientByIdUseCaseType;
   getAllClientsByUserIdUseCase: GetAllClientsByUserIdUseCaseType;
+  searchClientsUseCase: SearchClientsUseCaseType;
 }) => {
-  const addClientController: ControllerFunction<
+  const findClientsController: ControllerFunction<{
+    query: { query: string };
+  }> = async (httpRequest) => {
+    try {
+      const { query } = httpRequest.query;
+      const userId = httpRequest.userId;
+
+
+      const clients = await dependencies.searchClientsUseCase.execute(
+        userId,
+        query
+      );
+
+      return {
+        statusCode: 200,
+        body: clients,
+      };
+    } catch (error: any) {
+      console.error("Error in findClientsController:", error);
+      return {
+        statusCode: 500,
+        body: { error: "Internal Server Error" },
+      };
+    }
+  };
+
+  const addOrUpdateClientController: ControllerFunction<
     AddClientControllerType
   > = async (httpRequest) => {
     try {
@@ -28,7 +57,7 @@ const createClientController = (dependencies: {
       const clientDataWithUserId = { ...clientData, userId };
 
       const client =
-        dependencies.addClientUseCase.execute(clientDataWithUserId);
+        dependencies.addOrUpdateClientUseCase.execute(clientDataWithUserId);
 
       return {
         statusCode: 201,
@@ -84,9 +113,9 @@ const createClientController = (dependencies: {
     GetClientByIdControllerType
   > = async (httpRequest) => {
     try {
-      const id = httpRequest.params.id;
+      const clientId = httpRequest.params.clientId;
 
-      const client = await dependencies.getClientByIdUseCase.execute(id);
+      const client = await dependencies.getClientByIdUseCase.execute(clientId);
 
       return {
         statusCode: 201,
@@ -109,16 +138,18 @@ const createClientController = (dependencies: {
   };
 
   return {
-    addClientController,
+    addOrUpdateClientController,
     getClientByIdController,
     getAllClientsByUserIdController,
+    findClientsController,
   };
 };
 
 const clientController = createClientController({
-  addClientUseCase,
+  addOrUpdateClientUseCase,
   getClientByIdUseCase,
   getAllClientsByUserIdUseCase,
+  searchClientsUseCase,
 });
 
 export default clientController;

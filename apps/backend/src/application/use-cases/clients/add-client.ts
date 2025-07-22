@@ -3,15 +3,14 @@ import { ClientRepositoryPort } from "../../ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { WithUserId } from "@/entities/user";
 
-// Custom error for application layer
 class ClientAlreadyExistsError extends Error {
-  constructor(email: string) {
-    super(`Client with email '${email}' already exists.`);
+  constructor(phone: string) {
+    super(`Client with phone number '${phone}' already exists.`);
     this.name = "ClientAlreadyExistsError";
   }
 }
 
-const createAddClientUseCase = (dependencies: {
+const createAddOrUpdateClientUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
 }) => {
   return {
@@ -33,9 +32,11 @@ const createAddClientUseCase = (dependencies: {
   };
 };
 
-const addClientUseCase = createAddClientUseCase({ clientRepositoryDb });
+const addOrUpdateClientUseCase = createAddOrUpdateClientUseCase({
+  clientRepositoryDb,
+});
 
-export type CreateAddClientUseCaseType = ReturnType<
-  typeof createAddClientUseCase
+export type CreateAddOrUpdateClientUseCaseType = ReturnType<
+  typeof createAddOrUpdateClientUseCase
 >;
-export default addClientUseCase;
+export default addOrUpdateClientUseCase;

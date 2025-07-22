@@ -11,6 +11,7 @@ export type Visit = {
     visitStatus?: boolean;
     note?: string | null;
     hairdresserId?: string;
+    userId?: string;
     serviceIds: string[];
 };
 export type VisitCreateData = Visit;
@@ -18,6 +19,26 @@ export type GetVisitsType = Omit<Visit, "serviceIds" | "id"> & {
     services: Service[];
     client: WithUserId<Client>;
     id: string;
+};
+export type VisitWithServices = {
+    client: {
+        id: string;
+        userId: string;
+        note: string | null;
+        deposit: boolean;
+        teamId: string;
+        firstName: string;
+        lastName: string;
+        phone: string | null;
+    };
+    visitServices: VisitService[];
+    visitStatus: boolean;
+} & Omit<Visit, "visitStatus" | "hairdresserId">;
+type VisitService = {
+    id: string;
+    service: Service;
+    serviceId: string;
+    visitId: string;
 };
 export declare enum DepositStatus {
     NEZAPLACENO = "NEZAPLACENO",
@@ -29,3 +50,4 @@ export declare const depositStatusOptions: {
     name: DepositStatus;
 }[];
 export type VisitDetailFormType = Pick<Visit, "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId">;
+export {};

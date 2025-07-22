@@ -1,8 +1,8 @@
-import { Client, ClientCreateData } from "@/entities/client";
+import { ClientCreateData } from "@/entities/client";
 import { ClientRepositoryPort } from "../../../application/ports/client-repository";
-import { PrismaClient } from "@prisma/client";
+import { Client, PrismaClient } from "@prisma/client";
 import prisma from "./prisma";
-import mapToDomainClient from "../../../infrastructure/mappers/client-mapper";
+import { ClientWithVisits } from "../../../infrastructure/mappers/client-mapper";
 import { WithUserId } from "@/entities/user";
 
 const createClientRepositoryDb = (
@@ -13,9 +13,49 @@ const createClientRepositoryDb = (
       const clients = await prismaRepository.client.findMany({
         where: { userId },
       });
-      return clients.map((client) => mapToDomainClient(client));
+      return clients;
+    },
+    search: async (teamId: string, query: string): Promise<Client[]> => {
+      const clients = await prismaRepository.client.findMany({
+        where: {
+          teamId,
+          firstName: {
+            search: query,
+          },
+          lastName: {
+            search: query,
+          },
+          phone: {
+            search: query,
+          },
+        },
+        include: { visits: true },
+      });
+
+      return clients;
     },
     add: async (clientData: WithUserId<ClientCreateData>): Promise<Client> => {
+      const { id: clientId } = clientData;
+
+      if (clientId) {
+        const existingClient = await prismaRepository.client.findFirst({
+          where: {
+            id: clientId,
+          },
+        });
+
+        if (existingClient) {
+          const { userId, id, teamId, ...updateFields } = clientData;
+
+          const updatedClient = await prismaRepository.client.update({
+            where: { id: clientId },
+            data: updateFields,
+          });
+
+          return updatedClient;
+        }
+      }
+
       const userTeam = await prismaRepository.teamMember.findFirst({
         where: { userId: clientData.userId },
       });
@@ -35,19 +75,20 @@ const createClientRepositoryDb = (
         },
       });
 
-      return mapToDomainClient(newClient);
+      return newClient;
     },
-    findById: async (id: string): Promise<Client | null> => {
-      const client = await prismaRepository.client.findUnique({
+    findById: async (id: string): Promise<ClientWithVisits | null> => {
+      const clientWithVisits = await prismaRepository.client.findUnique({
         where: { id },
+        include: { visits: true },
       });
-      return client ? mapToDomainClient(client) : null;
+      return clientWithVisits;
     },
     findByPhone: async (phone: string): Promise<Client | null> => {
       const client = await prismaRepository.client.findUnique({
-        where: { phone }, // 'phone' is marked @unique in schema.prisma
+        where: { phone },
       });
-      return client ? mapToDomainClient(client) : null;
+      return client;
     },
   };
 };

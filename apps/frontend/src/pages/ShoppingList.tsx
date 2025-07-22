@@ -31,7 +31,7 @@ const rows: ShoppingListItemType[] = [
 ]
 
 const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'item', headerName: 'Položkasa', disableColumnMenu: true, minWidth: 90 },
+  { field: 'item', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
   {
     field: 'price',
     headerName: 'Cena',

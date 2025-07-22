@@ -1,9 +1,11 @@
 import Stack from '@mui/material/Stack'
 import { AddBuyStockItemButton } from './AddBuyStockItemButton'
-import AddClientItemButton from './AddClientItemButton'
+import AddOrUpdateClientItemButton from './AddOrUpdateClientItemButton'
 import { AddVisitItemButton } from './AddVisitItemButton'
 import AddStockItemButton from './AddStockItemButton'
 import AddServiceItemButton from './AddServiceItemButton'
+import MenuIconButton from './MenuIconButton'
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 
 const BottomBar = () => {
   const paddingX = '10px'
@@ -28,7 +30,9 @@ const BottomBar = () => {
       }}>
       <AddServiceItemButton />
       <AddBuyStockItemButton />
-      <AddClientItemButton />
+      <AddOrUpdateClientItemButton
+        openButton={<MenuIconButton icon={<PersonAddAlt1OutlinedIcon fontSize="large" />} title="Přidat klienta" />}
+      />
       <AddVisitItemButton />
       <AddStockItemButton />
     </Stack>

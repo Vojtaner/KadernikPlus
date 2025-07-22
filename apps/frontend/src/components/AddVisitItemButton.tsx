@@ -3,7 +3,7 @@ import FormDialog from './Dialog'
 import MenuIconButton from './MenuIconButton'
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import BasicDateTimePicker from './DateTimePicker'
-import CustomerAutoComplete from './CustomerAutoComplete'
+import ClientAutoComplete from './ClientAutoComplete'
 import HairCutAutoComplete from './HairCutAutoComplete'
 import { useAppFormContext } from '../reactHookForm/store'
 import { useCreateVisitMutation } from '../queries'
@@ -35,7 +35,7 @@ export const AddVisitItemButton = () => {
       formFields={
         <>
           <BasicDateTimePicker fieldPath="date" control={control} />
-          <CustomerAutoComplete fieldPath="clientId" control={control} />
+          <ClientAutoComplete fieldPath="clientId" control={control} />
           <HairCutAutoComplete fieldPath="serviceIds" control={control} />
         </>
       }

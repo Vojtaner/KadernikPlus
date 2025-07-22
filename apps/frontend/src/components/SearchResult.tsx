@@ -1,27 +1,25 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
+import type { Client } from '../../../entities/client'
 
-const SearchResult = (props: { sx?: SxProps }) => {
+type SearchResultProps = { clientData: Client; sx?: SxProps }
+
+const SearchResult = (props: SearchResultProps) => {
+  const { sx, clientData } = props
+  console.log({ res: clientData })
   const haircut = 'Stříhání suché'
-  const customerName = 'Standa Novák'
-  const depositState = 'Bez zálohy'
+  const depositState = clientData.deposit ? 'Se zálohou' : 'Bez zálohy'
   const dateTime = '12.5.2025 - 13:45'
 
   return (
-    <Stack
-      marginY="5px"
-      direction="row"
-      alignItems="center"
-      justifyContent="flex-start"
-      spacing={1}
-      sx={{ ...props.sx }}>
+    <Stack marginY="5px" direction="row" alignItems="center" justifyContent="flex-start" spacing={1} sx={{ ...sx }}>
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>
       <Stack justifyContent="center" height="100%">
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography fontWeight={600} color="text.primary" fontSize={'1rem'}>
-            {customerName}
+            {`${clientData.firstName} ${clientData.lastName}`}
           </Typography>
           <Typography variant="caption" color="text.secondary">
             {haircut}

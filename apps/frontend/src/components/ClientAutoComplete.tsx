@@ -2,7 +2,7 @@ import { Autocomplete, TextField } from '@mui/material'
 import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
 import Loader from '../pages/Loader'
 import { Controller, type Control } from 'react-hook-form'
-import { useClietsQuery } from '../queries'
+import { useClientsQuery } from '../queries'
 
 // const clients = [
 //   { id: '1', firstName: 'Jana', lastName: 'Morečková' },
@@ -16,8 +16,8 @@ type ClientsAutoCompleteProps = {
   control: Control<AppFormState>
 }
 
-export default function CustomerAutoComplete({ fieldPath, control }: ClientsAutoCompleteProps) {
-  const { data: clients } = useClietsQuery()
+export default function ClientAutoComplete({ fieldPath, control }: ClientsAutoCompleteProps) {
+  const { data: clients } = useClientsQuery()
 
   if (!clients) {
     return <Loader />

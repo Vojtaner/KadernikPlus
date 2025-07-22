@@ -64,6 +64,7 @@ const createStockItemRepositoryDb = (
       const stockItems = await prismaStockRepository.stockItem.findMany({
         where: { stockId: stockId },
       });
+
       return stockItems.map((stockItem) => mapToDomainStockItem(stockItem));
     },
   };

@@ -15,10 +15,6 @@ export const Dashboard = () => {
 
   return (
     <Stack direction="column" rowGap={5}>
-      <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
-        <AppBarChart />
-      </DashBoardCard>
-
       <DashBoardCard
         title="Přehled návštěv"
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}
@@ -34,6 +30,9 @@ export const Dashboard = () => {
         // }
       >
         {<VisitsList columnHeaderHeight={0} hideFooter={true} />}
+      </DashBoardCard>
+      <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
+        <AppBarChart />
       </DashBoardCard>
     </Stack>
   )

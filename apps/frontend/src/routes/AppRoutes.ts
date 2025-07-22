@@ -1,6 +1,6 @@
 export const AppRoutes = {
   Dashboard: '/',
-  CustomerProfile: '/customer-profile/:customerId',
+  ClientProfile: '/client-profile/:clientId',
   VisitsList: '/visits-list',
   VisitDetail: '/visits-list/:visitId',
   NotFound: '*',
@@ -19,7 +19,7 @@ export type AppRoutePath = (typeof AppRoutes)[keyof typeof AppRoutes]
 
 export const breadCrumbNameMap: Record<string, string> = {
   '/': 'Dashboard',
-  'customer-profile': 'Profil zákazníka',
+  'client-profile': 'Profil zákazníka',
   'visits-list': 'Návštěvy',
   sms: 'SMS',
   logs: 'Záznamy o aktivitě',
@@ -32,7 +32,7 @@ export const breadCrumbNameMap: Record<string, string> = {
   team: 'Tým',
 }
 
-export const generateVisitDetailPath = (visitId: string) => AppRoutes.CustomerProfile.replace(':customerId', visitId)
+export const generateClientDetailPath = (clientId: string) => AppRoutes.ClientProfile.replace(':clientId', clientId)
 export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':stockId', stockId)
 export const generateTeamPath = (teamId: string) => AppRoutes.Team.replace(':teamId', teamId)
 

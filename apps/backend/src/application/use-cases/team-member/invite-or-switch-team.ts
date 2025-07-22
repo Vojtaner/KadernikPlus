@@ -44,8 +44,6 @@ const createInviteOrSwitchTeamUseCase = (dependencies: {
         canAccessVisits: false,
       });
 
-      console.log(newMember);
-
       return newMember;
     },
   };

@@ -5,6 +5,7 @@ import { mockUserLogs } from './api/mocks'
 import { apiRoutes } from './api/apiRoutes'
 import {
   deleteTeamMember,
+  getClientById,
   getClients,
   getServices,
   getStockItems,
@@ -14,8 +15,10 @@ import {
   getUserLogs,
   getVisitByVisitId,
   getVisits,
+  patchSearchClients,
   patchTeamMemberSkill,
   patchUpdateVisit,
+  patchUpdateVisitStatus,
   postCreateNewClient,
   postCreateNewStockItem,
   postCreateService,
@@ -25,12 +28,12 @@ import {
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
-import type { Client, ClientCreateData } from '../../entities/client'
+import type { Client, ClientCreateData, ClientSearchPayload, ClientWithVisits } from '../../entities/client'
 import type { StockItemCreateData } from '../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import type { GetVisitsType, VisitWithServices, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
+import type { VisitWithServices, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
 import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
 
 // ---- Team and TeamMembers ----
@@ -107,7 +110,7 @@ export const useServicesQuery = () => {
     queryFn: () => getServices(axios),
   })
 }
-export const useCreateServiceMutation = (): UseMutationResult<ServiceCreateData, Error, ServiceCreateData> => {
+export const useCreateServiceMutation = () => {
   const axios = useAxios()
 
   return useMutation<ServiceCreateData, Error, ServiceCreateData>({
@@ -126,27 +129,54 @@ export const useVisitQuery = (visitId: string | undefined) => {
     queryKey: ['visit', visitId],
     queryFn: () => {
       if (!visitId) {
-        throw new Error('Stock ID is required to fetch stock items.')
+        throw new Error('Visit ID is required to fetch visits.')
       }
       return getVisitByVisitId(axios, visitId)
     },
   })
 }
 
-export const useCreateVisitMutation = (): UseMutationResult<VisitCreateData, Error, VisitCreateData> => {
+export const useCreateVisitMutation = () => {
   const axios = useAxios()
 
   return useMutation<VisitCreateData, Error, VisitCreateData>({
     mutationFn: (visitData: VisitCreateData) => postCreateVisit(axios, visitData),
-    onSuccess: () => {
+    onSuccess: (visitData) => {
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['client', visitData.clientId] })
+    },
+  })
+}
+export const useSearchClientsQuery = (payload: ClientSearchPayload, enabled = true) => {
+  const axios = useAxios()
+
+  return useQuery<Client[], Error>({
+    queryKey: ['searchClients'],
+    queryFn: () => patchSearchClients(axios, payload),
+    enabled: enabled && !!payload.nameOrPhone, // only search if query string is present and enabled is true
+  })
+}
+
+export const useVisitStatusMutation = () => {
+  const axios = useAxios()
+
+  return useMutation<{ visitId?: string; status: boolean }, Error, { visitId?: string; status: boolean } | undefined>({
+    mutationFn: async (data) => {
+      if (!data || !data.visitId) {
+        throw Error('Data for visit status update are not complete')
+      }
+
+      await patchUpdateVisitStatus(axios, data)
+      return data
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['visit', data.visitId] })
       queryClient.invalidateQueries({ queryKey: ['visits'] })
     },
   })
 }
-
-export const useUpdateVisitMutation = (
-  visitId: string | undefined
-): UseMutationResult<string, Error, VisitDetailFormType> => {
+export const useUpdateVisitMutation = (visitId: string | undefined) => {
   const axios = useAxios()
 
   return useMutation<string, Error, VisitDetailFormType>({
@@ -168,7 +198,7 @@ export const useUpdateVisitMutation = (
 export const useVisitsQuery = () => {
   const axios = useAxios()
 
-  return useQuery<GetVisitsType[]>({
+  return useQuery<VisitWithServices[]>({
     queryKey: ['visits'],
     queryFn: () => getVisits(axios),
   })
@@ -176,23 +206,40 @@ export const useVisitsQuery = () => {
 
 // ---- Clients----
 
-export const useCreateNewClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
+export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
   const axios = useAxios()
 
   return useMutation<ClientCreateData, Error, ClientCreateData>({
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
-    onSuccess: () => {
+    onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['client', client.id] })
     },
   })
 }
 
-export const useClietsQuery = () => {
+export const useClientsQuery = () => {
   const axios = useAxios()
 
   return useQuery<Client[]>({
     queryKey: ['clients'],
     queryFn: () => getClients(axios),
+  })
+}
+export const useClientQuery = (clientId: string | undefined) => {
+  const axios = useAxios()
+
+  return useQuery<ClientWithVisits>({
+    queryKey: ['client', clientId],
+    queryFn: () => {
+      if (!clientId) {
+        throw Error('Client ID is missing.')
+      }
+
+      const client = getClientById(axios, clientId)
+
+      return client
+    },
   })
 }
 
@@ -225,7 +272,6 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
       }
       return getStockItems(axios, stockId)
     },
-    enabled: !!stockId,
   })
 }
 

@@ -9,7 +9,8 @@ export type AppFormState = ClientForm &
   ServiceForm &
   VisitDetailForm &
   VisitCreateForm &
-  AddTeamMemberForm
+  AddTeamMemberForm &
+  SearchForm
 
 export const unitList = Object.values(UnitsObject).map((unit, index) => ({
   id: String(index + 1),
@@ -23,4 +24,5 @@ export type StockItemForm = StockItemCreateData
 export type ServiceForm = ServiceCreateData
 export type VisitCreateForm = VisitCreateData
 export type VisitDetailForm = VisitDetailFormType
+export type SearchForm = { searchValue: string }
 export type AddTeamMemberForm = { teamMemberEmail: string; teamMemberConsentId: string }

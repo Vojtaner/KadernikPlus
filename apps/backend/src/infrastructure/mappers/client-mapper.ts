@@ -1,4 +1,8 @@
-import { Client } from ".prisma/client";
+import { Client, Prisma } from ".prisma/client";
+
+export type ClientWithVisits = Prisma.ClientGetPayload<{
+  include: { visits: true };
+}>;
 
 const mapToDomainClient = (prismaClient: {
   id: string;

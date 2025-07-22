@@ -1,25 +1,28 @@
-import { Grid, Switch, Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
 import { useParams } from 'react-router-dom'
-import { useTeamMembersQuery, useVisitQuery } from '../queries'
+import { useVisitStatusMutation } from '../queries'
 import Loader from './Loader'
 import { getDateTime } from './VisitsList'
+import Switch from './SwitchButton'
+import type { VisitWithServices } from '../../../entities/visit'
 
-const VisitDetailGrid = () => {
+type VisitDetailGridProps = {
+  visitData: VisitWithServices | undefined
+}
+const VisitDetailGrid = (props: VisitDetailGridProps) => {
+  const { visitData } = props
   const { visitId } = useParams()
-  const { data: visitData } = useVisitQuery(visitId)
-  const { data: teamMembers } = useTeamMembersQuery()
+  const { mutate: changeVisitStatus } = useVisitStatusMutation()
 
   if (!visitData) {
     return <Loader />
   }
 
-  console.log({ teamMembers, visitData })
-
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4}>
-        <DetailColumn label={'Kadeřnice'} input={'Monika L.'} />
+        <DetailColumn label={'Kadeřnice'} input={visitData.userId?.slice(-6)} />
       </Grid>
       <Grid size={4}>
         <DetailColumn
@@ -45,7 +48,17 @@ const VisitDetailGrid = () => {
         <DetailColumn label={'Výše zálohy'} input={formatToCZK(visitData.deposit)} />
       </Grid>
       <Grid size={4} padding={0}>
-        <DetailColumn label={'Uzavřeno'} input={<Switch checked={visitData.visitStatus} />} />
+        <DetailColumn
+          label={'Uzavřeno'}
+          input={
+            <Switch
+              checked={visitData.visitStatus}
+              onSubmitEndpoint={(checked) => {
+                changeVisitStatus({ status: checked, visitId })
+              }}
+            />
+          }
+        />
       </Grid>
     </Grid>
   )

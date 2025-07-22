@@ -114,17 +114,17 @@ const createStockItemController = (dependencies: {
   > = async (httpRequest) => {
     const { stockId } = httpRequest.params;
 
-    const stockItem = await dependencies.getStockItemsByStockIdUseCase.execute(
+    const stockItems = await dependencies.getStockItemsByStockIdUseCase.execute(
       stockId
     );
 
-    if (!stockItem) {
+    if (!stockItems) {
       throw new Error(`Stock item with ID "${stockId}" not found.`);
     }
 
     return {
       statusCode: 200,
-      body: stockItem,
+      body: stockItems,
     };
   };
 

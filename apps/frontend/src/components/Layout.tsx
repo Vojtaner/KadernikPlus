@@ -5,14 +5,14 @@ import TopBar from './TopBar'
 import { useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
-import SearchResult from './SearchResult'
+import SearchResults from '../pages/SearchResults'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
 
-  const onActiveSearch = () => {
-    setIsSearchActive((prev) => !prev)
+  const onActiveSearch = (state: boolean) => {
+    setIsSearchActive(state)
   }
 
   document.body.style.background = '#4b4b4b'
@@ -30,7 +30,7 @@ const Layout = (props: PropsWithChildren) => {
         }}
         borderRadius="15px 15px 0 0"
         spacing={0.5}>
-        <TopBar onActiveSearch={onActiveSearch} isSearchActive={isSearchActive} />
+        <TopBar onActiveSearch={onActiveSearch} />
         {!isSearchActive && <SectionHeader />}
       </Stack>
       <Box
@@ -43,30 +43,7 @@ const Layout = (props: PropsWithChildren) => {
         sx={{ bgcolor: 'white', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
-          <SearchResult
-            sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-            }}
-          />
-          <SearchResult
-            sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-            }}
-          />
-          <SearchResult
-            sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-            }}
-          />
-          <SearchResult
-            sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-            }}
-          />
+          <SearchResults isSearchActive={isSearchActive} />
         </>
       </Box>
       <BottomBar />

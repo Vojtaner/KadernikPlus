@@ -6,15 +6,21 @@ const clientRoutes = Router();
 
 clientRoutes.post(
   "/",
-  makeExpressCallback(clientController.addClientController)
+  makeExpressCallback(clientController.addOrUpdateClientController)
 );
+
+clientRoutes.patch(
+  "/search",
+  makeExpressCallback(clientController.findClientsController)
+);
+
 clientRoutes.get(
   "/",
   makeExpressCallback(clientController.getAllClientsByUserIdController)
 );
 
 clientRoutes.get(
-  "/:id",
+  "/:clientId",
   makeExpressCallback(clientController.getClientByIdController)
 );
 

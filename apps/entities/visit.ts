@@ -39,7 +39,7 @@ export type VisitWithServices = {
 
   visitServices: VisitService[];
   visitStatus: boolean;
-} & Omit<Visit, "id" | "visitStatus" | "hairdresserId">;
+} & Omit<Visit, "visitStatus" | "hairdresserId">;
 
 type VisitService = {
   id: string;

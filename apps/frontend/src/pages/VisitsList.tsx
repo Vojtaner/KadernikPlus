@@ -5,9 +5,10 @@ import RedSwitch from '../components/RedSwitch'
 import { formatNameShort } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { AppRoutes } from '../routes/AppRoutes'
-import { useVisitsQuery } from '../queries'
+import { useVisitsQuery, useVisitStatusMutation } from '../queries'
 import Loader from './Loader'
-import type { GetVisitsType } from '../../../entities/visit'
+import type { VisitWithServices } from '../../../entities/visit'
+import type { UseMutateFunction } from '@tanstack/react-query'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
@@ -16,6 +17,7 @@ type VisitListProps = {
 const VisitsList = (props: VisitListProps) => {
   const { columnHeaderHeight, hideFooter = false } = props
   const { data: visits } = useVisitsQuery()
+  const { mutate: changeVisitStatus } = useVisitStatusMutation()
 
   if (!visits) {
     return <Loader />
@@ -25,7 +27,7 @@ const VisitsList = (props: VisitListProps) => {
     <Stack spacing={2}>
       <AppDataGrid
         rows={createVisitsTable(visits)}
-        columns={columns}
+        columns={createColumns(changeVisitStatus)}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
       />
@@ -36,44 +38,115 @@ export default VisitsList
 
 type VisitListItem = { id: string; date: string; client: string; serviceName: string; visitState: boolean }
 
-export const VisitListRows: VisitListItem[] = [
-  { id: '1', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '2', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '3', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '4', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-  { id: '5', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '6', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-  { id: '7', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '8', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '9', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '10', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-  { id: '11', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '12', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-  { id: '13', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-]
+// export const VisitListRows: VisitListItem[] = [
+//   { id: '1', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '2', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '3', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '4', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
+//   { id: '5', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '6', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
+//   { id: '7', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '8', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '9', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '10', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
+//   { id: '11', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '12', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+//   { id: '13', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
+// ]
 
-const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
+// const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
+//   {
+//     field: 'date',
+//     headerName: 'Čas',
+//     disableColumnMenu: true,
+//     width: 80,
+//     minWidth: 20,
+//     display: 'flex',
+//     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
+//   },
+//   {
+//     field: 'client',
+//     headerName: 'Zákazník',
+//     disableColumnMenu: true,
+//     display: 'flex',
+//     minWidth: 80,
+//     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
+//   },
+//   {
+//     field: 'serviceName',
+//     headerName: 'Účes',
+//     minWidth: 80,
+//     disableColumnMenu: true,
+//   },
+//   {
+//     field: 'visitState',
+//     headerName: 'Zavřít',
+//     width: 20,
+//     editable: false,
+//     display: 'flex',
+//     disableColumnMenu: true,
+//     renderCell: (params) => (
+//       <RedSwitch
+//         checked={params.value}
+//         size="small"
+//         onSubmitEndpoint={(checked) => {
+//           console.log(checked)
+//         }}
+//       />
+//     ),
+//   },
+//   {
+//     field: 'visitDetailButton',
+//     headerName: 'Detail',
+//     width: 20,
+//     editable: false,
+//     display: 'flex',
+//     disableColumnMenu: true,
+//     renderCell: (params) => (
+//       <IconButton href={`${AppRoutes.VisitsList}/${params.id}`}>
+//         <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
+//       </IconButton>
+//     ),
+//   },
+// ]
+
+export const createColumns = (
+  changeVisitStatus: UseMutateFunction<
+    {
+      visitId?: string
+      status: boolean
+    },
+    Error,
+    | {
+        visitId?: string
+        status: boolean
+      }
+    | undefined,
+    unknown
+  >
+): GridColDef<VisitListItem[][number]>[] => [
   {
     field: 'date',
     headerName: 'Čas',
     disableColumnMenu: true,
     width: 80,
-    minWidth: 20,
     display: 'flex',
+    minWidth: 20,
     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
   },
   {
     field: 'client',
     headerName: 'Zákazník',
-    disableColumnMenu: true,
     display: 'flex',
+
+    disableColumnMenu: true,
     minWidth: 80,
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
   {
     field: 'serviceName',
     headerName: 'Účes',
-    minWidth: 80,
+    minWidth: 100,
     disableColumnMenu: true,
   },
   {
@@ -81,16 +154,26 @@ const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
     headerName: 'Zavřít',
     width: 20,
     editable: false,
-    display: 'flex',
     disableColumnMenu: true,
-    renderCell: (params) => <RedSwitch checked={params.value} size="small" />,
+    renderCell: (params) => {
+      console.log({ params })
+      return (
+        <RedSwitch
+          checked={params.value}
+          size="small"
+          onSubmitEndpoint={(checked) => {
+            console.log({ checked })
+            changeVisitStatus({ visitId: params.id.toString(), status: !params.value })
+          }}
+        />
+      )
+    },
   },
   {
     field: 'visitDetailButton',
     headerName: 'Detail',
     width: 20,
     editable: false,
-    display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
       <IconButton href={`${AppRoutes.VisitsList}/${params.id}`}>
@@ -100,16 +183,21 @@ const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
   },
 ]
 
-const createVisitsTable = (visits: GetVisitsType[]): VisitListItem[] => {
-  return visits.map((visit) => {
+const createVisitsTable = (visits: VisitWithServices[]): VisitListItem[] => {
+  const visitsList = visits.map((visit) => {
+    if (!visit.id) {
+      return
+    }
+
     return {
       id: visit.id,
       date: getDateTime(visit.date),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
-      serviceName: visit.services.map((service) => service.serviceName).join(','),
-      visitState: false,
+      serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
+      visitState: visit.visitStatus,
     }
   })
+  return visitsList.filter((visitList) => !!visitList)
 }
 
 export const getDateTime = (date: Date) => {

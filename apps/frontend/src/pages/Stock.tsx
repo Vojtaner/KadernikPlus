@@ -8,6 +8,7 @@ import ErrorBoundary from './ErrorBoundary'
 import { type StockItem } from '../../../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
+import { formatToCZK } from './VisitDetailGrid'
 
 const Stock = () => {
   const { stockId } = useParams()
@@ -31,17 +32,18 @@ const Stock = () => {
 export default Stock
 
 const columns: GridColDef<StockItem[][number]>[] = [
-  { field: 'itemName', headerName: 'Položkas', disableColumnMenu: true, minWidth: 90 },
+  { field: 'itemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 125 },
   {
     field: 'price',
     headerName: 'Cena',
     disableColumnMenu: true,
-    minWidth: 80,
+    minWidth: 90,
+    renderCell: (params) => formatToCZK(params.value),
   },
   {
     field: 'quantity',
     headerName: 'Množ.',
-    minWidth: 85,
+    minWidth: 67,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
@@ -53,6 +55,7 @@ const columns: GridColDef<StockItem[][number]>[] = [
     field: 'threshold',
     headerName: 'Min.',
     type: 'number',
+    minWidth: 67,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>

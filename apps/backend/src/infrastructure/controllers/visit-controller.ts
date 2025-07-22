@@ -7,7 +7,6 @@ import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getVisitByIdUseCase, {
   CreateGetVisitByIdUseCaseType,
 } from "../../application/use-cases/visits/get-visit-by-id";
-import { HasId } from "@/domain/entity";
 import getVisitsByClientIdUseCase, {
   CreateGetVisitsByClientIdUseCaseType,
 } from "../../application/use-cases/visits/get-visits-by-client-id";
@@ -21,12 +20,18 @@ import {
   CreateUpdateVisitUseCaseType,
   updateVisitUseCase,
 } from "../../application/use-cases/visits/update-visit";
+import updateVisitStatusUseCase, {
+  UpdateVisitStatusUseCaseType,
+} from "../../application/use-cases/visits/update-visit-status";
 
 // type GetVisitsControllerType = { query: HasClientId };
 type GetVisitsByDatesControllerType = {
   query: { date?: Date; to?: Date; from?: Date };
 };
 type AddVisitControllerType = { body: VisitCreateData };
+type UpdateVisitStatusControllerType = {
+  body: { visitId: string; status: boolean };
+};
 type GetVisitByIdControllerType = { query: { visitId: string } };
 type UpdateVisitControllerType = {
   params: { visitId: string };
@@ -44,6 +49,7 @@ const createVisitController = (dependencies: {
   getVisitByIdUseCase: CreateGetVisitByIdUseCaseType;
   updateVisitUseCase: CreateUpdateVisitUseCaseType;
   deleteVisitUseCase: CreateDeleteVisitUseCaseType;
+  updateVisitStatusUseCase: UpdateVisitStatusUseCaseType;
 }) => {
   const addVisitController: ControllerFunction<AddVisitControllerType> = async (
     httpRequest
@@ -146,7 +152,29 @@ const createVisitController = (dependencies: {
       throw error;
     }
   };
+  const updateVisitStatusController: ControllerFunction<
+    UpdateVisitStatusControllerType
+  > = async (httpRequest) => {
+    try {
+      const { visitId, status } = httpRequest.body;
 
+      if (!visitId || typeof status !== "boolean") {
+        throw Error("Missing or invalid visitId or checked");
+      }
+
+      const updatedVisit = await dependencies.updateVisitStatusUseCase.execute({
+        visitId,
+        status,
+      });
+
+      return {
+        statusCode: 200,
+        body: updatedVisit,
+      };
+    } catch (err) {
+      throw err;
+    }
+  };
   const updateVisitController: ControllerFunction<
     UpdateVisitControllerType
   > = async (httpRequest) => {
@@ -235,6 +263,7 @@ const createVisitController = (dependencies: {
     updateVisitController,
     getVisitsByClientIdController,
     deleteVisitController,
+    updateVisitStatusController,
   };
 };
 
@@ -245,6 +274,7 @@ const visitController = createVisitController({
   getVisitByIdUseCase,
   updateVisitUseCase,
   deleteVisitUseCase,
+  updateVisitStatusUseCase,
 });
 
 export default visitController;

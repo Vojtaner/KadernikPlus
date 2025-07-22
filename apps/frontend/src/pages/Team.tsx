@@ -38,8 +38,6 @@ const Team = () => {
     return <Typography>No team members found</Typography>
   }
 
-  console.log({ teamMembers })
-
   const teamMembersRows = createTeamMemberSettingsRows(teamMembers)
   const columns = createColumns(updateTeamMemberSkill, deleteTeamMember, teamMembersRows)
 
@@ -136,7 +134,7 @@ const createColumns = (
   {
     field: 'canAccessClients',
     headerName: 'Klienti',
-    width: 100,
+    width: 65,
     disableColumnMenu: true,
     renderCell: (params) => (
       <Checkbox
@@ -163,7 +161,7 @@ const createColumns = (
   {
     field: 'canAccessVisits',
     headerName: 'Návštěvy',
-    width: 65,
+    width: 75,
     disableColumnMenu: true,
     renderCell: (params) => (
       <Checkbox
@@ -189,6 +187,7 @@ const createColumns = (
     field: 'delete',
     headerName: '',
     width: 60,
+
     disableColumnMenu: true,
     renderCell: (params) => (
       <BoxIcon

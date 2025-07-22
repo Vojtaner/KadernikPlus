@@ -3,11 +3,11 @@ import type { Stock, UserLog, UserType } from './entity'
 import { mockUserLogs, mockUser, mockWarehouseState } from './mocks'
 import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
-import type { Client, ClientCreateData } from '../../../entities/client'
+import type { Client, ClientCreateData, ClientSearchPayload, ClientWithVisits } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
-import type { GetVisitsType, VisitCreateData, VisitDetailFormType, VisitWithServices } from '../../../entities/visit'
+import type { VisitCreateData, VisitDetailFormType, VisitWithServices } from '../../../entities/visit'
 import type { TeamMember } from '../../../entities/team-member'
 import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'
@@ -56,7 +56,7 @@ export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
   return response.data
 }
 
-export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<Client[]> => {
+export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<ClientWithVisits> => {
   const response = await axios.get(apiRoutes.getClientByIdUrl(clientId))
   return response.data
 }
@@ -64,7 +64,8 @@ export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
   const response = await axios.get(apiRoutes.getClientsUrl())
   return response.data
 }
-export const getVisits = async (axios: AxiosInstance): Promise<GetVisitsType[]> => {
+
+export const getVisits = async (axios: AxiosInstance): Promise<VisitWithServices[]> => {
   const response = await axios.get(apiRoutes.getVisitUrl())
   return response.data
 }
@@ -88,6 +89,11 @@ export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCrea
   const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
   return response.data
 }
+
+export const patchSearchClients = async (axios: AxiosInstance, payload: ClientSearchPayload): Promise<Client[]> => {
+  const response = await axios.patch(apiRoutes.getSearchClientsUrl(payload.nameOrPhone), payload)
+  return response.data
+}
 export const patchUpdateVisit = async (
   axios: AxiosInstance,
   visitId: string,
@@ -106,6 +112,10 @@ export const patchTeamMemberSkill = async (
   teamId: string
 ): Promise<VisitDetailForm> => {
   const response = await axios.patch(apiRoutes.getUpdateTeamMemberUrl(teamId), memberData)
+  return response.data
+}
+export const patchUpdateVisitStatus = async (axios: AxiosInstance, data: { visitId?: string; status: boolean }) => {
+  const response = await axios.patch(apiRoutes.getUpdateVisitStatusUrl(), data)
   return response.data
 }
 

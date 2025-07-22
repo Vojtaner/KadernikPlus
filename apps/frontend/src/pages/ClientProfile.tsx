@@ -1,12 +1,12 @@
 import { Divider, Stack } from '@mui/material'
-import CustomerProfileGrid from '../components/CustomerProfileGrid'
+import ClientProfileGrid from '../components/ClientProfileGrid'
 import VisitDetailCard from '../components/VisitDetailCard'
 import Note from '../components/Note'
 
-const CustomerProfile = () => {
+const ClientProfile = () => {
   return (
     <Stack spacing={2}>
-      <CustomerProfileGrid />
+      <ClientProfileGrid />
       <Divider />
       <Note />
       <VisitDetailCard />
@@ -20,4 +20,4 @@ const CustomerProfile = () => {
     </Stack>
   )
 }
-export default CustomerProfile
+export default ClientProfile
