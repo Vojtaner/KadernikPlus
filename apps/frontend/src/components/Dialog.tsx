@@ -45,14 +45,14 @@ export default function FormDialog(props: FormDialogProps) {
             component: 'form',
             onSubmit: handleSubmit(handleValidSubmit, handleInvalidSubmit),
             sx: {
-              minWidth: '70vw',
+              minWidth: '80vw',
             },
           },
         }}>
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {dialogHelperText && <DialogContentText sx={{ paddingBottom: '1rem' }}>{dialogHelperText}</DialogContentText>}
-          <Stack direction="column" rowGap={2}>
+          {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}
+          <Stack direction="column" rowGap={2} paddingY={2}>
             {formFields}
           </Stack>
         </DialogContent>

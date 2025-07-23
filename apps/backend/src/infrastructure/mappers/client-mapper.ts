@@ -4,6 +4,14 @@ export type ClientWithVisits = Prisma.ClientGetPayload<{
   include: { visits: true };
 }>;
 
+export type ClientWithVisitsAndServices = Prisma.ClientGetPayload<{
+  include: {
+    visits: {
+      include: { visitServices: { include: { service: true } } };
+    };
+  };
+}>;
+
 const mapToDomainClient = (prismaClient: {
   id: string;
   firstName: string;

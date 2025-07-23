@@ -31,9 +31,9 @@ export const Dashboard = () => {
       >
         {<VisitsList columnHeaderHeight={0} hideFooter={true} />}
       </DashBoardCard>
-      <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
+      {/* <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
         <AppBarChart />
-      </DashBoardCard>
+      </DashBoardCard> */}
     </Stack>
   )
 }

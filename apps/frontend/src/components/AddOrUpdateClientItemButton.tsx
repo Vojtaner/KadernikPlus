@@ -8,7 +8,7 @@ import type { ClientCreateData } from '../../../entities/client'
 import React from 'react'
 
 type AddOrUpdateClientItemButtonProps = {
-  defaultValues?: { firstName: string; lastName: string; phone: string | null }
+  defaultValues?: { firstName: string; lastName: string; phone: string | null; note?: string | null }
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
   clientId?: string
 }
@@ -77,6 +77,17 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
             type="tel"
             fullWidth
             rules={phoneValidationRule}
+          />
+          <TextField
+            fieldPath="note"
+            control={control}
+            label="Poznámka"
+            defaultValue={defaultValues?.note}
+            type="text"
+            multiline
+            minRows={2}
+            maxRows={10}
+            fullWidth
           />
         </>
       }

@@ -41,24 +41,11 @@ export const AddVisitItemButton = () => {
       }
       onSubmitEndpoint={(visitData) => createVisitMutation(visitData)}
       onOpenButton={
-        <MenuIconButton
-          icon={<MoreTimeOutlinedIcon fontSize="large" />}
-          onClick={handleClickOpen}
-          title="Přidat návštěvu"
-        />
+        <MenuIconButton icon={<MoreTimeOutlinedIcon fontSize="large" />} onClick={handleClickOpen} title="Objednat" />
       }
-      title="Přidat návštěvu"
+      title="Objednat"
     />
   )
 }
-
-// type CustomerType = { id: string; name: string }
-
-// const customerList = [
-//   { id: '1', name: 'Jana Morečková' },
-//   { id: '2', name: 'Magdaléna Suchá' },
-//   { id: '3', name: 'Honza Navrátil' },
-//   { id: '', name: 'Ludmila Křížová' },
-// ]
 
 export default AddVisitItemButton

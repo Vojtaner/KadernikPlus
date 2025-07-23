@@ -2,7 +2,10 @@ import { ClientCreateData } from "@/entities/client";
 import { ClientRepositoryPort } from "../../../application/ports/client-repository";
 import { Client, PrismaClient } from "@prisma/client";
 import prisma from "./prisma";
-import { ClientWithVisits } from "../../../infrastructure/mappers/client-mapper";
+import {
+  ClientWithVisits,
+  ClientWithVisitsAndServices,
+} from "../../../infrastructure/mappers/client-mapper";
 import { WithUserId } from "@/entities/user";
 
 const createClientRepositoryDb = (
@@ -15,7 +18,10 @@ const createClientRepositoryDb = (
       });
       return clients;
     },
-    search: async (teamId: string, query: string): Promise<Client[]> => {
+    search: async (
+      teamId: string,
+      query: string
+    ): Promise<ClientWithVisitsAndServices[]> => {
       const clients = await prismaRepository.client.findMany({
         where: {
           teamId,
@@ -29,12 +35,18 @@ const createClientRepositoryDb = (
             search: query,
           },
         },
-        include: { visits: true },
+        include: {
+          visits: {
+            include: { visitServices: { include: { service: true } } },
+          },
+        },
       });
 
       return clients;
     },
-    add: async (clientData: WithUserId<ClientCreateData>): Promise<Client> => {
+    addOrUpdate: async (
+      clientData: WithUserId<ClientCreateData>
+    ): Promise<Client> => {
       const { id: clientId } = clientData;
 
       if (clientId) {
@@ -88,6 +100,7 @@ const createClientRepositoryDb = (
       const client = await prismaRepository.client.findUnique({
         where: { phone },
       });
+
       return client;
     },
   };

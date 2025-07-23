@@ -1,15 +1,14 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
-import type { Client } from '../../../entities/client'
+import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../../../entities/client'
+import { getDateTime } from '../pages/VisitsList'
 
-type SearchResultProps = { clientData: Client; sx?: SxProps }
+type SearchResultProps = { clientData: ClientWithVisitsWithVisitServices; sx?: SxProps }
 
 const SearchResult = (props: SearchResultProps) => {
   const { sx, clientData } = props
-  console.log({ res: clientData })
-  const haircut = 'Stříhání suché'
-  const depositState = clientData.deposit ? 'Se zálohou' : 'Bez zálohy'
-  const dateTime = '12.5.2025 - 13:45'
+
+  const latestVisit = getLatestVisit(clientData.visits)
 
   return (
     <Stack marginY="5px" direction="row" alignItems="center" justifyContent="flex-start" spacing={1} sx={{ ...sx }}>
@@ -22,18 +21,18 @@ const SearchResult = (props: SearchResultProps) => {
             {`${clientData.firstName} ${clientData.lastName}`}
           </Typography>
           <Typography variant="caption" color="text.secondary">
-            {haircut}
+            {latestVisit?.visitServices[0].service.serviceName}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
-            {depositState.toUpperCase()}
+            {latestVisit?.depositStatus?.toUpperCase()}
           </Typography>
           <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
             -
           </Typography>
           <Typography variant="caption" color={'#ff6221'} alignItems="center">
-            {dateTime}
+            {latestVisit?.date && getDateTime(latestVisit?.date)}
           </Typography>
         </Stack>
       </Stack>
@@ -42,3 +41,13 @@ const SearchResult = (props: SearchResultProps) => {
 }
 
 export default SearchResult
+
+const getLatestVisit = (visits: ReturnedClientVisit[]): ReturnedClientVisit | undefined => {
+  if (!visits.length) {
+    return undefined
+  }
+
+  return visits.reduce((latest, current) => {
+    return new Date(current.date) > new Date(latest.date) ? current : latest
+  })
+}

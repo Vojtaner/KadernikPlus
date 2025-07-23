@@ -60,6 +60,7 @@ const SearchBar = (props: SearchBarProps) => {
         <TextField
           fieldPath="searchValue"
           control={control}
+          type="search"
           placeholder="Vyhledej zákazníka..."
           sx={{
             width: '100%',

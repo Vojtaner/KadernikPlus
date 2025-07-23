@@ -1,15 +1,18 @@
-import { Client } from "@prisma/client";
 import { ClientRepositoryPort } from "../../../application/ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { TeamMemberRepositoryPort } from "../../../application/ports/team-member-repository";
 import teamMemberRepositoryDb from "../../../infrastructure/data/prisma/prisma-team-member-repository";
+import { ClientWithVisitsAndServices } from "@/infrastructure/mappers/client-mapper";
 
 const createSearchClientsUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
   teamMemberRepositoryDb: TeamMemberRepositoryPort;
 }) => {
   return {
-    execute: async (userId: string, query: string): Promise<Client[]> => {
+    execute: async (
+      userId: string,
+      query: string
+    ): Promise<ClientWithVisitsAndServices[]> => {
       if (!query) {
         return [];
       }
@@ -20,7 +23,7 @@ const createSearchClientsUseCase = (dependencies: {
         throw Error("User has no team assigned.");
       }
 
-      const clients = dependencies.clientRepositoryDb.search(
+      const clients = await dependencies.clientRepositoryDb.search(
         teamMember.teamId,
         query
       );

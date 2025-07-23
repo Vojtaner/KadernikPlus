@@ -1,7 +1,8 @@
-import { Client, ClientCreateData } from "@/entities/client";
+import { ClientCreateData } from "@/entities/client";
 import { ClientRepositoryPort } from "../../ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { WithUserId } from "@/entities/user";
+import { Client } from "@prisma/client";
 
 class ClientAlreadyExistsError extends Error {
   constructor(phone: string) {
@@ -20,14 +21,16 @@ const createAddOrUpdateClientUseCase = (dependencies: {
       if (clientData.phone) {
         const existingClient =
           await dependencies.clientRepositoryDb.findByPhone(clientData.phone);
+
         if (existingClient) {
           throw new ClientAlreadyExistsError(clientData.phone);
         }
       }
 
-      const newClient = await dependencies.clientRepositoryDb.add(clientData);
+      const newOrUpdatedclient =
+        await dependencies.clientRepositoryDb.addOrUpdate(clientData);
 
-      return newClient;
+      return newOrUpdatedclient;
     },
   };
 };

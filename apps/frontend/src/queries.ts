@@ -28,7 +28,13 @@ import {
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
-import type { Client, ClientCreateData, ClientSearchPayload, ClientWithVisits } from '../../entities/client'
+import type {
+  Client,
+  ClientCreateData,
+  ClientSearchPayload,
+  ClientWithVisits,
+  ClientWithVisitsWithVisitServices,
+} from '../../entities/client'
 import type { StockItemCreateData } from '../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../entities/service'
 import { type StockItem } from '../../entities/stock-item'
@@ -148,15 +154,6 @@ export const useCreateVisitMutation = () => {
     },
   })
 }
-export const useSearchClientsQuery = (payload: ClientSearchPayload, enabled = true) => {
-  const axios = useAxios()
-
-  return useQuery<Client[], Error>({
-    queryKey: ['searchClients'],
-    queryFn: () => patchSearchClients(axios, payload),
-    enabled: enabled && !!payload.nameOrPhone, // only search if query string is present and enabled is true
-  })
-}
 
 export const useVisitStatusMutation = () => {
   const axios = useAxios()
@@ -213,8 +210,19 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCr
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
+      console.log(client.id)
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
     },
+  })
+}
+
+export const useSearchClientsQuery = (payload: ClientSearchPayload, enabled = true) => {
+  const axios = useAxios()
+
+  return useQuery<ClientWithVisitsWithVisitServices[], Error>({
+    queryKey: ['searchClients'],
+    queryFn: () => patchSearchClients(axios, payload),
+    enabled: enabled && !!payload.nameOrPhone, // only search if query string is present and enabled is true
   })
 }
 

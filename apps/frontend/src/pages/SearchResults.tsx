@@ -13,34 +13,18 @@ const SearchResults = (props: { isSearchActive: boolean }) => {
 
   return (
     <>
-      <SearchResult
-        sx={{
-          transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-          transition: 'transform 0.5s ease-in-out',
-        }}
-        clientData={searchData[0]}
-      />
-      <SearchResult
-        sx={{
-          transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-          transition: 'transform 0.5s ease-in-out',
-        }}
-        clientData={searchData[0]}
-      />
-      <SearchResult
-        sx={{
-          transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-          transition: 'transform 0.5s ease-in-out',
-        }}
-        clientData={searchData[0]}
-      />
-      <SearchResult
-        sx={{
-          transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-          transition: 'transform 0.5s ease-in-out',
-        }}
-        clientData={searchData[0]}
-      />
+      {searchData.map((client) => {
+        return (
+          <SearchResult
+            key={client.id}
+            sx={{
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transition: 'transform 0.5s ease-in-out',
+            }}
+            clientData={client}
+          />
+        )
+      })}
     </>
   )
 }

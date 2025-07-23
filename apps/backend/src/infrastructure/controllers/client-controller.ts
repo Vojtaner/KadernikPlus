@@ -1,6 +1,6 @@
 import addOrUpdateClientUseCase, {
   CreateAddOrUpdateClientUseCaseType,
-} from "../../application/use-cases/clients/add-client";
+} from "../../application/use-cases/clients/add-or-update-client";
 import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
 } from "../../application/use-cases/clients/get-client-by-id";
@@ -27,7 +27,6 @@ const createClientController = (dependencies: {
     try {
       const { query } = httpRequest.query;
       const userId = httpRequest.userId;
-
 
       const clients = await dependencies.searchClientsUseCase.execute(
         userId,
@@ -56,15 +55,16 @@ const createClientController = (dependencies: {
 
       const clientDataWithUserId = { ...clientData, userId };
 
-      const client =
-        dependencies.addOrUpdateClientUseCase.execute(clientDataWithUserId);
+      const newOrUpdatedClient =
+        await dependencies.addOrUpdateClientUseCase.execute(
+          clientDataWithUserId
+        );
 
       return {
         statusCode: 201,
-        body: client,
+        body: newOrUpdatedClient,
       };
     } catch (error: any) {
-      //například
       if (
         error.name === "UserNotFoundError" ||
         error.name === "ClientNotFoundError"

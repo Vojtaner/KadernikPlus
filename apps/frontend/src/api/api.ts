@@ -3,7 +3,13 @@ import type { Stock, UserLog, UserType } from './entity'
 import { mockUserLogs, mockUser, mockWarehouseState } from './mocks'
 import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
-import type { Client, ClientCreateData, ClientSearchPayload, ClientWithVisits } from '../../../entities/client'
+import type {
+  Client,
+  ClientCreateData,
+  ClientSearchPayload,
+  ClientWithVisits,
+  ClientWithVisitsWithVisitServices,
+} from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
@@ -90,7 +96,10 @@ export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCrea
   return response.data
 }
 
-export const patchSearchClients = async (axios: AxiosInstance, payload: ClientSearchPayload): Promise<Client[]> => {
+export const patchSearchClients = async (
+  axios: AxiosInstance,
+  payload: ClientSearchPayload
+): Promise<ClientWithVisitsWithVisitServices[]> => {
   const response = await axios.patch(apiRoutes.getSearchClientsUrl(payload.nameOrPhone), payload)
   return response.data
 }

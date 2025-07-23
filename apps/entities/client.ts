@@ -19,17 +19,34 @@ export type Client = {
 export type ClientCreateData = Client;
 
 export type ClientWithVisits = Client & {
-  visits: {
+  visits: ReturnedClientVisit[];
+};
+export type ClientWithVisitsWithVisitServices = Client & {
+  visits: ReturnedClientVisit[];
+};
+
+export type ReturnedClientVisit = {
+  id: string;
+  deposit: number | null;
+  note: string | null;
+  userId: string;
+  teamId: string;
+  clientId: string;
+  date: Date;
+  depositStatus: string | null;
+  visitStatus: boolean | null;
+  paidPrice: number | null;
+  visitServices: {
     id: string;
-    deposit: number | null;
-    note: string | null;
-    userId: string;
-    teamId: string;
-    clientId: string;
-    date: Date;
-    depositStatus: Number | null;
-    visitStatus: boolean | null;
-    paidPrice: Number | null;
+    visitId: string;
+    serviceId: string;
+    service: {
+      id: string;
+      userId: string;
+      teamId: string | null;
+      serviceName: string;
+      basePrice: number;
+    };
   }[];
 };
 
