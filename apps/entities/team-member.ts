@@ -13,6 +13,7 @@ export type TeamSettings = {
 };
 
 export const DEFAULT_USERS_TEAM = "users-team";
+export const DEFAULT_STOCK = "default-stock";
 
 export type Permissions = {
   canAccessStocks: boolean;

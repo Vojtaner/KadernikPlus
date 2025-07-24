@@ -1,9 +1,9 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
-import FormDialog from './Dialog'
-import TextField from './TextField'
-import { useAppFormContext } from '../reactHookForm/store'
-import { useAddTeamMemberMutation } from '../queries'
+import FormDialog from '../Dialog'
+import TextField from '../TextField'
+import { useAppFormContext } from '../../reactHookForm/store'
+import { useAddTeamMemberMutation } from '../../queries'
 
 const AddTeamMemberButton = () => {
   const [open, setOpen] = useState(false)

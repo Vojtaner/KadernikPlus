@@ -62,13 +62,8 @@ CREATE TABLE `procedures` (
     `visit_id` VARCHAR(191) NOT NULL,
     `step_order` INTEGER NOT NULL,
     `description` TEXT NULL,
-    `stockAllowanceId` VARCHAR(191) NULL,
-    `grams_used` DECIMAL(10, 2) NULL,
-    `time_minutes` INTEGER NULL,
-    `issue` TEXT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `procedures_stockAllowanceId_key`(`stockAllowanceId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -94,6 +89,7 @@ CREATE TABLE `stock_allowances` (
     `id` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
     `stock_item_id` VARCHAR(191) NOT NULL,
+    `procedure_id` VARCHAR(191) NOT NULL,
     `quantity` DECIMAL(10, 2) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
@@ -171,13 +167,13 @@ ALTER TABLE `visit_services` ADD CONSTRAINT `visit_services_service_id_fkey` FOR
 ALTER TABLE `photos` ADD CONSTRAINT `photos_visit_id_fkey` FOREIGN KEY (`visit_id`) REFERENCES `visits`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `procedures` ADD CONSTRAINT `procedures_stockAllowanceId_fkey` FOREIGN KEY (`stockAllowanceId`) REFERENCES `stock_allowances`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE `procedures` ADD CONSTRAINT `procedures_visit_id_fkey` FOREIGN KEY (`visit_id`) REFERENCES `visits`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `stock_items` ADD CONSTRAINT `stock_items_stockId_fkey` FOREIGN KEY (`stockId`) REFERENCES `stocks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `stock_allowances` ADD CONSTRAINT `stock_allowances_procedure_id_fkey` FOREIGN KEY (`procedure_id`) REFERENCES `procedures`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `stock_allowances` ADD CONSTRAINT `stock_allowances_user_id_fkey` FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

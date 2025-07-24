@@ -23,3 +23,7 @@ export declare const UnitsObject: {
     KS: string;
     BALENI: string;
 };
+export type StockAllowance = {
+    stockItemId: string;
+    amount: number;
+};

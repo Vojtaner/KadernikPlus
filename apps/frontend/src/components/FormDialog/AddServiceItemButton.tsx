@@ -1,11 +1,11 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
-import FormDialog from './Dialog'
-import MenuIconButton from './MenuIconButton'
-import TextField from './TextField'
+import FormDialog from '../Dialog'
+import MenuIconButton from '../MenuIconButton'
+import TextField from '../TextField'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
-import { useCreateServiceMutation } from '../queries'
-import { useAppFormContext } from '../reactHookForm/store'
+import { useCreateServiceMutation } from '../../queries'
+import { useAppFormContext } from '../../reactHookForm/store'
 
 const AddServiceItemButton = () => {
   const [open, setOpen] = useState(false)

@@ -1,13 +1,13 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
-import FormDialog from './Dialog'
-import MenuIconButton from './MenuIconButton'
-import TextField from './TextField'
+import FormDialog from '../Dialog'
+import MenuIconButton from '../MenuIconButton'
+import TextField from '../TextField'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
-import { unitList } from '../reactHookForm/entity'
-import SelectField from './SelectField'
-import { useCreateStockItemMutation, useStocksQuery } from '../queries'
-import { useAppFormContext } from '../reactHookForm/store'
+import { unitList } from '../../reactHookForm/entity'
+import SelectField from '../SelectField'
+import { useCreateStockItemMutation, useStocksQuery } from '../../queries'
+import { useAppFormContext } from '../../reactHookForm/store'
 
 const AddStockItemButton = () => {
   const [open, setOpen] = useState(false)

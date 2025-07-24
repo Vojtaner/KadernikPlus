@@ -8,6 +8,7 @@ export type StockItem = {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  stockId: string;
 };
 
 export type StockItemCreateData = Omit<
@@ -26,4 +27,14 @@ export const UnitsObject = {
   MM: "mm",
   KS: "ks",
   BALENI: "balení",
+};
+
+export type StockAllowance = {
+  createdAt: Date;
+  id: string;
+  procedureId: string;
+  quantity: string;
+  stockItem: StockItem;
+  stockItemId: string;
+  userId: string;
 };

@@ -1,12 +1,14 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, type UseMutationOptions } from '@tanstack/react-query'
 import type { Stock, UserLog } from './api/entity'
 import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
+
 import { apiRoutes } from './api/apiRoutes'
 import {
   deleteTeamMember,
   getClientById,
   getClients,
+  getProcedures,
   getServices,
   getStockItems,
   getStocks,
@@ -24,6 +26,7 @@ import {
   postCreateService,
   postCreateVisit,
   postInviteTeamMember,
+  postNewProcedure,
 } from './api/api'
 
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
@@ -41,6 +44,7 @@ import { type StockItem } from '../../entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type { VisitWithServices, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
 import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
+import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -105,6 +109,37 @@ export const useTeamMembersQuery = (teamId?: string) => {
     queryKey: ['teamMembers', resolvedTeamId],
     queryFn: () => getTeamMembers(axios, resolvedTeamId),
   })
+}
+
+// ---- Procedures ----
+export const useProceduresQuery = (visitId: string | undefined) => {
+  const axios = useAxios()
+
+  return useQuery<CreateProcedure[]>({
+    queryKey: ['procedures', visitId],
+    queryFn: () => {
+      if (!visitId) {
+        throw new Error('Stock ID is required to fetch stock items.')
+      }
+      const procedures = getProcedures(axios, visitId)
+
+      return procedures
+    },
+  })
+}
+
+export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedure, unknown, PostNewProcedure>) => {
+  const axios = useAxios()
+
+  const mutation = useMutation({
+    mutationFn: (data: PostNewProcedure) => postNewProcedure(axios, data.visitId, data),
+    onSuccess: (data: CreateProcedure, variables, context) => {
+      options?.onSuccess?.(data, variables, context)
+      queryClient.invalidateQueries({ queryKey: ['procedures', data.visitId] })
+    },
+  })
+
+  return { mutation }
 }
 
 // ---- Services ----
@@ -210,7 +245,6 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCr
     mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
-      console.log(client.id)
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
     },
   })

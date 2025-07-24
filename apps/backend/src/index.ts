@@ -16,6 +16,7 @@ import { getEnvVar } from "./utils/getEnvVar";
 import serviceRoutes from "./routes/services-routes";
 import teamMemberRoutes from "./routes/team-member-routes";
 import teamRoutes from "./routes/team";
+import procedureRoutes from "./routes/procedure-routes";
 
 dotenv.config();
 
@@ -41,6 +42,7 @@ app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 app.use("/api/visits", visitRoutes);
 app.use("/api/team-members", teamMemberRoutes);
 app.use("/api/team", teamRoutes);
+app.use("/api/procedures", procedureRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);

@@ -17,7 +17,7 @@ type SelectFieldProps<T extends Identifiable> = {
   items: T[]
   keyExtractor: (item: T) => T['id']
   labelExtractor: (item: T) => string
-  defaultValue: FieldPathValue<AppFormState, FieldPath<AppFormState>>
+  defaultValue?: FieldPathValue<AppFormState, FieldPath<AppFormState>>
 }
 
 const SelectField = <T extends Identifiable>(props: SelectFieldProps<T>) => {

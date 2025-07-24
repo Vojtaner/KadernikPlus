@@ -11,6 +11,7 @@ import type {
   ClientWithVisitsWithVisitServices,
 } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
+import type { CreateProcedure, PostNewProcedure } from '../../../entities/procedure'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
 import type { VisitCreateData, VisitDetailFormType, VisitWithServices } from '../../../entities/visit'
@@ -143,6 +144,7 @@ export const postInviteTeamMember = async (
   const response = await axios.post(apiRoutes.getInviteTeamMemberUrl(), data)
   return response.data
 }
+
 export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promise<TeamMember> => {
   const response = await axios.delete(apiRoutes.getTeamMemberUrl(), { data: { id } })
   return response.data
@@ -153,6 +155,20 @@ export const getTeamMembers = async (
   teamId: string
 ): Promise<(TeamMember & { user: { name: string } })[]> => {
   const response = await axios.get(apiRoutes.getTeamMembersUrl(teamId))
+  return response.data
+}
+
+export const getProcedures = async (axios: AxiosInstance, visitId: string): Promise<CreateProcedure[]> => {
+  const response = await axios.get(apiRoutes.getProceduresUrl(visitId))
+  return response.data
+}
+
+export const postNewProcedure = async (
+  axios: AxiosInstance,
+  visitId: string,
+  data: PostNewProcedure
+): Promise<CreateProcedure> => {
+  const response = await axios.post(apiRoutes.getProceduresUrl(visitId), data)
   return response.data
 }
 

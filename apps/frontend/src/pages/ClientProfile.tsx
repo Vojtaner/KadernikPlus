@@ -1,14 +1,13 @@
 import { Divider, Stack, Typography } from '@mui/material'
 import ClientProfileGrid from '../components/ClientProfileGrid'
 import VisitDetailCard from '../components/VisitDetailCard'
-import Note from '../components/Note'
 import { useClientQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import Loader from '../pages/Loader'
 import { formatToCZK } from './VisitDetailGrid'
 import { getDateTime } from './VisitsList'
 import BoxIcon from '../components/BoxIcon'
-import AddOrUpdateClientItemButton from '../components/AddOrUpdateClientItemButton'
+import AddOrUpdateClientItemButton from '../components/FormDialog/AddOrUpdateClientItemButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
@@ -24,7 +23,7 @@ const ClientProfile = () => {
   if (!clientData) {
     return <Typography>Data klienta nenačtena.</Typography>
   }
-  console.log(clientData)
+  
   return (
     <Stack spacing={2}>
       <ClientProfileGrid clientData={clientData} />

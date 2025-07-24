@@ -1,5 +1,4 @@
 import { Stack } from '@mui/material'
-import AppBarChart from '../components/BarChart'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 // import { useState } from 'react'
 // import SelectField from '../components/SelectField'

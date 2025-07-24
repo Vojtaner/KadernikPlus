@@ -11,7 +11,19 @@ import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } f
 import { type AppFormState } from '../reactHookForm/entity'
 
 export type TextFieldProps<
-  TFieldValues extends Record<string, string | number | null | Date | string[] | boolean> = AppFormState, //formulářový state,
+  TFieldValues extends Record<
+    string,
+    | string
+    | number
+    | null
+    | Date
+    | string[]
+    | boolean
+    | {
+        stockItemId: string
+        quantity: number
+      }[]
+  > = AppFormState, //formulářový state,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
 > = Omit<MuiTextFieldProps, 'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'> & {
   fieldPath: TName
@@ -22,10 +34,22 @@ export type TextFieldProps<
 }
 
 function TextField<
-  TFieldValues extends Record<string, string | number | null | Date | string[] | boolean> = AppFormState,
+  TFieldValues extends Record<
+    string,
+    | string
+    | number
+    | null
+    | Date
+    | string[]
+    | boolean
+    | {
+        stockItemId: string
+        quantity: number
+      }[]
+  > = AppFormState,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: TextFieldProps<TFieldValues, TName>) {
-  const { fieldPath, control, rules, defaultValue, disabled, ...rest } = props
+  const { fieldPath, control, rules, disabled, defaultValue, ...rest } = props
   const { errors } = useFormState({ control, name: fieldPath })
 
   const error: string = get(errors, fieldPath)?.message
@@ -35,17 +59,20 @@ function TextField<
       control={control}
       name={fieldPath}
       rules={rules}
+      defaultValue={defaultValue}
       render={({ field: { onChange, onBlur, value, ref } }) => (
         <MuiTextField
           {...rest}
-          onChange={onChange}
-          onBlur={onBlur}
-          value={value ?? defaultValue ?? ''}
-          name={fieldPath}
           inputRef={ref}
+          name={fieldPath}
+          disabled={disabled}
           helperText={error}
           error={!!error}
-          disabled={disabled}
+          value={value}
+          onBlur={onBlur}
+          onChange={(e) => {
+            onChange(e.target.value)
+          }}
         />
       )}
     />

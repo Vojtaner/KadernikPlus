@@ -1,8 +1,8 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
+import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
 import { Controller, type Control, type FieldPathValue } from 'react-hook-form'
-import { useTeamMembersQuery } from '../queries'
-import Loader from '../pages/Loader'
+import { useTeamMembersQuery } from '../../queries'
+import Loader from '../../pages/Loader'
 
 type TeamMemberAutoCompleteProps = {
   fieldPath: AppFieldPath
@@ -32,7 +32,7 @@ export default function TeamMemberAutoComplete({ fieldPath, control, defaultValu
     <Controller
       name={fieldPath}
       control={control}
-      defaultValue={defaultValue} // <-- add this here
+      defaultValue={defaultValue}
       render={({ field }) => {
         const selectedOption = teamMemberOptions.find((option) => option.id === field.value) || null
 

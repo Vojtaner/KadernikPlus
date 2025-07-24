@@ -99,28 +99,21 @@ model Photo {
   @@map("photos")
 }
 
-/// Detailed steps or actions performed during a visit
+
 model Procedure {
   id          String  @id @default(uuid())
   visitId     String  @map("visit_id")
   stepOrder   Int     @map("step_order")
   description String? @db.Text
 
-  stockAllowanceId String?         @unique // Unique FK for 1-1 relationship (nullable for optional 1-1)
-  stockAllowance   StockAllowance? @relation(fields: [stockAllowanceId], references: [id])
+  stockAllowances StockAllowance[] // <--- více spotřeb na jednu proceduru
 
-  gramsUsed   Decimal? @map("grams_used") @db.Decimal(10, 2)
-  timeMinutes Int?     @map("time_minutes")
-  issue       String?  @db.Text
-  createdAt   DateTime @default(now()) @map("created_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
   visit Visit @relation(fields: [visitId], references: [id])
 
   @@map("procedures")
 }
-
-
-
 
 
 model StockItem {
@@ -146,15 +139,16 @@ model StockItem {
 model StockAllowance {
   id          String @id @default(uuid())
   userId      String @map("user_id")
-  stockItemId String @map("stock_item_id") // renamed to clarify relation to StockItem
+  stockItemId String @map("stock_item_id")
 
-  procedure Procedure? // no `fields` or `references` here; FK on Procedure
+  procedureId String @map("procedure_id")
+  procedure   Procedure @relation(fields: [procedureId], references: [id])
 
-  quantity  Decimal  @db.Decimal(10, 2)
-  createdAt DateTime @default(now()) @map("created_at")
+  quantity    Decimal  @db.Decimal(10, 2)
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  user      User      @relation(fields: [userId], references: [id])
-  stockItem StockItem @relation(fields: [stockItemId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+  stockItem   StockItem @relation(fields: [stockItemId], references: [id])
 
   @@map("stock_allowances")
 }

@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from ".prisma/client";
 import {
   StockItem,
   StockItemCreateData,
@@ -28,7 +28,7 @@ const createStockItemRepositoryDb = (
             },
           },
         });
-        return mapToDomainStockItem(stockItem);
+        return stockItem;
       } catch (err) {
         if (
           err instanceof PrismaClientKnownRequestError &&
@@ -47,7 +47,7 @@ const createStockItemRepositoryDb = (
       const stockItem = await prismaStockRepository.stockItem.findUnique({
         where: { id: stockItemId },
       });
-      return stockItem ? mapToDomainStockItem(stockItem) : null;
+      return stockItem ?? null;
     },
 
     findStockItemByName: async (
@@ -57,7 +57,7 @@ const createStockItemRepositoryDb = (
       const stockItem = await prismaStockRepository.stockItem.findFirst({
         where: { itemName: itemName },
       });
-      return stockItem ? mapToDomainStockItem(stockItem) : null;
+      return stockItem ?? null;
     },
 
     getStockItemsByStockId: async (stockId: string): Promise<StockItem[]> => {
@@ -65,7 +65,7 @@ const createStockItemRepositoryDb = (
         where: { stockId: stockId },
       });
 
-      return stockItems.map((stockItem) => mapToDomainStockItem(stockItem));
+      return stockItems;
     },
   };
 };

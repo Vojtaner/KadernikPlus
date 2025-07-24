@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { useServicesQuery } from '../queries'
-import Loader from '../pages/Loader'
-import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
+import { useServicesQuery } from '../../queries'
+import Loader from '../../pages/Loader'
+import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
 import { Controller, type Control } from 'react-hook-form'
 
 // const services = [

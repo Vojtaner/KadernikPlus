@@ -1,10 +1,10 @@
 import { Button } from '@mui/material'
-import FormDialog from './Dialog'
+import FormDialog from '../Dialog'
 import { useState } from 'react'
-import TextField from './TextField'
-import { useCreateNewOrUpdateClientMutation } from '../queries'
-import { useAppFormContext } from '../reactHookForm/store'
-import type { ClientCreateData } from '../../../entities/client'
+import TextField from '../TextField'
+import { useCreateNewOrUpdateClientMutation } from '../../queries'
+import { useAppFormContext } from '../../reactHookForm/store'
+import type { ClientCreateData } from '../../../../entities/client'
 import React from 'react'
 
 type AddOrUpdateClientItemButtonProps = {

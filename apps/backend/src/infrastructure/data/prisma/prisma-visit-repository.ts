@@ -1,10 +1,7 @@
 import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
 import { VisitRepositoryPort } from "../../../application/ports/visit-repository";
-import { PrismaClient, Service, Visit } from "@prisma/client";
-import mapToDomainVisit, {
-  CreatedVisit,
-  VisitWithServices,
-} from "../../mappers/visit-mapper";
+import { PrismaClient } from ".prisma/client";
+import { CreatedVisit, VisitWithServices } from "../../mappers/visit-mapper";
 import prisma from "./prisma";
 import { WithUserId } from "@/entities/user";
 import { HasId } from "@/domain/entity";
@@ -28,10 +25,8 @@ export const createVisitRepositoryDb = (
         clientId: visitData.clientId,
         userId: visitData.userId,
         date: visitData.date,
-
-        //paid price se musí odstranit asi s migrací?
         paidPrice: 1,
-        teamId: userTeam.teamId, //teamId se musí přidat do VisitCreateData",
+        teamId: userTeam.teamId,
         visitServices: {
           create: visitData.serviceIds.map((serviceId) => ({
             service: { connect: { id: serviceId } },
@@ -73,13 +68,12 @@ export const createVisitRepositoryDb = (
     return visits;
   },
 
-  //návštěva nevrací nově přidaná políčka deposit,depositStatus etc
-
   findById: async (visitId: string): Promise<VisitWithServices | null> => {
     const visit = await prismaRepository.visit.findUnique({
       where: { id: visitId },
       include: {
         client: true,
+        procedures: { include: { stockAllowances: true } },
         visitServices: {
           include: {
             service: true,

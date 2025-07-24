@@ -156,13 +156,11 @@ export const createColumns = (
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      console.log({ params })
       return (
         <RedSwitch
           checked={params.value}
           size="small"
-          onSubmitEndpoint={(checked) => {
-            console.log({ checked })
+          onSubmitEndpoint={() => {
             changeVisitStatus({ visitId: params.id.toString(), status: !params.value })
           }}
         />

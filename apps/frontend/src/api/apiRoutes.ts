@@ -7,6 +7,7 @@ export const apiRoutes = {
   getClientsUrl: () => `/api/clients/`,
   getCreateNewClientUrl: () => `/api/clients`,
   getCreateStockItemUrl: () => `/api/stock`,
+  getProceduresUrl: (visitId: string) => `/api/procedures/visit/${encodeURIComponent(visitId)}`,
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
   getVisitUrl: () => `/api/visits`,

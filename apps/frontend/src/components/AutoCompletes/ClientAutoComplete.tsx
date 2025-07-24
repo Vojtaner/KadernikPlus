@@ -1,8 +1,8 @@
 import { Autocomplete, TextField } from '@mui/material'
-import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
-import Loader from '../pages/Loader'
+import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
+import Loader from '../../pages/Loader'
 import { Controller, type Control } from 'react-hook-form'
-import { useClientsQuery } from '../queries'
+import { useClientsQuery } from '../../queries'
 
 // const clients = [
 //   { id: '1', firstName: 'Jana', lastName: 'Morečková' },

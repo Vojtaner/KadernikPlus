@@ -1,54 +1,85 @@
-import { Box, Typography, Stack } from '@mui/material'
+import { Box, Typography, Stack, IconButton } from '@mui/material'
 import AppTheme from '../AppTheme'
-import Paper from './Paper'
+import type { StockAllowance } from '../../../entities/stock-item'
+import AddProcedureButton from './FormDialog/AddProcedureButton'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 
-const ProcedureCard = () => {
+type ProcedureCardProps = {
+  description: string
+  stockAllowances: StockAllowance[]
+  orderNumber: number
+  procedureId: string | undefined
+}
+
+//spojit proceduru s SMSkou
+
+const ProcedureCard = (props: ProcedureCardProps) => {
+  const { description, orderNumber, stockAllowances: defaultStockAllowances, procedureId } = props
+
   return (
-    <Paper>
-      <Stack spacing={2} direction={'row'} justifyContent={'space-between'} alignItems={'center'}>
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      alignItems="center"
+      boxShadow="0px 1px 7px 0px rgba(0,0,0,0.22)"
+      borderRadius="10px">
+      <Stack sx={{ borderRadius: 0, padding: '1rem' }} spacing={1}>
         <Box
           sx={{
             borderRight: `2px dotted ${AppTheme.palette.primary.light}`,
           }}>
           <Typography variant="h6" sx={{ padding: 1 }} color="primary">
-            1.
+            {`${orderNumber}.`}
           </Typography>
         </Box>
-        <Stack direction={'column'}>
-          <Typography variant="body1" sx={{ padding: 1 }}>
-            Před aplikací provedeno mytí jemným šamponem, vysušeno ručníkem. Barva míchána 1:1 s 6% oxidantem, nanesena
-            nejprve na odrosty, poté do délek, působení 30 minut.
-          </Typography>
-          <Stack
-            direction={'row'}
-            rowGap={2}
-            columnGap={1}
-            alignItems={'center'}
-            flexWrap="wrap"
-            justifyContent={'flex-start'}>
-            <Box boxShadow={'0px 1px 7px 0px rgba(0,0,0,0.12)'} padding={1} borderRadius={2}>
-              <Typography variant="body1" fontWeight={600} color="secondary">
-                Blondor 30 ml
-              </Typography>
-            </Box>
-            <Box boxShadow={'0px 1px 7px 0px rgba(0,0,0,0.12)'} padding={1} borderRadius={2}>
-              <Typography variant="body1" fontWeight={600} color="secondary">
-                Blondor 30 ml
-              </Typography>
-            </Box>
-            <Box boxShadow={'0px 1px 7px 0px rgba(0,0,0,0.12)'} padding={1} borderRadius={2}>
-              <Typography variant="body1" fontWeight={600} color="secondary">
-                Blondor 30 ml
-              </Typography>
-            </Box>
-            <Typography fontWeight={600} color="primary.main">
-              + Přidat
-            </Typography>
-          </Stack>
-        </Stack>
       </Stack>
-    </Paper>
+
+      <Box sx={{ flexGrow: 1, padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+        <Typography variant="body1" sx={{ marginBottom: 1 }}>
+          {description}
+        </Typography>
+
+        <Stack direction="row" rowGap={2} columnGap={1} alignItems="center" flexWrap="wrap" justifyContent="flex-end">
+          {defaultStockAllowances.map((stockAllowance) => (
+            <StockAllowance stockAllowance={stockAllowance} key={stockAllowance.id} />
+          ))}
+        </Stack>
+      </Box>
+
+      <IconButton
+        sx={{
+          bgcolor: 'secondary.light',
+          alignSelf: 'stretch',
+          borderRadius: '0 10px 10px 0',
+          borderLeft: `1px dotted ${AppTheme.palette.secondary.main}`,
+        }}>
+        <AddProcedureButton
+          defaultValues={{ stockAllowances: defaultStockAllowances, description }}
+          procedureId={procedureId}
+          openButton={
+            <IconButton color="error">
+              <EditOutlinedIcon />
+            </IconButton>
+          }
+        />
+      </IconButton>
+    </Stack>
   )
 }
 
 export default ProcedureCard
+
+type StockAllowanceProps = {
+  stockAllowance: StockAllowance
+}
+const StockAllowance = (props: StockAllowanceProps) => {
+  const { stockAllowance } = props
+
+  return (
+    <Box boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)" padding={1} key={stockAllowance.id} borderRadius={2}>
+      <Typography fontSize="11px" fontWeight={600} color="secondary">
+        {`${stockAllowance.stockItem.itemName} ${stockAllowance.quantity}`}
+      </Typography>
+    </Box>
+  )
+}

@@ -10,7 +10,14 @@ export type AppFormState = ClientForm &
   VisitDetailForm &
   VisitCreateForm &
   AddTeamMemberForm &
-  SearchForm
+  SearchForm & {
+    stockAllowances: {
+      stockAllowanceId: string
+      stockItemId: string
+      quantity: number
+    }[]
+    description: string
+  }
 
 export const unitList = Object.values(UnitsObject).map((unit, index) => ({
   id: String(index + 1),
