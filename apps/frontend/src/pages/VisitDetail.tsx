@@ -39,7 +39,7 @@ const VisitDetail = () => {
         )}
       </Stack>
       <Divider />
-      <Note />
+      <Note note={visitData.note} />
       <Divider
         sx={{
           '& .MuiDivider-wrapper': {

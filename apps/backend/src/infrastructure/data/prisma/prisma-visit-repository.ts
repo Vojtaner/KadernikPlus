@@ -161,9 +161,9 @@ export const createVisitRepositoryDb = (
         paidPrice: visitData.paidPrice,
         date: visitData.date,
         deposit: Number(visitData.deposit),
+        note: visitData.note,
         depositStatus: { set: visitData.depositStatus as any }, //po restartu dockeru se srovná
       },
-
       include: {
         visitServices: true,
       },

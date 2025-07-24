@@ -15,7 +15,7 @@ export type Visit = {
   userId?: string;
 
   serviceIds: string[];
-};
+} & Pick<Client, "firstName" | "lastName" | "phone" | "note">;
 
 export type VisitCreateData = Visit;
 
@@ -73,5 +73,5 @@ export const depositStatusOptions = Object.entries(DepositStatus).map(
 
 export type VisitDetailFormType = Pick<
   Visit,
-  "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId"
+  "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId" | "note"
 >;

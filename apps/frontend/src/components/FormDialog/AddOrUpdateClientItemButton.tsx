@@ -99,13 +99,13 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
 
 export default AddOrUpdateClientItemButton
 
-const phoneValidationRule = {
+export const phoneValidationRule = {
   pattern: {
     value: /^\+?[0-9]{7,15}$/,
     message: 'Zadejte platné telefonní číslo.',
   },
 }
-const firstNameValidationrule = {
+export const firstNameValidationrule = {
   minLength: {
     value: 3,
     message: 'Jméno musí mít alespoň 3 znaky.',

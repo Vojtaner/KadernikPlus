@@ -133,6 +133,7 @@ export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedu
 
   const mutation = useMutation({
     mutationFn: (data: PostNewProcedure) => postNewProcedure(axios, data.visitId, data),
+
     onSuccess: (data: CreateProcedure, variables, context) => {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['procedures', data.visitId] })
@@ -177,12 +178,13 @@ export const useVisitQuery = (visitId: string | undefined) => {
   })
 }
 
-export const useCreateVisitMutation = () => {
+export const useCreateVisitMutation = (options?: UseMutationOptions<VisitCreateData, Error, VisitCreateData>) => {
   const axios = useAxios()
 
   return useMutation<VisitCreateData, Error, VisitCreateData>({
     mutationFn: (visitData: VisitCreateData) => postCreateVisit(axios, visitData),
-    onSuccess: (visitData) => {
+    onSuccess: (visitData, variables, context) => {
+      options?.onSuccess?.(visitData, variables, context)
       queryClient.invalidateQueries({ queryKey: ['visits'] })
       queryClient.invalidateQueries({ queryKey: ['clients'] })
       queryClient.invalidateQueries({ queryKey: ['client', visitData.clientId] })

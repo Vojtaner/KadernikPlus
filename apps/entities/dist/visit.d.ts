@@ -13,7 +13,7 @@ export type Visit = {
     hairdresserId?: string;
     userId?: string;
     serviceIds: string[];
-};
+} & Pick<Client, "firstName" | "lastName" | "phone" | "note">;
 export type VisitCreateData = Visit;
 export type GetVisitsType = Omit<Visit, "serviceIds" | "id"> & {
     services: Service[];
@@ -49,5 +49,5 @@ export declare const depositStatusOptions: {
     id: string;
     name: DepositStatus;
 }[];
-export type VisitDetailFormType = Pick<Visit, "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId">;
+export type VisitDetailFormType = Pick<Visit, "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId" | "note">;
 export {};

@@ -23,6 +23,9 @@ import {
 import updateVisitStatusUseCase, {
   UpdateVisitStatusUseCaseType,
 } from "../../application/use-cases/visits/update-visit-status";
+import addOrUpdateClientUseCase, {
+  CreateAddOrUpdateClientUseCaseType,
+} from "../../application/use-cases/clients/add-or-update-client";
 
 // type GetVisitsControllerType = { query: HasClientId };
 type GetVisitsByDatesControllerType = {
@@ -50,6 +53,7 @@ const createVisitController = (dependencies: {
   updateVisitUseCase: CreateUpdateVisitUseCaseType;
   deleteVisitUseCase: CreateDeleteVisitUseCaseType;
   updateVisitStatusUseCase: UpdateVisitStatusUseCaseType;
+  addOrUpdateClientUseCase: CreateAddOrUpdateClientUseCaseType;
 }) => {
   const addVisitController: ControllerFunction<AddVisitControllerType> = async (
     httpRequest
@@ -57,6 +61,7 @@ const createVisitController = (dependencies: {
     function addHours(date: Date, hours: number): Date {
       return new Date(date.getTime() + hours * 60 * 60 * 1000);
     }
+
     try {
       const visitData = httpRequest.body;
       const original = new Date(visitData.date);
@@ -64,7 +69,36 @@ const createVisitController = (dependencies: {
       const userId = httpRequest.userId;
       const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
 
-      if (!visitData.clientId || !visitDataWithUserId.date || !userId) {
+      if (
+        !visitData.clientId &&
+        visitData.firstName &&
+        visitData.lastName &&
+        visitData.phone
+      ) {
+        const clientData = {
+          id: "",
+          firstName: visitData.firstName,
+          lastName: visitData.lastName,
+          phone: visitData.phone,
+          note: visitData.note,
+          userId,
+          deposit: true,
+        };
+
+        const newClient = await dependencies.addOrUpdateClientUseCase.execute(
+          clientData
+        );
+
+        const newVisit = await dependencies.addVisitUseCase.execute({
+          ...visitDataWithUserId,
+          clientId: newClient.id,
+        });
+
+        return {
+          statusCode: 201,
+          body: newVisit,
+        };
+      } else if (!visitData.clientId || !visitDataWithUserId.date || !userId) {
         return {
           statusCode: 400,
           body: {
@@ -275,6 +309,7 @@ const visitController = createVisitController({
   updateVisitUseCase,
   deleteVisitUseCase,
   updateVisitStatusUseCase,
+  addOrUpdateClientUseCase,
 });
 
 export default visitController;

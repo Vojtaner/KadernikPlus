@@ -8,6 +8,7 @@ export type StockItem = {
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
+    stockId: string;
 };
 export type StockItemCreateData = Omit<StockItem, "createdAt" | "updatedAt" | "isActive" | "id"> & {
     stockId: string;
@@ -24,6 +25,11 @@ export declare const UnitsObject: {
     BALENI: string;
 };
 export type StockAllowance = {
+    createdAt: Date;
+    id: string;
+    procedureId: string;
+    quantity: string;
+    stockItem: StockItem;
     stockItemId: string;
-    amount: number;
+    userId: string;
 };

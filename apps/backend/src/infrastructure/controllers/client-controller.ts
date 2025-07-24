@@ -54,7 +54,7 @@ const createClientController = (dependencies: {
       const userId = httpRequest.userId;
 
       const clientDataWithUserId = { ...clientData, userId };
-
+      console.log({ clientDataWithUserId });
       const newOrUpdatedClient =
         await dependencies.addOrUpdateClientUseCase.execute(
           clientDataWithUserId

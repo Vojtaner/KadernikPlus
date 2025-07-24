@@ -74,9 +74,21 @@ const EditVisitDetailDialog = () => {
             required
             defaultValue={visit.paidPrice}
           />
+          <TextField
+            fieldPath="note"
+            label="Poznámka"
+            type="text"
+            fullWidth
+            multiline
+            minRows={2}
+            maxRows={5}
+            required
+            defaultValue={visit.note}
+          />
         </>
       }
       onSubmitEndpoint={(visitData) => {
+        console.log(visitData)
         updateVisitMutation(visitData)
       }}
       onOpenButton={
