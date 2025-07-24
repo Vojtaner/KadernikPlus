@@ -24,33 +24,6 @@ const VisitDetail = () => {
     return <Typography>Požadovaná data nejsou dostupná.</Typography>
   }
 
-  // const dataProcedure = {
-  //   description: 'Nová procedura.',
-  //   visitId: '6c268bea-a41a-4388-879e-9ccea4af3340',
-  //   stockAllowances: [
-  //     {
-  //       stockItemId: 'c0887f06-2ff7-4adb-8e16-6cac3b784e0a',
-  //       quantity: 5,
-  //       userId: 'google-oauth2|113238590142888685973',
-  //     },
-  //   ],
-  // }
-
-  // const handleAddProcedure = async (data: PostNewProcedure) => {
-  //   try {
-  //     if (!visitId) {
-  //       throw Error('Visit ID not found.')
-  //     }
-  //     const newProcedure = await createNewProcedure.mutate(data)
-  //     console.log({ newProcedure })
-  //   } catch (error: unknown) {
-  //     console.log(error)
-  //   }
-  // }
-
-  //přidat proceduru tlačítko - s ní se otevře dialog note + fieldarray spotřeb / editovat proceduru
-  // formulář - poznámku, Spotřebovaný materiál Array, odstranit
-
   return (
     <>
       <VisitDetailGrid visitData={visitData} />

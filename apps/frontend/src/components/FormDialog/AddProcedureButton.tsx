@@ -76,7 +76,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       isOpen={open}
       onClose={handleClose}
       onSubmitEndpoint={(formData) => {
-        console.log(formData)
         createNewProcedure.mutate({ ...formData, visitId, id: procedureId } as unknown as PostNewProcedure)
       }}
       actions={
@@ -101,7 +100,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 
           <Stack spacing={2}>
             {fields.map((field, index) => {
-              console.log({ field })
               return (
                 <Grid container spacing={2} key={field.id} alignItems="center">
                   <Controller
