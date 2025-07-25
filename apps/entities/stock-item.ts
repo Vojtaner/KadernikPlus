@@ -16,6 +16,12 @@ export type StockItemCreateData = Omit<
   "createdAt" | "updatedAt" | "isActive" | "id"
 > & { stockId: string };
 
+export type StockItemBuyData = {
+  stockItemId: string;
+  price: number;
+  quantity: number;
+};
+
 export type Units = (typeof UnitsObject)[keyof typeof UnitsObject];
 
 export const UnitsObject = {

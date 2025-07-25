@@ -7,10 +7,11 @@ type SmsCardProps = {
   text: string
   customerName: string
   haircut: string
+  visitDistance: string
 }
 
 const SmsCard = (props: SmsCardProps) => {
-  const { text, customerName, haircut } = props
+  const { text, customerName, haircut, visitDistance } = props
 
   return (
     <Stack
@@ -22,7 +23,7 @@ const SmsCard = (props: SmsCardProps) => {
       <Stack sx={{ borderRadius: 0, padding: '1rem' }} spacing={1}>
         <Stack direction="row" spacing={2}>
           <DetailColumn label="Jméno" input={customerName} fontSize={12} />
-          <DetailColumn label="Návštěva" input="před 2 dny" fontSize={12} />
+          <DetailColumn label="Návštěva" input={visitDistance} fontSize={12} />
           <DetailColumn label="Účes" input={haircut} fontSize={12} />
         </Stack>
         <Typography variant="body1" fontSize="12px">

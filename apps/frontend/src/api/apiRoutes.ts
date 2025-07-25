@@ -10,7 +10,7 @@ export const apiRoutes = {
   getProceduresUrl: (visitId: string) => `/api/procedures/visit/${encodeURIComponent(visitId)}`,
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
-  getVisitUrl: () => `/api/visits`,
+  getVisitUrl: (query?: { from?: string; to?: string }) => getVisitUrlComposed(query),
   getUpdateVisitStatusUrl: () => `/api/visits/status`,
   getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
@@ -20,4 +20,21 @@ export const apiRoutes = {
   getInviteTeamMemberUrl: () => `/api/team-members/invitation`,
   getUpdateTeamMemberUrl: (teamId: string) => `/api/team-members/${encodeURIComponent(teamId)}`,
   getSearchClientsUrl: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
+}
+
+const getVisitUrlComposed = (query?: { from?: string; to?: string }) => {
+  if (!query) {
+    return '/api/visits'
+  }
+
+  const params = new URLSearchParams()
+
+  if (query.from) {
+    params.append('from', query.from)
+  }
+  if (query.to) {
+    params.append('to', query.to)
+  }
+
+  return `/api/visits?${params.toString()}`
 }

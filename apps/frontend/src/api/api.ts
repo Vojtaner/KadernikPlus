@@ -72,8 +72,11 @@ export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
   return response.data
 }
 
-export const getVisits = async (axios: AxiosInstance): Promise<VisitWithServices[]> => {
-  const response = await axios.get(apiRoutes.getVisitUrl())
+export const getVisits = async (
+  axios: AxiosInstance,
+  query?: { from?: string; to?: string }
+): Promise<VisitWithServices[]> => {
+  const response = await axios.get(apiRoutes.getVisitUrl(query))
   return response.data
 }
 

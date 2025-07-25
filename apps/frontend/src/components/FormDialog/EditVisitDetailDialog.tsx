@@ -60,7 +60,7 @@ const EditVisitDetailDialog = () => {
           <BasicDateTimePicker fieldPath="date" control={control} defaultValue={visit.date} />
           <TextField
             fieldPath="deposit"
-            label="Zaplacená záloha"
+            label="Výše zálohy"
             type="number"
             fullWidth
             required

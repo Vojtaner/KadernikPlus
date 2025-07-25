@@ -1,7 +1,7 @@
-import createStockItemUseCase, {
-  CreateStockItemUseCaseType,
+import createOrUpdateStockItemUseCase, {
+  CreateOrUpdateStockItemUseCaseType,
 } from "../../application/use-cases/stock/create-stock-item";
-import { StockItemCreateData } from "@/entities/stock-item";
+import { StockItemBuyData, StockItemCreateData } from "@/entities/stock-item";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getStockItemByIdUseCase, {
   GetStockItemByIdUseCaseType,
@@ -16,47 +16,43 @@ import getStocksByUserIdUseCase, {
   GetStocksByUserIdUseCaseType,
 } from "../../application/use-cases/stock/get-stocks-by-user-id";
 
-type CreateStockItemControllerType = {
-  body: StockItemCreateData;
+type CreateOrUpdateStockItemControllerType = {
+  body: StockItemCreateData | StockItemBuyData;
 };
 type GetStockItemByIdControllerType = {};
 type FindStockItemByNameControllerType = {};
 type GetStockItemsByStockIdControllerType = {};
 type GetStocksByUserIdControllerType = {};
 
+export const isPurchaseStockItem = (
+  data: StockItemCreateData | StockItemBuyData
+): data is StockItemBuyData => {
+  return "stockItemId" in data;
+};
+
 const createStockItemController = (dependencies: {
-  createStockItemUseCase: CreateStockItemUseCaseType;
+  createOrUpdateStockItemUseCase: CreateOrUpdateStockItemUseCaseType;
   getStockItemByIdUseCase: GetStockItemByIdUseCaseType;
   findStockItemByNameUseCase: FindStockItemByNameUseCaseType;
   getStockItemsByStockIdUseCase: GetStockItemsByStockIdUseCaseType;
   getStocksByUserIdUseCase: GetStocksByUserIdUseCaseType;
 }) => {
-  const createStockItemController: ControllerFunction<
-    CreateStockItemControllerType
+  const createOrUpdateStockItemController: ControllerFunction<
+    CreateOrUpdateStockItemControllerType
   > = async (httpRequest) => {
-    const { itemName, unit, quantity, threshold, price, stockId } =
-      httpRequest.body;
+    const data = httpRequest.body;
 
-    const stockItemData = {
-      itemName,
-      unit,
-      quantity: Number(quantity),
-      price: Number(price),
-      threshold: Number(threshold),
-      stockId,
-    };
-
-    const newStockItem = await dependencies.createStockItemUseCase.execute(
-      stockItemData
-    );
+    const newOrUpdatedStockItem =
+      await dependencies.createOrUpdateStockItemUseCase.execute(data);
 
     return {
       statusCode: 201,
-      body: newStockItem,
+      body: newOrUpdatedStockItem,
     };
   };
+
   const getStocksByUserIdController: ControllerFunction<
-    CreateStockItemControllerType
+    GetStocksByUserIdControllerType
   > = async (httpRequest) => {
     const userId = httpRequest.userId;
     const stocks = await dependencies.getStocksByUserIdUseCase.execute(userId);
@@ -129,7 +125,7 @@ const createStockItemController = (dependencies: {
   };
 
   return {
-    createStockItemController,
+    createOrUpdateStockItemController,
     findStockItemByNameController,
     getStockItemByIdController,
     getStockItemsByStockIdController,
@@ -138,7 +134,7 @@ const createStockItemController = (dependencies: {
 };
 
 const stockItemController = createStockItemController({
-  createStockItemUseCase,
+  createOrUpdateStockItemUseCase,
   getStockItemByIdUseCase,
   findStockItemByNameUseCase,
   getStockItemsByStockIdUseCase,

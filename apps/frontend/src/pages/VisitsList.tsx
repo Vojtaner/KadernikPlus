@@ -205,5 +205,5 @@ export const getDateTime = (date: Date) => {
   const minutes = convertedDate.getUTCMinutes().toString().padStart(2, '0')
   const day = convertedDate.getUTCDate()
   const month = convertedDate.getUTCMonth() + 1
-  return `${day}.${month} - ${hours}:${minutes}`
+  return `${day}.${month}. - ${hours}:${minutes}`
 }

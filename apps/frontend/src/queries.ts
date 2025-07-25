@@ -229,15 +229,17 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
   })
 }
 
-export const useVisitsQuery = () => {
+export const useVisitsQuery = (query?: { from?: string; to?: string }) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServices[]>({
     queryKey: ['visits'],
-    queryFn: () => getVisits(axios),
+    queryFn: () => getVisits(axios, query),
+    staleTime: 24 * 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }
-
 // ---- Clients----
 
 export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
@@ -297,11 +299,16 @@ export const useStocksQuery = () => {
   })
 }
 
-export const useCreateStockItemMutation = (): UseMutationResult<StockItemCreateData, Error, StockItemCreateData> => {
+export const useCreateStockItemMutation = (
+  options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>
+) => {
   const axios = useAxios()
 
   return useMutation<StockItemCreateData, Error, StockItemCreateData>({
     mutationFn: (stockItem: StockItemCreateData) => postCreateNewStockItem(axios, stockItem),
+    onSuccess(data, variables, context) {
+      options?.onSuccess?.(data, variables, context)
+    },
   })
 }
 

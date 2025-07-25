@@ -4,6 +4,7 @@ import SearchBar from './SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
 import { useState } from 'react'
+import { AppRoutes } from '../routes/AppRoutes'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
@@ -137,10 +138,21 @@ export const AppLogo = (props: AppLogoProps) => {
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
-      <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
-      <Typography color="common.white" variant="h5">
-        Kadeřník+
-      </Typography>
+      <Box
+        component="a"
+        href={AppRoutes.Dashboard}
+        sx={{
+          textDecoration: 'none',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          cursor: 'pointer',
+        }}>
+        <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
+        <Typography color="common.white" variant="h5">
+          Kadeřník+
+        </Typography>
+      </Box>
     </Stack>
   )
 }

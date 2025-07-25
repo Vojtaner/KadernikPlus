@@ -4,6 +4,7 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 // import SelectField from '../components/SelectField'
 import VisitsList from './VisitsList'
 import DashBoardCard from '../components/DashBoardCard'
+import AppBarChart from '../components/BarChart'
 
 export const Dashboard = () => {
   // const [selectedId, setSelectedId] = useState<string>('1')
@@ -30,9 +31,9 @@ export const Dashboard = () => {
       >
         {<VisitsList columnHeaderHeight={0} hideFooter={true} />}
       </DashBoardCard>
-      {/* <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
+      <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
         <AppBarChart />
-      </DashBoardCard> */}
+      </DashBoardCard>
     </Stack>
   )
 }
