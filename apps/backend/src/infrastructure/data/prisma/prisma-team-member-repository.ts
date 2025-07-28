@@ -32,13 +32,15 @@ const createTeamMemberRepositoryDb = (
     });
   },
 
-  findMany: async (teamId: string) => {
+  findMany: async (teamId: string, userId: string) => {
     if (DEFAULT_USERS_TEAM === teamId) {
       const members = await prisma.teamMember.findMany({
         where: {
           teamId,
+          NOT: {
+            userId: userId,
+          },
         },
-
         include: {
           user: {
             select: {
@@ -47,14 +49,17 @@ const createTeamMemberRepositoryDb = (
           },
         },
       });
+
       return members;
     }
 
     const members = await prisma.teamMember.findMany({
       where: {
         teamId,
+        NOT: {
+          userId: userId,
+        },
       },
-
       include: {
         user: {
           select: {

@@ -5,9 +5,10 @@ const createGetTeamMemberUseCase = (dependencies: {
   teamMemberRepositoryDb: TeamMemberRepositoryPort;
 }) => {
   return {
-    execute: async (data: { teamId: string }) => {
+    execute: async (data: { teamId: string; userId: string }) => {
       const teamMembers = await dependencies.teamMemberRepositoryDb.findMany(
-        data.teamId
+        data.teamId,
+        data.userId
       );
 
       return teamMembers;

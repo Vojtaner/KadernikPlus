@@ -132,6 +132,7 @@ const createTeamMemberController = (dependencies: {
 
       const teamMembers = await dependencies.getTeamMembersUseCase.execute({
         teamId,
+        userId,
       });
 
       return {

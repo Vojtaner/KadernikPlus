@@ -15,7 +15,10 @@ export type TeamMemberRepositoryPort = {
     canAccessClients: boolean;
     canAccessVisits: boolean;
   }>;
-  findMany: (teamId: string) => Promise<
+  findMany: (
+    teamId: string,
+    userId: string
+  ) => Promise<
     {
       id: string;
       userId: string;
