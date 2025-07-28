@@ -2,6 +2,7 @@ import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../../../entities/client'
 import { getDateTime } from '../pages/VisitsList'
+import { generateClientDetailPath } from '../routes/AppRoutes'
 
 type SearchResultProps = { clientData: ClientWithVisitsWithVisitServices; sx?: SxProps }
 
@@ -11,7 +12,19 @@ const SearchResult = (props: SearchResultProps) => {
   const latestVisit = getLatestVisit(clientData.visits)
 
   return (
-    <Stack marginY="5px" direction="row" alignItems="center" justifyContent="flex-start" spacing={1} sx={{ ...sx }}>
+    <Stack
+      marginY="5px"
+      direction="row"
+      alignItems="center"
+      justifyContent="flex-start"
+      spacing={1}
+      sx={{
+        textDecoration: 'none',
+        color: 'inherit',
+        ...sx,
+      }}
+      component={'a'}
+      href={generateClientDetailPath(clientData.id)}>
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>

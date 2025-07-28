@@ -18,6 +18,7 @@ import type { VisitCreateData, VisitDetailFormType, VisitWithServices } from '..
 import type { TeamMember } from '../../../entities/team-member'
 import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'
+import type { Dayjs } from 'dayjs'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -74,7 +75,7 @@ export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
 
 export const getVisits = async (
   axios: AxiosInstance,
-  query?: { from?: string; to?: string }
+  query?: { from?: Dayjs; to?: Dayjs }
 ): Promise<VisitWithServices[]> => {
   const response = await axios.get(apiRoutes.getVisitUrl(query))
   return response.data

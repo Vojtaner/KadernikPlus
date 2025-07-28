@@ -31,7 +31,6 @@ const createProcedureRepositoryDb = (
   },
   addOrUpdate: async (data: ProcedureCreateData) => {
     const { userId } = data;
-    console.log({ procData: data.stockAllowances });
 
     if (data.id) {
       const existing = await prisma.procedure.findUnique({

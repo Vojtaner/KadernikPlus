@@ -1,3 +1,5 @@
+import type { Dayjs } from 'dayjs'
+
 export const apiRoutes = {
   getUserLogsUrl: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
   getStockItemsUrl: (stockId: string) => `/api/stock/${encodeURIComponent(stockId)}/items`,
@@ -10,7 +12,7 @@ export const apiRoutes = {
   getProceduresUrl: (visitId: string) => `/api/procedures/visit/${encodeURIComponent(visitId)}`,
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
-  getVisitUrl: (query?: { from?: string; to?: string }) => getVisitUrlComposed(query),
+  getVisitUrl: (query?: { from?: Dayjs; to?: Dayjs }) => getVisitUrlComposed(query),
   getUpdateVisitStatusUrl: () => `/api/visits/status`,
   getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
@@ -22,7 +24,7 @@ export const apiRoutes = {
   getSearchClientsUrl: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
 }
 
-const getVisitUrlComposed = (query?: { from?: string; to?: string }) => {
+const getVisitUrlComposed = (query?: { from?: Dayjs; to?: Dayjs }) => {
   if (!query) {
     return '/api/visits'
   }
@@ -30,10 +32,10 @@ const getVisitUrlComposed = (query?: { from?: string; to?: string }) => {
   const params = new URLSearchParams()
 
   if (query.from) {
-    params.append('from', query.from)
+    params.append('from', query.from.toISOString())
   }
   if (query.to) {
-    params.append('to', query.to)
+    params.append('to', query.to.toISOString())
   }
 
   return `/api/visits?${params.toString()}`

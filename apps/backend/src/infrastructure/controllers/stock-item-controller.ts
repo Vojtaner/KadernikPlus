@@ -1,6 +1,6 @@
 import createOrUpdateStockItemUseCase, {
   CreateOrUpdateStockItemUseCaseType,
-} from "../../application/use-cases/stock/create-stock-item";
+} from "../../application/use-cases/stock/create-or-update-stock-item";
 import { StockItemBuyData, StockItemCreateData } from "@/entities/stock-item";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getStockItemByIdUseCase, {

@@ -1,5 +1,7 @@
 import { Client } from "client";
+import { Procedure } from "procedure";
 import { Service } from "service";
+import { StockAllowance } from "stock-item";
 import { WithUserId } from "user";
 
 export type Visit = {
@@ -40,6 +42,9 @@ export type VisitWithServices = {
   visitServices: VisitService[];
   visitStatus: boolean;
 } & Omit<Visit, "visitStatus" | "hairdresserId">;
+
+export type VisitWithServicesWithProceduresWithStockAllowances =
+  VisitWithServices & Procedure & StockAllowance;
 
 type VisitService = {
   id: string;

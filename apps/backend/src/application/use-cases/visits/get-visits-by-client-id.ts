@@ -10,9 +10,10 @@ const createGetVisitsByClientIdUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
 }) => {
   return {
-    execute: async (clientId: string): Promise<Visit[]> => {
+    execute: async (clientId: string, userId: string): Promise<Visit[]> => {
       const clientExists = await dependencies.clientRepositoryDb.findById(
-        clientId
+        clientId,
+        userId
       );
 
       if (!clientExists) {

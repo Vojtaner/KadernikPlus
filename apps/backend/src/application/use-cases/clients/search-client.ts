@@ -25,7 +25,8 @@ const createSearchClientsUseCase = (dependencies: {
 
       const clients = await dependencies.clientRepositoryDb.search(
         teamMember.teamId,
-        query
+        query,
+        userId
       );
 
       return clients;

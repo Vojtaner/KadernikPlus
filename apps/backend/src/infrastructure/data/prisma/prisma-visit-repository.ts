@@ -1,7 +1,11 @@
 import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
 import { VisitRepositoryPort } from "../../../application/ports/visit-repository";
 import { PrismaClient } from ".prisma/client";
-import { CreatedVisit, VisitWithServices } from "../../mappers/visit-mapper";
+import {
+  CreatedVisit,
+  VisitWithServices,
+  VisitWithServicesWithProceduresWithStockAllowances,
+} from "../../mappers/visit-mapper";
 import prisma from "./prisma";
 import { WithUserId } from "@/entities/user";
 import { HasId } from "@/domain/entity";
@@ -68,12 +72,16 @@ export const createVisitRepositoryDb = (
     return visits;
   },
 
-  findById: async (visitId: string): Promise<VisitWithServices | null> => {
+  findById: async (
+    visitId: string
+  ): Promise<VisitWithServicesWithProceduresWithStockAllowances | null> => {
     const visit = await prismaRepository.visit.findUnique({
       where: { id: visitId },
       include: {
         client: true,
-        procedures: { include: { stockAllowances: true } },
+        procedures: {
+          include: { stockAllowances: { include: { stockItem: true } } },
+        },
         visitServices: {
           include: {
             service: true,
@@ -90,7 +98,7 @@ export const createVisitRepositoryDb = (
     from?: Date;
     to?: Date;
     userId: string;
-  }): Promise<VisitWithServices[]> => {
+  }): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
     const { date, from, to, userId } = filter;
 
     const where: any = {
@@ -123,17 +131,21 @@ export const createVisitRepositoryDb = (
       };
     }
 
-    const visits: VisitWithServices[] = await prismaRepository.visit.findMany({
-      where,
-      include: {
-        client: true,
-        visitServices: {
-          include: {
-            service: true,
+    const visits: VisitWithServicesWithProceduresWithStockAllowances[] =
+      await prismaRepository.visit.findMany({
+        where,
+        include: {
+          client: true,
+          procedures: {
+            include: { stockAllowances: { include: { stockItem: true } } },
+          },
+          visitServices: {
+            include: {
+              service: true,
+            },
           },
         },
-      },
-    });
+      });
 
     return visits;
   },

@@ -1,8 +1,5 @@
-import {
-  StockItem,
-  StockItemBuyData,
-  StockItemCreateData,
-} from "@/entities/stock-item";
+import { StockItemBuyData, StockItemCreateData } from "@/entities/stock-item";
+import { StockItem } from "@prisma/client";
 
 export type StockItemRepositoryPort = {
   createOrUpdateStockItem(

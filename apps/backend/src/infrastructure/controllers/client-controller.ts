@@ -54,7 +54,7 @@ const createClientController = (dependencies: {
       const userId = httpRequest.userId;
 
       const clientDataWithUserId = { ...clientData, userId };
-      console.log({ clientDataWithUserId });
+
       const newOrUpdatedClient =
         await dependencies.addOrUpdateClientUseCase.execute(
           clientDataWithUserId
@@ -114,8 +114,12 @@ const createClientController = (dependencies: {
   > = async (httpRequest) => {
     try {
       const clientId = httpRequest.params.clientId;
+      const userId = httpRequest.userId;
 
-      const client = await dependencies.getClientByIdUseCase.execute(clientId);
+      const client = await dependencies.getClientByIdUseCase.execute(
+        clientId,
+        userId
+      );
 
       return {
         statusCode: 201,

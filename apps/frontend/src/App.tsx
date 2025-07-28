@@ -9,6 +9,7 @@ import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AxiosProvider } from './axios/axios'
 import ReactRouterRoutes from './routes/ReactRouterRoutes'
+import { SnackbarMessages } from './components/SnackBarMessages'
 
 function App() {
   const methods = useAppForm()
@@ -22,6 +23,7 @@ function App() {
               <Layout>
                 <ReactRouterRoutes />
               </Layout>
+              <SnackbarMessages />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </FormProvider>

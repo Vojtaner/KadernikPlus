@@ -17,8 +17,11 @@ const createGetClientByIdUseCase = (dependencies: {
   visitRepositoryDb: VisitRepositoryPort;
 }) => {
   return {
-    execute: async (clientId: string): Promise<Client> => {
-      const client = await dependencies.clientRepositoryDb.findById(clientId);
+    execute: async (clientId: string, userId: string): Promise<Client> => {
+      const client = await dependencies.clientRepositoryDb.findById(
+        clientId,
+        userId
+      );
 
       if (!client) {
         throw new ClientNotFoundError(clientId);

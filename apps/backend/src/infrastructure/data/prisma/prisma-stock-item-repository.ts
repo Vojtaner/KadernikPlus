@@ -1,12 +1,12 @@
-import { PrismaClient } from ".prisma/client";
+import { Prisma, PrismaClient, StockItem } from ".prisma/client";
 import {
-  StockItem,
   StockItemBuyData,
   StockItemCreateData,
 } from "../../../../../entities/stock-item";
 import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const createStockItemRepositoryDb = (
   prismaStockRepository: PrismaClient
@@ -24,14 +24,22 @@ const createStockItemRepositoryDb = (
                 id: stockItemId,
               },
             });
+          const newPriceFormatted = Number(newPrice);
+          const newQuantityFormatted = Number(newQuatinty);
+          const averageStockItemPrice = new Decimal(
+            (newPriceFormatted / newQuantityFormatted).toFixed(2)
+          );
+          const totalQuantityNumber =
+            Number(existingStockItem ? existingStockItem.quantity : 0) +
+            newQuantityFormatted;
 
           if (existingStockItem) {
             const updatedStockItem =
               await prismaStockRepository.stockItem.update({
                 where: { id: stockItemId },
                 data: {
-                  quantity: existingStockItem.quantity + Number(newQuatinty),
-                  price: existingStockItem.price + Number(newPrice),
+                  quantity: new Prisma.Decimal(totalQuantityNumber),
+                  price: new Prisma.Decimal(averageStockItemPrice),
                 },
               });
 
@@ -39,20 +47,26 @@ const createStockItemRepositoryDb = (
           }
         } else {
           const { itemName, unit, quantity, threshold, price, stockId } = data;
+          const newPriceFormatted = Number(price);
+          const newQuantityFormatted = Number(quantity);
+          const averageStockItemPrice = new Decimal(
+            (newPriceFormatted / newQuantityFormatted).toFixed(2)
+          );
 
           const stockItem = await prismaStockRepository.stockItem.create({
             data: {
               itemName: itemName,
               unit: unit,
-              quantity: Number(quantity),
-              price: Number(price),
-              threshold: Number(threshold),
+              quantity: new Prisma.Decimal(quantity),
+              price: new Prisma.Decimal(averageStockItemPrice),
+              threshold: new Prisma.Decimal(threshold),
               isActive: true,
               stock: {
                 connect: { id: stockId },
               },
             },
           });
+
           return stockItem;
         }
       } catch (err) {

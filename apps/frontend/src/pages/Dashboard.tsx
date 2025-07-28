@@ -4,7 +4,7 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 // import SelectField from '../components/SelectField'
 import VisitsList from './VisitsList'
 import DashBoardCard from '../components/DashBoardCard'
-import AppBarChart from '../components/BarChart'
+import RevenuChart from '../components/RevenueChart'
 
 export const Dashboard = () => {
   // const [selectedId, setSelectedId] = useState<string>('1')
@@ -29,20 +29,11 @@ export const Dashboard = () => {
         //   />
         // }
       >
-        {<VisitsList columnHeaderHeight={0} hideFooter={true} />}
+        <VisitsList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
       <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
-        <AppBarChart />
+        <RevenuChart />
       </DashBoardCard>
     </Stack>
   )
 }
-
-// type DateListType = { id: string; name: string }
-
-// const DatesList: DateListType[] = [
-//   { id: '1', name: '12.5.2025' },
-//   { id: '2', name: '13.5.2025' },
-//   { id: '3', name: '14.5.2025' },
-//   { id: '4', name: '15.5.2025' },
-// ]

@@ -1,7 +1,7 @@
 import { useForm, useFormContext, useWatch, type Mode } from 'react-hook-form'
 import type { AppFormState, AppFieldPath } from './entity'
 
-export const useAppForm = (options?: { defaultValues?: Partial<AppFormState>; mode: Mode }) => {
+export const useAppForm = (options?: { defaultValues?: Partial<AppFormState>; mode?: Mode }) => {
   const methods = useForm<AppFormState>({
     defaultValues: options?.defaultValues,
     mode: options?.mode,

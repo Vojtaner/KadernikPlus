@@ -6,6 +6,7 @@ import { useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
+import { SnackbarMessages } from './SnackBarMessages'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props

@@ -93,7 +93,7 @@ const EditVisitDetailDialog = () => {
       }}
       onOpenButton={
         <BoxIcon
-          size={'medium'}
+          size="medium"
           icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
           boxColor="secondary.light"
           onClick={handleClickOpen}

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import appUiSlice from './appUiSlice'
+import snackBarReducer from './snackBarReducer'
 
 const rootReducer = {
   appUi: appUiSlice,
+  snackbarMessage: snackBarReducer,
 }
 
 const store = configureStore({

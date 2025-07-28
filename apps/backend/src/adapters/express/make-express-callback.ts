@@ -57,9 +57,10 @@ export const makeExpressCallback = <T>(controller: ControllerFunction<T>) => {
       res.status(httpResponse.statusCode).send(httpResponse.body);
     } catch (e: any) {
       console.error("Error in makeExpressCallback:", e);
-      res
-        .status(500)
-        .send({ error: e.message || "An unknown error occurred." });
+      res.status(500).send({
+        error: e.message || "An unknown error occurred.",
+        status: e.status || 500,
+      });
     }
   };
 };

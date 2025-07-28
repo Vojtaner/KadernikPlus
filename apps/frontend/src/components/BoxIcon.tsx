@@ -22,7 +22,7 @@ const BoxIcon = (props: BoxIconProps) => {
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: '5px',
-        boxShadow: '0px 0px 4px 0px rgba(0,0,0,0.12)',
+        boxShadow: '0px 4px 5px 0px rgba(0,0,0,0.32)',
         backgroundColor: boxColor,
         ...sx,
       }}

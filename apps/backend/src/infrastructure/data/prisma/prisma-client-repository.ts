@@ -13,28 +13,57 @@ const createClientRepositoryDb = (
 ): ClientRepositoryPort => {
   return {
     findAll: async (userId: string): Promise<Client[]> => {
-      const clients = await prismaRepository.client.findMany({
-        where: { userId },
+      const teamMember = await prismaRepository.teamMember.findFirst({
+        where: {
+          userId,
+        },
       });
+
+      const conditions: Record<string, number | string>[] = [{ userId }];
+
+      if (teamMember?.canAccessClients && teamMember.teamId) {
+        conditions.push({ teamId: teamMember.teamId });
+      }
+
+      const clients = await prismaRepository.client.findMany({
+        where: { AND: conditions },
+      });
+
       return clients;
     },
     search: async (
       teamId: string,
-      query: string
+      query: string,
+      userId: string
     ): Promise<ClientWithVisitsAndServices[]> => {
-      const clients = await prismaRepository.client.findMany({
+      const teamMember = await prismaRepository.teamMember.findFirst({
         where: {
-          teamId,
-          firstName: {
-            search: query,
-          },
-          lastName: {
-            search: query,
-          },
-          phone: {
-            search: query,
-          },
+          userId,
         },
+      });
+
+      const conditions: Record<string, number | string | { search: string }>[] =
+        [
+          {
+            userId,
+            firstName: {
+              search: query,
+            },
+            lastName: {
+              search: query,
+            },
+            phone: {
+              search: query,
+            },
+          },
+        ];
+
+      if (teamMember?.canAccessClients && teamMember.teamId) {
+        conditions.push({ teamId });
+      }
+
+      const clients = await prismaRepository.client.findMany({
+        where: { AND: conditions },
         include: {
           visits: {
             include: { visitServices: { include: { service: true } } },
@@ -89,12 +118,38 @@ const createClientRepositoryDb = (
 
       return newClient;
     },
-    findById: async (id: string): Promise<ClientWithVisits | null> => {
-      const clientWithVisits = await prismaRepository.client.findUnique({
-        where: { id },
+    findById: async (
+      id: string,
+      userId: string
+    ): Promise<ClientWithVisits | null> => {
+      const teamMember = await prismaRepository.teamMember.findFirst({
+        where: {
+          userId,
+        },
+      });
+
+      const conditions: Record<string, string>[] = [{ id }];
+
+      if (teamMember?.canAccessClients && teamMember.teamId) {
+        conditions.push({ teamId: teamMember.teamId });
+      }
+      console.log({ conditions });
+
+      const clientWithVisits = await prismaRepository.client.findFirst({
+        where: { AND: conditions },
         include: { visits: true },
       });
-      return clientWithVisits;
+
+      if (
+        clientWithVisits?.teamId === teamMember?.teamId &&
+        teamMember?.canAccessClients
+      ) {
+        return clientWithVisits;
+      } else {
+        throw new Error(
+          "Klient neexistuje nebo není ve vašem týmu či k němu nemáte oprávnění."
+        );
+      }
     },
     findByPhone: async (phone: string): Promise<Client | null> => {
       const client = await prismaRepository.client.findUnique({

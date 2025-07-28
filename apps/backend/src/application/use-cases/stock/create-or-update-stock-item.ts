@@ -1,11 +1,8 @@
-import {
-  StockItem,
-  StockItemBuyData,
-  StockItemCreateData,
-} from "@/entities/stock-item";
+import { StockItemBuyData, StockItemCreateData } from "@/entities/stock-item";
 import { StockItemRepositoryPort } from "../../ports/stock-item-repository";
 import stockItemRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-item-repository";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
+import { StockItem } from "@prisma/client";
 
 const createOrUpdateCreateStockItemUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;

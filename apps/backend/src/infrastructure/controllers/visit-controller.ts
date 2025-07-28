@@ -138,9 +138,9 @@ const createVisitController = (dependencies: {
 
     const now = new Date();
 
-    const effectiveFrom = from ? new Date(from) : now;
+    const effectiveFrom = from ? from : now;
     const effectiveTo = to
-      ? new Date(to)
+      ? to
       : new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days ahead
 
     const userId = httpRequest.userId;
@@ -249,9 +249,11 @@ const createVisitController = (dependencies: {
   > = async (httpRequest) => {
     try {
       const clientId = httpRequest.params.clientId;
+      const userId = httpRequest.userId;
 
       const visits = await dependencies.getVisitsByClientIdUseCase.execute(
-        clientId
+        clientId,
+        userId
       );
 
       return {

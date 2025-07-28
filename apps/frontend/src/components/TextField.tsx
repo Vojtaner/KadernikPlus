@@ -9,6 +9,7 @@ import {
 } from 'react-hook-form'
 import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material'
 import { type AppFormState } from '../reactHookForm/entity'
+import type { Dayjs } from 'dayjs'
 
 export type TextFieldProps<
   TFieldValues extends Record<
@@ -23,6 +24,7 @@ export type TextFieldProps<
         stockItemId: string
         quantity: number
       }[]
+    | Dayjs
   > = AppFormState, //formulářový state,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
 > = Omit<MuiTextFieldProps, 'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'> & {
@@ -46,6 +48,7 @@ function TextField<
         stockItemId: string
         quantity: number
       }[]
+    | Dayjs
   > = AppFormState,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >(props: TextFieldProps<TFieldValues, TName>) {

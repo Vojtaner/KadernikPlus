@@ -45,6 +45,8 @@ import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type { VisitWithServices, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
 import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
 import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure'
+import type { Dayjs } from 'dayjs'
+import type { AxiosError } from 'axios'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -229,17 +231,22 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
   })
 }
 
-export const useVisitsQuery = (query?: { from?: string; to?: string }) => {
+export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServices[]>({
-    queryKey: ['visits'],
-    queryFn: () => getVisits(axios, query),
+    queryKey: query
+      ? ['visits', query?.from?.format('YYYY-MM-DD') ?? null, query?.to?.format('YYYY-MM-DD') ?? null]
+      : ['visits'],
+    queryFn: () => {
+      return getVisits(axios, query)
+    },
     staleTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: false,
+    refetchOnMount: true,
   })
 }
+
 // ---- Clients----
 
 export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
@@ -275,7 +282,7 @@ export const useClientsQuery = () => {
 export const useClientQuery = (clientId: string | undefined) => {
   const axios = useAxios()
 
-  return useQuery<ClientWithVisits>({
+  return useQuery<ClientWithVisits, AxiosError<{ error: string; status: number }>>({
     queryKey: ['client', clientId],
     queryFn: () => {
       if (!clientId) {

@@ -11,19 +11,22 @@ import AddOrUpdateClientItemButton from '../components/FormDialog/AddOrUpdateCli
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
+import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
 
 const ClientProfile = () => {
   const { clientId } = useParams()
-  const { data: clientData, isLoading } = useClientQuery(clientId)
+  const { data: clientData, isLoading, error } = useClientQuery(clientId)
+  const addSnackbarMessage = useAddSnackbarMessage()
 
   if (isLoading) {
     return <Loader />
   }
 
-  if (!clientData) {
-    return <Typography>Data klienta nenačtena.</Typography>
+  if (!clientData || error) {
+    addSnackbarMessage({ type: 'error', text: error?.response?.data.error })
+    return <Typography>{error && error?.response?.data.error}</Typography>
   }
-  
+
   return (
     <Stack spacing={2}>
       <ClientProfileGrid clientData={clientData} />
