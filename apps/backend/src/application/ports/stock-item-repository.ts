@@ -9,6 +9,7 @@ export type StockItemRepositoryPort = {
     stockItemId: string,
     userId: string
   ): Promise<StockItem | null>;
+  deleteStockItem: (stockItemId: string, userId: string) => Promise<void>;
   findStockItemByName(name: string): Promise<StockItem | null>;
   getStockItemsByStockId(stockId: string, userId: string): Promise<StockItem[]>;
 };
