@@ -5,9 +5,9 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Stack } from '@mui/material'
-import type { FieldErrors } from 'react-hook-form'
-import { useAppFormContext } from '../reactHookForm/store'
 import type { AppFormState } from '../reactHookForm/entity'
+
+import type { UseFormHandleSubmit } from 'react-hook-form'
 
 type FormDialogProps = {
   actions: React.ReactNode
@@ -17,22 +17,14 @@ type FormDialogProps = {
   onOpenButton: React.ReactNode
   isOpen: boolean
   onClose: () => void
-  onSubmitEndpoint: (data: AppFormState) => void
+  handleSubmit: UseFormHandleSubmit<AppFormState>
 }
 
 export default function FormDialog(props: FormDialogProps) {
-  const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose, onSubmitEndpoint } = props
+  const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose, handleSubmit } = props
 
-  const { handleSubmit } = useAppFormContext()
-
-  const handleValidSubmit = (data: AppFormState) => {
-    onSubmitEndpoint(data)
-    onClose()
-  }
-
-  const handleInvalidSubmit = (errors: FieldErrors) => {
-    console.warn('Form has errors:', errors)
-  }
+  const onValidHandle = () => {}
+  const onInvalidHandle = () => {}
 
   return (
     <>
@@ -43,7 +35,10 @@ export default function FormDialog(props: FormDialogProps) {
         slotProps={{
           paper: {
             component: 'form',
-            onSubmit: handleSubmit(handleValidSubmit, handleInvalidSubmit),
+            onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
+              e.preventDefault()
+              handleSubmit(onValidHandle, onInvalidHandle)()
+            },
             sx: {
               minWidth: '80vw',
             },

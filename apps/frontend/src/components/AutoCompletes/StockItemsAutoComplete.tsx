@@ -1,16 +1,20 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
-import { Controller, type Control, type FieldPathValue } from 'react-hook-form'
+import type { AppFieldPath } from '../../reactHookForm/entity'
+import { Controller, type Control, type FieldPathValue, type FieldValues } from 'react-hook-form'
 import { useStockItemsQuery, useStocksQuery } from '../../queries'
 import Loader from '../../pages/Loader'
 
-type StockItemsAutoCompleteProps = {
+type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: AppFieldPath
-  control: Control<AppFormState>
-  defaultValue?: FieldPathValue<AppFormState, AppFieldPath>
+  control: Control<TFieldValues>
+  defaultValue?: FieldPathValue<TFieldValues, AppFieldPath>
 }
 
-export default function StockItemsAutoComplete({ fieldPath, control, defaultValue }: StockItemsAutoCompleteProps) {
+export default function StockItemsAutoComplete<TFieldValues extends FieldValues>({
+  fieldPath,
+  control,
+  defaultValue,
+}: StockItemsAutoCompleteProps<TFieldValues>) {
   const { data: stocks } = useStocksQuery()
   const { data: stockItems, isLoading, isError } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
 

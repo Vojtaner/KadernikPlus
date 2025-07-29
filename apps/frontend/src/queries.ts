@@ -306,7 +306,7 @@ export const useStocksQuery = () => {
   })
 }
 
-export const useCreateStockItemMutation = (
+export const useCreateOrUpdateStockItemMutation = (
   options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>
 ) => {
   const axios = useAxios()
@@ -315,6 +315,7 @@ export const useCreateStockItemMutation = (
     mutationFn: (stockItem: StockItemCreateData) => postCreateNewStockItem(axios, stockItem),
     onSuccess(data, variables, context) {
       options?.onSuccess?.(data, variables, context)
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
     },
   })
 }

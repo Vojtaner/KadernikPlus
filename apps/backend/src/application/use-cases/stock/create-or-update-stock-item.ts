@@ -1,7 +1,7 @@
 import { StockItemBuyData, StockItemCreateData } from "@/entities/stock-item";
 import { StockItemRepositoryPort } from "../../ports/stock-item-repository";
 import stockItemRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-item-repository";
-import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
+import { isNewStockItem } from "../../../infrastructure/controllers/stock-item-controller";
 import { StockItem } from "@prisma/client";
 
 const createOrUpdateCreateStockItemUseCase = (dependencies: {
@@ -11,7 +11,7 @@ const createOrUpdateCreateStockItemUseCase = (dependencies: {
     execute: async (
       data: StockItemCreateData | StockItemBuyData
     ): Promise<StockItem | undefined> => {
-      if (!isPurchaseStockItem(data)) {
+      if (isNewStockItem(data)) {
         if (!data.itemName || data.itemName.trim() === "") {
           throw new Error("Stock item name cannot be empty.");
         }

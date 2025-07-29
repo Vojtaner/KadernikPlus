@@ -5,7 +5,10 @@ export type StockItemRepositoryPort = {
   createOrUpdateStockItem(
     data: StockItemCreateData | StockItemBuyData
   ): Promise<StockItem | undefined>;
-  getStockItemById(stockItemId: string): Promise<StockItem | null>;
+  getStockItemById(
+    stockItemId: string,
+    userId: string
+  ): Promise<StockItem | null>;
   findStockItemByName(name: string): Promise<StockItem | null>;
-  getStockItemsByStockId(stockId: string): Promise<StockItem[]>;
+  getStockItemsByStockId(stockId: string, userId: string): Promise<StockItem[]>;
 };

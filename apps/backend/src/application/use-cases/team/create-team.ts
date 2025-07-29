@@ -7,7 +7,7 @@ const createCreateTeamUseCase = (dependencies: {
   return {
     execute: async (teamData: { name: string }) => {
       const newTeam = await dependencies.teamRepositoryDb.create({
-        name: `Tým - ${teamData.name}`,
+        name: `${teamData.name}`,
       });
 
       return newTeam;

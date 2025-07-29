@@ -1,5 +1,5 @@
-function StockItemAlreadyExistsError(itemName: string): Error {
-  const error = new Error(`Stock item with name "${itemName}" already exists.`);
+function StockItemAlreadyExistsError(): Error {
+  const error = new Error(`Stock item already exists.`);
   error.name = "StockItemAlreadyExistsError";
   return error;
 }

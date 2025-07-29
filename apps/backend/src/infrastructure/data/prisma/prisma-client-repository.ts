@@ -123,34 +123,37 @@ const createClientRepositoryDb = (
       userId: string
     ): Promise<ClientWithVisits | null> => {
       const teamMember = await prismaRepository.teamMember.findFirst({
-        where: {
-          userId,
-        },
+        where: { userId },
       });
 
-      const conditions: Record<string, string>[] = [{ id }];
+      const whereConditions: Record<string, string>[] = [{ id }];
 
       if (teamMember?.canAccessClients && teamMember.teamId) {
-        conditions.push({ teamId: teamMember.teamId });
+        whereConditions.push({ teamId: teamMember.teamId });
       }
-      console.log({ conditions });
 
-      const clientWithVisits = await prismaRepository.client.findFirst({
-        where: { AND: conditions },
+      const client = await prismaRepository.client.findFirst({
+        where: { AND: whereConditions },
         include: { visits: true },
       });
 
-      if (
-        clientWithVisits?.teamId === teamMember?.teamId &&
-        teamMember?.canAccessClients
-      ) {
-        return clientWithVisits;
-      } else {
-        throw new Error(
-          "Klient neexistuje nebo není ve vašem týmu či k němu nemáte oprávnění."
-        );
+      if (!client) {
+        throw new Error("Klient nebyl nalezen.");
       }
+
+      const isOwnClient = !client.teamId;
+      const isTeamClient =
+        client.teamId === teamMember?.teamId && teamMember?.canAccessClients;
+
+      if (isOwnClient || isTeamClient) {
+        return client;
+      }
+
+      throw new Error(
+        "Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění."
+      );
     },
+
     findByPhone: async (phone: string): Promise<Client | null> => {
       const client = await prismaRepository.client.findUnique({
         where: { phone },

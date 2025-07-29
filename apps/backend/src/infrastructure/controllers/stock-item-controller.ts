@@ -27,7 +27,18 @@ type GetStocksByUserIdControllerType = {};
 export const isPurchaseStockItem = (
   data: StockItemCreateData | StockItemBuyData
 ): data is StockItemBuyData => {
-  return "stockItemId" in data;
+  return (
+    Object.keys(data).length === 3 &&
+    "id" in data &&
+    "quantity" in data &&
+    "price" in data
+  );
+};
+
+export const isNewStockItem = (
+  data: StockItemCreateData | StockItemBuyData
+): data is StockItemCreateData => {
+  return !("stockItemId" in data) && "threshold" in data;
 };
 
 const createStockItemController = (dependencies: {
@@ -92,8 +103,11 @@ const createStockItemController = (dependencies: {
     GetStockItemByIdControllerType
   > = async (httpRequest) => {
     const { stockItemId } = httpRequest.params;
+    const userId = httpRequest.userId;
+
     const stockItem = await dependencies.getStockItemByIdUseCase.execute(
-      stockItemId
+      stockItemId,
+      userId
     );
 
     if (!stockItem) {
@@ -109,9 +123,11 @@ const createStockItemController = (dependencies: {
     GetStockItemsByStockIdControllerType
   > = async (httpRequest) => {
     const { stockId } = httpRequest.params;
+    const userId = httpRequest.userId;
 
     const stockItems = await dependencies.getStockItemsByStockIdUseCase.execute(
-      stockId
+      stockId,
+      userId
     );
 
     if (!stockItems) {

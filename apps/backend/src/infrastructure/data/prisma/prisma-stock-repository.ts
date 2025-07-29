@@ -6,18 +6,39 @@ const createStockRepositoryDb = (
   prismaStockRepository: PrismaClient
 ): StockRepositoryPort => {
   return {
-    createStock: async (userId: string): Promise<Stock> => {
+    createStock: async (userId: string, teamId: string): Promise<Stock> => {
       const count = await prismaStockRepository.stock.count({
         where: { ownerId: userId },
       });
+
       const stock = await prismaStockRepository.stock.create({
         data: {
           ownerId: userId,
-          stockName: `Stock ${count + 1}`,
+          stockName: `Sklad ${count + 1}`,
+          teamId,
         },
       });
 
       return stock;
+    },
+    updateStock: async (
+      teamId: string,
+      invitedUserId: string
+    ): Promise<Stock> => {
+      const stockToUpdate = await prisma.stock.findFirst({
+        where: { ownerId: invitedUserId },
+      });
+
+      if (stockToUpdate) {
+        const updatedStock = await prisma.stock.update({
+          where: { id: stockToUpdate.id },
+          data: { teamId },
+        });
+
+        return updatedStock;
+      } else {
+        throw new Error("Sklad zvaného uživatele nenalezen. Nemožné přidat.");
+      }
     },
 
     getStocks: async (userId: string): Promise<Stock[]> => {
@@ -33,4 +54,5 @@ const createStockRepositoryDb = (
 };
 
 const stockRepositoryDb = createStockRepositoryDb(prisma);
+
 export default stockRepositoryDb;

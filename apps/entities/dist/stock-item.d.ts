@@ -1,5 +1,5 @@
 export type StockItem = {
-    id: string;
+    id?: string;
     itemName: string;
     unit: Units;
     price: number;
@@ -10,11 +10,12 @@ export type StockItem = {
     updatedAt: Date;
     stockId: string;
 };
-export type StockItemCreateData = Omit<StockItem, "createdAt" | "updatedAt" | "isActive" | "id"> & {
+export type StockItemDefaultValuesType = Pick<StockItem, "quantity" | "price" | "id" | "threshold" | "unit" | "itemName" | "stockId">;
+export type StockItemCreateData = Omit<StockItem, "createdAt" | "updatedAt" | "isActive"> & {
     stockId: string;
 };
 export type StockItemBuyData = {
-    stockItemId: string;
+    id: string;
     price: number;
     quantity: number;
 };

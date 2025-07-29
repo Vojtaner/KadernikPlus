@@ -47,7 +47,8 @@ const createAddUserUseCase = (dependencies: {
       });
 
       const newStock = await dependencies.stockRepositoryDb.createStock(
-        newUser.id
+        newUser.id,
+        newTeam.id
       );
 
       return newUser;

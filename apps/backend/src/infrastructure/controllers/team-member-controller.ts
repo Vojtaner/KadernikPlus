@@ -88,6 +88,7 @@ const createTeamMemberController = (dependencies: {
           invitedEmail: email,
           invitedUserIdLast4: consentId,
           newTeamId: teamOwner?.teamId,
+          userId,
         });
 
       return {

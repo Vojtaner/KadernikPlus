@@ -9,6 +9,7 @@ import { type StockItem } from '../../../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
+import AddOrBuyStockItemButton from '../components/FormDialog/AddOrBuyStockItemButton'
 
 const Stock = () => {
   const { stockId } = useParams()
@@ -71,12 +72,23 @@ const columns: GridColDef<StockItem[][number]>[] = [
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
-      <BoxIcon
-        size={'small'}
-        key={params.id}
-        onClick={() => console.log(params.id)}
-        icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
-        boxColor="secondary.light"
+      <AddOrBuyStockItemButton
+        defaultValues={{
+          id: params.row.id,
+          itemName: params.row.itemName,
+          stockId: params.row.stockId,
+          price: params.row.price,
+          quantity: params.row.quantity,
+          threshold: params.row.threshold,
+          unit: params.row.unit,
+        }}
+        openButton={
+          <BoxIcon
+            boxColor="secondary.light"
+            size="small"
+            icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
+          />
+        }
       />
     ),
   },

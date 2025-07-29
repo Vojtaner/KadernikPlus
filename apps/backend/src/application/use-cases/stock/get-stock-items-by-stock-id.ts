@@ -6,11 +6,17 @@ const createGetStockItemsByStockIdUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;
 }) => {
   return {
-    execute: async (stockId: string): Promise<StockItem[] | null> => {
+    execute: async (
+      stockId: string,
+      userId: string
+    ): Promise<StockItem[] | null> => {
       if (!stockId || stockId.trim() === "") {
         throw new Error("Stock item ID or Stock ID cannot be empty.");
       }
-      return dependencies.stockItemRepositoryDb.getStockItemsByStockId(stockId);
+      return dependencies.stockItemRepositoryDb.getStockItemsByStockId(
+        stockId,
+        userId
+      );
     },
   };
 };

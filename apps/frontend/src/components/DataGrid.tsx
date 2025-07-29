@@ -59,6 +59,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         density="compact"
+        rowHeight={60}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
       />

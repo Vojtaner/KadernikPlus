@@ -137,7 +137,7 @@ export const postCreateNewStockItem = async (
   axios: AxiosInstance,
   stockItem: StockItemCreateData
 ): Promise<StockItemCreateData> => {
-  const response = await axios.post(apiRoutes.getCreateStockItemUrl(), stockItem)
+  const response = await axios.post(apiRoutes.getCreateOrUpdateStockItemUrl(), stockItem)
   return response.data
 }
 
