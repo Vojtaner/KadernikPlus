@@ -5,16 +5,16 @@ import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import BasicDateTimePicker from '../DateTimePicker'
 import ClientAutoComplete from '../AutoCompletes/ClientAutoComplete'
 import HairCutAutoComplete from '../AutoCompletes/HairCutAutoComplete'
-import { useAppFormContext } from '../../reactHookForm/store'
 import { useCreateVisitMutation } from '../../queries'
 import { useState } from 'react'
-import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
-import TextField from '../TextField'
+import { useForm } from 'react-hook-form'
+import type { Visit } from '../../../../entities/visit'
+import AddNewClientForm from '../AddNewClientForm'
 
 export const AddVisitItemButton = () => {
   const [open, setOpen] = useState(false)
   const [isNewClient, setIsNewClient] = useState(false)
-  const { control, resetField } = useAppFormContext()
+  const { control, resetField, handleSubmit } = useForm<Visit>()
   const { mutate: createVisitMutation } = useCreateVisitMutation({
     onSuccess: () => {
       setIsNewClient(false)
@@ -30,6 +30,10 @@ export const AddVisitItemButton = () => {
   const handleClose = () => {
     setIsNewClient(false)
     setOpen(false)
+  }
+
+  const onSubmit = (data: Visit) => {
+    createVisitMutation(data)
   }
 
   return (
@@ -64,51 +68,11 @@ export const AddVisitItemButton = () => {
               </Button>
             </Box>
           </Stack>
-          {isNewClient && (
-            <Stack spacing={1} padding={1}>
-              <TextField
-                fieldPath="firstName"
-                control={control}
-                label="Jméno"
-                type="text"
-                fullWidth
-                rules={firstNameValidationrule}
-              />
-              <TextField
-                fieldPath="lastName"
-                control={control}
-                label="Přijmení"
-                type="text"
-                fullWidth
-                rules={firstNameValidationrule}
-              />
-              <TextField
-                fieldPath="phone"
-                control={control}
-                label="Telefon"
-                type="tel"
-                fullWidth
-                rules={phoneValidationRule}
-              />
-              <TextField
-                fieldPath="note"
-                control={control}
-                label="Poznámka"
-                type="text"
-                multiline
-                minRows={2}
-                maxRows={10}
-                fullWidth
-              />
-            </Stack>
-          )}
+          {isNewClient && <AddNewClientForm control={control} />}
           <HairCutAutoComplete fieldPath="serviceIds" control={control} />
         </>
       }
-      onSubmitEndpoint={(visitData) => {
-        createVisitMutation(visitData)
-        console.log({ visitData })
-      }}
+      handleSubmit={() => handleSubmit(onSubmit)}
       onOpenButton={
         <MenuIconButton icon={<MoreTimeOutlinedIcon fontSize="large" />} onClick={handleClickOpen} title="Objednat" />
       }

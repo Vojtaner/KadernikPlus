@@ -1,4 +1,4 @@
-import { ClientCreateData } from "@/entities/client";
+import { ClientOrUpdateCreateData } from "@/entities/client";
 import { ClientRepositoryPort } from "../../ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { WithUserId } from "@/entities/user";
@@ -16,7 +16,7 @@ const createAddOrUpdateClientUseCase = (dependencies: {
 }) => {
   return {
     execute: async (
-      clientData: WithUserId<ClientCreateData>
+      clientData: WithUserId<ClientOrUpdateCreateData>
     ): Promise<Client> => {
       if (clientData.phone) {
         const existingClient =

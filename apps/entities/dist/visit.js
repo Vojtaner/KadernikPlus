@@ -14,7 +14,6 @@ var DepositStatus;
 (function (DepositStatus) {
     DepositStatus["NEZAPLACENO"] = "NEZAPLACENO";
     DepositStatus["ZAPLACENO"] = "ZAPLACENO";
-    DepositStatus["BEZ_ZALOHY"] = "BEZ Z\u00C1LOHY";
 })(DepositStatus || (exports.DepositStatus = DepositStatus = {}));
 exports.depositStatusOptions = Object.entries(DepositStatus).map(([key, value]) => ({
     id: key,

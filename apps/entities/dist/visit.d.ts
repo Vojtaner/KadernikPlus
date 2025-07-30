@@ -45,8 +45,7 @@ type VisitService = {
 };
 export declare enum DepositStatus {
     NEZAPLACENO = "NEZAPLACENO",
-    ZAPLACENO = "ZAPLACENO",
-    BEZ_ZALOHY = "BEZ Z\u00C1LOHY"
+    ZAPLACENO = "ZAPLACENO"
 }
 export declare const depositStatusOptions: {
     id: string;

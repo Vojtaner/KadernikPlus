@@ -1,14 +1,15 @@
 import { Button } from '@mui/material'
 import FormDialog from '../Dialog'
 import { useState } from 'react'
-import TextField from '../TextField'
 import { useCreateNewOrUpdateClientMutation } from '../../queries'
-import { useAppFormContext } from '../../reactHookForm/store'
 import type { ClientCreateData } from '../../../../entities/client'
 import React from 'react'
+import { useForm } from 'react-hook-form'
+import AddNewClientForm from '../AddNewClientForm'
+import type { Visit } from '../../../../entities/visit'
 
 type AddOrUpdateClientItemButtonProps = {
-  defaultValues?: { firstName: string; lastName: string; phone: string | null; note?: string | null }
+  defaultValues?: ClientCreateData
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
   clientId?: string
 }
@@ -17,9 +18,12 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
   const { defaultValues, openButton, clientId } = props
   const [open, setOpen] = useState(false)
   const { mutate: createNewClientMutation } = useCreateNewOrUpdateClientMutation()
-  const { control } = useAppFormContext()
+  const { control, reset, handleSubmit } = useForm<Visit>({ defaultValues: { ...defaultValues } })
 
   const handleClickOpen = () => {
+    if (!defaultValues) {
+      reset({ firstName: undefined, lastName: undefined, note: undefined, phone: undefined })
+    }
     setOpen(true)
   }
 
@@ -34,6 +38,10 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
     setOpen(false)
   }
 
+  const onSubmit = (data: ClientCreateData) => {
+    createNewClientMutation(clientId ? { ...data, id: clientId } : data)
+  }
+
   return (
     <FormDialog
       isOpen={open}
@@ -44,51 +52,10 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
           <Button type="submit">Uložit</Button>
         </>
       }
-      onSubmitEndpoint={(clientData) =>
-        createNewClientMutation(
-          (clientId ? { ...clientData, id: clientId } : clientData) as unknown as ClientCreateData
-        )
-      }
+      handleSubmit={() => handleSubmit(onSubmit)}
       formFields={
         <>
-          <TextField
-            fieldPath="firstName"
-            control={control}
-            label="Jméno"
-            defaultValue={defaultValues?.firstName}
-            type="text"
-            fullWidth
-            rules={firstNameValidationrule}
-          />
-          <TextField
-            fieldPath="lastName"
-            control={control}
-            label="Přijmení"
-            defaultValue={defaultValues?.lastName}
-            type="text"
-            fullWidth
-            rules={firstNameValidationrule}
-          />
-          <TextField
-            fieldPath="phone"
-            control={control}
-            defaultValue={defaultValues?.phone}
-            label="Telefon"
-            type="tel"
-            fullWidth
-            rules={phoneValidationRule}
-          />
-          <TextField
-            fieldPath="note"
-            control={control}
-            label="Poznámka"
-            defaultValue={defaultValues?.note}
-            type="text"
-            multiline
-            minRows={2}
-            maxRows={10}
-            fullWidth
-          />
+          <AddNewClientForm control={control} />
         </>
       }
       onOpenButton={openDialogButton}

@@ -176,6 +176,8 @@ const createVisitController = (dependencies: {
       const { visitId } = httpRequest.params;
       const visit = await dependencies.getVisitByIdUseCase.execute(visitId);
 
+      console.log({ visit });
+
       return {
         statusCode: 200,
         body: visit,
@@ -301,9 +303,9 @@ const createVisitController = (dependencies: {
   return {
     addVisitController,
     getVisitsByDatesController,
+    getVisitsByClientIdController,
     getVisitByIdController,
     updateVisitController,
-    getVisitsByClientIdController,
     deleteVisitController,
     updateVisitStatusController,
   };

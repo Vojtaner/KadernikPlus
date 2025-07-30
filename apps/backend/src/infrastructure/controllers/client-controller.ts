@@ -5,7 +5,7 @@ import getClientByIdUseCase, {
   CreateGetClientByIdUseCaseType,
 } from "../../application/use-cases/clients/get-client-by-id";
 import { ControllerFunction } from "../../adapters/express/make-express-callback";
-import { ClientCreateData } from "@/entities/client";
+import { ClientOrUpdateCreateData } from "../../../../entities/client";
 import getAllClientsByUserIdUseCase, {
   GetAllClientsByUserIdUseCaseType,
 } from "../../application/use-cases/clients/get-all-clients";
@@ -50,7 +50,7 @@ const createClientController = (dependencies: {
     AddClientControllerType
   > = async (httpRequest) => {
     try {
-      const clientData: ClientCreateData = httpRequest.body;
+      const clientData: ClientOrUpdateCreateData = httpRequest.body;
       const userId = httpRequest.userId;
 
       const clientDataWithUserId = { ...clientData, userId };

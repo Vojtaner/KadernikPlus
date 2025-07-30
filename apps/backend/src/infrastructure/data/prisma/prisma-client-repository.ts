@@ -1,4 +1,4 @@
-import { ClientCreateData } from "@/entities/client";
+import { ClientOrUpdateCreateData } from "../../../../../entities/client";
 import { ClientRepositoryPort } from "../../../application/ports/client-repository";
 import { Client, PrismaClient } from "@prisma/client";
 import prisma from "./prisma";
@@ -6,7 +6,7 @@ import {
   ClientWithVisits,
   ClientWithVisitsAndServices,
 } from "../../../infrastructure/mappers/client-mapper";
-import { WithUserId } from "@/entities/user";
+import { WithUserId } from "../../../../..//entities/user";
 
 const createClientRepositoryDb = (
   prismaRepository: PrismaClient
@@ -74,8 +74,9 @@ const createClientRepositoryDb = (
       return clients;
     },
     addOrUpdate: async (
-      clientData: WithUserId<ClientCreateData>
+      clientData: WithUserId<ClientOrUpdateCreateData>
     ): Promise<Client> => {
+      console.log(clientData);
       const { id: clientId } = clientData;
 
       if (clientId) {
@@ -103,6 +104,10 @@ const createClientRepositoryDb = (
 
       if (!userTeam) {
         throw new Error("User is not assigned to any team.");
+      }
+
+      if (!clientData.firstName || !clientData.lastName) {
+        throw new Error("Zadejte jméno klienta.");
       }
 
       const newClient = await prismaRepository.client.create({

@@ -41,11 +41,17 @@ export const UnitsObject = {
 };
 
 export type StockAllowance = {
-  createdAt: Date;
-  id: string;
-  procedureId: string;
-  quantity: string;
-  stockItem: StockItem;
+  createdAt?: Date;
+  id?: string;
+  procedureId?: string;
+  quantity: number;
+  stockItem?: StockItem;
   stockItemId: string;
-  userId: string;
+  userId?: string;
+};
+
+export type StockAllowanceFieldArrayType = {
+  stockItemId: string;
+  quantity: number;
+  id: string;
 };

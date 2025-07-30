@@ -1,16 +1,18 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
-import { Controller, type Control, type FieldPathValue } from 'react-hook-form'
+import type { AppFieldPath } from '../../reactHookForm/entity'
+import { Controller, type Control, type FieldPathValue, type FieldValues } from 'react-hook-form'
 import { useTeamMembersQuery } from '../../queries'
 import Loader from '../../pages/Loader'
 
-type TeamMemberAutoCompleteProps = {
-  fieldPath: AppFieldPath
-  control: Control<AppFormState>
-  defaultValue: FieldPathValue<AppFormState, AppFieldPath>
+type TeamMemberAutoCompleteProps<TFieldValues extends FieldValues> = {
+  fieldPath: FieldPathValue<TFieldValues, AppFieldPath>
+  control: Control<TFieldValues>
 }
 
-export default function TeamMemberAutoComplete({ fieldPath, control, defaultValue }: TeamMemberAutoCompleteProps) {
+export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>({
+  fieldPath,
+  control,
+}: TeamMemberAutoCompleteProps<TFieldValues>) {
   const { data: teamMembers, isLoading, isError } = useTeamMembersQuery()
 
   if (isLoading) {
@@ -32,7 +34,6 @@ export default function TeamMemberAutoComplete({ fieldPath, control, defaultValu
     <Controller
       name={fieldPath}
       control={control}
-      defaultValue={defaultValue}
       render={({ field }) => {
         const selectedOption = teamMemberOptions.find((option) => option.id === field.value) || null
 

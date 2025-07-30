@@ -5,11 +5,12 @@ import MenuIconButton from '../MenuIconButton'
 import TextField from '../TextField'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import { useCreateServiceMutation } from '../../queries'
-import { useAppFormContext } from '../../reactHookForm/store'
+import { useForm } from 'react-hook-form'
+import type { ServiceCreateData } from '../../../../entities/service'
 
 const AddServiceItemButton = () => {
   const [open, setOpen] = useState(false)
-  const { control } = useAppFormContext()
+  const { control, handleSubmit } = useForm<ServiceCreateData>()
   const { mutate: createServicemMutation } = useCreateServiceMutation()
 
   const handleClickOpen = () => {
@@ -20,11 +21,16 @@ const AddServiceItemButton = () => {
     setOpen(false)
   }
 
+  const onSubmit = (data: ServiceCreateData) => {
+    createServicemMutation(data)
+    handleClose()
+  }
+
   return (
     <FormDialog
       isOpen={open}
       onClose={handleClose}
-      onSubmitEndpoint={(serviceData) => createServicemMutation(serviceData)}
+      handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
           <Button onClick={handleClose}>Zavřít</Button>

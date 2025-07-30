@@ -1,8 +1,7 @@
 import { Autocomplete, TextField } from '@mui/material'
 import { useServicesQuery } from '../../queries'
 import Loader from '../../pages/Loader'
-import type { AppFieldPath, AppFormState } from '../../reactHookForm/entity'
-import { Controller, type Control } from 'react-hook-form'
+import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
 
 // const services = [
 //   { id: '1', serviceName: 'Stříhání na sucho' },
@@ -13,11 +12,11 @@ import { Controller, type Control } from 'react-hook-form'
 
 //udělat jediný autocomplete v budoucnu otypovat
 
-type HairCutAutoCompleteProps = {
-  fieldPath: AppFieldPath
-  control: Control<AppFormState>
+type HairCutAutoCompleteProps<TFieldValues extends FieldValues> = {
+  fieldPath: FieldPath<TFieldValues>
+  control: Control<TFieldValues>
 }
-function HairCutAutoComplete(props: HairCutAutoCompleteProps) {
+function HairCutAutoComplete<TFieldValues extends FieldValues>(props: HairCutAutoCompleteProps<TFieldValues>) {
   const { fieldPath, control } = props
   const { data: services } = useServicesQuery()
 

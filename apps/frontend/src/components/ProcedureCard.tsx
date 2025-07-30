@@ -1,8 +1,8 @@
 import { Box, Typography, Stack, IconButton } from '@mui/material'
 import AppTheme from '../AppTheme'
-import type { StockAllowance } from '../../../entities/stock-item'
 import AddProcedureButton from './FormDialog/AddProcedureButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
+import type { StockAllowance } from '../../../entities/stock-item'
 
 type ProcedureCardProps = {
   description: string
@@ -56,11 +56,7 @@ const ProcedureCard = (props: ProcedureCardProps) => {
         <AddProcedureButton
           defaultValues={{ stockAllowances: defaultStockAllowances, description }}
           procedureId={procedureId}
-          openButton={
-            <IconButton color="error">
-              <EditOutlinedIcon />
-            </IconButton>
-          }
+          openButton={<EditOutlinedIcon />}
         />
       </IconButton>
     </Stack>
@@ -72,13 +68,14 @@ export default ProcedureCard
 type StockAllowanceProps = {
   stockAllowance: StockAllowance
 }
+
 const StockAllowance = (props: StockAllowanceProps) => {
   const { stockAllowance } = props
 
   return (
     <Box boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)" padding={1} key={stockAllowance.id} borderRadius={2}>
       <Typography fontSize="11px" fontWeight={600} color="secondary">
-        {`${stockAllowance.stockItem.itemName} ${stockAllowance.quantity}`}
+        {`${stockAllowance.stockItem && stockAllowance.stockItem.itemName} ${stockAllowance.quantity}`}
       </Typography>
     </Box>
   )

@@ -2,12 +2,17 @@ import { Button } from '@mui/material'
 import { useState } from 'react'
 import FormDialog from '../Dialog'
 import TextField from '../TextField'
-import { useAppFormContext } from '../../reactHookForm/store'
 import { useAddTeamMemberMutation } from '../../queries'
+import { useForm } from 'react-hook-form'
+
+type TeamMemberForm = {
+  email: string
+  consentId: string
+}
 
 const AddTeamMemberButton = () => {
   const [open, setOpen] = useState(false)
-  const { control } = useAppFormContext()
+  const { control, handleSubmit } = useForm<TeamMemberForm>()
   const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation()
 
   const handleClickOpen = () => {
@@ -18,13 +23,16 @@ const AddTeamMemberButton = () => {
     setOpen(false)
   }
 
+  const onSubmit = (data: TeamMemberForm) => {
+    addTeamMemberMutation({ email: data.email, consentId: data.consentId })
+    handleClose()
+  }
+
   return (
     <FormDialog
       isOpen={open}
       onClose={handleClose}
-      onSubmitEndpoint={(appFormState) => {
-        addTeamMemberMutation({ email: appFormState.teamMemberEmail, consentId: appFormState.teamMemberConsentId })
-      }}
+      handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
           <Button onClick={handleClose}>Zavřít</Button>
@@ -33,9 +41,9 @@ const AddTeamMemberButton = () => {
       }
       formFields={
         <>
-          <TextField fieldPath="teamMemberEmail" label="E-mail" type="email" control={control} required fullWidth />
+          <TextField fieldPath="email" label="E-mail" type="email" control={control} required fullWidth />
           <TextField
-            fieldPath="teamMemberConsentId"
+            fieldPath="consentId"
             label="Souhlasné ID"
             type="text"
             control={control}

@@ -66,7 +66,6 @@ type VisitService = {
 export enum DepositStatus {
   NEZAPLACENO = "NEZAPLACENO",
   ZAPLACENO = "ZAPLACENO",
-  BEZ_ZALOHY = "BEZ ZÁLOHY",
 }
 
 export const depositStatusOptions = Object.entries(DepositStatus).map(

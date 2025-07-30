@@ -3,30 +3,16 @@ import {
   get,
   useFormState,
   type Control,
-  type FieldPath,
   type FieldPathValue,
+  type FieldValues,
+  type Path,
   type RegisterOptions,
 } from 'react-hook-form'
 import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material'
-import { type AppFormState } from '../reactHookForm/entity'
-import type { Dayjs } from 'dayjs'
 
 export type TextFieldProps<
-  TFieldValues extends Record<
-    string,
-    | string
-    | number
-    | null
-    | Date
-    | string[]
-    | boolean
-    | {
-        stockItemId: string
-        quantity: number
-      }[]
-    | Dayjs
-  > = AppFormState, //formulářový state,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends Path<TFieldValues> = Path<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
 > = Omit<MuiTextFieldProps, 'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'> & {
   fieldPath: TName
   control?: Control<TFieldValues>
@@ -36,21 +22,8 @@ export type TextFieldProps<
 }
 
 function TextField<
-  TFieldValues extends Record<
-    string,
-    | string
-    | number
-    | null
-    | Date
-    | string[]
-    | boolean
-    | {
-        stockItemId: string
-        quantity: number
-      }[]
-    | Dayjs
-  > = AppFormState,
-  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends Path<TFieldValues> = Path<TFieldValues>,
 >(props: TextFieldProps<TFieldValues, TName>) {
   const { fieldPath, control, rules, disabled, defaultValue, ...rest } = props
   const { errors } = useFormState({ control, name: fieldPath })

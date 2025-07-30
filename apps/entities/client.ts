@@ -13,10 +13,20 @@ export type Client = {
   teamId?: string;
 };
 
+export type ClientOrUpdateCreateData = {
+  firstName?: string;
+  lastName?: string;
+  phone?: string | null;
+  note?: string | null;
+  id?: string;
+  deposit?: boolean;
+  teamId?: string;
+};
+
 /**
  * Interface for creating a new Client.
  */
-export type ClientCreateData = Client;
+// export type ClientCreateData = Client;
 
 export type ClientWithVisits = Client & {
   visits: ReturnedClientVisit[];

@@ -4,22 +4,25 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker, DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/cs'
-import { Controller, type Control } from 'react-hook-form'
-import type { AppFieldPath, AppFormState } from '../reactHookForm/entity'
+import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
 import type { PickerValue } from '@mui/x-date-pickers/internals'
 
 dayjs.locale('cs')
 
-type DatePickerProps = {
-  control: Control<AppFormState> // or better: `Control<any>` from RHF
+type DatePickerProps<TFieldValues extends FieldValues> = {
+  control: Control<TFieldValues>
   label?: string
-  fieldPath: AppFieldPath
+  fieldPath: FieldPath<TFieldValues>
   defaultValue?: Dayjs
   minDate?: Dayjs
   maxDate?: Dayjs
 }
 
-export default function BasicDateTimePicker({ fieldPath, control, label, defaultValue }: DatePickerProps) {
+export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
+  fieldPath,
+  control,
+  label,
+}: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
       <Controller
@@ -27,9 +30,10 @@ export default function BasicDateTimePicker({ fieldPath, control, label, default
         control={control}
         render={({ field }) => (
           <DateTimePicker
+            {...field}
             label={label ?? 'Datum'}
             ampm={false}
-            value={isStringNumberOrDate(field.value) ? dayjs(field.value) : (dayjs(defaultValue) ?? null)}
+            value={dayjs(field.value)}
             onChange={(date) => field.onChange(date?.toDate())}
             slotProps={{ textField: { fullWidth: true } }}
           />
@@ -38,7 +42,14 @@ export default function BasicDateTimePicker({ fieldPath, control, label, default
     </LocalizationProvider>
   )
 }
-export function BasicDatePicker({ fieldPath, control, label, defaultValue, minDate, maxDate }: DatePickerProps) {
+export function BasicDatePicker<TFieldValues extends FieldValues>({
+  fieldPath,
+  control,
+  label,
+  defaultValue,
+  minDate,
+  maxDate,
+}: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
       <Controller

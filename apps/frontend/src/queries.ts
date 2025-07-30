@@ -33,7 +33,7 @@ import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
 import type {
   Client,
-  ClientCreateData,
+  ClientOrUpdateCreateData,
   ClientSearchPayload,
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
@@ -175,7 +175,12 @@ export const useVisitQuery = (visitId: string | undefined) => {
       if (!visitId) {
         throw new Error('Visit ID is required to fetch visits.')
       }
-      return getVisitByVisitId(axios, visitId)
+
+      return getVisitByVisitId(axios, visitId).then((data) => ({
+        ...data,
+        paidPrice: Number(data.paidPrice),
+        deposit: Number(data.deposit),
+      }))
     },
   })
 }
@@ -212,6 +217,7 @@ export const useVisitStatusMutation = () => {
     },
   })
 }
+
 export const useUpdateVisitMutation = (visitId: string | undefined) => {
   const axios = useAxios()
 
@@ -249,11 +255,34 @@ export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
 
 // ---- Clients----
 
-export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<ClientCreateData, Error, ClientCreateData> => {
+// export const useClientDepositStatusMutation = () => {
+//   const axios = useAxios()
+
+//   return useMutation<{ visitId?: string; status: boolean }, Error, { visitId?: string; status: boolean } | undefined>({
+//     mutationFn: async (data) => {
+//       if (!data || !data.visitId) {
+//         throw Error('Data for visit status update are not complete')
+//       }
+
+//       await patchUpdateVisitStatus(axios, data)
+//       return data
+//     },
+//     onSuccess: (data) => {
+//       queryClient.invalidateQueries({ queryKey: ['visit', data.visitId] })
+//       queryClient.invalidateQueries({ queryKey: ['visits'] })
+//     },
+//   })
+// }
+
+export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
+  ClientOrUpdateCreateData,
+  Error,
+  ClientOrUpdateCreateData
+> => {
   const axios = useAxios()
 
-  return useMutation<ClientCreateData, Error, ClientCreateData>({
-    mutationFn: (clientData: ClientCreateData) => postCreateNewClient(axios, clientData),
+  return useMutation<ClientOrUpdateCreateData, Error, ClientOrUpdateCreateData>({
+    mutationFn: (clientData: ClientOrUpdateCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
