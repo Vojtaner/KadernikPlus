@@ -24,6 +24,11 @@ stockItemRoutes.get(
   makeExpressCallback(StockItemController.getStockItemByIdController)
 );
 
+stockItemRoutes.delete(
+  "/item/:stockItemId",
+  makeExpressCallback(StockItemController.deleteStockItemByIdController)
+);
+
 stockItemRoutes.get(
   "/by-name",
   makeExpressCallback(StockItemController.findStockItemByNameController)

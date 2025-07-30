@@ -1,12 +1,12 @@
 import { Box, Typography, Stack, IconButton } from '@mui/material'
 import AppTheme from '../AppTheme'
-import AddProcedureButton from './FormDialog/AddProcedureButton'
+import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormDialog/AddProcedureButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import type { StockAllowance } from '../../../entities/stock-item'
 
 type ProcedureCardProps = {
   description: string
-  stockAllowances: StockAllowance[]
+  stockAllowances: AddProcedureStockAllowanceType
   orderNumber: number
   procedureId: string | undefined
 }

@@ -5,16 +5,17 @@ import { mockUserLogs } from './api/mocks'
 
 import { apiRoutes } from './api/apiRoutes'
 import {
+  deleteStockItem,
   deleteTeamMember,
   getClientById,
   getClients,
+  getLogs,
   getProcedures,
   getServices,
   getStockItems,
   getStocks,
   getTeamMember,
   getTeamMembers,
-  getUserLogs,
   getVisitByVisitId,
   getVisits,
   patchSearchClients,
@@ -47,6 +48,7 @@ import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
 import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure'
 import type { Dayjs } from 'dayjs'
 import type { AxiosError } from 'axios'
+import type { LogData } from '../../entities/logs'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -139,6 +141,7 @@ export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedu
     onSuccess: (data: CreateProcedure, variables, context) => {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['procedures', data.visitId] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
     },
   })
 
@@ -255,25 +258,6 @@ export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
 
 // ---- Clients----
 
-// export const useClientDepositStatusMutation = () => {
-//   const axios = useAxios()
-
-//   return useMutation<{ visitId?: string; status: boolean }, Error, { visitId?: string; status: boolean } | undefined>({
-//     mutationFn: async (data) => {
-//       if (!data || !data.visitId) {
-//         throw Error('Data for visit status update are not complete')
-//       }
-
-//       await patchUpdateVisitStatus(axios, data)
-//       return data
-//     },
-//     onSuccess: (data) => {
-//       queryClient.invalidateQueries({ queryKey: ['visit', data.visitId] })
-//       queryClient.invalidateQueries({ queryKey: ['visits'] })
-//     },
-//   })
-// }
-
 export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
   ClientOrUpdateCreateData,
   Error,
@@ -285,6 +269,7 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
     mutationFn: (clientData: ClientOrUpdateCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['logs'] })
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
     },
   })
@@ -348,6 +333,17 @@ export const useCreateOrUpdateStockItemMutation = (
     },
   })
 }
+export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, unknown, string>) => {
+  const axios = useAxios()
+
+  return useMutation({
+    mutationFn: (stockItemId: string) => deleteStockItem(axios, stockItemId),
+    onSuccess(data, variables, context) {
+      options?.onSuccess?.(data, variables, context)
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+    },
+  })
+}
 
 export const useStockItemsQuery = (stockId: string | undefined) => {
   const axios = useAxios()
@@ -370,12 +366,13 @@ export const mockGetUserLogs = () =>
     return HttpResponse.json(mockUserLogs)
   })
 
-export const useUserLogsQuery = (userId: string) => {
+export const useLogsQuery = () => {
   const axios = useAxios()
 
-  return useQuery<UserLog[]>({
-    queryKey: ['userLogs', userId],
-    queryFn: () => getUserLogs(axios, userId),
-    enabled: !!userId,
+  return useQuery<LogData[]>({
+    queryKey: ['logs'],
+    queryFn: () => {
+      return getLogs(axios)
+    },
   })
 }

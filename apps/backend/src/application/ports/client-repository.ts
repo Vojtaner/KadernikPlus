@@ -1,4 +1,4 @@
-import { ClientCreateData } from "@/entities/client";
+import { ClientOrUpdateCreateData } from "@/entities/client";
 import { WithUserId } from "@/entities/user";
 import {
   ClientWithVisits,
@@ -7,7 +7,9 @@ import {
 import { Client } from "@prisma/client";
 
 export type ClientRepositoryPort = {
-  addOrUpdate: (clientData: WithUserId<ClientCreateData>) => Promise<Client>;
+  addOrUpdate: (
+    clientData: WithUserId<ClientOrUpdateCreateData>
+  ) => Promise<Client>;
   findById: (id: string, userId: string) => Promise<ClientWithVisits | null>;
   findAll: (userId: string) => Promise<Client[]>;
   findByPhone: (phone: string) => Promise<Client | null>;

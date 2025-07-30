@@ -9,7 +9,9 @@ import { useCreateVisitMutation } from '../../queries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { Visit } from '../../../../entities/visit'
-import AddNewClientForm from '../AddNewClientForm'
+
+import TextField from '../TextField'
+import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
 
 export const AddVisitItemButton = () => {
   const [open, setOpen] = useState(false)
@@ -68,7 +70,44 @@ export const AddVisitItemButton = () => {
               </Button>
             </Box>
           </Stack>
-          {isNewClient && <AddNewClientForm control={control} />}
+          {isNewClient && (
+            <Stack spacing={1} padding={1}>
+              <TextField
+                fieldPath="firstName"
+                control={control}
+                label="Jméno"
+                type="text"
+                fullWidth
+                rules={firstNameValidationrule}
+              />
+              <TextField
+                fieldPath="lastName"
+                control={control}
+                label="Přijmení"
+                type="text"
+                fullWidth
+                rules={firstNameValidationrule}
+              />
+              <TextField
+                fieldPath="phone"
+                control={control}
+                label="Telefon"
+                type="tel"
+                fullWidth
+                rules={phoneValidationRule}
+              />
+              <TextField
+                fieldPath="note"
+                control={control}
+                label="Poznámka"
+                type="text"
+                multiline
+                minRows={2}
+                maxRows={10}
+                fullWidth
+              />
+            </Stack>
+          )}
           <HairCutAutoComplete fieldPath="serviceIds" control={control} />
         </>
       }

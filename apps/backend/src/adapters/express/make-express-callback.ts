@@ -31,7 +31,7 @@ export type ControllerFunction<T = { body?: any; params?: any; query?: any }> =
     }): Promise<{
       headers?: { [key: string]: string };
       statusCode: number;
-      body: any;
+      body?: any;
     }>;
   };
 

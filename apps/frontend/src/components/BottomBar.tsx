@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack'
 import AddOrUpdateClientItemButton from './FormDialog/AddOrUpdateClientItemButton'
 import { AddVisitItemButton } from './FormDialog/AddVisitItemButton'
-import AddStockItemButton from './FormDialog/AddOrBuyStockItemButton'
+import AddStockItemButton from './FormDialog/AddEditBuyStockItemButton'
 import AddServiceItemButton from './FormDialog/AddServiceItemButton'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import MenuIconButton from './MenuIconButton'

@@ -1,27 +1,22 @@
-import { Stack } from '@mui/material'
 import { LogLine } from '../components/LogLine.tsx'
-import { useUserLogsQuery } from '../queries.ts'
+import Stack from '@mui/material/Stack'
+import { useLogsQuery } from '../queries.ts'
 import ErrorBoundary from './ErrorBoundary.tsx'
+import dayjs from 'dayjs'
 
 const Logs = () => {
-  const { data } = useUserLogsQuery('1')
+  const { data: logs } = useLogsQuery()
 
-  if (!data) {
+  if (!logs) {
     return <ErrorBoundary />
   }
+  console.log({ logs })
 
   return (
     <Stack rowGap={1.5}>
-      {data &&
-        data.map((log) => (
-          <LogLine
-            key={log.id}
-            actionType={log.actionType}
-            dateTime={log.dateTime}
-            description={log.description}
-            userName={log.userName}
-          />
-        ))}
+      {logs.map((log) => (
+        <LogLine key={log.id} dateTime={dayjs(log.createdAt)} description={log.message} userName={log.user.name} />
+      ))}
     </Stack>
   )
 }

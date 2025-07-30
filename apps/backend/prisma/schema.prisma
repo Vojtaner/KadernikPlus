@@ -18,14 +18,14 @@ generator client {
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
-  id           String        @id @default(uuid())
-  name         String
-  email        String        @unique
-  bankAccount  String?
+  id          String  @id @default(uuid())
+  name        String
+  email       String  @unique
+  bankAccount String?
 
-  authProvider String?       @map("auth_provider")
-  createdAt    DateTime      @default(now())
-  lastLogin    DateTime?     @map("last_login")
+  authProvider String?   @map("auth_provider")
+  createdAt    DateTime  @default(now())
+  lastLogin    DateTime? @map("last_login")
 
   services        Service[]
   visits          Visit[]
@@ -34,13 +34,15 @@ model User {
   clients         Client[]
 
   teamMemberships TeamMember[]
+  LogEntry        LogEntry[]
 
   @@map("users")
 }
+
 model TeamMember {
-  id        String   @id @default(uuid())
-  teamId    String
-  userId    String    @unique
+  id     String @id @default(uuid())
+  teamId String
+  userId String @unique
 
   canAccessStocks  Boolean @default(false)
   canAccessClients Boolean @default(false)
@@ -52,28 +54,26 @@ model TeamMember {
   @@unique([teamId, userId])
 }
 
-
 enum DepositStatus {
-  ZAPLACENO      // deposit paid
-  NEZAPLACENO    // deposit not paid
-  BEZ_ZALOHY     // deposit should not be paid
+  ZAPLACENO // deposit paid
+  NEZAPLACENO // deposit not paid
+  BEZ_ZALOHY // deposit should not be paid
 }
 
 model Team {
-  id        String       @id @default(uuid())
-  name      String
+  id   String @id @default(uuid())
+  name String
 
-  members   TeamMember[]
-  clients   Client[]
-  visits    Visit[]
-  stocks    Stock[]
-  services  Service[]
+  members  TeamMember[]
+  clients  Client[]
+  visits   Visit[]
+  stocks   Stock[]
+  services Service[]
 
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  LogEntry  LogEntry[]
 }
-
-
 
 /// Junction table for the many-to-many relationship between Visit and Service
 model VisitService {
@@ -101,7 +101,6 @@ model Photo {
   @@map("photos")
 }
 
-
 model Procedure {
   id          String  @id @default(uuid())
   visitId     String  @map("visit_id")
@@ -117,14 +116,28 @@ model Procedure {
   @@map("procedures")
 }
 
+model LogEntry {
+  id         String   @id @default(uuid())
+  userId     String // Who did the action
+  teamId     String // (Optional if multi-team)
+  action     String // e.g. "CREATE_CLIENT", "DELETE_STOCK_ITEM"
+  entityType String // e.g. "client", "stockItem", etc.
+  entityId   String? // e.g. "abc-123" if available
+  message    String // Human-readable e.g. "Added client John Doe"
+  metadata   Json? // Optional, for before/after values or extras
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  team Team @relation(fields: [teamId], references: [id])
+}
 
 model StockItem {
   id        String   @id @default(uuid())
   itemName  String
   unit      String
-  quantity  Decimal   @db.Decimal(10, 2)
-  price     Decimal   @db.Decimal(10, 2)
-  threshold Decimal   @db.Decimal(10, 2)
+  quantity  Decimal  @db.Decimal(10, 2)
+  price     Decimal  @db.Decimal(10, 2)
+  threshold Decimal  @db.Decimal(10, 2)
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -143,14 +156,14 @@ model StockAllowance {
   userId      String @map("user_id")
   stockItemId String @map("stock_item_id")
 
-  procedureId String @map("procedure_id")
+  procedureId String    @map("procedure_id")
   procedure   Procedure @relation(fields: [procedureId], references: [id])
 
-  quantity    Decimal  @db.Decimal(10, 2)
-  createdAt   DateTime @default(now()) @map("created_at")
+  quantity  Decimal  @db.Decimal(10, 2)
+  createdAt DateTime @default(now()) @map("created_at")
 
-  user        User      @relation(fields: [userId], references: [id])
-  stockItem   StockItem @relation(fields: [stockItemId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+  stockItem StockItem @relation(fields: [stockItemId], references: [id])
 
   @@map("stock_allowances")
 }
@@ -166,29 +179,29 @@ model Client {
   userId    String
   user      User    @relation(fields: [userId], references: [id])
 
-  teamId    String
-  team      Team    @relation(fields: [teamId], references: [id])
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
 
-  @@map("clients")
   @@fulltext([firstName, lastName, phone])
+  @@map("clients")
 }
 
 model Visit {
-  id         String   @id @default(uuid())
-  clientId   String
-  userId     String
-  date       DateTime
-  note       String?
-  deposit    Int?
+  id            String         @id @default(uuid())
+  clientId      String
+  userId        String
+  date          DateTime
+  note          String?
+  deposit       Int?
   depositStatus DepositStatus? @default(NEZAPLACENO)
-  visitStatus Boolean?
-  paidPrice  Decimal? @db.Decimal(10, 2)
+  visitStatus   Boolean?
+  paidPrice     Decimal?       @db.Decimal(10, 2)
 
-  client    Client @relation(fields: [clientId], references: [id])
-  user      User   @relation(fields: [userId], references: [id])
+  client Client @relation(fields: [clientId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
-  teamId    String
-  team      Team   @relation(fields: [teamId], references: [id])
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id])
 
   visitServices VisitService[]
   photos        Photo[]
@@ -202,9 +215,9 @@ model Stock {
   stockName String
   createdAt DateTime @default(now())
   ownerId   String
-  teamId    String?  // optional if stock belongs to team
+  teamId    String? // optional if stock belongs to team
 
-  owner User @relation("OwnedStocks", fields: [ownerId], references: [id])
+  owner User  @relation("OwnedStocks", fields: [ownerId], references: [id])
   team  Team? @relation(fields: [teamId], references: [id])
 
   stockItems StockItem[]
@@ -213,13 +226,13 @@ model Stock {
 }
 
 model Service {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   serviceName String
-  basePrice   Decimal  @db.Decimal(10, 2)
+  basePrice   Decimal @db.Decimal(10, 2)
   userId      String
-  teamId      String?  // optional team-wide access
+  teamId      String? // optional team-wide access
 
-  user User @relation(fields: [userId], references: [id])
+  user User  @relation(fields: [userId], references: [id])
   team Team? @relation(fields: [teamId], references: [id])
 
   visitServices VisitService[]
@@ -227,6 +240,3 @@ model Service {
   @@unique([userId, serviceName])
   @@map("services")
 }
-
-
-

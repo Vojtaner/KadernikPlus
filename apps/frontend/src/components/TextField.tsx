@@ -3,28 +3,28 @@ import {
   get,
   useFormState,
   type Control,
+  type FieldPath,
   type FieldPathValue,
   type FieldValues,
-  type Path,
   type RegisterOptions,
 } from 'react-hook-form'
 import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material'
 
-export type TextFieldProps<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends Path<TFieldValues> = Path<TFieldValues>, //defaultování na cestu ve formuláři pokud není zadaná
-> = Omit<MuiTextFieldProps, 'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'> & {
-  fieldPath: TName
+export type TextFieldProps<TFieldValues extends FieldValues = FieldValues> = Omit<
+  MuiTextFieldProps,
+  'name' | 'defaultValue' | 'value' | 'onChange' | 'onBlur'
+> & {
+  fieldPath: FieldPath<TFieldValues>
   control?: Control<TFieldValues>
-  rules?: Omit<RegisterOptions<TFieldValues, TName>, 'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'>
-  defaultValue?: FieldPathValue<TFieldValues, TName>
+  rules?: Omit<
+    RegisterOptions<TFieldValues, FieldPath<TFieldValues>>,
+    'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
+  >
+  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
   disabled?: boolean
 }
 
-function TextField<
-  TFieldValues extends FieldValues = FieldValues,
-  TName extends Path<TFieldValues> = Path<TFieldValues>,
->(props: TextFieldProps<TFieldValues, TName>) {
+function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFieldProps<TFieldValues>) {
   const { fieldPath, control, rules, disabled, defaultValue, ...rest } = props
   const { errors } = useFormState({ control, name: fieldPath })
 

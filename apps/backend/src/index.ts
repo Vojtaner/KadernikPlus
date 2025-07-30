@@ -17,6 +17,7 @@ import serviceRoutes from "./routes/services-routes";
 import teamMemberRoutes from "./routes/team-member-routes";
 import teamRoutes from "./routes/team";
 import procedureRoutes from "./routes/procedure-routes";
+import logRoutes from "./routes/log-routes";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 
 app.use("/api/visits", visitRoutes);
+app.use("/api/logs", logRoutes);
 app.use("/api/team-members", teamMemberRoutes);
 app.use("/api/team", teamRoutes);
 app.use("/api/procedures", procedureRoutes);
@@ -47,6 +49,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);
 app.use("/api/services", serviceRoutes);
+
 app.use(errorHandler);
 
 const startServer = async () => {

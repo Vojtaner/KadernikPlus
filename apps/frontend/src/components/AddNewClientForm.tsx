@@ -1,18 +1,26 @@
 import Stack from '@mui/material/Stack'
 import { firstNameValidationrule, phoneValidationRule } from './FormDialog/AddOrUpdateClientItemButton'
 import TextField from './TextField'
-import type { Control, FieldValues } from 'react-hook-form'
-import type { Visit } from '../../../entities/visit'
+import type { Control } from 'react-hook-form'
 
-type AddNewClientFormProps<TFieldValues extends FieldValues> = { control: Control<TFieldValues> }
+type AddNewClientFormProps = {
+  control: Control<AddNewClientFields>
+}
 
-const AddNewClientForm = (props: AddNewClientFormProps<Visit>) => {
+type AddNewClientFields = {
+  firstName: string
+  lastName: string
+  phone: string
+  note?: string
+}
+//zde mi nefungovala typovost tak jsem to vyjmul pryč při vložení controlu mi to nevidělo hodnoty fielPath
+function AddNewClientForm(props: AddNewClientFormProps) {
   const { control } = props
 
   return (
     <Stack spacing={1} padding={1}>
       <TextField
-        fieldPath="lastName"
+        fieldPath="firstName"
         control={control}
         label="Jméno"
         type="text"

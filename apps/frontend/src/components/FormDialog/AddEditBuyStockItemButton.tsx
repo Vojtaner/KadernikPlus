@@ -10,12 +10,12 @@ import type { StockItemDefaultValuesType } from '../../../../entities/stock-item
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-type AddOrBuyStockItemButtonProps = {
+type AddEditBuyStockItemButtonProps = {
   defaultValues?: StockItemDefaultValuesType
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
 }
 
-const AddOrBuyStockItemButton = (props: AddOrBuyStockItemButtonProps) => {
+const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
   const { defaultValues, openButton } = props
   const [open, setOpen] = useState(false)
   const { control, reset, handleSubmit } = useForm<StockItemDefaultValuesType>({
@@ -149,7 +149,7 @@ const AddOrBuyStockItemButton = (props: AddOrBuyStockItemButtonProps) => {
   )
 }
 
-export default AddOrBuyStockItemButton
+export default AddEditBuyStockItemButton
 
 const getButtonStyles = (active: boolean) => ({
   lineHeight: '18px',

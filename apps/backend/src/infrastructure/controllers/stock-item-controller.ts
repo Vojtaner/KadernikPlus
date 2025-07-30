@@ -15,11 +15,15 @@ import getStockItemsByStockIdUseCase, {
 import getStocksByUserIdUseCase, {
   GetStocksByUserIdUseCaseType,
 } from "../../application/use-cases/stock/get-stocks-by-user-id";
+import deleteStockItemByIdUseCase, {
+  DeleteStockItemByIdUseCaseType,
+} from "../../application/use-cases/stock/delete-stock-item-by-id";
 
 type CreateOrUpdateStockItemControllerType = {
   body: StockItemCreateData | StockItemBuyData;
 };
 type GetStockItemByIdControllerType = {};
+type DeleteStockItemByIdControllerType = { params: { stockItemId: string } };
 type FindStockItemByNameControllerType = {};
 type GetStockItemsByStockIdControllerType = {};
 type GetStocksByUserIdControllerType = {};
@@ -47,6 +51,7 @@ const createStockItemController = (dependencies: {
   findStockItemByNameUseCase: FindStockItemByNameUseCaseType;
   getStockItemsByStockIdUseCase: GetStockItemsByStockIdUseCaseType;
   getStocksByUserIdUseCase: GetStocksByUserIdUseCaseType;
+  deleteStockItemByIdUseCase: DeleteStockItemByIdUseCaseType;
 }) => {
   const createOrUpdateStockItemController: ControllerFunction<
     CreateOrUpdateStockItemControllerType
@@ -119,6 +124,19 @@ const createStockItemController = (dependencies: {
       body: stockItem,
     };
   };
+  const deleteStockItemByIdController: ControllerFunction<
+    DeleteStockItemByIdControllerType
+  > = async (httpRequest) => {
+    console.log({ httpRequest: httpRequest.params });
+    const { stockItemId } = httpRequest.params;
+    const userId = httpRequest.userId;
+
+    await dependencies.deleteStockItemByIdUseCase.execute(stockItemId, userId);
+
+    return {
+      statusCode: 204,
+    };
+  };
   const getStockItemsByStockIdController: ControllerFunction<
     GetStockItemsByStockIdControllerType
   > = async (httpRequest) => {
@@ -146,6 +164,7 @@ const createStockItemController = (dependencies: {
     getStockItemByIdController,
     getStockItemsByStockIdController,
     getStocksByUserIdController,
+    deleteStockItemByIdController,
   };
 };
 
@@ -155,5 +174,6 @@ const stockItemController = createStockItemController({
   findStockItemByNameUseCase,
   getStockItemsByStockIdUseCase,
   getStocksByUserIdUseCase,
+  deleteStockItemByIdUseCase,
 });
 export default stockItemController;

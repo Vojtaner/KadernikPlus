@@ -3,6 +3,8 @@ import { ClientRepositoryPort } from "../../ports/client-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { WithUserId } from "@/entities/user";
 import { Client } from "@prisma/client";
+import logRepositoryDb from "../../../infrastructure/data/prisma/prisma-log-repository";
+import { LogRepositoryPort } from "../../../application/ports/log-repository";
 
 class ClientAlreadyExistsError extends Error {
   constructor(phone: string) {
@@ -13,11 +15,16 @@ class ClientAlreadyExistsError extends Error {
 
 const createAddOrUpdateClientUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
+  logRepositoryDb: LogRepositoryPort;
 }) => {
   return {
     execute: async (
       clientData: WithUserId<ClientOrUpdateCreateData>
     ): Promise<Client> => {
+      let action = "create";
+      let clientId: string | undefined = undefined;
+      let message = "";
+
       if (clientData.phone) {
         const existingClient =
           await dependencies.clientRepositoryDb.findByPhone(clientData.phone);
@@ -27,16 +34,36 @@ const createAddOrUpdateClientUseCase = (dependencies: {
         }
       }
 
-      const newOrUpdatedclient =
+      const newOrUpdatedClient =
         await dependencies.clientRepositoryDb.addOrUpdate(clientData);
 
-      return newOrUpdatedclient;
+      if (clientData.id) {
+        action = "update";
+        clientId = clientData.id;
+        message = `Upravený klient ${clientData.firstName} ${clientData.lastName}`;
+      } else {
+        clientId = newOrUpdatedClient.id;
+        message = `Vytvořen klient ${newOrUpdatedClient.firstName} ${newOrUpdatedClient.lastName}`;
+      }
+
+      await dependencies.logRepositoryDb.log({
+        userId: clientData.userId,
+        action,
+        entityType: "client",
+        entityId: clientId,
+        message,
+        metadata: { input: clientData },
+        teamId: newOrUpdatedClient.teamId,
+      });
+
+      return newOrUpdatedClient;
     },
   };
 };
 
 const addOrUpdateClientUseCase = createAddOrUpdateClientUseCase({
   clientRepositoryDb,
+  logRepositoryDb,
 });
 
 export type CreateAddOrUpdateClientUseCaseType = ReturnType<

@@ -5,13 +5,14 @@ import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
 import type {
   Client,
-  ClientCreateData,
+  ClientOrUpdateCreateData,
   ClientSearchPayload,
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
 } from '../../../entities/client'
 import type { StockItemCreateData } from '../../../entities/stock-item'
 import type { CreateProcedure, PostNewProcedure } from '../../../entities/procedure'
+import type { LogData } from '../../../entities/logs'
 import { type StockItem } from '../../../entities/stock-item'
 import type { Service, ServiceCreateData } from '../../../entities/service'
 import type { VisitCreateData, VisitDetailFormType, VisitWithServices } from '../../../entities/visit'
@@ -50,6 +51,16 @@ export const getStockItems = async (axios: AxiosInstance, stockId: string): Prom
   return response.data
 }
 
+export const getLogs = async (axios: AxiosInstance): Promise<LogData[]> => {
+  const response = await axios.get(apiRoutes.getLogsUrl())
+  return response.data
+}
+
+export const deleteStockItem = async (axios: AxiosInstance, stockItemId: string): Promise<void> => {
+  const response = await axios.delete(apiRoutes.deleteStockItemByIdUrl(stockItemId))
+  return response.data
+}
+
 export const getServices = async (axios: AxiosInstance): Promise<Service[]> => {
   const response = await axios.get(apiRoutes.getServiceUrl())
   return response.data
@@ -83,8 +94,8 @@ export const getVisits = async (
 
 export const postCreateNewClient = async (
   axios: AxiosInstance,
-  clientData: ClientCreateData
-): Promise<ClientCreateData> => {
+  clientData: ClientOrUpdateCreateData
+): Promise<ClientOrUpdateCreateData> => {
   const response = await axios.post(apiRoutes.getCreateNewClientUrl(), clientData)
   return response.data
 }

@@ -3,7 +3,9 @@ import type { Dayjs } from 'dayjs'
 export const apiRoutes = {
   getUserLogsUrl: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
   getStockItemsUrl: (stockId: string) => `/api/stock/${encodeURIComponent(stockId)}/items`,
+  getLogsUrl: () => `/api/logs/`,
   getStockItemByIdUrl: (stockItemId: string) => `/item/${encodeURIComponent(stockItemId)}`,
+  deleteStockItemByIdUrl: (stockItemId: string) => `api/stock/item/${encodeURIComponent(stockItemId)}`,
   getUserUrl: (userId: string) => `/api/user?userId=${encodeURIComponent(userId)}`,
   getClientByIdUrl: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
   getClientsUrl: () => `/api/clients/`,

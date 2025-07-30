@@ -1,15 +1,14 @@
-import { Button } from '@mui/material'
+import { Button, Stack } from '@mui/material'
 import FormDialog from '../Dialog'
 import { useState } from 'react'
 import { useCreateNewOrUpdateClientMutation } from '../../queries'
-import type { ClientCreateData } from '../../../../entities/client'
+import type { ClientOrUpdateCreateData } from '../../../../entities/client'
 import React from 'react'
 import { useForm } from 'react-hook-form'
-import AddNewClientForm from '../AddNewClientForm'
-import type { Visit } from '../../../../entities/visit'
+import TextField from '../TextField'
 
 type AddOrUpdateClientItemButtonProps = {
-  defaultValues?: ClientCreateData
+  defaultValues?: ClientOrUpdateCreateData
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
   clientId?: string
 }
@@ -18,7 +17,7 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
   const { defaultValues, openButton, clientId } = props
   const [open, setOpen] = useState(false)
   const { mutate: createNewClientMutation } = useCreateNewOrUpdateClientMutation()
-  const { control, reset, handleSubmit } = useForm<Visit>({ defaultValues: { ...defaultValues } })
+  const { control, reset, handleSubmit } = useForm<ClientOrUpdateCreateData>({ defaultValues: { ...defaultValues } })
 
   const handleClickOpen = () => {
     if (!defaultValues) {
@@ -38,8 +37,9 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
     setOpen(false)
   }
 
-  const onSubmit = (data: ClientCreateData) => {
+  const onSubmit = (data: ClientOrUpdateCreateData) => {
     createNewClientMutation(clientId ? { ...data, id: clientId } : data)
+    handleClose()
   }
 
   return (
@@ -54,9 +54,42 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
       formFields={
-        <>
-          <AddNewClientForm control={control} />
-        </>
+        <Stack spacing={1} padding={1}>
+          <TextField
+            fieldPath="firstName"
+            control={control}
+            label="Jméno"
+            type="text"
+            fullWidth
+            rules={firstNameValidationrule}
+          />
+          <TextField
+            fieldPath="lastName"
+            control={control}
+            label="Přijmení"
+            type="text"
+            fullWidth
+            rules={firstNameValidationrule}
+          />
+          <TextField
+            fieldPath="phone"
+            control={control}
+            label="Telefon"
+            type="tel"
+            fullWidth
+            rules={phoneValidationRule}
+          />
+          <TextField
+            fieldPath="note"
+            control={control}
+            label="Poznámka"
+            type="text"
+            multiline
+            minRows={2}
+            maxRows={10}
+            fullWidth
+          />
+        </Stack>
       }
       onOpenButton={openDialogButton}
       title="Přidat klienta"

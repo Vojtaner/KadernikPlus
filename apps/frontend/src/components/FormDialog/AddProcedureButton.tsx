@@ -1,4 +1,4 @@
-import { Stack, IconButton, Button } from '@mui/material'
+import { Stack, IconButton, Button, Typography, Box } from '@mui/material'
 import { Grid } from '@mui/material'
 import {
   Controller,
@@ -8,7 +8,6 @@ import {
   type FieldPath,
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
-  type FieldValues,
 } from 'react-hook-form'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import TextField from '../TextField'
@@ -21,9 +20,15 @@ import type { PostNewProcedure } from '../../../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../../../entities/stock-item'
 
+export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id'> & {
+  currentQuantity: number
+  unit: string
+  id: string
+})[]
+
 type AddProcedureButtonProps = {
   defaultValues?: {
-    stockAllowances: StockAllowance[]
+    stockAllowances: AddProcedureStockAllowanceType
     description: string
   }
   openButton: ReactElement<{ onClick: (e: React.MouseEvent) => void; color: string }>
@@ -32,24 +37,25 @@ type AddProcedureButtonProps = {
 
 type StockAllowanceFormValues = {
   description: string
-  stockAllowances: StockAllowance[]
+  stockAllowances: AddProcedureStockAllowanceType
 }
 
 type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
   control: Control<TForm>
   name: FieldPath<TForm>
-  append: UseFieldArrayAppend<FieldValues, 'stockAllowances'>
+  append: UseFieldArrayAppend<StockAllowanceFormValues, 'stockAllowances'>
   remove: UseFieldArrayRemove
-  fields: Record<'id', string>[]
+  fields: AddProcedureStockAllowanceType
 }
 
 const AddProcedureButton = (props: AddProcedureButtonProps) => {
   const { visitId } = useParams()
   const { openButton, defaultValues, procedureId } = props
   const [open, setOpen] = useState(false)
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove } = useFieldArray<StockAllowanceFormValues>({
     name: 'stockAllowances',
   })
+
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
       remove()
@@ -57,10 +63,9 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       setOpen(false)
     },
   })
-
   const defaultStockAlowances = defaultValues
     ? mapDefaultStockAlowances(defaultValues.stockAllowances)
-    : [{ stockItemId: '', quantity: 0, id: '' }]
+    : [{ stockItemId: '', quantity: 0, id: '', currentQuantity: 0, unit: '' }]
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -143,34 +148,58 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
   const { control, append, remove, fields } = props
 
   return (
-    <Stack spacing={2}>
-      {fields.map((field, index) => (
-        <Grid container spacing={2} key={field.id} alignItems="center">
-          <Controller name={`stockAllowances.${index}.id`} control={control} render={() => <></>} />
-          <Grid size={7}>
-            <StockItemsAutoComplete fieldPath={`stockAllowances.${index}.stockItemId`} control={control} />
-          </Grid>
-          <Grid size={3}>
-            <TextField type="number" label="Počet" fieldPath={`stockAllowances.${index}.quantity`} control={control} />
-          </Grid>
-          <Grid size={2}>
-            <IconButton onClick={() => remove(index)} color="error">
-              <DeleteOutlineIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      ))}
-      <Button onClick={() => append({ stockItemId: '', quantity: 0 })} variant="outlined">
+    <Stack spacing={3}>
+      {fields.map((field, index) => {
+        {
+          return (
+            <Stack key={field.id} spacing={0.5}>
+              <Grid container spacing={2} alignItems="center">
+                <Controller name={`stockAllowances.${index}.id`} control={control} render={() => <></>} />
+                <Grid size={7}>
+                  <StockItemsAutoComplete fieldPath={`stockAllowances.${index}.stockItemId`} control={control} />
+                </Grid>
+                <Grid size={3}>
+                  <TextField
+                    type="number"
+                    label="Počet"
+                    fieldPath={`stockAllowances.${index}.quantity`}
+                    control={control}
+                  />
+                </Grid>
+                <Grid size={2}>
+                  <IconButton onClick={() => remove(index)} color="error">
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </Grid>
+              </Grid>
+
+              <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
+                Aktuálně ve skladu{' '}
+                <Box component="span" color="primary.main" fontWeight="bold">
+                  {`${field.currentQuantity} ${field.unit}`}
+                </Box>
+              </Typography>
+            </Stack>
+          )
+        }
+      })}
+      <Button
+        onClick={() => append({ stockItemId: '', quantity: 0, unit: '', currentQuantity: 0, id: '' })}
+        variant="outlined">
         Přidat položku
       </Button>
     </Stack>
   )
 }
 
-const mapDefaultStockAlowances = (defaultStockAllowances: StockAllowance[]): StockAllowance[] => {
+const mapDefaultStockAlowances = (
+  defaultStockAllowances: AddProcedureStockAllowanceType
+): { stockItemId: string; currentQuantity: number; unit: string; quantity: number; id: string }[] => {
   return defaultStockAllowances.map((stockAllowance) => ({
     stockItemId: stockAllowance.stockItemId,
     quantity: Number(stockAllowance.quantity),
-    id: stockAllowance.id,
+    id: stockAllowance.id ?? '',
+    currentQuantity: Number(stockAllowance.stockItem?.quantity),
+    unit: stockAllowance.stockItem?.unit ?? '',
   }))
 }
