@@ -29,7 +29,7 @@ export const createVisitRepositoryDb = (
         clientId: visitData.clientId,
         userId: visitData.userId,
         date: visitData.date,
-        paidPrice: 1,
+        paidPrice: Number(visitData.paidPrice),
         teamId: userTeam.teamId,
         visitServices: {
           create: visitData.serviceIds.map((serviceId) => ({

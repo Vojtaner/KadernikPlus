@@ -3,6 +3,7 @@ import type { AppFieldPath } from '../../reactHookForm/entity'
 import { Controller, type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
 import { useStockItemsQuery, useStocksQuery } from '../../queries'
 import Loader from '../../pages/Loader'
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 
 type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: AppFieldPath
@@ -44,7 +45,10 @@ export default function StockItemsAutoComplete<TFieldValues extends FieldValues>
             options={stockItemsOptions}
             getOptionLabel={(option) => option.name}
             value={selectedOption}
-            onChange={(_, newValue) => field.onChange(newValue?.id ?? null)}
+            onChange={(_, newValue) => {
+              queryClient.invalidateQueries({ queryKey: ['procedures'] })
+              return field.onChange(newValue?.id ?? null)
+            }}
             isOptionEqualToValue={(option, value) => value != null && option.id === value.id}
             renderInput={(params) => <TextField {...params} label="Vyberte položku" />}
           />

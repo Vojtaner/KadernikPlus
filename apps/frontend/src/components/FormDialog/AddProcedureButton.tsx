@@ -8,6 +8,7 @@ import {
   type FieldPath,
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
+  useWatch,
 } from 'react-hook-form'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import TextField from '../TextField'
@@ -15,7 +16,7 @@ import { useEffect, useState, type ReactElement } from 'react'
 import FormDialog from '../Dialog'
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import React from 'react'
-import { useProceduresMutation } from '../../queries'
+import { useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../queries'
 import type { PostNewProcedure } from '../../../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../../../entities/stock-item'
@@ -146,11 +147,24 @@ export default AddProcedureButton
 
 const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceFormValues>) => {
   const { control, append, remove, fields } = props
+  const { data: stocks } = useStocksQuery()
+  const { data: stockItems } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
+  const watchedStockAllowanecs = useWatch({ control })
 
   return (
     <Stack spacing={3}>
       {fields.map((field, index) => {
+        const fielArrayStockItem =
+          watchedStockAllowanecs.stockAllowances && watchedStockAllowanecs.stockAllowances[index]
+
         {
+          const stockItem =
+            fielArrayStockItem &&
+            stockItems &&
+            stockItems.find((stockItem) => stockItem.id === fielArrayStockItem.stockItemId)
+
+          const updatedStockQuantity = stockItem && stockItem.quantity - (fielArrayStockItem?.quantity ?? 0)
+
           return (
             <Stack key={field.id} spacing={0.5}>
               <Grid container spacing={2} alignItems="center">
@@ -173,12 +187,14 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
                 </Grid>
               </Grid>
 
-              <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-                Aktuálně ve skladu{' '}
-                <Box component="span" color="primary.main" fontWeight="bold">
-                  {`${field.currentQuantity} ${field.unit}`}
-                </Box>
-              </Typography>
+              {stockItem ? (
+                <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
+                  Aktuálně ve skladu
+                  <Box component="span" color="primary.main" fontWeight="bold">
+                    {`${updatedStockQuantity} ${stockItem?.unit}`}
+                  </Box>
+                </Typography>
+              ) : null}
             </Stack>
           )
         }

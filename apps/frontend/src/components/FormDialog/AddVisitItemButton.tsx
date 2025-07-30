@@ -9,7 +9,6 @@ import { useCreateVisitMutation } from '../../queries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import type { Visit } from '../../../../entities/visit'
-
 import TextField from '../TextField'
 import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
 
