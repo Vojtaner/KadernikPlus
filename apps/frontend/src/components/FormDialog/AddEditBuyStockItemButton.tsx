@@ -11,13 +11,17 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 
 type AddEditBuyStockItemButtonProps = {
-  defaultValues?: StockItemDefaultValuesType
+  defaultValues?: Partial<StockItemDefaultValuesType>
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
+  formUsage: 'purchase' | 'purchaseAndNewStockItem' | 'stockItem'
 }
 
 const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
-  const { defaultValues, openButton } = props
+  const { defaultValues, openButton, formUsage } = props
   const [open, setOpen] = useState(false)
+  const isOnlyShoppingForm = formUsage === 'purchase'
+  const isPurchaseAndNewStockItemForm = formUsage === 'purchaseAndNewStockItem'
+  const isNewStockItemForm = formUsage === 'stockItem'
   const { control, reset, handleSubmit } = useForm<StockItemDefaultValuesType>({
     defaultValues: {
       ...defaultValues,
@@ -64,8 +68,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
   }
 
   const onSubmit = (data: StockItemDefaultValuesType) => {
-    console.log({ data })
-    createOrUpdateStockItemMutation(data)
+    createOrUpdateStockItemMutation({ ...data, stockId: stocks[0].id })
     handleClose()
   }
 
@@ -82,7 +85,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
       }
       formFields={
         <>
-          {!defaultValues && (
+          {isPurchaseAndNewStockItemForm && (
             <Stack direction="row" spacing={1} alignItems="center">
               <Button
                 size="small"
@@ -100,46 +103,40 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
                 onClick={() => {
                   setIsPurchaseStockItem(true)
                 }}>
-                Doplnění skladu
+                Nákup položky
               </Button>
             </Stack>
           )}
-          {isPurchaseStockItem ? (
+          {isPurchaseStockItem || isOnlyShoppingForm ? (
             <>
               <StockItemsAutoComplete fieldPath="id" control={control} />
               <TextField fieldPath="quantity" label="Počet" type="number" fullWidth required control={control} />
               <TextField fieldPath="price" label="Cena" type="number" fullWidth control={control} />
             </>
           ) : (
-            <>
-              <SelectField
-                items={stocks.map((stock) => {
-                  return { name: stock.stockName, id: stock.id }
-                })}
-                control={control}
-                keyExtractor={(stock) => stock.id}
-                labelExtractor={(stock) => stock.name}
-                fieldPath="stockId"
-              />
-              <TextField
-                control={control}
-                fieldPath="itemName"
-                label="Skladová položka"
-                type="text"
-                fullWidth
-                required
-              />
-              <SelectField
-                items={unitList}
-                control={control}
-                keyExtractor={(unit) => unit.name}
-                labelExtractor={(unit) => unit.name}
-                fieldPath="unit"
-              />
-              <TextField fieldPath="quantity" label="Množství" type="number" fullWidth required control={control} />
-              <TextField fieldPath="price" label="Cena celkem" type="number" fullWidth control={control} />
-              <TextField fieldPath="threshold" label="Minimální množství" type="number" control={control} fullWidth />
-            </>
+            (isPurchaseAndNewStockItemForm || isNewStockItemForm) && (
+              <>
+                <TextField
+                  control={control}
+                  fieldPath="itemName"
+                  label="Skladová položka"
+                  type="text"
+                  fullWidth
+                  required
+                />
+                <SelectField
+                  items={unitList}
+                  label={'Vyberte jednotku'}
+                  control={control}
+                  keyExtractor={(unit) => unit.name}
+                  labelExtractor={(unit) => unit.name}
+                  fieldPath="unit"
+                />
+                <TextField fieldPath="quantity" label="Množství" type="number" fullWidth required control={control} />
+                <TextField fieldPath="price" label="Cena celkem" type="number" fullWidth control={control} />
+                <TextField fieldPath="threshold" label="Minimální množství" type="number" control={control} fullWidth />
+              </>
+            )
           )}
         </>
       }

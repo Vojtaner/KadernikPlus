@@ -24,6 +24,8 @@ const VisitDetail = () => {
     return <Typography>Požadovaná data nejsou dostupná.</Typography>
   }
 
+  const hasZeroProcedures = proceduresData.length === 0
+
   return (
     <>
       <VisitDetailGrid visitData={visitData} />
@@ -65,13 +67,15 @@ const VisitDetail = () => {
           />
         ))}
 
-        <AddProcedureButton
-          openButton={
-            <Button variant="outlined" sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
-              + Přidat proceduru
-            </Button>
-          }
-        />
+        {hasZeroProcedures && (
+          <AddProcedureButton
+            openButton={
+              <Button variant="outlined" sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
+                + Přidat proceduru
+              </Button>
+            }
+          />
+        )}
       </Stack>
     </>
   )

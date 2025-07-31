@@ -3,7 +3,7 @@ import type { AppPaletteColorString } from '../entity'
 
 export type BoxIconProps = {
   icon: React.ReactNode
-  boxColor?: AppPaletteColorString
+  boxColor?: AppPaletteColorString | `#${string}`
   sx?: object
   size?: 'small' | 'large' | 'medium'
   key?: string | number

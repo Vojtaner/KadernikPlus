@@ -7,11 +7,12 @@ type DashBoardCardProps = { children: ReactNode; title: string; icon: ReactNode;
 const DashBoardCard = (props: DashBoardCardProps) => {
   const { children, title, icon, action, sx } = props
   return (
-    <Paper sx={{ ...sx }}>
+    <Paper sx={{ ...sx, boxShadow: '0px 4px 6px rgba(0,0,0,1)' }}>
       <Stack direction="column" rowGap="10px">
         <Stack direction="row" alignItems="center" spacing={2}>
           <IconButton href="/">{icon}</IconButton>
           <Typography
+            color="secondary"
             sx={{
               fontSize: '15px',
               fontWeight: 600,

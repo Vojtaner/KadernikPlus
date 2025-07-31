@@ -64,7 +64,6 @@ const createVisitController = (dependencies: {
 
     try {
       const visitData = httpRequest.body;
-      console.log({ visitData });
       const original = new Date(visitData.date);
       const shiftedTime = addHours(original, 2);
       const userId = httpRequest.userId;
@@ -176,8 +175,6 @@ const createVisitController = (dependencies: {
     try {
       const { visitId } = httpRequest.params;
       const visit = await dependencies.getVisitByIdUseCase.execute(visitId);
-
-      console.log({ visit });
 
       return {
         statusCode: 200,

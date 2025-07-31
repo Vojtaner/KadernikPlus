@@ -1,38 +1,25 @@
 import { Stack } from '@mui/material'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-// import { useState } from 'react'
-// import SelectField from '../components/SelectField'
+import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined'
+import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined'
 import VisitsList from './VisitsList'
 import DashBoardCard from '../components/DashBoardCard'
 import RevenuChart from '../components/RevenueChart'
+import ShoppingList from './ShoppingList'
 
 export const Dashboard = () => {
-  // const [selectedId, setSelectedId] = useState<string>('1')
-
-  // const onSelectDate = (value: string) => {
-  //   setSelectedId(value)
-  // }
-
   return (
     <Stack direction="column" rowGap={5}>
+      <DashBoardCard title="Tržby" icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
+        <RevenuChart />
+      </DashBoardCard>
       <DashBoardCard
         title="Přehled návštěv"
-        icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}
-        // action={
-        //   <SelectField<DateListType>
-        //     items={DatesList}
-        //     keyExtractor={(date) => date.id}
-        //     labelExtractor={(date) => date.name}
-        //     value={selectedId}
-        //     onChange={onSelectDate}
-        //     sx={{ height: '30px' }}
-        //   />
-        // }
-      >
+        icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" color="secondary" />}>
         <VisitsList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
-      <DashBoardCard title="Tržby" icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" />}>
-        <RevenuChart />
+      <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
+        <ShoppingList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
     </Stack>
   )

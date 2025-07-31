@@ -15,7 +15,6 @@ const createLogController = (dependencies: {
 
     const logs = await dependencies.getAllLogsUseCase.execute(userId);
 
-    console.log({ logs });
     return {
       statusCode: 200,
       body: logs,

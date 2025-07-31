@@ -7,7 +7,7 @@ import procedureRepositoryDb from "../../../infrastructure/data/prisma/prisma-pr
 import { Procedure } from ".prisma/client";
 
 const createAddOrUpdateProcedureUseCase = (dependencies: {
-  procedureRepository: ProcedureRepositoryPort;
+  procedureRepositoryDb: ProcedureRepositoryPort;
 }) => {
   return {
     execute: async (data: ProcedureCreateData): Promise<Procedure> => {
@@ -15,13 +15,13 @@ const createAddOrUpdateProcedureUseCase = (dependencies: {
         throw new Error("Missing visitId.");
       }
 
-      return dependencies.procedureRepository.addOrUpdate(data);
+      return dependencies.procedureRepositoryDb.addOrUpdate(data);
     },
   };
 };
 
 const addOrUpdateProcedureUseCase = createAddOrUpdateProcedureUseCase({
-  procedureRepository: procedureRepositoryDb,
+  procedureRepositoryDb: procedureRepositoryDb,
 });
 
 export type AddOrUpdateProcedureUseCaseType = ReturnType<

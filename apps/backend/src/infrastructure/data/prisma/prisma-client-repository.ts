@@ -76,7 +76,6 @@ const createClientRepositoryDb = (
     addOrUpdate: async (
       clientData: WithUserId<ClientOrUpdateCreateData>
     ): Promise<Client> => {
-      console.log(clientData);
       const { id: clientId } = clientData;
 
       if (clientId) {

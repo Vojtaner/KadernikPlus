@@ -129,7 +129,7 @@ export const createColumns = (
     field: 'date',
     headerName: 'Čas',
     disableColumnMenu: true,
-    width: 80,
+    width: 75,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
@@ -138,21 +138,20 @@ export const createColumns = (
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
-
     disableColumnMenu: true,
-    minWidth: 80,
+    minWidth: 60,
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
   {
     field: 'serviceName',
     headerName: 'Účes',
-    minWidth: 100,
+    minWidth: 85,
     disableColumnMenu: true,
   },
   {
     field: 'visitState',
     headerName: 'Zavřít',
-    width: 20,
+    width: 15,
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
@@ -170,7 +169,7 @@ export const createColumns = (
   {
     field: 'visitDetailButton',
     headerName: 'Detail',
-    width: 20,
+    width: 10,
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => (

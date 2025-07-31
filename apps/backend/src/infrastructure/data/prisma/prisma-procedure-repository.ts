@@ -22,51 +22,54 @@ export type FullProcedure = Prisma.ProcedureGetPayload<{
 const createProcedureRepositoryDb = (
   prisma: PrismaClient
 ): ProcedureRepositoryPort => ({
-  findByVisitId: async (visitId: string): Promise<Procedure[]> => {
+  findByVisitId: async (visitId: string) => {
     return prisma.procedure.findMany({
       where: { visitId },
       orderBy: { stepOrder: "asc" },
       include: { stockAllowances: { include: { stockItem: true } } },
     });
   },
-  addOrUpdate: async (data: ProcedureCreateData) => {
-    const { userId } = data;
 
-    if (data.id) {
+  addOrUpdate: async (data: ProcedureCreateData) => {
+    const { id, userId, visitId, description, stockAllowances = [] } = data;
+
+    const computeStepOrder = async () => {
+      const lastStep = await prisma.procedure.findFirst({
+        where: { visitId },
+        orderBy: { stepOrder: "desc" },
+      });
+      return lastStep ? lastStep.stepOrder + 1 : 1;
+    };
+
+    if (id) {
       const existing = await prisma.procedure.findUnique({
-        where: { id: data.id },
-        include: {
-          stockAllowances: true,
-        },
+        where: { id },
+        include: { stockAllowances: true },
       });
 
-      if (existing) {
-        const incoming = data.stockAllowances ?? [];
+      if (!existing) throw new Error("Procedura nenalezena.");
 
-        const incomingIds = incoming
-          .filter((s) => s.stockAllowanceId)
-          .map((s) => s.stockAllowanceId);
-        const existingIds = existing?.stockAllowances.map((s) => s.id) ?? [];
+      const existingIds = new Set(existing.stockAllowances.map((s) => s.id));
+      const incomingIds = new Set(
+        stockAllowances.map((s) => s.stockAllowanceId).filter(Boolean)
+      );
 
-        const toCreate = incoming.filter((s) => !s.stockAllowanceId);
-        const toUpdate = incoming.filter(
-          (s) => s.stockAllowanceId && existingIds.includes(s.stockAllowanceId)
-        );
-        const toDelete = existingIds.filter((id) => !incomingIds.includes(id));
+      const toCreate = stockAllowances.filter((s) => !s.stockAllowanceId);
+      const toUpdate = stockAllowances.filter(
+        (s) => s.stockAllowanceId && existingIds.has(s.stockAllowanceId)
+      );
+      const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
 
-        return prisma.procedure.update({
-          where: { id: data.id },
+      return prisma.$transaction(async (tx) => {
+        const updated = await tx.procedure.update({
+          where: { id },
           data: {
-            description: data.description,
-            visit: {
-              connect: { id: data.visitId },
-            },
+            description,
+            visit: { connect: { id: visitId } },
             stockAllowances: {
-              deleteMany: {
-                id: { in: toDelete },
-              },
+              deleteMany: { id: { in: toDelete } },
               update: toUpdate.map((s) => ({
-                where: { id: s.stockAllowanceId },
+                where: { id: s.stockAllowanceId! },
                 data: {
                   stockItemId: s.stockItemId,
                   quantity: s.quantity,
@@ -79,51 +82,64 @@ const createProcedureRepositoryDb = (
               })),
             },
           },
-          include: {
-            stockAllowances: {
-              include: {
-                stockItem: true,
-              },
-            },
-          },
+          include: { stockAllowances: { include: { stockItem: true } } },
         });
-      }
+
+        if (toCreate.length > 0) {
+          await Promise.all(
+            toCreate.map((item) =>
+              tx.stockItem.update({
+                where: { id: item.stockItemId },
+                data: {
+                  quantity: {
+                    decrement: item.quantity,
+                  },
+                },
+              })
+            )
+          );
+        }
+
+        return updated;
+      });
     }
 
-    const lastStep = await prisma.procedure.findFirst({
-      where: { visitId: data.visitId },
-      orderBy: { stepOrder: "desc" },
-    });
+    const stepOrder = await computeStepOrder();
 
-    const newStepOrder = lastStep ? lastStep.stepOrder + 1 : 1;
-
-    const newProcedure = await prisma.procedure.create({
-      data: {
-        description: data.description,
-        stepOrder: newStepOrder,
-        visit: {
-          connect: { id: data.visitId },
-        },
-        stockAllowances: {
-          create: data.stockAllowances
-            ? data.stockAllowances.map((s) => ({
-                stockItemId: s.stockItemId,
-                quantity: s.quantity,
-                userId,
-              }))
-            : [],
-        },
-      },
-      include: {
-        stockAllowances: {
-          include: {
-            stockItem: true,
+    return prisma.$transaction(async (tx) => {
+      const created = await tx.procedure.create({
+        data: {
+          description,
+          stepOrder,
+          visit: { connect: { id: visitId } },
+          stockAllowances: {
+            create: stockAllowances.map((s) => ({
+              stockItemId: s.stockItemId,
+              quantity: s.quantity,
+              userId,
+            })),
           },
         },
-      },
-    });
+        include: { stockAllowances: { include: { stockItem: true } } },
+      });
 
-    return newProcedure;
+      if (stockAllowances.length > 0) {
+        await Promise.all(
+          stockAllowances.map((item) =>
+            tx.stockItem.update({
+              where: { id: item.stockItemId },
+              data: {
+                quantity: {
+                  decrement: item.quantity,
+                },
+              },
+            })
+          )
+        );
+      }
+
+      return created;
+    });
   },
 });
 

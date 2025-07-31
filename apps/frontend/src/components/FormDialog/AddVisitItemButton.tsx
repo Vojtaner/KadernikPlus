@@ -11,13 +11,16 @@ import { useForm } from 'react-hook-form'
 import type { Visit } from '../../../../entities/visit'
 import TextField from '../TextField'
 import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
+import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 
 export const AddVisitItemButton = () => {
+  const addSnackbarMessage = useAddSnackbarMessage()
   const [open, setOpen] = useState(false)
   const [isNewClient, setIsNewClient] = useState(false)
   const { control, resetField, handleSubmit } = useForm<Visit>()
   const { mutate: createVisitMutation } = useCreateVisitMutation({
     onSuccess: () => {
+      addSnackbarMessage({ type: 'success', text: 'Návštěva byla vytvořena.' })
       setIsNewClient(false)
       resetField('clientId')
       resetField('serviceIds')
@@ -35,6 +38,7 @@ export const AddVisitItemButton = () => {
 
   const onSubmit = (data: Visit) => {
     createVisitMutation(data)
+    handleClose()
   }
 
   return (

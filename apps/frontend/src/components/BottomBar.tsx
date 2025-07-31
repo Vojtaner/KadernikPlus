@@ -33,7 +33,10 @@ const BottomBar = () => {
         openButton={<MenuIconButton icon={<PersonAddAlt1OutlinedIcon fontSize="large" />} title="Přidat klienta" />}
       />
       <AddVisitItemButton />
-      <AddStockItemButton openButton={<MenuIconButton icon={<WarehouseIcon fontSize="large" />} title="Sklad" />} />
+      <AddStockItemButton
+        formUsage="purchaseAndNewStockItem"
+        openButton={<MenuIconButton icon={<WarehouseIcon fontSize="large" />} title="Sklad" />}
+      />
     </Stack>
   )
 }

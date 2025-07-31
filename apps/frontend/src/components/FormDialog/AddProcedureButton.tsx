@@ -20,10 +20,9 @@ import { useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../..
 import type { PostNewProcedure } from '../../../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../../../entities/stock-item'
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id'> & {
-  currentQuantity: number
-  unit: string
   id: string
 })[]
 
@@ -59,6 +58,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
       remove()
       reset()
       setOpen(false)
@@ -66,7 +66,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
   })
   const defaultStockAlowances = defaultValues
     ? mapDefaultStockAlowances(defaultValues.stockAllowances)
-    : [{ stockItemId: '', quantity: 0, id: '', currentQuantity: 0, unit: '' }]
+    : [{ stockItemId: '', quantity: 0, id: '' }]
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -107,6 +107,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       handleSubmit={() =>
         handleSubmit((formData) => {
           createNewProcedure.mutate({ ...formData, visitId, id: procedureId } as unknown as PostNewProcedure)
+          handleClose()
         })
       }
       actions={
@@ -199,9 +200,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           )
         }
       })}
-      <Button
-        onClick={() => append({ stockItemId: '', quantity: 0, unit: '', currentQuantity: 0, id: '' })}
-        variant="outlined">
+      <Button onClick={() => append({ stockItemId: '', quantity: 0, id: '' })} variant="outlined">
         Přidat položku
       </Button>
     </Stack>
@@ -210,12 +209,10 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
 
 const mapDefaultStockAlowances = (
   defaultStockAllowances: AddProcedureStockAllowanceType
-): { stockItemId: string; currentQuantity: number; unit: string; quantity: number; id: string }[] => {
+): { stockItemId: string; quantity: number; id: string }[] => {
   return defaultStockAllowances.map((stockAllowance) => ({
     stockItemId: stockAllowance.stockItemId,
     quantity: Number(stockAllowance.quantity),
     id: stockAllowance.id ?? '',
-    currentQuantity: Number(stockAllowance.stockItem?.quantity),
-    unit: stockAllowance.stockItem?.unit ?? '',
   }))
 }

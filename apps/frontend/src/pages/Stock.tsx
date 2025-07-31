@@ -77,6 +77,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     renderCell: (params) => (
       <Stack direction="row" spacing={1}>
         <AddEditBuyStockItemButton
+          formUsage="stockItem"
           defaultValues={{
             id: params.row.id,
             itemName: params.row.itemName,
