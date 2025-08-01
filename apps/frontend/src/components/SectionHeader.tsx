@@ -11,7 +11,7 @@ const SectionHeader = () => {
   return (
     <Stack
       direction="row"
-      bgcolor="white"
+      bgcolor="#f6f6f6"
       alignItems="center"
       padding={1}
       borderRadius="15px 15px 0 0"

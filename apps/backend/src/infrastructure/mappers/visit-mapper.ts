@@ -16,6 +16,7 @@ export type VisitWithServicesWithProceduresWithStockAllowances =
   Prisma.VisitGetPayload<{
     include: {
       client: true;
+      user: true;
       procedures: {
         include: { stockAllowances: { include: { stockItem: true } } };
       };

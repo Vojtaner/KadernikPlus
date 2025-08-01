@@ -79,6 +79,7 @@ export const createVisitRepositoryDb = (
       where: { id: visitId },
       include: {
         client: true,
+        user: true,
         procedures: {
           include: { stockAllowances: { include: { stockItem: true } } },
         },
@@ -136,6 +137,7 @@ export const createVisitRepositoryDb = (
         where,
         include: {
           client: true,
+          user: true,
           procedures: {
             include: { stockAllowances: { include: { stockItem: true } } },
           },

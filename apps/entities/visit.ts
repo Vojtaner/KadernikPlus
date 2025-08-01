@@ -2,7 +2,7 @@ import { Client } from "client";
 import { Procedure } from "procedure";
 import { Service } from "service";
 import { StockAllowance } from "stock-item";
-import { WithUserId } from "user";
+import { User, WithUserId } from "user";
 
 export type Visit = {
   id?: string;
@@ -38,6 +38,7 @@ export type VisitWithServices = {
     lastName: string;
     phone: string | null;
   };
+  user: User;
 
   visitServices: VisitService[];
   visitStatus: boolean;

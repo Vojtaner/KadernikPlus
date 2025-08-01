@@ -1,33 +1,47 @@
 import { IconButton, Stack, Typography } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
-import RedSwitch from '../components/RedSwitch'
 import { formatNameShort } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { AppRoutes } from '../routes/AppRoutes'
-import { useVisitsQuery, useVisitStatusMutation } from '../queries'
+import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
 import type { VisitWithServices } from '../../../entities/visit'
-import type { UseMutateFunction } from '@tanstack/react-query'
+import { BasicDatePicker } from '../components/DateTimePicker'
+import { useForm } from 'react-hook-form'
+import dayjs from 'dayjs'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
   hideFooter?: boolean
 }
+
 const VisitsList = (props: VisitListProps) => {
   const { columnHeaderHeight, hideFooter = false } = props
-  const { data: visits } = useVisitsQuery()
-  const { mutate: changeVisitStatus } = useVisitStatusMutation()
+  const { control, watch } = useForm({
+    defaultValues: {
+      from: dayjs().subtract(1, 'day'),
+      to: dayjs().add(1, 'day'),
+    },
+  })
 
-  if (!visits) {
+  const fromDate = watch('from')
+  const toDate = watch('to')
+  const { data: visitData } = useVisitsQuery({ from: fromDate, to: toDate })
+
+  if (!visitData) {
     return <Loader />
   }
 
   return (
     <Stack spacing={2}>
+      <Stack direction="row" spacing={2}>
+        <BasicDatePicker label="Datum od" control={control} fieldPath="from" defaultValue={fromDate} />
+        <BasicDatePicker label="Datum od" control={control} fieldPath="to" defaultValue={toDate} />
+      </Stack>
       <AppDataGrid
-        rows={createVisitsTable(visits)}
-        columns={createColumns(changeVisitStatus)}
+        rows={createVisitsTable(visitData)}
+        columns={createColumns()}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
       />
@@ -38,98 +52,12 @@ export default VisitsList
 
 type VisitListItem = { id: string; date: string; client: string; serviceName: string; visitState: boolean }
 
-// export const VisitListRows: VisitListItem[] = [
-//   { id: '1', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '2', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '3', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '4', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-//   { id: '5', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '6', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-//   { id: '7', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '8', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '9', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '10', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: true },
-//   { id: '11', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '12', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-//   { id: '13', date: '12.4.2025 - 13:45', client: 'Laurionvá Monika', serviceName: 'Baleage', visitState: false },
-// ]
-
-// const columns: GridColDef<(typeof VisitListRows)[number]>[] = [
-//   {
-//     field: 'date',
-//     headerName: 'Čas',
-//     disableColumnMenu: true,
-//     width: 80,
-//     minWidth: 20,
-//     display: 'flex',
-//     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
-//   },
-//   {
-//     field: 'client',
-//     headerName: 'Zákazník',
-//     disableColumnMenu: true,
-//     display: 'flex',
-//     minWidth: 80,
-//     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
-//   },
-//   {
-//     field: 'serviceName',
-//     headerName: 'Účes',
-//     minWidth: 80,
-//     disableColumnMenu: true,
-//   },
-//   {
-//     field: 'visitState',
-//     headerName: 'Zavřít',
-//     width: 20,
-//     editable: false,
-//     display: 'flex',
-//     disableColumnMenu: true,
-//     renderCell: (params) => (
-//       <RedSwitch
-//         checked={params.value}
-//         size="small"
-//         onSubmitEndpoint={(checked) => {
-//           console.log(checked)
-//         }}
-//       />
-//     ),
-//   },
-//   {
-//     field: 'visitDetailButton',
-//     headerName: 'Detail',
-//     width: 20,
-//     editable: false,
-//     display: 'flex',
-//     disableColumnMenu: true,
-//     renderCell: (params) => (
-//       <IconButton href={`${AppRoutes.VisitsList}/${params.id}`}>
-//         <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
-//       </IconButton>
-//     ),
-//   },
-// ]
-
-export const createColumns = (
-  changeVisitStatus: UseMutateFunction<
-    {
-      visitId?: string
-      status: boolean
-    },
-    Error,
-    | {
-        visitId?: string
-        status: boolean
-      }
-    | undefined,
-    unknown
-  >
-): GridColDef<VisitListItem[][number]>[] => [
+export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
   {
     field: 'date',
     headerName: 'Čas',
     disableColumnMenu: true,
-    width: 75,
+    width: 70,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
@@ -139,30 +67,27 @@ export const createColumns = (
     headerName: 'Zákazník',
     display: 'flex',
     disableColumnMenu: true,
-    minWidth: 60,
+    minWidth: 55,
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
   {
     field: 'serviceName',
     headerName: 'Účes',
-    minWidth: 85,
+    minWidth: 70,
     disableColumnMenu: true,
   },
   {
     field: 'visitState',
     headerName: 'Zavřít',
-    width: 15,
+    width: 90,
+    display: 'flex',
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      return (
-        <RedSwitch
-          checked={params.value}
-          size="small"
-          onSubmitEndpoint={() => {
-            changeVisitStatus({ visitId: params.id.toString(), status: !params.value })
-          }}
-        />
+      return params.row.visitState ? (
+        <Typography color="success">Uzavřeno</Typography>
+      ) : (
+        <Typography color="error">Neuzavřeno</Typography>
       )
     },
   },

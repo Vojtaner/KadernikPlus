@@ -10,9 +10,6 @@ import ShoppingList from './ShoppingList'
 export const Dashboard = () => {
   return (
     <Stack direction="column" rowGap={5}>
-      <DashBoardCard title="Tržby" icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
-        <RevenuChart />
-      </DashBoardCard>
       <DashBoardCard
         title="Přehled návštěv"
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" color="secondary" />}>
@@ -20,6 +17,9 @@ export const Dashboard = () => {
       </DashBoardCard>
       <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
         <ShoppingList columnHeaderHeight={0} hideFooter={true} />
+      </DashBoardCard>
+      <DashBoardCard title="Tržby" icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
+        <RevenuChart />
       </DashBoardCard>
     </Stack>
   )

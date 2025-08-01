@@ -6,6 +6,7 @@ import Loader from './Loader'
 import { getDateTime } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../../../entities/visit'
 import RedSwitch from '../components/RedSwitch'
+import { formatNameShort } from '../entity'
 
 type VisitDetailGridProps = {
   visitData: VisitWithServices | undefined
@@ -22,7 +23,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4}>
-        <DetailColumn label="Kadeřnice" input={visitData.userId?.slice(-6)} />
+        <DetailColumn label="Kadeřnice" input={formatNameShort(`${visitData.user.name}`)} />
       </Grid>
       <Grid size={4}>
         <DetailColumn
@@ -65,9 +66,10 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
       )}
       <Grid size={4} padding={0}>
         <DetailColumn
-          label="Uzavřeno"
+          label={visitData.visitStatus ? 'Uzavřeno' : 'Neuzavřeno'}
           input={
             <RedSwitch
+              tooltip="Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a případně zálohu."
               disabled={!isVisitFinished(visitData)}
               checked={visitData.visitStatus}
               onSubmitEndpoint={(checked) => {
@@ -114,6 +116,10 @@ export const isVisitFinished = (visitData: VisitWithServices): boolean => {
 
   const hasPaid = paidPrice > 0
   const hasDeposit = deposit ? deposit > 0 : false
+
+  if (hasPaid && !isDepositRequired) {
+    return true
+  }
 
   return hasPaid && isDepositRequired && DepositStatus.ZAPLACENO === depositStatus && hasDeposit
 }

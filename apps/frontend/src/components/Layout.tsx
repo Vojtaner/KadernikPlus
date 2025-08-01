@@ -6,7 +6,6 @@ import { useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
-import { SnackbarMessages } from './SnackBarMessages'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
@@ -16,7 +15,7 @@ const Layout = (props: PropsWithChildren) => {
     setIsSearchActive(state)
   }
 
-  document.body.style.background = '#4b4b4b'
+  document.body.style.background = '#f6f6f6'
 
   return (
     <Stack
@@ -37,11 +36,11 @@ const Layout = (props: PropsWithChildren) => {
       <Box
         paddingX="10px"
         paddingY="12px"
-        bgcolor="white"
+        bgcolor="#f6f6f6"
         marginTop="-1px"
         overflow={'hidden'}
         borderRadius={isSearchActive ? '15px 15px 0 0' : 'none'}
-        sx={{ bgcolor: 'white', height: '100%', minHeight: '100vh' }}>
+        sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
           <SearchResults isSearchActive={isSearchActive} />

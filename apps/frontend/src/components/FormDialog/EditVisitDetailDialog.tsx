@@ -62,16 +62,21 @@ const EditVisitDetailDialog = () => {
       }
       formFields={
         <>
-          <SelectField
-            items={depositStatusOptions}
-            control={control}
-            keyExtractor={(status) => status.id}
-            labelExtractor={(status) => status.name}
-            fieldPath="depositStatus"
-          />
+          {visit.client.deposit && (
+            <>
+              <SelectField
+                label={'Stav zálohy'}
+                items={depositStatusOptions}
+                control={control}
+                keyExtractor={(status) => status.id}
+                labelExtractor={(status) => status.name}
+                fieldPath="depositStatus"
+              />
+              <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
+            </>
+          )}
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} />
           <BasicDateTimePicker fieldPath="date" control={control} />
-          <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
           <TextField fieldPath="paidPrice" label="Cena" type="number" fullWidth control={control} required />
           <TextField
             fieldPath="note"
