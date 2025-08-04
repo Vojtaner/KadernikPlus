@@ -1,14 +1,36 @@
+import { useEffect } from 'react'
 import SearchResult from '../components/SearchResult'
+import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
 import { useSearchClientsQuery } from '../queries'
 import { useAppCurrentWatch } from '../reactHookForm/store'
+import Loader from './Loader'
 
 const SearchResults = (props: { isSearchActive: boolean }) => {
   const { isSearchActive } = props
   const searchValue = useAppCurrentWatch('searchValue')
-  const { data: searchData } = useSearchClientsQuery({ nameOrPhone: searchValue as string }, !!searchValue)
+  const {
+    data: searchData,
+    isSuccess,
+    isError,
+    isLoading,
+  } = useSearchClientsQuery({ nameOrPhone: searchValue as string }, !!searchValue)
+  const addSnackBarMessage = useAddSnackbarMessage()
 
+  useEffect(() => {
+    if (isSuccess) {
+      addSnackBarMessage({ text: 'Výsledky hledání nalezeny.', type: 'success' })
+    }
+
+    if (isError) {
+      addSnackBarMessage({ text: 'Výsledky hledání nenalezeny.', type: 'error' })
+    }
+  }, [isSuccess, isError])
+
+  if (isLoading) {
+    return <Loader />
+  }
   if (!searchData?.length) {
-    return <></>
+    return null
   }
 
   return (

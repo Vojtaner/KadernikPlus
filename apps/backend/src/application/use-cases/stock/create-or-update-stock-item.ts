@@ -13,16 +13,16 @@ const createOrUpdateCreateStockItemUseCase = (dependencies: {
     ): Promise<StockItem | undefined> => {
       if (isNewStockItem(data)) {
         if (!data.itemName || data.itemName.trim() === "") {
-          throw new Error("Stock item name cannot be empty.");
+          throw new Error("Název skladové položky nesmí být prázdný.");
         }
         if (!data.unit || data.unit.trim() === "") {
-          throw new Error("Stock item unit cannot be empty.");
+          throw new Error("Jednotka skladové položky nesmí být prázdná.");
         }
         if (data.quantity < 0) {
-          throw new Error("Stock item quantity cannot be negative.");
+          throw new Error("Množství skladové položky nesmí být záporné.");
         }
         if (data.threshold < 0) {
-          throw new Error("Stock item threshold cannot be negative.");
+          throw new Error("Práh skladové položky nesmí být záporný.");
         }
       }
 

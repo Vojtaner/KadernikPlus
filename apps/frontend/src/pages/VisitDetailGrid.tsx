@@ -27,7 +27,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
       </Grid>
       <Grid size={4}>
         <DetailColumn
-          label="Zaplacená cena"
+          label={`${visitData.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}
           input={formatToCZK(visitData.paidPrice)}
           helperText={formatToCZK(visitData.visitServices[0].service.basePrice)}
         />
@@ -37,7 +37,6 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
       </Grid>
       {visitData.client.deposit ? (
         <>
-          {' '}
           <Grid size={4}>
             <DetailColumn
               label="Stav zálohy"

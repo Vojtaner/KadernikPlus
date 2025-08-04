@@ -49,6 +49,7 @@ import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure
 import type { Dayjs } from 'dayjs'
 import type { AxiosError } from 'axios'
 import type { LogData } from '../../entities/logs'
+import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -69,27 +70,40 @@ export type SkillUpdateInput = {
 
 export const useAddTeamMemberMutation = () => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation({
     mutationFn: (data: { email: string; consentId: string }) => postInviteTeamMember(axios, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      addSnackBarMessage({ text: 'Člen týmu byl přidán.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
     },
   })
 }
+
 export const useDeleteTeamMemberMutation = () => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation({
     mutationFn: (id: string) => deleteTeamMember(axios, id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      addSnackBarMessage({ text: 'Člen týmu byl odebrán.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Nepovedlo se odebrat člena týmu.', type: 'error' })
+      console.error(error)
     },
   })
 }
 
 export const useUpdateTeamMemberSkill = (teamId?: string) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation({
     mutationFn: (data: SkillUpdateInput) => {
@@ -100,6 +114,12 @@ export const useUpdateTeamMemberSkill = (teamId?: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      addSnackBarMessage({ text: 'Oprávnění byla v týmu byla upravena.', type: 'success' })
+    },
+    onError: (error) => {
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      addSnackBarMessage({ text: 'Oprávnění v týmu se nepodařilo upravit.', type: 'error' })
+      console.error(error)
     },
   })
 }
@@ -134,6 +154,7 @@ export const useProceduresQuery = (visitId: string | undefined) => {
 
 export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedure, unknown, PostNewProcedure>) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   const mutation = useMutation({
     mutationFn: (data: PostNewProcedure) => postNewProcedure(axios, data.visitId, data),
@@ -142,6 +163,11 @@ export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedu
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['procedures', data.visitId] })
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      addSnackBarMessage({ text: 'Procedura byla upravena.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Proceduru se nepovedlo upravit.', type: 'error' })
+      console.error(error)
     },
   })
 
@@ -159,11 +185,18 @@ export const useServicesQuery = () => {
 }
 export const useCreateServiceMutation = () => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<ServiceCreateData, Error, ServiceCreateData>({
     mutationFn: (serviceData: ServiceCreateData) => postCreateService(axios, serviceData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['services'] })
+      addSnackBarMessage({ text: 'Služba byla vytvořena a přidána do ceníku.', type: 'success' })
+    },
+
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Službu se nepovedlo vytvořit.', type: 'error' })
+      console.error(error)
     },
   })
 }
@@ -190,6 +223,7 @@ export const useVisitQuery = (visitId: string | undefined) => {
 
 export const useCreateVisitMutation = (options?: UseMutationOptions<VisitCreateData, Error, VisitCreateData>) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<VisitCreateData, Error, VisitCreateData>({
     mutationFn: (visitData: VisitCreateData) => postCreateVisit(axios, visitData),
@@ -198,17 +232,23 @@ export const useCreateVisitMutation = (options?: UseMutationOptions<VisitCreateD
       queryClient.invalidateQueries({ queryKey: ['visits'] })
       queryClient.invalidateQueries({ queryKey: ['clients'] })
       queryClient.invalidateQueries({ queryKey: ['client', visitData.clientId] })
+      addSnackBarMessage({ text: 'Návštěva byla uložena.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Návštěvu se nepodařilo byla uložit.', type: 'error' })
+      console.error(error)
     },
   })
 }
 
 export const useVisitStatusMutation = () => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<{ visitId?: string; status: boolean }, Error, { visitId?: string; status: boolean } | undefined>({
     mutationFn: async (data) => {
       if (!data || !data.visitId) {
-        throw Error('Data for visit status update are not complete')
+        throw Error('Data pro úpravu návštěvy nejsou kompletní.')
       }
 
       await patchUpdateVisitStatus(axios, data)
@@ -217,17 +257,23 @@ export const useVisitStatusMutation = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['visit', data.visitId] })
       queryClient.invalidateQueries({ queryKey: ['visits'] })
+      addSnackBarMessage({ text: 'Stav návštěvy byl upraven.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Stav návštěvy nebyl upraven.', type: 'error' })
+      console.error(error)
     },
   })
 }
 
 export const useUpdateVisitMutation = (visitId: string | undefined) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<string, Error, VisitDetailFormType>({
     mutationFn: async (visitData: VisitDetailFormType) => {
       if (!visitId) {
-        throw new Error('Visit ID is required to update a visit.')
+        throw new Error('Id návštěvy je nutné k její úpravě.')
       }
 
       await patchUpdateVisit(axios, visitId, visitData)
@@ -236,6 +282,11 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
       queryClient.invalidateQueries({ queryKey: ['visits'] })
+      addSnackBarMessage({ text: 'Návštěva byla upravena.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Návštěvu se nepodařilo upravit.', type: 'error' })
+      console.error(error)
     },
   })
 }
@@ -264,6 +315,7 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
   ClientOrUpdateCreateData
 > => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<ClientOrUpdateCreateData, Error, ClientOrUpdateCreateData>({
     mutationFn: (clientData: ClientOrUpdateCreateData) => postCreateNewClient(axios, clientData),
@@ -271,6 +323,11 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: ['clients'] })
       queryClient.invalidateQueries({ queryKey: ['logs'] })
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
+      addSnackBarMessage({ text: 'Klienta se podařilo přidat/upravit.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Klienta se nepodařilo přidat/upravit.', type: 'error' })
+      console.error(error)
     },
   })
 }
@@ -281,7 +338,7 @@ export const useSearchClientsQuery = (payload: ClientSearchPayload, enabled = tr
   return useQuery<ClientWithVisitsWithVisitServices[], Error>({
     queryKey: ['searchClients'],
     queryFn: () => patchSearchClients(axios, payload),
-    enabled: enabled && !!payload.nameOrPhone, // only search if query string is present and enabled is true
+    enabled: enabled && !!payload.nameOrPhone,
   })
 }
 
@@ -300,7 +357,7 @@ export const useClientQuery = (clientId: string | undefined) => {
     queryKey: ['client', clientId],
     queryFn: () => {
       if (!clientId) {
-        throw Error('Client ID is missing.')
+        throw Error('Chybí ID klienta.')
       }
 
       const client = getClientById(axios, clientId)
@@ -324,23 +381,34 @@ export const useCreateOrUpdateStockItemMutation = (
   options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>
 ) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation<StockItemCreateData, Error, StockItemCreateData>({
     mutationFn: (stockItem: StockItemCreateData) => postCreateNewStockItem(axios, stockItem),
     onSuccess(data, variables, context) {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      addSnackBarMessage({ text: 'Materiál úspěšně přidán/upraven.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
     },
   })
 }
 export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, unknown, string>) => {
   const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation({
     mutationFn: (stockItemId: string) => deleteStockItem(axios, stockItemId),
     onSuccess(data, variables, context) {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      addSnackBarMessage({ text: 'Materiál úspěšně smazán.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Materiál se nepodařilo smazat.', type: 'error' })
+      console.error(error)
     },
   })
 }

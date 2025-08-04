@@ -43,7 +43,7 @@ const Layout = (props: PropsWithChildren) => {
         sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
-          <SearchResults isSearchActive={isSearchActive} />
+          {isSearchActive && <SearchResults isSearchActive={isSearchActive} />}
         </>
       </Box>
       <BottomBar />

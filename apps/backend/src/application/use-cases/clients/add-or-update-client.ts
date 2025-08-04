@@ -25,15 +25,6 @@ const createAddOrUpdateClientUseCase = (dependencies: {
       let clientId: string | undefined = undefined;
       let message = "";
 
-      if (clientData.phone) {
-        const existingClient =
-          await dependencies.clientRepositoryDb.findByPhone(clientData.phone);
-
-        if (existingClient) {
-          throw new ClientAlreadyExistsError(clientData.phone);
-        }
-      }
-
       const newOrUpdatedClient =
         await dependencies.clientRepositoryDb.addOrUpdate(clientData);
 

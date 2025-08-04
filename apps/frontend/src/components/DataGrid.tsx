@@ -21,10 +21,11 @@ type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & 
   columns: GridColDef<T[number]>[]
   sx?: object
   [key: string]: unknown
+  rowHeight?: number
 }
 
 function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridProps<T>) {
-  const { rows, columns, columnHeaderHeight, hideFooter } = props
+  const { rows, columns, columnHeaderHeight, hideFooter, rowHeight } = props
 
   const gridColumns: readonly GridColDef[] = React.useMemo(
     () =>
@@ -32,7 +33,6 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         ...col,
         width: col.width ?? getMaxWordLength(rows, col.field as keyof T[number]) * CHAR_WIDTH_PX,
         minWidth: col.minWidth ?? 50,
-
         field: col.field,
       })),
     [columns, rows]
@@ -60,7 +60,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         density="compact"
-        rowHeight={60}
+        rowHeight={rowHeight ?? 60}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
       />

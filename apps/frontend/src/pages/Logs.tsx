@@ -10,7 +10,6 @@ const Logs = () => {
   if (!logs) {
     return <ErrorBoundary />
   }
-  console.log({ logs })
 
   return (
     <Stack rowGap={1.5}>

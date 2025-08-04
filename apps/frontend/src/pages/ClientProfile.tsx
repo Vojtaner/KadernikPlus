@@ -1,4 +1,4 @@
-import { Divider, Stack, Typography } from '@mui/material'
+import { Button, Divider, Stack, Typography } from '@mui/material'
 import ClientProfileGrid from '../components/ClientProfileGrid'
 import VisitDetailCard from '../components/VisitDetailCard'
 import { useClientQuery } from '../queries'
@@ -6,12 +6,12 @@ import { useParams } from 'react-router-dom'
 import Loader from '../pages/Loader'
 import { formatToCZK } from './VisitDetailGrid'
 import { getDateTime } from './VisitsList'
-import BoxIcon from '../components/BoxIcon'
 import AddOrUpdateClientItemButton from '../components/FormDialog/AddOrUpdateClientItemButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
+import AppTheme from '../AppTheme'
 
 const ClientProfile = () => {
   const { clientId } = useParams()
@@ -33,12 +33,13 @@ const ClientProfile = () => {
 
       <Divider />
       <Stack spacing={2} direction="row" alignItems="center" justifyContent="center">
-        <BoxIcon
-          href={`sms:+420${clientData.phone}`}
+        <Button
           size="medium"
-          icon={<SmsOutlinedIcon fontSize="small" color="info" />}
-          boxColor="info.light"
-        />
+          href={`sms:+420${clientData.phone}`}
+          sx={{ background: `${AppTheme.palette.info.light}`, color: `${AppTheme.palette.info.main}` }}
+          startIcon={<SmsOutlinedIcon fontSize="small" color="info" />}>
+          Poslat SMS
+        </Button>
         <AddOrUpdateClientItemButton
           defaultValues={{
             firstName: clientData.firstName,
@@ -46,20 +47,23 @@ const ClientProfile = () => {
             phone: clientData.phone,
             note: clientData.note,
           }}
-          openButton={<BoxIcon size="medium" icon={<EditOutlinedIcon fontSize="small" color="secondary" />} />}
+          openButton={
+            <Button
+              size="medium"
+              sx={{ background: `${AppTheme.palette.primary.light}` }}
+              startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
+              Upravit klienta
+            </Button>
+          }
           clientId={clientData.id}
         />
-        {/* <BoxIcon
-            size="medium"
-            icon={<DeleteOutlineOutlinedIcon fontSize="small" color="primary" />}
-            boxColor="primary.light"
-          /> */}
-        <BoxIcon
+        <Button
           size="medium"
-          icon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}
-          boxColor="success.light"
           href={`tel:+420${clientData.phone}`}
-        />
+          sx={{ background: `${AppTheme.palette.success.light}`, color: `${AppTheme.palette.success.main}` }}
+          startIcon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}>
+          Volat
+        </Button>
       </Stack>
       <Divider />
 

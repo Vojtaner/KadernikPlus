@@ -11,12 +11,20 @@ type Location<T> = {
   key: string
 }
 
-export const useTypedLocation = () => {
+export const useAppLocation = () => {
   return useLocation() as Location<AppLocationState>
 }
 
-export const getNthPathName = (pathNames: string[], order: number) => {
-  return breadCrumbNameMap[pathNames[order]]
+export const getNthPathName = (
+  pathNames: string[],
+  order: number,
+  appendix?: string
+): { pageTitle: string; appendix: undefined | string } => {
+  if (appendix) {
+    return { pageTitle: breadCrumbNameMap[pathNames[order]], appendix: appendix }
+  }
+
+  return { pageTitle: breadCrumbNameMap[pathNames[order]] ?? 'Přehled', appendix: undefined }
 }
 
 export const getPathNameWithOutSlash = (pathname: AppRoutePath): string[] =>

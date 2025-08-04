@@ -3,16 +3,16 @@ import { Grid } from '@mui/material'
 import {
   Controller,
   useForm,
-  useFieldArray,
   type Control,
   type FieldPath,
   type UseFieldArrayAppend,
   type UseFieldArrayRemove,
+  useFieldArray,
   useWatch,
 } from 'react-hook-form'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import TextField from '../TextField'
-import { useEffect, useState, type ReactElement } from 'react'
+import { useState, type ReactElement } from 'react'
 import FormDialog from '../Dialog'
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import React from 'react'
@@ -50,33 +50,41 @@ type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
 
 const AddProcedureButton = (props: AddProcedureButtonProps) => {
   const { visitId } = useParams()
+  const { data: stocks } = useStocksQuery()
   const { openButton, defaultValues, procedureId } = props
   const [open, setOpen] = useState(false)
-  const { fields, append, remove } = useFieldArray<StockAllowanceFormValues>({
+
+  const { control, handleSubmit, reset } = useForm({
+    defaultValues: {
+      description: defaultValues?.description ?? '',
+      stockAllowances: mapDefaultStockAlowances(defaultValues?.stockAllowances),
+    },
+  })
+
+  // @@ts-expect-error: shut up TypeScript, it works
+  const { fields, append, remove, replace } = useFieldArray<StockAllowanceFormValues, 'stockAllowances'>({
     name: 'stockAllowances',
+    control,
   })
 
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      remove()
+      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+
       reset()
       setOpen(false)
     },
   })
-  const defaultStockAlowances = defaultValues
-    ? mapDefaultStockAlowances(defaultValues.stockAllowances)
-    : [{ stockItemId: '', quantity: 0, id: '' }]
-
-  const { control, handleSubmit, reset } = useForm({
-    defaultValues: {
-      description: defaultValues?.description ?? '',
-      stockAllowances: defaultStockAlowances,
-    },
-  })
 
   const handleClickOpen = () => {
-    remove()
+    if (defaultValues) {
+      const stockAllowancesDefault = mapDefaultStockAlowances(defaultValues.stockAllowances)
+      replace(stockAllowancesDefault)
+      reset({ stockAllowances: stockAllowancesDefault })
+    }
+
     setOpen(true)
   }
 
@@ -91,14 +99,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     },
     color: 'error',
   })
-
-  useEffect(() => {
-    if (open && fields.length === 0 && defaultStockAlowances.length > 0) {
-      defaultStockAlowances.forEach((item) => {
-        append(item)
-      })
-    }
-  }, [open])
 
   return (
     <FormDialog
@@ -120,7 +120,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
         <>
           <TextField
             fieldPath="description"
-            label="Poznámka"
+            label="Popis postupu"
             type="text"
             control={control}
             fullWidth
@@ -165,6 +165,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
             stockItems.find((stockItem) => stockItem.id === fielArrayStockItem.stockItemId)
 
           const updatedStockQuantity = stockItem && stockItem.quantity - (fielArrayStockItem?.quantity ?? 0)
+          const stockItemQuantityCritical = updatedStockQuantity && updatedStockQuantity < stockItem.threshold
 
           return (
             <Stack key={field.id} spacing={0.5}>
@@ -191,8 +192,11 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
               {stockItem ? (
                 <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
                   Aktuálně ve skladu
-                  <Box component="span" color="primary.main" fontWeight="bold">
-                    {`${updatedStockQuantity} ${stockItem?.unit}`}
+                  <Box
+                    component="span"
+                    color={stockItemQuantityCritical ? 'primary.main' : 'success.main'}
+                    fontWeight="bold">
+                    {` ${updatedStockQuantity} ${stockItem?.unit}`}
                   </Box>
                 </Typography>
               ) : null}
@@ -208,8 +212,11 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
 }
 
 const mapDefaultStockAlowances = (
-  defaultStockAllowances: AddProcedureStockAllowanceType
+  defaultStockAllowances?: AddProcedureStockAllowanceType
 ): { stockItemId: string; quantity: number; id: string }[] => {
+  if (!defaultStockAllowances) {
+    return []
+  }
   return defaultStockAllowances.map((stockAllowance) => ({
     stockItemId: stockAllowance.stockItemId,
     quantity: Number(stockAllowance.quantity),

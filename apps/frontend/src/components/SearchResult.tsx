@@ -23,14 +23,14 @@ const SearchResult = (props: SearchResultProps) => {
         color: 'inherit',
         ...sx,
       }}
-      component={'a'}
+      component="a"
       href={generateClientDetailPath(clientData.id)}>
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>
       <Stack justifyContent="center" height="100%">
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography fontWeight={600} color="text.primary" fontSize={'1rem'}>
+          <Typography fontWeight={600} color="text.primary" fontSize="1rem">
             {`${clientData.firstName} ${clientData.lastName}`}
           </Typography>
           <Typography variant="caption" color="text.secondary">
@@ -38,13 +38,13 @@ const SearchResult = (props: SearchResultProps) => {
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
+          <Typography variant="h6" color="info.main" fontSize="0.7rem">
             {latestVisit?.depositStatus?.toUpperCase()}
           </Typography>
-          <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
+          <Typography variant="h6" color="info.main" fontSize="0.7rem">
             -
           </Typography>
-          <Typography variant="caption" color={'#ff6221'} alignItems="center">
+          <Typography variant="caption" color="#ff6221" alignItems="center">
             {latestVisit?.date && getDateTime(latestVisit?.date)}
           </Typography>
         </Stack>

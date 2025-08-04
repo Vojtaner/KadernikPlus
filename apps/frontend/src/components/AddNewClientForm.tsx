@@ -39,7 +39,7 @@ function AddNewClientForm(props: AddNewClientFormProps) {
       <TextField
         fieldPath="note"
         control={control}
-        label="Poznámka"
+        label="Informace o klientovi"
         type="text"
         multiline
         minRows={2}

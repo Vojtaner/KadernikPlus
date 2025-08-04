@@ -8,6 +8,7 @@ export const AppRoutes = {
   Logs: '/logs',
   stock: '/stock/:stockId',
   PriceList: '/prices',
+  ClientList: '/clients',
   Consumption: '/consumption',
   MyProfile: '/my-profile',
   ShoppingList: '/shopping-list',
@@ -29,6 +30,7 @@ export const breadCrumbNameMap: Record<string, string> = {
   'my-profile': 'Můj profil',
   'shopping-list': 'Nákupní seznam',
   '*': 'Stránka nenalezena',
+  clients: 'Klienti',
   team: 'Tým',
 }
 

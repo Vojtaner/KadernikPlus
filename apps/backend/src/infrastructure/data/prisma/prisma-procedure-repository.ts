@@ -47,7 +47,9 @@ const createProcedureRepositoryDb = (
         include: { stockAllowances: true },
       });
 
-      if (!existing) throw new Error("Procedura nenalezena.");
+      if (!existing) {
+        throw new Error("Procedura nenalezena.");
+      }
 
       const existingIds = new Set(existing.stockAllowances.map((s) => s.id));
       const incomingIds = new Set(

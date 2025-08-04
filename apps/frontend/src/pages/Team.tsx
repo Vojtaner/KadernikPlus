@@ -13,7 +13,6 @@ import type { TeamMember, TeamSettings } from '../../../entities/team-member'
 import AddTeamMemberButton from '../components/FormDialog/AddTeamMemberButton'
 import BoxIcon from '../components/BoxIcon'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import { useAuth0 } from '@auth0/auth0-react'
 
 // const rows: TeamSettings[] = [
 //   { name: 'Vojtěch Laurin', id: '1', canAccessStocks: true, canAccessClients: true, canAccessVisits: true },
@@ -23,12 +22,9 @@ import { useAuth0 } from '@auth0/auth0-react'
 
 const Team = () => {
   const { teamId } = useParams()
-  const { user } = useAuth0()
   const { data: teamMembers, isLoading } = useTeamMembersQuery(teamId)
   const { mutate: updateTeamMemberSkill } = useUpdateTeamMemberSkill(teamId)
   const { mutate: deleteTeamMember } = useDeleteTeamMemberMutation()
-
-  console.log({ teamMembers, user })
 
   if (isLoading) {
     return <Loader />

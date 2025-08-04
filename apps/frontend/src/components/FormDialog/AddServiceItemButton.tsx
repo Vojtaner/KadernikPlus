@@ -39,8 +39,8 @@ const AddServiceItemButton = () => {
       }
       formFields={
         <>
-          <TextField control={control} fieldPath="basePrice" label="Cena za službu" type="number" fullWidth required />
           <TextField control={control} fieldPath="serviceName" label="Název služby" type="text" fullWidth required />
+          <TextField control={control} fieldPath="basePrice" label="Cena za službu" type="number" fullWidth required />
         </>
       }
       onOpenButton={

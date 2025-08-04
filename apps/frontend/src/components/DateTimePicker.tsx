@@ -5,7 +5,6 @@ import { DateTimePicker, DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/cs'
 import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
-import type { PickerValue } from '@mui/x-date-pickers/internals'
 
 dayjs.locale('cs')
 
@@ -63,7 +62,6 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
             slotProps={{ textField: { fullWidth: true } }}
             minDate={minDate}
             maxDate={maxDate}
-            onAccept={(date: PickerValue) => console.log(date && date.format('YYYY-MM-DD'))}
           />
         )}
       />

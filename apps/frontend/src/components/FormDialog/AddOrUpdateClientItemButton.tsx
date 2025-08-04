@@ -23,6 +23,7 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
     if (!defaultValues) {
       reset({ firstName: undefined, lastName: undefined, note: undefined, phone: undefined })
     }
+
     setOpen(true)
   }
 
@@ -82,7 +83,7 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
           <TextField
             fieldPath="note"
             control={control}
-            label="Poznámka"
+            label="Informace o klientovi"
             type="text"
             multiline
             minRows={2}

@@ -102,7 +102,7 @@ export const AddVisitItemButton = () => {
               <TextField
                 fieldPath="note"
                 control={control}
-                label="Poznámka"
+                label="Informace o klientovi"
                 type="text"
                 multiline
                 minRows={2}

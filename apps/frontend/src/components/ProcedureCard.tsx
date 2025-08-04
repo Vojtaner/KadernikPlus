@@ -15,9 +15,6 @@ type ProcedureCardProps = {
 
 const ProcedureCard = (props: ProcedureCardProps) => {
   const { description, orderNumber, stockAllowances: defaultStockAllowances, procedureId } = props
-  const hasMoreThenOneField = defaultStockAllowances.length >= 1
-
-  console.log({ hasMoreThenOneField })
 
   return (
     <Stack

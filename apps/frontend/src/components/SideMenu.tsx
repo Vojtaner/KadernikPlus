@@ -15,7 +15,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard'
 import Face4Icon from '@mui/icons-material/Face4'
 import SideMenuButton from './SideMenuItem'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
-import { getPathNameWithOutSlash, useTypedLocation } from '../routes/reactRouter'
+import { getPathNameWithOutSlash, useAppLocation } from '../routes/reactRouter'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useAuth0 } from '@auth0/auth0-react'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -29,7 +29,6 @@ export const SideMenu = () => {
   const { data: stocks } = useStocksQuery()
 
   const handleDrawerToggle = (open: boolean) => () => {
-    // ... (keyboard event check)
     if (open) {
       dispatch(toggleDrawer())
     } else {
@@ -39,12 +38,12 @@ export const SideMenu = () => {
 
   const handleLanguageChange = (lang: AppLanguage) => {
     dispatch(setLanguage(lang))
-    dispatch(setDrawerOpen(false)) // Close drawer after language change
+    dispatch(setDrawerOpen(false))
   }
 
   const currentLanguage = useSelector((state: RootState) => state.appUi.language)
   const intl = useIntl()
-  const { pathname } = useTypedLocation()
+  const { pathname } = useAppLocation()
   const pathNameTransformed = getPathNameWithOutSlash(pathname)[0]
 
   const drawerList = (
@@ -64,10 +63,10 @@ export const SideMenu = () => {
         title={intl.formatMessage({ id: 'myProfile' })}
         icon={<Face4Icon />}
       />
+
       <SideMenuButton
         disabled={!teamMember}
         isActive={isActiveRoute(pathNameTransformed, AppRoutes.Team)}
-        //vyřešit react router preloadem nebo tanstackquery prefetch
         to={teamMember ? generateTeamPath(teamMember.teamId) : ''}
         title={intl.formatMessage({ id: 'team' })}
         icon={<Face4Icon />}
@@ -78,6 +77,12 @@ export const SideMenu = () => {
         to={AppRoutes.Dashboard}
         title={intl.formatMessage({ id: 'dashboard' })}
         icon={<DashboardIcon />}
+      />
+      <SideMenuButton
+        isActive={isActiveRoute(pathNameTransformed, AppRoutes.ClientList)}
+        to={AppRoutes.ClientList}
+        title={intl.formatMessage({ id: 'clients' })}
+        icon={<Face4Icon />}
       />
       <SideMenuButton
         isActive={isActiveRoute(pathNameTransformed, AppRoutes.VisitsList)}

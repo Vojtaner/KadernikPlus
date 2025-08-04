@@ -13,12 +13,14 @@ import VisitsList from '../pages/VisitsList'
 import { AppRoutes } from './AppRoutes'
 import { Dashboard } from '../pages/Dashboard'
 import ClientProfile from '../pages/ClientProfile'
+import ClientsList from '../pages/ClientList'
 
 const ReactRouterRoutes = () => {
   return (
     <Routes>
       <Route path={AppRoutes.MyProfile} element={<AuthenticationGuard component={MyProfile} />} />
       <Route path={AppRoutes.Dashboard} element={<AuthenticationGuard component={Dashboard} />} />
+      <Route path={AppRoutes.ClientList} element={<AuthenticationGuard component={ClientsList} />} />
       <Route path={AppRoutes.Sms} element={<AuthenticationGuard component={SmsPage} />} />
       <Route path={AppRoutes.ShoppingList} element={<AuthenticationGuard component={ShoppingList} />} />
       <Route path={AppRoutes.Consumption} element={<AuthenticationGuard component={Consumption} />} />

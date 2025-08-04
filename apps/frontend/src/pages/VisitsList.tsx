@@ -36,8 +36,8 @@ const VisitsList = (props: VisitListProps) => {
   return (
     <Stack spacing={2}>
       <Stack direction="row" spacing={2}>
-        <BasicDatePicker label="Datum od" control={control} fieldPath="from" defaultValue={fromDate} />
-        <BasicDatePicker label="Datum od" control={control} fieldPath="to" defaultValue={toDate} />
+        <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
+        <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
       </Stack>
       <AppDataGrid
         rows={createVisitsTable(visitData)}
@@ -57,7 +57,7 @@ export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
     field: 'date',
     headerName: 'Čas',
     disableColumnMenu: true,
-    width: 70,
+    width: 80,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
@@ -130,4 +130,12 @@ export const getDateTime = (date: Date) => {
   const day = convertedDate.getUTCDate()
   const month = convertedDate.getUTCMonth() + 1
   return `${day}.${month}. - ${hours}:${minutes}`
+}
+
+export const formatPhoneNumber = (digits: string | null): string | undefined => {
+  if (!digits) {
+    return undefined
+  }
+
+  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
 }

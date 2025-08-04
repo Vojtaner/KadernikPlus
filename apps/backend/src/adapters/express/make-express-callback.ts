@@ -58,7 +58,7 @@ export const makeExpressCallback = <T>(controller: ControllerFunction<T>) => {
     } catch (e: any) {
       console.error("Error in makeExpressCallback:", e);
       res.status(500).send({
-        error: e.message || "An unknown error occurred.",
+        message: e.message || "Neznámý error,chyba serveru.",
         status: e.status || 500,
       });
     }

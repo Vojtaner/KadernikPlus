@@ -1,8 +1,8 @@
 import { Button, Divider, Stack, Typography } from '@mui/material'
 import VisitDetailGrid from './VisitDetailGrid'
-import BoxIcon from '../components/BoxIcon'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import ProcedureCard from '../components/ProcedureCard'
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../components/Note'
 import { generateClientDetailPath } from '../routes/AppRoutes'
 import EditVisitDetailDialog from '../components/FormDialog/EditVisitDetailDialog'
@@ -10,14 +10,24 @@ import { useProceduresQuery, useVisitQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import AddProcedureButton from '../components/FormDialog/AddProcedureButton'
 import Loader from './Loader'
+import { useAppDispatch } from '../store'
+import { setCurrentLocationAppendix } from '../store/appUiSlice'
+import AppTheme from '../AppTheme'
 
 const VisitDetail = () => {
   const { visitId } = useParams()
-  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId)
+  const { data: visitData, isLoading: isLoadingVisit, isSuccess: isSuccessVisitData } = useVisitQuery(visitId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
+  const dispatch = useAppDispatch()
 
   if (isLoadingVisit || isLoadingProcedure) {
     return <Loader />
+  }
+
+  if (isSuccessVisitData) {
+    const name = `${visitData.client.firstName} ${visitData.client.lastName}`.toUpperCase()
+    const serviceName = visitData.visitServices[0].service.serviceName
+    dispatch(setCurrentLocationAppendix(`${name} - ${serviceName}`))
   }
 
   if (!proceduresData || !visitData) {
@@ -30,18 +40,28 @@ const VisitDetail = () => {
     <>
       <VisitDetailGrid visitData={visitData} />
       <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-start" paddingY={2}>
-        <EditVisitDetailDialog />
+        <EditVisitDetailDialog
+          openButton={
+            <Button
+              size="medium"
+              sx={{ background: `${AppTheme.palette.primary.light}` }}
+              startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
+              Upravit návštěvu
+            </Button>
+          }
+        />
         {visitData && (
-          <BoxIcon
+          <Button
             size="medium"
-            icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
-            boxColor="primary.light"
-            href={generateClientDetailPath(visitData.clientId)}
-          />
+            startIcon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
+            sx={{ background: `${AppTheme.palette.primary.light}` }}
+            href={generateClientDetailPath(visitData.clientId)}>
+            Profil zákazníka
+          </Button>
         )}
       </Stack>
       <Divider />
-      <Note note={visitData.note} />
+      <Note note={visitData.note} label="Informace k návštěvě" />
       <Divider
         sx={{
           '& .MuiDivider-wrapper': {

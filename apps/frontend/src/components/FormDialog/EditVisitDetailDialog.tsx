@@ -1,9 +1,7 @@
 import { Button, Typography } from '@mui/material'
 import FormDialog from '../Dialog'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import BasicDateTimePicker from '../DateTimePicker'
 import { useUpdateVisitMutation, useVisitQuery } from '../../queries'
-import BoxIcon from '../BoxIcon'
 import SelectField from '../SelectField'
 import TextField from '../TextField'
 import { depositStatusOptions, type VisitDetailFormType } from '../../../../entities/visit'
@@ -12,8 +10,12 @@ import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import Loader from '../../pages/Loader'
 import { useForm } from 'react-hook-form'
+import React from 'react'
 
-const EditVisitDetailDialog = () => {
+const EditVisitDetailDialog = (props: {
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
+}) => {
+  const { openButton } = props
   const [open, setOpen] = useState(false)
   const { visitId } = useParams()
   const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId)
@@ -41,6 +43,13 @@ const EditVisitDetailDialog = () => {
     setOpen(true)
   }
 
+  const openDialogButton = React.cloneElement(openButton, {
+    onClick: (e: React.MouseEvent) => {
+      openButton.props.onClick?.(e)
+      handleClickOpen()
+    },
+  })
+
   const handleClose = () => {
     setOpen(false)
   }
@@ -65,7 +74,7 @@ const EditVisitDetailDialog = () => {
           {visit.client.deposit && (
             <>
               <SelectField
-                label={'Stav zálohy'}
+                label="Stav zálohy"
                 items={depositStatusOptions}
                 control={control}
                 keyExtractor={(status) => status.id}
@@ -77,10 +86,17 @@ const EditVisitDetailDialog = () => {
           )}
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} />
           <BasicDateTimePicker fieldPath="date" control={control} />
-          <TextField fieldPath="paidPrice" label="Cena" type="number" fullWidth control={control} required />
+          <TextField
+            fieldPath="paidPrice"
+            label={`${visit.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}
+            type="number"
+            fullWidth
+            control={control}
+            required
+          />
           <TextField
             fieldPath="note"
-            label="Poznámka"
+            label="Informace k návštěvě"
             type="text"
             fullWidth
             multiline
@@ -92,14 +108,7 @@ const EditVisitDetailDialog = () => {
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
-      onOpenButton={
-        <BoxIcon
-          size="medium"
-          icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
-          boxColor="secondary.light"
-          onClick={handleClickOpen}
-        />
-      }
+      onOpenButton={openDialogButton}
       title="Detail návštěvy"
     />
   )

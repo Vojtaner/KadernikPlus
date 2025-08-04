@@ -7,12 +7,14 @@ interface AppUiState {
   isDrawerOpen: boolean
   language: AppLanguage
   searchText: string
+  currentLocationAppendix: string
 }
 
 const initialState: AppUiState = {
   isDrawerOpen: false,
   language: 'cs',
   searchText: '',
+  currentLocationAppendix: '',
 }
 
 const appUiSlice = createSlice({
@@ -31,9 +33,13 @@ const appUiSlice = createSlice({
     setSearchText: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload
     },
+    setCurrentLocationAppendix: (state, action: PayloadAction<string>) => {
+      state.currentLocationAppendix = action.payload
+    },
   },
 })
 
-export const { toggleDrawer, setDrawerOpen, setLanguage, setSearchText } = appUiSlice.actions
+export const { toggleDrawer, setDrawerOpen, setLanguage, setSearchText, setCurrentLocationAppendix } =
+  appUiSlice.actions
 
 export default appUiSlice.reducer

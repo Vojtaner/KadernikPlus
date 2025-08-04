@@ -149,9 +149,13 @@ export const AppLogo = (props: AppLogoProps) => {
           cursor: 'pointer',
         }}>
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
-        <Typography color="common.white" variant="h5">
-          Kadeřník+
-        </Typography>
+        <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
+          <img
+            width={'100px'}
+            src="../../public/assets/logofornow.png"
+            style={{ marginTop: '-30px', marginBottom: '-38px' }}
+          />
+        </div>
       </Box>
     </Stack>
   )

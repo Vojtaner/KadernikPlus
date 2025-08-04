@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Stack, IconButton, type SxProps } from '@mui/material'
+import { Stack, IconButton, type SxProps, Typography } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
-import { useAppCurrentWatch, useAppFormContext } from '../reactHookForm/store'
 import TextField from './TextField'
 import { useSearchClientsQuery } from '../queries'
+import SearchOffIcon from '@mui/icons-material/SearchOff'
+import { useForm } from 'react-hook-form'
+import ClearIcon from '@mui/icons-material/Clear'
 
 type SearchBarProps = {
   onClick?: () => void
@@ -17,9 +19,9 @@ const SearchBar = (props: SearchBarProps) => {
   const { onClick, onFocus, isActive, onToggleActive } = props
   const [internalActive, setInternalActive] = useState(false)
   const isFieldFocused = isActive ?? internalActive
-  const { control } = useAppFormContext()
-  const searchValue = useAppCurrentWatch('searchValue')
-  const { refetch } = useSearchClientsQuery({ nameOrPhone: searchValue as string }, !!searchValue)
+  const { control, watch, reset } = useForm<{ searchValue: string }>({ defaultValues: { searchValue: '' } })
+  const searchValue = watch('searchValue')
+  const { refetch } = useSearchClientsQuery({ nameOrPhone: searchValue }, !!searchValue)
 
   useEffect(() => {
     if (!searchValue) {
@@ -28,7 +30,7 @@ const SearchBar = (props: SearchBarProps) => {
 
     const handler = setTimeout(() => {
       refetch()
-    }, 1000)
+    }, 500)
 
     return () => clearTimeout(handler)
   }, [searchValue])
@@ -42,8 +44,18 @@ const SearchBar = (props: SearchBarProps) => {
     })
   }
 
+  const handleFocusField = (e: React.MouseEvent) => {
+    e.stopPropagation()
+  }
+
+  const searchPlaceholder = 'Vyhledej zákazníka...'
+
   return (
-    <Stack direction="row" sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }} justifyContent="space-between">
+    <Stack
+      onClick={handleOpenField}
+      direction="row"
+      sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }}
+      justifyContent="space-between">
       <IconButton
         sx={{
           ...props.sx,
@@ -51,25 +63,56 @@ const SearchBar = (props: SearchBarProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           display: 'flex',
-        }}
-        onClick={handleOpenField}>
-        <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        }}>
+        {isFieldFocused ? (
+          <SearchOffIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        ) : (
+          <SearchIcon sx={{ color: '#f0f0f0' }} fontSize="medium" />
+        )}
       </IconButton>
+      {!isFieldFocused && (
+        <Typography
+          display="flex"
+          alignItems="center"
+          color="#ffffff91"
+          sx={{
+            width: '100%',
+          }}>
+          {searchPlaceholder}
+        </Typography>
+      )}
 
       {isFieldFocused && (
         <TextField
           fieldPath="searchValue"
           control={control}
           type="search"
-          placeholder="Vyhledej zákazníka..."
+          placeholder={searchPlaceholder}
+          onClick={(e) => handleFocusField(e)}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton onClick={() => reset({ searchValue: '' })} edge="end" size="small">
+                  <ClearIcon fontSize="small" sx={{ color: 'white' }} />
+                </IconButton>
+              ),
+            },
+          }}
           sx={{
             width: '100%',
+            alignSelf: 'center',
             background: 'none',
             '& .MuiInputBase-root': {
-              color: 'white',
+              color: '#ffffffb5',
             },
             '& .MuiOutlinedInput-notchedOutline': {
               border: 'none',
+            },
+            '& .MuiOutlinedInput-input': {
+              padding: '0',
+            },
+            '& input[type="search"]::-webkit-search-cancel-button': {
+              display: 'none',
             },
           }}
         />

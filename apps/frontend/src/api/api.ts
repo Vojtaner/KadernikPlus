@@ -20,6 +20,7 @@ import type { TeamMember } from '../../../entities/team-member'
 import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'
 import type { Dayjs } from 'dayjs'
+import { extractErrorMessage } from './errorHandler'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -148,16 +149,24 @@ export const postCreateNewStockItem = async (
   axios: AxiosInstance,
   stockItem: StockItemCreateData
 ): Promise<StockItemCreateData> => {
-  const response = await axios.post(apiRoutes.getCreateOrUpdateStockItemUrl(), stockItem)
-  return response.data
+  try {
+    const response = await axios.post(apiRoutes.getCreateOrUpdateStockItemUrl(), stockItem)
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Materiál se nepodařilo přidat/upravit.'))
+  }
 }
 
 export const postInviteTeamMember = async (
   axios: AxiosInstance,
   data: { email: string; consentId: string }
 ): Promise<TeamMember> => {
-  const response = await axios.post(apiRoutes.getInviteTeamMemberUrl(), data)
-  return response.data
+  try {
+    const response = await axios.post(apiRoutes.getInviteTeamMemberUrl(), data)
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Nepovedlo se přidat člena týmu.'))
+  }
 }
 
 export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promise<TeamMember> => {
