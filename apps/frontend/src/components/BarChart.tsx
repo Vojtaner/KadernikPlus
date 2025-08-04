@@ -1,13 +1,16 @@
 import { BarChart } from '@mui/x-charts/BarChart'
 import AppTheme from '../AppTheme'
 import dayjs from 'dayjs'
-import type { VisitWithServices, VisitWithServicesWithProceduresWithStockAllowances } from '../../../entities/visit'
+import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entities/visit'
 
-type AppBarChartProps = { visitData: VisitWithServices[]; from: dayjs.Dayjs; to: dayjs.Dayjs }
+type AppBarChartProps = {
+  visitData: VisitWithServicesWithProceduresWithStockAllowances[]
+  from: dayjs.Dayjs
+  to: dayjs.Dayjs
+}
 
 const AppBarChart = (props: AppBarChartProps) => {
   const { visitData, from, to } = props
-
   const { costs, profit, labels } = getCostsProfitRevenue(visitData, {
     from: from.toDate(),
     to: to.toDate(),
@@ -112,7 +115,7 @@ function aggregateVisitsByDate(
     }
 
     const key = visitDate.toISOString().split('T')[0]
-    const revenue = parseFloat(visit.paidPrice)
+    const revenue = parseFloat(`${visit.paidPrice}`)
     const cost = calculateVisitCost(visit)
 
     const existing = map.get(key)
@@ -129,6 +132,7 @@ function aggregateVisitsByDate(
 
 function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllowances): number {
   let total = 0
+
   for (const procedure of visit.procedures ?? []) {
     for (const allowance of procedure.stockAllowances ?? []) {
       const qty = parseFloat(allowance.quantity)

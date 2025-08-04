@@ -6,7 +6,7 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 import { AppRoutes } from '../routes/AppRoutes'
 import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
-import type { VisitWithServices } from '../../../entities/visit'
+import type { VisitWithServices } from '../entities/visit'
 import { BasicDatePicker } from '../components/DateTimePicker'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'

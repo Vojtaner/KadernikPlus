@@ -17,13 +17,14 @@ import FormDialog from '../Dialog'
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import React from 'react'
 import { useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../queries'
-import type { PostNewProcedure } from '../../../../entities/procedure'
+import type { PostNewProcedure } from '../../entities/procedure'
 import { useParams } from 'react-router-dom'
-import type { StockAllowance } from '../../../../entities/stock-item'
+import type { StockAllowance } from '../../entities/stock-item'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 
-export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id'> & {
+export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
+  quantity: number
 })[]
 
 type AddProcedureButtonProps = {

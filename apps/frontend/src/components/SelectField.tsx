@@ -1,5 +1,5 @@
 import { Controller, type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
-import { UnitsObject } from '../../../entities/stock-item'
+import { UnitsObject } from '../entities/stock-item'
 import { FormControl, InputLabel, MenuItem, Select, type SxProps, type Theme } from '@mui/material'
 
 export type Unit = (typeof UnitsObject)[keyof typeof UnitsObject]

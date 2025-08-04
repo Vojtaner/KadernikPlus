@@ -1,11 +1,10 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import type { AppFieldPath } from '../../reactHookForm/entity'
-import { Controller, type Control, type FieldPathValue, type FieldValues } from 'react-hook-form'
+import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form'
 import { useTeamMembersQuery } from '../../queries'
 import Loader from '../../pages/Loader'
 
 type TeamMemberAutoCompleteProps<TFieldValues extends FieldValues> = {
-  fieldPath: FieldPathValue<TFieldValues, AppFieldPath>
+  fieldPath: Path<TFieldValues>
   control: Control<TFieldValues>
 }
 

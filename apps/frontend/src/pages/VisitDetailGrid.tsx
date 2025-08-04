@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useVisitStatusMutation } from '../queries'
 import Loader from './Loader'
 import { getDateTime } from './VisitsList'
-import { DepositStatus, type VisitWithServices } from '../../../entities/visit'
+import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import RedSwitch from '../components/RedSwitch'
 import { formatNameShort } from '../entity'
 

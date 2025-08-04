@@ -1,4 +1,5 @@
-import { UnitsObject, type StockItem } from '../../../entities/stock-item'
+import dayjs from 'dayjs'
+import { UnitsObject, type StockItem } from '../entities/stock-item'
 import type { UserLog, UserType } from './entity'
 
 export const mockUserLogs: UserLog[] = [
@@ -7,70 +8,70 @@ export const mockUserLogs: UserLog[] = [
     userName: 'Standa Novák',
     description: 'Nový klient: Jana Malá',
     actionType: 'přidání klienta',
-    dateTime: '12.5.2025 - 10:12',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '2',
     userName: 'Standa Novák',
     description: 'Barvení + střih: Eva Novotná',
     actionType: 'návštěva klienta',
-    dateTime: '12.5.2025 - 11:45',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '3',
     userName: 'Standa Novák',
     description: 'Nákup: Blondor 1L, Peroxid 9%',
     actionType: 'nákup položky',
-    dateTime: '12.5.2025 - 13:25',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '4',
     userName: 'Standa Novák',
     description: 'Sklad doplněn: Šampon Silver 500ml',
     actionType: 'přidání skladové položky',
-    dateTime: '12.5.2025 - 13:45',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '5',
     userName: 'Standa Novák',
     description: 'Nový klient: Tomáš Kučera',
     actionType: 'přidání klienta',
-    dateTime: '13.5.2025 - 09:02',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '6',
     userName: 'Standa Novák',
     description: 'Barvení + foukaná: Karolína Černá',
     actionType: 'návštěva klienta',
-    dateTime: '13.5.2025 - 12:33',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '7',
     userName: 'Standa Novák',
     description: 'Sklad doplněn: Maska na vlasy Repair 250ml',
     actionType: 'přidání skladové položky',
-    dateTime: '13.5.2025 - 13:00',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '8',
     userName: 'Standa Novák',
     description: 'Export přehledu návštěv za duben',
     actionType: 'export dat',
-    dateTime: '13.5.2025 - 13:30',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '9',
     userName: 'Standa Novák',
     description: 'Úprava údajů klienta: Jana Malá',
     actionType: 'úprava klienta',
-    dateTime: '14.5.2025 - 09:20',
+    dateTime: dayjs(new Date()),
   },
   {
     id: '10',
     userName: 'Standa Novák',
     description: 'Odstranění položky: Peroxid 12%',
     actionType: 'smazání skladové položky',
-    dateTime: '14.5.2025 - 10:15',
+    dateTime: dayjs(new Date()),
   },
 ]
 

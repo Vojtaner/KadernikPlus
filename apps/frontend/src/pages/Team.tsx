@@ -9,7 +9,7 @@ import {
 } from '../queries'
 import { useParams } from 'react-router-dom'
 import Loader from './Loader'
-import type { TeamMember, TeamSettings } from '../../../entities/team-member'
+import type { TeamMember, TeamSettings } from '../entities/team-member'
 import AddTeamMemberButton from '../components/FormDialog/AddTeamMemberButton'
 import BoxIcon from '../components/BoxIcon'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'

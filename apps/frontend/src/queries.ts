@@ -38,17 +38,22 @@ import type {
   ClientSearchPayload,
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
-} from '../../entities/client'
-import type { StockItemCreateData } from '../../entities/stock-item'
-import type { Service, ServiceCreateData } from '../../entities/service'
-import { type StockItem } from '../../entities/stock-item'
+} from './entities/client'
+import type { StockItemCreateData } from './entities/stock-item'
+import type { Service, ServiceCreateData } from './entities/service'
+import { type StockItem } from './entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import type { VisitWithServices, VisitCreateData, VisitDetailFormType } from '../../entities/visit'
-import { DEFAULT_USERS_TEAM, type TeamMember } from '../../entities/team-member'
-import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure'
+import type {
+  VisitWithServices,
+  VisitCreateData,
+  VisitDetailFormType,
+  VisitWithServicesWithProceduresWithStockAllowances,
+} from './entities/visit'
+import { DEFAULT_USERS_TEAM, type TeamMember } from './entities/team-member'
+import type { CreateProcedure, PostNewProcedure } from './entities/procedure'
 import type { Dayjs } from 'dayjs'
 import type { AxiosError } from 'axios'
-import type { LogData } from '../../entities/logs'
+import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 
 // ---- Team and TeamMembers ----
@@ -294,7 +299,7 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
 export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
   const axios = useAxios()
 
-  return useQuery<VisitWithServices[]>({
+  return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
     queryKey: query
       ? ['visits', query?.from?.format('YYYY-MM-DD') ?? null, query?.to?.format('YYYY-MM-DD') ?? null]
       : ['visits'],

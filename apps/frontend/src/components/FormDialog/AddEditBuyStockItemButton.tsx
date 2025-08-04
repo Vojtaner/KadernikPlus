@@ -6,7 +6,7 @@ import { unitList } from '../../reactHookForm/entity'
 import SelectField from '../SelectField'
 import { useCreateOrUpdateStockItemMutation, useStocksQuery } from '../../queries'
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
-import type { StockItemDefaultValuesType } from '../../../../entities/stock-item'
+import type { StockItemDefaultValuesType } from '../../entities/stock-item'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 

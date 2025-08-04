@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material'
 import DetailColumn from './DetailColumn'
 import { formatToCZK } from '../pages/VisitDetailGrid'
-import type { ClientWithVisits } from '../../../entities/client'
+import type { ClientWithVisits } from '../entities/client'
 import Note from './Note'
 import { useCreateNewOrUpdateClientMutation } from '../queries'
 import RedSwitch from './RedSwitch'
@@ -30,7 +30,7 @@ const ClientProfileGrid = (props: ClientProfileGridProps) => {
         <DetailColumn label="Náštěvy celkem" input={visitCount} />
       </Grid>
       <Grid size={4} alignContent="center" justifyContent="center">
-        <Note note={clientData.note} />
+        <Note note={clientData.note} label="Informace o zákazníkovi" />
       </Grid>
       <Grid size={4} alignContent="center" justifyContent="center">
         <DetailColumn

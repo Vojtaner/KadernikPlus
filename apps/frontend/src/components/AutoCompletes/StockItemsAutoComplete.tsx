@@ -1,12 +1,18 @@
 import { Autocomplete, TextField, Typography } from '@mui/material'
-import type { AppFieldPath } from '../../reactHookForm/entity'
-import { Controller, type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
+import {
+  Controller,
+  type Control,
+  type FieldPath,
+  type FieldPathValue,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form'
 import { useStockItemsQuery, useStocksQuery } from '../../queries'
 import Loader from '../../pages/Loader'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 
 type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
-  fieldPath: AppFieldPath
+  fieldPath: Path<TFieldValues>
   control: Control<TFieldValues>
   defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
 }

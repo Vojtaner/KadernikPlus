@@ -4,7 +4,7 @@ import BoxIcon from '../components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../components/DataGrid'
 import { useServicesQuery } from '../queries'
-import type { Service } from '../../../entities/service'
+import type { Service } from '../entities/service'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
 

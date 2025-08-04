@@ -2,7 +2,7 @@ import { Box, Typography, Stack, IconButton } from '@mui/material'
 import AppTheme from '../AppTheme'
 import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormDialog/AddProcedureButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import type { StockAllowance } from '../../../entities/stock-item'
+import type { StockAllowance } from '../entities/stock-item'
 
 type ProcedureCardProps = {
   description: string
@@ -66,7 +66,7 @@ const ProcedureCard = (props: ProcedureCardProps) => {
 export default ProcedureCard
 
 type StockAllowanceProps = {
-  stockAllowance: StockAllowance
+  stockAllowance: Omit<StockAllowance, 'quantity'> & { quantity: number }
 }
 
 const StockAllowance = (props: StockAllowanceProps) => {

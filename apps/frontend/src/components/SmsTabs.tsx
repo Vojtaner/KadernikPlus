@@ -7,14 +7,14 @@ import { useState } from 'react'
 import { useVisitsQuery } from '../queries'
 import { getDateTime } from '../pages/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
-import { DepositStatus, type VisitWithServices } from '../../../entities/visit'
+import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import Loader from '../pages/Loader'
 import dayjs from 'dayjs'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')
-  const from = dayjs().subtract(4, 'day').toISOString()
-  const to = dayjs().add(8, 'day').toISOString()
+  const from = dayjs().subtract(4, 'day')
+  const to = dayjs().add(8, 'day')
 
   const { data: visitData, isLoading } = useVisitsQuery({ from, to })
 

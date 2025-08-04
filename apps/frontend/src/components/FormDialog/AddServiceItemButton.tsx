@@ -6,7 +6,7 @@ import TextField from '../TextField'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import { useCreateServiceMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
-import type { ServiceCreateData } from '../../../../entities/service'
+import type { ServiceCreateData } from '../../entities/service'
 
 const AddServiceItemButton = () => {
   const [open, setOpen] = useState(false)
