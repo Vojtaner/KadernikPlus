@@ -26,5 +26,6 @@ docker run -it --rm -p 8083:8083 \
   -e PREFIX_ENABLE_MOCKS=false \
   -e PREFIX_IS_DEVELOPMENT=false \
   -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
+  -e PREFIX_AUT0_CLIENT_ID=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
   my-react-app
 ```
