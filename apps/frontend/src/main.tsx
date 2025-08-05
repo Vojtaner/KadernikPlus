@@ -30,7 +30,7 @@ enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <Auth0Provider
       domain={import.meta.env.VITE_AUT0_DOMAIN}
-      clientId={import.meta.env.VITE_AUT0_DOMAIN}
+      clientId={import.meta.env.VITE_AUT0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_API_URL,
