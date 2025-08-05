@@ -1,0 +1,18 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const prisma_team_member_repository_1 = __importDefault(require("../../../infrastructure/data/prisma/prisma-team-member-repository"));
+const createUpdateTeamMemberSkillUseCase = (dependencies) => {
+    return {
+        execute: async (data) => {
+            const updatedMember = await dependencies.teamMemberRepositoryDb.update(data);
+            return updatedMember;
+        },
+    };
+};
+const updateTeamMemberSkillUseCase = createUpdateTeamMemberSkillUseCase({
+    teamMemberRepositoryDb: prisma_team_member_repository_1.default,
+});
+exports.default = updateTeamMemberSkillUseCase;

@@ -7,6 +7,7 @@ const mapToDomainClient = (prismaClient) => {
         lastName: prismaClient.lastName,
         phone: prismaClient.phone,
         note: prismaClient.note,
+        deposit: prismaClient.deposit ?? false,
     };
 };
 exports.default = mapToDomainClient;

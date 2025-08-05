@@ -4,37 +4,121 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("./prisma"));
-const client_mapper_1 = __importDefault(require("../../../infrastructure/mappers/client-mapper"));
-const createClientRepositoryDb = (prismaVisitRepository) => {
+const createClientRepositoryDb = (prismaRepository) => {
     return {
-        findAll: async () => {
-            const clients = await prismaVisitRepository.client.findMany();
-            return clients.map((client) => (0, client_mapper_1.default)(client));
+        findAll: async (userId) => {
+            const teamMember = await prismaRepository.teamMember.findFirst({
+                where: {
+                    userId,
+                },
+            });
+            const conditions = [{ userId }];
+            if (teamMember?.canAccessClients && teamMember.teamId) {
+                conditions.push({ teamId: teamMember.teamId });
+            }
+            const clients = await prismaRepository.client.findMany({
+                where: { AND: conditions },
+            });
+            return clients;
         },
-        add: async (clientData) => {
-            console.log({ clientData });
-            const newClient = await prismaVisitRepository.client.create({
+        search: async (teamId, query, userId) => {
+            const teamMember = await prismaRepository.teamMember.findFirst({
+                where: {
+                    userId,
+                },
+            });
+            const conditions = [
+                {
+                    userId,
+                    firstName: {
+                        search: query,
+                    },
+                    lastName: {
+                        search: query,
+                    },
+                    phone: {
+                        search: query,
+                    },
+                },
+            ];
+            if (teamMember?.canAccessClients && teamMember.teamId) {
+                conditions.push({ teamId });
+            }
+            const clients = await prismaRepository.client.findMany({
+                where: { AND: conditions },
+                include: {
+                    visits: {
+                        include: { visitServices: { include: { service: true } } },
+                    },
+                },
+            });
+            return clients;
+        },
+        addOrUpdate: async (clientData) => {
+            const { id: clientId } = clientData;
+            if (clientId) {
+                const existingClient = await prismaRepository.client.findFirst({
+                    where: {
+                        id: clientId,
+                    },
+                });
+                if (existingClient) {
+                    const { userId, id, teamId, ...updateFields } = clientData;
+                    const updatedClient = await prismaRepository.client.update({
+                        where: { id: clientId },
+                        data: updateFields,
+                    });
+                    return updatedClient;
+                }
+            }
+            const userTeam = await prismaRepository.teamMember.findFirst({
+                where: { userId: clientData.userId },
+            });
+            if (!userTeam) {
+                throw new Error("User is not assigned to any team.");
+            }
+            if (!clientData.firstName || !clientData.lastName) {
+                throw new Error("Zadejte jméno klienta.");
+            }
+            const newClient = await prismaRepository.client.create({
                 data: {
                     firstName: clientData.firstName,
                     lastName: clientData.lastName,
                     phone: clientData.phone,
                     note: clientData.note,
-                    userId: "441245bd-c800-4a0d-ba75-d865002ac09c",
+                    userId: clientData.userId,
+                    teamId: userTeam.teamId,
                 },
             });
-            return (0, client_mapper_1.default)(newClient);
+            return newClient;
         },
-        findById: async (id) => {
-            const client = await prismaVisitRepository.client.findUnique({
-                where: { id },
+        findById: async (id, userId) => {
+            const teamMember = await prismaRepository.teamMember.findFirst({
+                where: { userId },
             });
-            return client ? (0, client_mapper_1.default)(client) : null;
+            const whereConditions = [{ id }];
+            if (teamMember?.canAccessClients && teamMember.teamId) {
+                whereConditions.push({ teamId: teamMember.teamId });
+            }
+            const client = await prismaRepository.client.findFirst({
+                where: { AND: whereConditions },
+                include: { visits: true },
+            });
+            if (!client) {
+                throw new Error("Klient nebyl nalezen.");
+            }
+            const isOwnClient = !client.teamId;
+            const isTeamClient = client.teamId === teamMember?.teamId && teamMember?.canAccessClients;
+            if (isOwnClient || isTeamClient) {
+                return client;
+            }
+            throw new Error("Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění.");
         },
         findByPhone: async (phone) => {
-            const client = await prismaVisitRepository.client.findUnique({
-                where: { phone }, // 'phone' is marked @unique in schema.prisma
+            const client = await prismaRepository.client.findUnique({
+                where: { phone },
             });
-            return client ? (0, client_mapper_1.default)(client) : null;
+            return client;
         },
     };
 };

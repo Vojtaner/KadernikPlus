@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const add_user_1 = __importDefault(require("../../application/use-cases/add-user"));
-const get_user_by_id_1 = __importDefault(require("../../application/use-cases/get-user-by-id"));
+const add_user_1 = __importDefault(require("../../application/use-cases/user/add-user"));
+const get_user_by_id_1 = __importDefault(require("../../application/use-cases/user/get-user-by-id"));
 const createUserController = (dependencies) => {
     const addUserController = async (httpRequest) => {
         try {

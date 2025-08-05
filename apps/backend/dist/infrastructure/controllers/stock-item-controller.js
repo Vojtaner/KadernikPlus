@@ -3,31 +3,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const add_stock_item_1 = __importDefault(require("../../application/use-cases/add-stock-item"));
-const get_stock_item_by_id_1 = __importDefault(require("../../application/use-cases/get-stock-item-by-id"));
-const find_stock_item_by_name_1 = __importDefault(require("../../application/use-cases/find-stock-item-by-name"));
-const get_all_stock_items_1 = __importDefault(require("../../application/use-cases/get-all-stock-items"));
+exports.isNewStockItem = exports.isPurchaseStockItem = void 0;
+const create_or_update_stock_item_1 = __importDefault(require("../../application/use-cases/stock/create-or-update-stock-item"));
+const get_stock_item_by_id_1 = __importDefault(require("../../application/use-cases/stock/get-stock-item-by-id"));
+const find_stock_item_by_name_1 = __importDefault(require("../../application/use-cases/stock/find-stock-item-by-name"));
+const get_stock_items_by_stock_id_1 = __importDefault(require("../../application/use-cases/stock/get-stock-items-by-stock-id"));
+const get_stocks_by_user_id_1 = __importDefault(require("../../application/use-cases/stock/get-stocks-by-user-id"));
+const delete_stock_item_by_id_1 = __importDefault(require("../../application/use-cases/stock/delete-stock-item-by-id"));
+const isPurchaseStockItem = (data) => {
+    return (Object.keys(data).length === 3 &&
+        "id" in data &&
+        "quantity" in data &&
+        "price" in data);
+};
+exports.isPurchaseStockItem = isPurchaseStockItem;
+const isNewStockItem = (data) => {
+    return !("stockItemId" in data) && "threshold" in data;
+};
+exports.isNewStockItem = isNewStockItem;
 const createStockItemController = (dependencies) => {
-    const addStockItemController = async (httpRequest) => {
-        const { name, unit, quantity, threshold, isActive } = httpRequest.body;
-        const stockItemData = {
-            name,
-            unit,
-            quantity,
-            threshold,
-            isActive,
-        };
-        const newStockItem = await dependencies.addStockItemUseCase.execute(stockItemData);
+    const createOrUpdateStockItemController = async (httpRequest) => {
+        const data = httpRequest.body;
+        const newOrUpdatedStockItem = await dependencies.createOrUpdateStockItemUseCase.execute(data);
         return {
             statusCode: 201,
-            body: newStockItem,
+            body: newOrUpdatedStockItem,
         };
     };
-    const getAllStockItemsController = async () => {
-        const stockItems = await dependencies.getAllStockItemsUseCase.execute();
+    const getStocksByUserIdController = async (httpRequest) => {
+        const userId = httpRequest.userId;
+        const stocks = await dependencies.getStocksByUserIdUseCase.execute(userId);
         return {
             statusCode: 200,
-            body: stockItems,
+            body: stocks,
         };
     };
     const findStockItemByNameController = async (httpRequest) => {
@@ -45,27 +53,53 @@ const createStockItemController = (dependencies) => {
         };
     };
     const getStockItemByIdController = async (httpRequest) => {
-        const { id } = httpRequest.params;
-        const stockItem = await dependencies.getStockItemByIdUseCase.execute(id);
+        const { stockItemId } = httpRequest.params;
+        const userId = httpRequest.userId;
+        const stockItem = await dependencies.getStockItemByIdUseCase.execute(stockItemId, userId);
         if (!stockItem) {
-            throw new Error(`Stock item with ID "${id}" not found.`);
+            throw new Error(`Stock item with ID "${stockItemId}" not found.`);
         }
         return {
             statusCode: 200,
             body: stockItem,
         };
     };
+    const deleteStockItemByIdController = async (httpRequest) => {
+        console.log({ httpRequest: httpRequest.params });
+        const { stockItemId } = httpRequest.params;
+        const userId = httpRequest.userId;
+        await dependencies.deleteStockItemByIdUseCase.execute(stockItemId, userId);
+        return {
+            statusCode: 204,
+        };
+    };
+    const getStockItemsByStockIdController = async (httpRequest) => {
+        const { stockId } = httpRequest.params;
+        const userId = httpRequest.userId;
+        const stockItems = await dependencies.getStockItemsByStockIdUseCase.execute(stockId, userId);
+        if (!stockItems) {
+            throw new Error(`Stock item with ID "${stockId}" not found.`);
+        }
+        return {
+            statusCode: 200,
+            body: stockItems,
+        };
+    };
     return {
-        addStockItemController,
-        getAllStockItemsController,
+        createOrUpdateStockItemController,
         findStockItemByNameController,
         getStockItemByIdController,
+        getStockItemsByStockIdController,
+        getStocksByUserIdController,
+        deleteStockItemByIdController,
     };
 };
 const stockItemController = createStockItemController({
-    addStockItemUseCase: add_stock_item_1.default,
+    createOrUpdateStockItemUseCase: create_or_update_stock_item_1.default,
     getStockItemByIdUseCase: get_stock_item_by_id_1.default,
     findStockItemByNameUseCase: find_stock_item_by_name_1.default,
-    getAllStockItemsUseCase: get_all_stock_items_1.default,
+    getStockItemsByStockIdUseCase: get_stock_items_by_stock_id_1.default,
+    getStocksByUserIdUseCase: get_stocks_by_user_id_1.default,
+    deleteStockItemByIdUseCase: delete_stock_item_by_id_1.default,
 });
 exports.default = stockItemController;

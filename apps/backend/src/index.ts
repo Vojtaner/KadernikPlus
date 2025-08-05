@@ -18,6 +18,7 @@ import teamMemberRoutes from "./routes/team-member-routes";
 import teamRoutes from "./routes/team";
 import procedureRoutes from "./routes/procedure-routes";
 import logRoutes from "./routes/log-routes";
+import { ManagementClient } from "auth0";
 
 dotenv.config();
 
@@ -32,6 +33,14 @@ const jwtCheck = auth({
 
 app.use(cors());
 app.use(express.json());
+const x = jwtCheck;
+
+console.log({
+  jwt: x,
+  audience: getEnvVar("AUDIENCE"),
+  issuerBaseURL: getEnvVar("AUTH0_ISSUER_BASE_URL"),
+  tokenSigningAlg: getEnvVar("AUTH0_TOKE_SIGNING_ALG"),
+});
 
 app.get("/", (req, res) => {
   res.send("Hairdresser App Backend is running!");

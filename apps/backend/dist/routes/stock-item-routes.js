@@ -1,11 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const make_express_callback_1 = require("../utils/make-express-callback");
+const make_express_callback_1 = require("../adapters/express/make-express-callback");
 const controllers_1 = require("../infrastructure/controllers");
 const stockItemRoutes = (0, express_1.Router)();
-stockItemRoutes.post("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.addStockItemController));
-stockItemRoutes.get("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getAllStockItemsController));
-stockItemRoutes.get("/:id", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getStockItemByIdController));
+stockItemRoutes.post("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.createOrUpdateStockItemController));
+stockItemRoutes.get("/", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getStocksByUserIdController));
+stockItemRoutes.get("/:stockId/items", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getStockItemsByStockIdController));
+stockItemRoutes.get("/item/:stockItemId", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.getStockItemByIdController));
+stockItemRoutes.delete("/item/:stockItemId", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.deleteStockItemByIdController));
 stockItemRoutes.get("/by-name", (0, make_express_callback_1.makeExpressCallback)(controllers_1.StockItemController.findStockItemByNameController));
 exports.default = stockItemRoutes;
