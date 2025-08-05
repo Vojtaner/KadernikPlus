@@ -20,12 +20,22 @@ ENV INJECTIONS GOES IN THE FOLLOWING WAY: https://dev.to/dutchskull/setting-up-d
 RUN CONTAINER
 
 ```
-docker run -it --rm -p 8083:8083 \
-  -e PREFIX_API_URL=https://api.myproductionapi.com \
+docker run -p 8083:8083 \
+  -e PREFIX_API_URL=http://localhost:3021  \
   -e PREFIX_PORT=8083 \
   -e PREFIX_ENABLE_MOCKS=false \
   -e PREFIX_IS_DEVELOPMENT=false \
   -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
   -e PREFIX_AUT0_CLIENT_ID=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
   my-react-app
+
+// interaktivní build s krokováním
+docker run -it --rm -p 8083:8083 \
+  -e PREFIX_API_URL=http://localhost:3021 \
+  -e PREFIX_PORT=8083 \
+  -e PREFIX_ENABLE_MOCKS=false \
+  -e PREFIX_IS_DEVELOPMENT=false \
+  -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
+  -e cd=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
+  my-react-app sh
 ```

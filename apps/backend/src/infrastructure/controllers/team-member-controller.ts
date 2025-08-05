@@ -8,7 +8,7 @@ import getTeamMemberUseCase, {
 import getTeamMemberByUserIdUseCase, {
   GetTeamMemberByUserIdUseCaseType,
 } from "../../application/use-cases/team-member/get-team-member-by-user-id";
-import { DEFAULT_USERS_TEAM } from "../../../../entities/team-member";
+import { DEFAULT_USERS_TEAM } from "../../entities/team-member";
 import updateTeamMemberSkillUseCase, {
   type UpdateTeamMemberSkillUseCaseType,
 } from "../../application/use-cases/team-member/update-team-member-skill";

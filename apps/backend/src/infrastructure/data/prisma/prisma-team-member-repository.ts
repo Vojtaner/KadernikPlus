@@ -1,7 +1,7 @@
 import { TeamMemberRepositoryPort } from "../../../application/ports/team-member-repository";
 import { PrismaClient, TeamMember } from ".prisma/client";
 import prisma from "./prisma";
-import { DEFAULT_USERS_TEAM } from "../../../../../entities/team-member";
+import { DEFAULT_USERS_TEAM } from "../../../entities/team-member";
 
 const createTeamMemberRepositoryDb = (
   prisma: PrismaClient

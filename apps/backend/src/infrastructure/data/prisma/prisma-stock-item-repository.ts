@@ -2,7 +2,7 @@ import { Prisma, PrismaClient, StockItem } from ".prisma/client";
 import {
   StockItemBuyData,
   StockItemCreateData,
-} from "../../../../../entities/stock-item";
+} from "../../../entities/stock-item";
 import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
@@ -10,7 +10,7 @@ import {
   Decimal,
   PrismaClientKnownRequestError,
 } from "@prisma/client/runtime/library";
-import { DEFAULT_USERS_TEAM } from "../../../../../entities/team-member";
+import { DEFAULT_USERS_TEAM } from "../../../entities/team-member";
 import StockItemAlreadyExistsError from "../../../domain/errors/stock-item-errors";
 
 const createStockItemRepositoryDb = (

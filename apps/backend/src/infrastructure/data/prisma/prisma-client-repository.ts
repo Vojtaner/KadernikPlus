@@ -1,4 +1,4 @@
-import { ClientOrUpdateCreateData } from "../../../../../entities/client";
+import { ClientOrUpdateCreateData } from "../../../entities/client";
 import { ClientRepositoryPort } from "../../../application/ports/client-repository";
 import { Client, PrismaClient } from "@prisma/client";
 import prisma from "./prisma";
@@ -6,7 +6,7 @@ import {
   ClientWithVisits,
   ClientWithVisitsAndServices,
 } from "../../../infrastructure/mappers/client-mapper";
-import { WithUserId } from "../../../../..//entities/user";
+import { WithUserId } from "../../../entities/user";
 
 const createClientRepositoryDb = (
   prismaRepository: PrismaClient
