@@ -33,7 +33,7 @@ enableMocking().then(() => {
       clientId={import.meta.env.VITE_AUT0_CLIENT_ID}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: import.meta.env.VITE_API_URL,
+        audience: import.meta.env.VITE_AUT0_AUDIENCE,
       }}>
       <StrictMode>
         <Provider store={store}>
