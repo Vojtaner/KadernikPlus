@@ -1,20 +1,17 @@
 import { Stack, Typography } from '@mui/material'
-import BoxIcon from './BoxIcon'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 
-const Note = () => {
+type NoteProps = { note?: string | null; label: string }
+
+const Note = (props: NoteProps) => {
+  const { note, label } = props
+
   return (
-    <Stack direction="column" spacing={1}>
-      <Stack direction={'row'} spacing={1} alignItems="flex-end">
-        <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1, padding: 0, margin: 0 }}>
-          Poznámka
-        </Typography>
-        <BoxIcon icon={<EditOutlinedIcon fontSize="inherit" color="primary" />} />
-      </Stack>
-      <Typography variant="body2" textAlign={'left'} color="text.primary">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolor quam similique! Vero aut rem quae!
-        Voluptatem nostrum, quis, cumque laboriosam molestiae dolorem ratione veniam magnam, velit fugiat assumenda
-        exercitationem? Dolores.
+    <Stack direction="column" spacing={1} paddingY={1}>
+      <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1, padding: 0, margin: 0 }}>
+        {label}
+      </Typography>
+      <Typography variant="body2" textAlign="left" color="text.primary">
+        {note}
       </Typography>
     </Stack>
   )

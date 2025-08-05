@@ -1,0 +1,24 @@
+FROM node:22-bullseye
+
+WORKDIR /backend
+
+COPY backend/package.json ./
+
+RUN npm install
+
+COPY backend/ .
+
+COPY entities/ ../entities/
+
+COPY backend/init.sh ./init.sh
+
+RUN chmod +x ./init.sh
+
+# running init.sh file to make 
+    # 1. grant priviledges to database 
+    # 2. prisma migrate, 
+    # 3. prisma generate
+
+RUN npm run build
+
+CMD ["npm", "run" ,"start"]

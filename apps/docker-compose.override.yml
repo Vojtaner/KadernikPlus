@@ -1,0 +1,41 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.dev
+      args:
+        VITE_IS_DEVELOPMENT: true
+        VITE_ENABLE_MOCKS: true
+        VITE_PORT: 3021
+    volumes:
+      - ./frontend:/app/frontend
+      - ./entities:/app/entities
+      - /app/frontend/node_modules
+    environment:
+      - HOST=0.0.0.0
+
+    command: npm run dev
+    ports:
+      - "3004:8083"
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: node-hairdresser-api
+    volumes:
+      - ./backend/src:/backend/src
+      - ./backend/.env:/backend/.env
+      - ./entities:/entities
+      - /backend/node_modules
+    command: sh ./init.sh
+    restart: always
+    ports:
+      - "3021:3021"
+    environment:
+      DATABASE_URL: "mysql://root:my_secret_password@db:3306/my_app_db"
+      PORT: 3021
+    depends_on:
+      - db

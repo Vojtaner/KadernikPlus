@@ -1,9 +1,45 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import { Provider, useSelector } from 'react-redux'
+import type { RootState } from './store/index.ts'
+import csMessages from './locales/cs.json'
+import enMessages from './locales/en.json'
+import { IntlProvider } from 'react-intl'
+import store from './store/index.ts'
+import { enableMocking } from './mswWorkerSetup/browser.ts'
+import { Auth0Provider } from '@auth0/auth0-react'
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-)
+const messages: { [key: string]: Record<string, string> } = {
+  cs: csMessages,
+  en: enMessages,
+}
+
+const AppWithIntl: React.FC = () => {
+  const currentLanguage = useSelector((state: RootState) => state.appUi.language)
+  const appMessages = messages[currentLanguage] || messages.cs
+
+  return (
+    <IntlProvider locale={currentLanguage} messages={appMessages}>
+      <App />
+    </IntlProvider>
+  )
+}
+
+enableMocking().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <Auth0Provider
+      domain={import.meta.env.VITE_AUT0_DOMAIN}
+      clientId={import.meta.env.VITE_AUT0_DOMAIN}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: import.meta.env.VITE_API_URL,
+      }}>
+      <StrictMode>
+        <Provider store={store}>
+          <AppWithIntl />
+        </Provider>
+      </StrictMode>
+    </Auth0Provider>
+  )
+})

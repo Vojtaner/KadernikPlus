@@ -1,20 +1,22 @@
-import { IconButton, Paper, Stack, Typography } from '@mui/material'
+import { IconButton, Stack, Typography } from '@mui/material'
 import DetailColumn from './DetailColumn'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import Paper from './Paper'
+import { AppRoutes } from '../routes/AppRoutes'
 
-const VisitDetailCard = () => {
+type VisitDetailCardProps = { date: string; paidPrice: string; index: number; visitId: string }
+
+const VisitDetailCard = (props: VisitDetailCardProps) => {
+  const { date, index, paidPrice, visitId } = props
   return (
-    <Paper
-      sx={{
-        boxShadow: '0px 1px 7px 0px rgba(0,0,0,0.12)',
-      }}>
-      <Stack direction={'row'} sx={{ padding: 1 }} justifyContent={'space-between'} alignItems={'center'}>
+    <Paper>
+      <Stack direction="row" sx={{ padding: 1 }} justifyContent="space-between" alignItems="center">
         <Typography variant="h6" sx={{ padding: 1 }} color="primary">
-          1.
+          {`${index}.`}
         </Typography>
-        <DetailColumn label="Datum" value="12.3.2025" />
-        <DetailColumn label="Section" value="1230,00 Kč" />
-        <IconButton>
+        <DetailColumn label="Datum" input={date} />
+        <DetailColumn label="Section" input={paidPrice} />
+        <IconButton href={`${AppRoutes.VisitsList}/${visitId}`}>
           <PhotoCameraFrontOutlinedIcon fontSize="large" color="primary" />
         </IconButton>
       </Stack>

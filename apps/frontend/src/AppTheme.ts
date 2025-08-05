@@ -1,6 +1,43 @@
 import { createTheme } from '@mui/material/styles'
+import { type LinkProps } from '@mui/material/Link'
+import { LinkBehavior } from './components/LinkBehaviour'
 
 const AppTheme = createTheme({
+  components: {
+    MuiLink: {
+      defaultProps: {
+        component: LinkBehavior,
+      } as LinkProps,
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxShadow: '0px 2px 6px rgba(0,0,0,0.2)',
+          borderRadius: '10px',
+          color: '#D02964',
+          textTransform: 'none',
+          '&:hover': {
+            backgroundColor: '#D02964',
+            color: 'white',
+          },
+        },
+        contained: {
+          backgroundColor: `linear-gradient(
+        270deg,
+        rgba(227, 63, 92, 1) 0%,
+        rgba(195, 54, 79, 1) 25%,
+        rgba(154, 43, 63, 1) 86%,
+        rgba(125, 35, 51, 1) 100%
+      )`,
+          color: '#fff',
+          '&:hover': {
+            backgroundColor: '#ffffff',
+            color: '#D02964',
+          },
+        },
+      },
+    },
+  },
   typography: {
     fontFamily: 'Roboto, sans-serif',
     h4: {
@@ -8,7 +45,7 @@ const AppTheme = createTheme({
       fontWeight: 500,
     },
     body1: {
-      fontSize: '0.9rem',
+      fontSize: '0.87rem',
       lineHeight: 1.5,
     },
     caption: {

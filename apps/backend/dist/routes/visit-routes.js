@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const make_express_callback_1 = require("../utils/make-express-callback");
+const index_1 = require("../infrastructure/controllers/index");
+const visitRoutes = (0, express_1.Router)();
+visitRoutes.post("/", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.addVisitController));
+visitRoutes.get("/", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.getVisitsController));
+visitRoutes.get("/", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.findVisitByIdController));
+exports.default = visitRoutes;
