@@ -18,13 +18,13 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
-      baseURL: 'http://localhost:3021',
+      baseURL: import.meta.env.VITE_API_URL,
     })
 
     instance.interceptors.request.use(async (config) => {
       const token = await getAccessTokenSilently({
         authorizationParams: {
-          audience: `http://localhost:3021`,
+          audience: import.meta.env.VITE_API_URL,
           scope: 'read:current_user',
         },
       })

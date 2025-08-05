@@ -29,11 +29,11 @@ const AppWithIntl: React.FC = () => {
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
     <Auth0Provider
-      domain="dev-ri7i8tb9.us.auth0.com"
-      clientId="IXBSMrmYutHAC8gNTXg1hCyavwnEczbo"
+      domain={import.meta.env.VITE_AUT0_DOMAIN}
+      clientId={import.meta.env.VITE_AUT0_DOMAIN}
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: 'http://localhost:3021',
+        audience: import.meta.env.VITE_API_URL,
       }}>
       <StrictMode>
         <Provider store={store}>

@@ -1,54 +1,30 @@
-# React + TypeScript + Vite
+#Project setup
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Project has two dockerfiles. The one that is meant to be hosted is not with .dev extension.
+Before upload you may test build by building image within /frontend folder via:
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```
+docker build -t test-fe .
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then try if image is actually running (basic graphic, nothig else should work)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```
+docker run -p 8083:8083 test-fe
+```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+The localhost:8083 should appear FE app running with no deep funcitonality.
+
+ENV INJECTIONS GOES IN THE FOLLOWING WAY: https://dev.to/dutchskull/setting-up-dynamic-environment-variables-with-vite-and-docker-5cmj
+
+RUN CONTAINER
+
+```
+docker run -it --rm -p 8083:8083 \
+  -e PREFIX_API_URL=https://api.myproductionapi.com \
+  -e PREFIX_PORT=8083 \
+  -e PREFIX_ENABLE_MOCKS=false \
+  -e PREFIX_IS_DEVELOPMENT=false \
+  -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
+  my-react-app
 ```
