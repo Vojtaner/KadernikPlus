@@ -24,7 +24,7 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
     instance.interceptors.request.use(async (config) => {
       const token = await getAccessTokenSilently({
         authorizationParams: {
-          audience: import.meta.env.VITE_API_URL,
+          audience: import.meta.env.VITE_AUT0_AUDIENCE,
           scope: 'read:current_user',
         },
       })
