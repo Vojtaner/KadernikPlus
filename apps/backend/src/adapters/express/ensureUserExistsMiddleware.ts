@@ -18,6 +18,7 @@ const ensureUserExistsMiddleware = (
       }
 
       await ensureUserExistsUseCase.execute(userId);
+
       next();
     } catch (err) {
       console.error("ensureUserExists error:", err);
