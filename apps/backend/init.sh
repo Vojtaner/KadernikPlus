@@ -8,4 +8,9 @@ npx prisma generate
 
 # Start the server
 echo "🚀 Starting server..."
-npm run dev
+# npm run dev
+# npm run start
+
+done
+
+exec "$@"
