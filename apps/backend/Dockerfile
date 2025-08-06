@@ -17,6 +17,8 @@ ENV AUTH0_TOKE_SIGNING_ALG="RS256"
 ENV DATABASE_URL="mysql://root:MWnDsLipQFXbPNMAirgLxmIHNFvpDtlR@shuttle.proxy.rlwy.net:49824/railway"
 ENV PORT="3021"
 
+
+
 RUN npm install
 
 COPY . .

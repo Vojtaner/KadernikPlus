@@ -30,13 +30,6 @@ export const createEnsureUserExists = (dependencies: {
           name,
           authProvider: "auth0",
         });
-
-        // await dependencies.userRepositoryDb.add({
-        //   id: userId,
-        //   email: email,
-        //   name: name,
-        //   authProvider: "auth0",
-        // });
       }
     },
   };
