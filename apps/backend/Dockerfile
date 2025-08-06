@@ -6,6 +6,8 @@ WORKDIR /app
 
 COPY ./package.json ./
 
+
+ENV AUTH0_ISSUER_BASE_URL="https://dev-ri7i8tb9.us.auth0.com/"
 ENV AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_CLIENT_ID="lftK2U2vymoAhbDpexRfSorBiMX8mk4G"
