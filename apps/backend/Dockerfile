@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY ./package.json ./
 
-
 ENV AUTH0_ISSUER_BASE_URL="https://dev-ri7i8tb9.us.auth0.com/"
 ENV AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
@@ -16,7 +15,6 @@ ENV AUTH0_M2M_DOMAIN="https://dev-ri7i8tb9.us.auth0.com/api/v2/"
 ENV AUTH0_TOKE_SIGNING_ALG="RS256"
 ENV DATABASE_URL="mysql://root:MWnDsLipQFXbPNMAirgLxmIHNFvpDtlR@shuttle.proxy.rlwy.net:49824/railway"
 ENV PORT="3021"
-
 
 
 RUN npm install

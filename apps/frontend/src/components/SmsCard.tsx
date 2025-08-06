@@ -8,10 +8,11 @@ type SmsCardProps = {
   customerName: string
   haircut: string
   visitDistance: string
+  phone: string | null
 }
 
 const SmsCard = (props: SmsCardProps) => {
-  const { text, customerName, haircut, visitDistance } = props
+  const { text, customerName, haircut, visitDistance, phone } = props
 
   return (
     <Stack
@@ -31,6 +32,8 @@ const SmsCard = (props: SmsCardProps) => {
         </Typography>
       </Stack>
       <IconButton
+        href={`sms:+420${phone}&body${encodeURI(text)}`}
+        disabled={!phone}
         sx={{
           bgcolor: 'info.light',
           alignSelf: 'stretch',

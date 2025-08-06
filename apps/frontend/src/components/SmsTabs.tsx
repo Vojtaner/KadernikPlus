@@ -47,6 +47,7 @@ const SmsTabs = () => {
               return (
                 <SmsCard
                   text={formatVisitToSms(invitationVisit)}
+                  phone={invitationVisit.phone}
                   key={invitationVisit.id}
                   customerName={`${invitationVisit.client.firstName} ${invitationVisit.client.lastName}`}
                   haircut={invitationVisit.visitServices
@@ -63,6 +64,7 @@ const SmsTabs = () => {
             {groupedVisits.payments.map((payment) => {
               return (
                 <SmsCard
+                  phone={payment.phone}
                   text={formatVisitPartialPaymentReminderSms(payment)}
                   key={payment.id}
                   customerName={`${payment.client.firstName} ${payment.client.lastName}`}
@@ -78,6 +80,7 @@ const SmsTabs = () => {
             {groupedVisits.reviews.map((review) => {
               return (
                 <SmsCard
+                  phone={review.phone}
                   text={formatVisitReviewRequestSms(review)}
                   key={review.id}
                   customerName={`${review.client.firstName} ${review.client.lastName}`}
