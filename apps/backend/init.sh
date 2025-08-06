@@ -11,6 +11,4 @@ echo "🚀 Starting server..."
 # npm run dev
 # npm run start
 
-done
-
 exec "$@"
