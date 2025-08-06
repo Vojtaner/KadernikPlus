@@ -11,11 +11,18 @@
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"],
-      "@/entities/*": ["../entities/dist/*"]
+      "@/*": [
+        "src/*"
+      ],
+      // "@/entities/*": ["../entities/dist/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "dist"],
-  "references": [{ "path": "../entities" }]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  // "references": [{ "path": "../entities" }]
 }

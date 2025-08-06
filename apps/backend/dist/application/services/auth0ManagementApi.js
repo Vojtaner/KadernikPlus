@@ -7,4 +7,5 @@ exports.auth0ManagementApi = new auth0_1.ManagementClient({
     clientId: (0, getEnvVar_1.getEnvVar)("AUTH0_M2M_CLIENT_ID"),
     clientSecret: (0, getEnvVar_1.getEnvVar)("AUTH0_M2M_CLIENT_SECRET"),
     domain: (0, getEnvVar_1.getEnvVar)("AUTH0_M2M_DOMAIN"),
+    audience: (0, getEnvVar_1.getEnvVar)("AUTH0_M2M_AUDIENCE"),
 });
