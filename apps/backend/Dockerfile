@@ -8,8 +8,6 @@ RUN npm install
 
 COPY backend/ .
 
-COPY entities/ ../entities/
-
 COPY backend/init.sh ./init.sh
 
 RUN chmod +x ./init.sh
