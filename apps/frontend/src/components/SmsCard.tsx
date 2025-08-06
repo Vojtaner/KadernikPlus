@@ -32,8 +32,7 @@ const SmsCard = (props: SmsCardProps) => {
         </Typography>
       </Stack>
       <IconButton
-        href={`sms:+420${phone}&body${encodeURI(text)}`}
-        disabled={!phone}
+        href={`sms:+420${phone}&body${encodeURIComponent(text)}`}
         sx={{
           bgcolor: 'info.light',
           alignSelf: 'stretch',
