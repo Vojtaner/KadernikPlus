@@ -10,9 +10,11 @@ RUN npm install
 
 COPY . .
 
-COPY ./init.sh ./init.sh
+COPY ./init.sh .
 
 RUN chmod +x ./init.sh
+
+RUN ./init.sh
 
 # running init.sh file to make 
     # 1. grant priviledges to database 
