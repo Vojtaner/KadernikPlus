@@ -151,7 +151,7 @@ export const AppLogo = (props: AppLogoProps) => {
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
         <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
           <img
-            width={'100px'}
+            width="100px"
             src="../../public/assets/logofornow.png"
             style={{ marginTop: '-30px', marginBottom: '-38px' }}
           />
