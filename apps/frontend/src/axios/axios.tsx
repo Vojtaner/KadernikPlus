@@ -25,7 +25,7 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
       const token = await getAccessTokenSilently({
         authorizationParams: {
           audience: import.meta.env.VITE_AUT0_AUDIENCE,
-          scope: 'read:current_user',
+          // scope: 'read:current_user',
         },
       })
 

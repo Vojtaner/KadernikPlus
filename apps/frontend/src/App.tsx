@@ -13,13 +13,6 @@ import { SnackbarMessages } from './components/SnackBarMessages'
 
 function App() {
   const methods = useAppForm()
-  console.log(import.meta.env.VITE_ENABLE_MOCKS)
-  console.log(import.meta.env.VITE_IS_DEVELOPMENT)
-  console.log(import.meta.env.VITE_PORT)
-  console.log(import.meta.env.VITE_AUT0_DOMAIN)
-  console.log(import.meta.env.VITE_API_URL)
-  console.log(import.meta.env.VITE_AUT0_CLIENT_ID)
-  console.log(import.meta.env.VITE_AUT0_AUDIENCE)
 
   return (
     <ThemeProvider theme={AppTheme}>

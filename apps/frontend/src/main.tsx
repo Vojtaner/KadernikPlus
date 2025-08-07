@@ -32,9 +32,11 @@ enableMocking().then(() => {
       domain={import.meta.env.VITE_AUT0_DOMAIN}
       clientId={import.meta.env.VITE_AUT0_CLIENT_ID}
       cacheLocation="localstorage"
+      useRefreshTokens={true}
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_AUT0_AUDIENCE,
+        scope: 'openid profile email offline_access',
       }}>
       <StrictMode>
         <Provider store={store}>
