@@ -31,6 +31,7 @@ enableMocking().then(() => {
     <Auth0Provider
       domain={import.meta.env.VITE_AUT0_DOMAIN}
       clientId={import.meta.env.VITE_AUT0_CLIENT_ID}
+      cacheLocation="localstorage"
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_AUT0_AUDIENCE,
