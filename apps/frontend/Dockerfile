@@ -2,26 +2,6 @@
 FROM node:23-bullseye-slim AS build
 WORKDIR /app
 
-# ARG VITE_ENABLE_MOCKS
-# ARG VITE_IS_DEVELOPMENT
-# ARG VITE_PORT
-# ARG VITE_API_URL
-
-# ENV PREFIX_ENABLE_MOCKS=false
-# ENV PREFIX_IS_DEVELOPMENT=false
-# ENV PREFIX_PORT=3021
-# ENV PREFIX_API_URL=http://localhost:3021
-# ENV APP_PREFIX=PREFIX_
-# ENV PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com
-# ENV PREFIX_AUT0_DOMAIN=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo
-
-# ENV VITE_ENABLE_MOCKS=$VITE_ENABLE_MOCKS
-# ENV VITE_IS_DEVELOPMENT=$VITE_IS_DEVELOPMENT
-# ENV VITE_PORT=$VITE_PORT
-# ENV VITE_API_URL=$VITE_API_URL
-
-
-
 COPY ./package*.json ./
 
 RUN npm install
@@ -34,23 +14,68 @@ COPY . .
 RUN npm run build
 
 
-FROM node:23-bullseye-slim
+# FROM node:23-bullseye-slim
+# WORKDIR /app
+
+# RUN apt-get update && apt-get install -y dos2unix
+
+# COPY --from=build /app/dist ./dist
+# COPY env.sh /env.sh
+
+# RUN dos2unix /env.sh && chmod +x /env.sh
+
+# RUN npm install -g serve
+
+# ENV PORT=8083
+# ENV APP_PREFIX=PREFIX_
+# ENV ASSET_DIR=/app/dist
+
+# ENTRYPOINT ["/env.sh"]
+
+# CMD ["serve", "-s", "dist", "-l", "8083"]
+
+
+
+
+# ===== STAGE 2: Final image with Nginx & env.sh =====
+FROM nginx:alpine
+
 WORKDIR /app
+# Nainstaluj bash, dos2unix
+RUN apk add --no-cache bash dos2unix
 
-RUN apt-get update && apt-get install -y dos2unix
 
-COPY --from=build /app/dist ./dist
+# Přenes dist výstup z build fáze
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Přenes env.sh a připrav ho ke spuštění
 COPY env.sh /env.sh
-
 RUN dos2unix /env.sh && chmod +x /env.sh
 
-RUN npm install -g serve
+# Přenes vlastní Nginx konfiguraci (přes port 8083)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
+# Environment proměnné
 ENV PORT=8083
 ENV APP_PREFIX=PREFIX_
-ENV ASSET_DIR=/app/dist
+ENV ASSET_DIR=/usr/share/nginx/html
 
+# Spustí env.sh před nginxem
 ENTRYPOINT ["/env.sh"]
 
-CMD ["serve", "-s", "dist", "-l", "8083"]
+# Standardní příkaz pro Nginx
+CMD ["nginx", "-g", "daemon off;"]
+
+
+# spuštění
+# docker run -p 3004:80 \
+#   -e PREFIX_API_URL=http://localhost:3021  \
+#   -e PREFIX_PORT=80 \
+#   -e PREFIX_ENABLE_MOCKS=false \
+#   -e PREFIX_IS_DEVELOPMENT=false \
+#   -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
+#   -e PREFIX_AUT0_CLIENT_ID=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
+#   -e PREFIX_AUT0_AUDIENCE=http://localhost:3021\
+#   my-nginx
+
 

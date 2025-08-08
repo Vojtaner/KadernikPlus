@@ -56,5 +56,12 @@ services:
     depends_on:
       - backend
 
+  website:
+    build:
+      context: .
+      dockerfile: ./website/Dockerfile
+    ports:
+      - "3011:80"
+    restart: unless-stopped
 volumes:
   db_data:
