@@ -19,12 +19,11 @@ function TopBar(props: TopBarProps) {
       sx={{
         height: '100px',
         paddingX: '10px',
-        paddingY: '10px',
-        paddingBottom: searchActive ? '0px' : '8px',
         position: 'sticky',
         overflow: 'hidden',
+        paddingY: '10px',
+        paddingBottom: searchActive ? '0px' : '8px',
         top: 0,
-        zIndex: 1100,
         transition: 'padding-bottom 0.7s ease',
         background: '#c81f5b',
       }}>

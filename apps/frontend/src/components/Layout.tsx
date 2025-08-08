@@ -24,12 +24,11 @@ const Layout = (props: PropsWithChildren) => {
       boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}>
       <Stack
         sx={{
+          zIndex: '1',
           position: 'sticky',
           top: 0,
           width: { md: '100%' },
-        }}
-        borderRadius="15px 15px 0 0"
-        spacing={0.5}>
+        }}>
         <TopBar onActiveSearch={onActiveSearch} />
         {!isSearchActive && <SectionHeader />}
       </Stack>
@@ -38,7 +37,6 @@ const Layout = (props: PropsWithChildren) => {
         paddingY="12px"
         bgcolor="#f6f6f6"
         marginTop="-1px"
-        overflow={'hidden'}
         borderRadius={isSearchActive ? '15px 15px 0 0' : 'none'}
         sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>

@@ -59,7 +59,7 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
             label={label ?? 'Datum'}
             value={field.value ? dayjs(field.value) : defaultValue ? dayjs(defaultValue) : null}
             onChange={(date) => field.onChange(date)}
-            slotProps={{ textField: { fullWidth: true } }}
+            slotProps={{ textField: { fullWidth: true, sx: { zIndex: '0' } } }}
             minDate={minDate}
             maxDate={maxDate}
           />
