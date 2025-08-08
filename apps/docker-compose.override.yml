@@ -9,7 +9,6 @@ services:
         VITE_PORT: 3021
     volumes:
       - ./frontend:/app/frontend
-      - ./entities:/app/entities
       - /app/frontend/node_modules
     environment:
       - HOST=0.0.0.0
@@ -28,7 +27,6 @@ services:
     volumes:
       - ./backend/src:/backend/src
       - ./backend/.env:/backend/.env
-      - ./entities:/entities
       - /backend/node_modules
     command: sh ./init.sh
     restart: always
