@@ -5,6 +5,7 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 import AppTheme from '../AppTheme'
 import { useState } from 'react'
 import { AppRoutes } from '../routes/AppRoutes'
+import logo from '../../public/assets/logofornow.png'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
@@ -149,11 +150,7 @@ export const AppLogo = (props: AppLogoProps) => {
         }}>
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
         <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
-          <img
-            width="100px"
-            src="../../public/assets/logofornow.png"
-            style={{ marginTop: '-30px', marginBottom: '-38px' }}
-          />
+          <img width="100px" src={logo} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
         </div>
       </Box>
     </Stack>
