@@ -12,3 +12,11 @@ npm run translate-insert --file=index.html
 /vytvoření klíčů a json
 npm run translate-extract --file=index.html
 ```
+
+#CSS minify
+
+Minifikace CSS uvnitř lonyo/assets/css
+
+```
+npx clean-css-cli -o app.min.css app.css
+```
