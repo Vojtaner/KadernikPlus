@@ -59,7 +59,7 @@ services:
   website:
     build:
       context: .
-      dockerfile: ./website/Dockerfile
+      dockerfile: ./website/Dockerfile.dev
     ports:
       - "3011:80"
     restart: unless-stopped
