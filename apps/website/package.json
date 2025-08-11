@@ -4,7 +4,9 @@
   "main": "extract-text.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "translate-extract": "node lonyo/create-key-and-json.js lonyo/$npm_config_file",
+    "translate-insert": "node lonyo/insert-translation.js lonyo/$npm_config_file lonyo/assets/lang/${npm_config_file%.html}-cs.json",
+    "translate-extract-and-insert": "bash -c 'node lonyo/create-key-and-json.js lonyo/$npm_config_file && node lonyo/insert-translation.js lonyo/$npm_config_file lonyo/assets/lang/${npm_config_file%.html}-cs.json'"
   },
   "keywords": [],
   "author": "",

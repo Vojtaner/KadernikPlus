@@ -63,5 +63,7 @@ services:
     ports:
       - "3011:80"
     restart: unless-stopped
+    volumes:
+      - ./website/lonyo/:/usr/share/nginx/html:ro
 volumes:
   db_data:
