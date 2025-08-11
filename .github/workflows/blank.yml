@@ -13,14 +13,13 @@ on:
 jobs:
   translate:
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: apps/website
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false  # important to disable default token usage for push
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -30,18 +29,26 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run translation extract and insert
-        run: npm run translate-insert --file=index.html
+      - name: Run translation insert
+        run: npm run translate-insert --file=lonyo/index.html
 
-      - name: Commit and push translation changes
+      - name: Configure git for pushing with PAT
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin https://x-access-token:${{ secrets.TRANSLATE_TOKEN }}@github.com/Vojtaner/KadernikPlus.git
+
+      - name: Show changed files
+        run: git status
+
+      - name: Commit and push changes
+        run: |
           git add ./lonyo/index.html ./lonyo/assets/lang/index-cs.json
           if ! git diff --cached --quiet; then
             git commit -m "Auto: update translations for index.html"
-            git push
+            git push origin main
           else
             echo "No changes to commit"
           fi
+
 
