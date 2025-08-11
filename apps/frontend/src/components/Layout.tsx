@@ -2,18 +2,26 @@ import Stack from '@mui/material/Stack'
 import BottomBar from './BottomBar'
 import SectionHeader from './SectionHeader'
 import TopBar from './TopBar'
-import { useState, type PropsWithChildren } from 'react'
+import { useEffect, useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
+import { useAuth0 } from '@auth0/auth0-react'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
+  const { isAuthenticated, loginWithRedirect } = useAuth0()
 
   const onActiveSearch = (state: boolean) => {
     setIsSearchActive(state)
   }
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      loginWithRedirect()
+    }
+  }, [isAuthenticated])
 
   document.body.style.background = '#f6f6f6'
 
