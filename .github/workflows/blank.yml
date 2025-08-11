@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: Run translation insert
-        run: npm run translate-insert --file=lonyo/index.html
+        run: npm run translate-insert --file=./lonyo/index.html
 
       - name: Configure git for pushing with PAT
         run: |
