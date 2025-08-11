@@ -6,14 +6,14 @@ WORKDIR /app
 
 COPY ./package.json ./
 
-ENV AUTH0_ISSUER_BASE_URL="https://dev-ri7i8tb9.us.auth0.com/"
 ENV AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
-ENV AUTH0_M2M_CLIENT_ID="lftK2U2vymoAhbDpexRfSorBiMX8mk4G"
-ENV AUTH0_M2M_CLIENT_SECRET="yk01Wq2clYsMh3ZqJYfnxczWBCvFRyx7uao1trOV4oxnnbebWqc0avtBaVJ9-4-S"
-ENV AUTH0_M2M_DOMAIN="https://dev-ri7i8tb9.us.auth0.com/api/v2/"
-ENV AUTH0_TOKE_SIGNING_ALG="RS256"
 ENV DATABASE_URL="mysql://root:MWnDsLipQFXbPNMAirgLxmIHNFvpDtlR@shuttle.proxy.rlwy.net:49824/railway"
+ENV AUTH0_ISSUER_BASE_URL="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/"
+ENV AUTH0_TOKE_SIGNING_ALG="RS256"
+ENV AUTH0_M2M_CLIENT_ID="CCqEi1S2XNdIUr0efwCBcjkwYgutj3Sq"
+# ENV AUTH0_M2M_CLIENT_SECRET="wCEn3R3_7f8w6E0jjPN1zC9P7CFnKx6qmpfiH_M2-PBVFlSMvQcpuh623JBRdZYa"
+ENV AUTH0_M2M_DOMAIN="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/api/v2"
 ENV PORT="3021"
 
 
