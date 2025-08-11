@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Run translation extract and insert
-        run: npm run translate-extract-and-insert --file=index.html
+        run: npm run translate-insert --file=index.html
 
       - name: Commit changes if any
         run: |
