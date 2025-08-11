@@ -11,17 +11,17 @@ import { useAuth0 } from '@auth0/auth0-react'
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
-  const { isAuthenticated, loginWithRedirect } = useAuth0()
+  const { isAuthenticated, loginWithRedirect, isLoading } = useAuth0()
 
   const onActiveSearch = (state: boolean) => {
     setIsSearchActive(state)
   }
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!isLoading && !isAuthenticated) {
       loginWithRedirect()
     }
-  }, [isAuthenticated])
+  }, [isLoading, isAuthenticated])
 
   document.body.style.background = '#f6f6f6'
 

@@ -36,7 +36,7 @@ enableMocking().then(() => {
       authorizationParams={{
         redirect_uri: window.location.origin,
         audience: import.meta.env.VITE_AUT0_AUDIENCE,
-        scope: 'openid profile email offline_access',
+        scope: 'openid profile email offline_access read:current_user',
       }}>
       <StrictMode>
         <Provider store={store}>
