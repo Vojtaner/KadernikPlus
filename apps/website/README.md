@@ -20,3 +20,13 @@ Minifikace CSS uvnitř lonyo/assets/css
 ```
 npx clean-css-cli -o app.min.css app.css
 ```
+
+#Iconset
+
+https://www.svgrepo.com/svg/508014/credit-card?edit=true
+
+Setting for card-blue.svg ->
+
+```
+padding:10%,thikness: 50%,BG Color:#c2e9ff,color: #2993d0,bgRadius: 10%,iconsize: 200px
+```
