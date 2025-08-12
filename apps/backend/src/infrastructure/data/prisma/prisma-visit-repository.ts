@@ -55,12 +55,18 @@ export const createVisitRepositoryDb = (
     return updatedVisit;
   },
 
-  findAll: async (clientId?: string): Promise<VisitWithServices[]> => {
+  findAll: async (
+    clientId?: string
+  ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
     const whereClause = clientId ? { clientId } : {};
     const visits = await prismaRepository.visit.findMany({
       where: whereClause,
       include: {
         client: true,
+        user: true,
+        procedures: {
+          include: { stockAllowances: { include: { stockItem: true } } },
+        },
         visitServices: {
           include: {
             service: true,

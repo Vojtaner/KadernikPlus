@@ -1,12 +1,12 @@
 import Stack from '@mui/material/Stack'
 import BottomBar from './BottomBar'
-import SectionHeader from './SectionHeader'
 import TopBar from './TopBar'
 import { useEffect, useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
 import { useAuth0 } from '@auth0/auth0-react'
+import SectionHeader from './SectionHeader'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props

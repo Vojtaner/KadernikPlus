@@ -9,7 +9,9 @@ import { Service, Visit } from "@prisma/client";
 
 export type VisitRepositoryPort = {
   add(visitData: WithUserId<VisitCreateData>): Promise<CreatedVisit>;
-  findAll: (clientId?: string) => Promise<VisitWithServices[]>;
+  findAll: (
+    clientId?: string
+  ) => Promise<VisitWithServicesWithProceduresWithStockAllowances[]>;
   findById: (
     id: string
   ) => Promise<VisitWithServicesWithProceduresWithStockAllowances | null>;

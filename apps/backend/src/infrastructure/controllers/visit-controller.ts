@@ -138,10 +138,28 @@ const createVisitController = (dependencies: {
 
     const now = new Date();
 
+    function endOfDay(date: any) {
+      // If it's a dayjs object, convert to Date
+      if (
+        date &&
+        typeof date === "object" &&
+        typeof date.toDate === "function"
+      ) {
+        date = date.toDate();
+      }
+      // If it's a string, convert to Date
+      if (typeof date === "string") {
+        date = new Date(date);
+      }
+      const d = new Date(date); // ensure native Date
+      d.setHours(23, 59, 59, 999);
+      return d;
+    }
+
     const effectiveFrom = from ? from : now;
     const effectiveTo = to
-      ? to
-      : new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days ahead
+      ? endOfDay(to)
+      : endOfDay(new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000)); // 10 days ahead
 
     const userId = httpRequest.userId;
 
@@ -256,9 +274,13 @@ const createVisitController = (dependencies: {
         userId
       );
 
+      const sortedVisits = [...visits].sort(
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      );
+
       return {
         statusCode: 200,
-        body: visits,
+        body: sortedVisits,
       };
     } catch (error: any) {
       if (error.name === "ClientNotFoundError") {

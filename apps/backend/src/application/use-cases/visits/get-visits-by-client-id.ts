@@ -3,14 +3,17 @@ import { ClientRepositoryPort } from "@/application/ports/client-repository";
 import visitRepositoryDb from "../../../infrastructure/data/prisma/prisma-visit-repository";
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { ClientNotFoundError } from "./add-visit";
-import { Visit } from "@prisma/client";
+import { VisitWithServicesWithProceduresWithStockAllowances } from "@/infrastructure/mappers/visit-mapper";
 
 const createGetVisitsByClientIdUseCase = (dependencies: {
   visitRepositoryDb: VisitRepositoryPort;
   clientRepositoryDb: ClientRepositoryPort;
 }) => {
   return {
-    execute: async (clientId: string, userId: string): Promise<Visit[]> => {
+    execute: async (
+      clientId: string,
+      userId: string
+    ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
       const clientExists = await dependencies.clientRepositoryDb.findById(
         clientId,
         userId
@@ -21,6 +24,7 @@ const createGetVisitsByClientIdUseCase = (dependencies: {
       }
 
       const visits = await dependencies.visitRepositoryDb.findAll(clientId);
+
       return visits;
     },
   };

@@ -73,6 +73,7 @@ const ClientProfile = () => {
             visitId={visit.id}
             date={getDateTime(visit.date)}
             index={index + 1}
+            clientId={clientData.id}
             key={index}
             paidPrice={formatToCZK(Number(visit.paidPrice))}
           />

@@ -10,7 +10,7 @@ import Stock from '../pages/Stock'
 import Team from '../pages/Team'
 import VisitDetail from '../pages/VisitDetail'
 import VisitsList from '../pages/VisitsList'
-import { AppRoutes } from './AppRoutes'
+import { ROUTES } from './AppRoutes'
 import { Dashboard } from '../pages/Dashboard'
 import ClientProfile from '../pages/ClientProfile'
 import ClientsList from '../pages/ClientList'
@@ -18,19 +18,19 @@ import ClientsList from '../pages/ClientList'
 const ReactRouterRoutes = () => {
   return (
     <Routes>
-      <Route path={AppRoutes.MyProfile} element={<AuthenticationGuard component={MyProfile} />} />
-      <Route path={AppRoutes.Dashboard} element={<AuthenticationGuard component={Dashboard} />} />
-      <Route path={AppRoutes.ClientList} element={<AuthenticationGuard component={ClientsList} />} />
-      <Route path={AppRoutes.Sms} element={<AuthenticationGuard component={SmsPage} />} />
-      <Route path={AppRoutes.ShoppingList} element={<AuthenticationGuard component={ShoppingList} />} />
-      <Route path={AppRoutes.Consumption} element={<AuthenticationGuard component={Consumption} />} />
-      <Route path={AppRoutes.PriceList} element={<AuthenticationGuard component={PriceList} />} />
-      <Route path={AppRoutes.Logs} element={<AuthenticationGuard component={Logs} />} />
-      <Route path={AppRoutes.VisitsList} element={<AuthenticationGuard component={VisitsList} />} />
-      <Route path={AppRoutes.VisitDetail} element={<AuthenticationGuard component={VisitDetail} />} />
-      <Route path={AppRoutes.Team} element={<AuthenticationGuard component={Team} />} />
-      <Route path={AppRoutes.ClientProfile} element={<AuthenticationGuard component={ClientProfile} />} />
-      <Route path={AppRoutes.stock} element={<AuthenticationGuard component={Stock} />} />
+      <Route path={ROUTES.profile.path} element={<AuthenticationGuard component={MyProfile} />} />
+      <Route path={ROUTES.home.path} element={<AuthenticationGuard component={Dashboard} />} />
+      <Route path={ROUTES.clients.path} element={<AuthenticationGuard component={ClientsList} />} />
+      <Route path={ROUTES.sms.path} element={<AuthenticationGuard component={SmsPage} />} />
+      <Route path={ROUTES.shoppingList.path} element={<AuthenticationGuard component={ShoppingList} />} />
+      <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />
+      <Route path={ROUTES.services.path} element={<AuthenticationGuard component={PriceList} />} />
+      <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} />
+      <Route path={ROUTES.visits.path} element={<AuthenticationGuard component={VisitsList} />} />
+      <Route path={ROUTES.visitDetail.path} element={<AuthenticationGuard component={VisitDetail} />} />
+      <Route path={ROUTES.team.path} element={<AuthenticationGuard component={Team} />} />
+      <Route path={ROUTES.clientDetail.path} element={<AuthenticationGuard component={ClientProfile} />} />
+      <Route path={ROUTES.stock.path} element={<AuthenticationGuard component={Stock} />} />
     </Routes>
   )
 }

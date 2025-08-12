@@ -11,7 +11,7 @@ import AppTheme from '../AppTheme'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import { generateClientDetailPath } from '../routes/AppRoutes'
+import { Paths } from '../routes/AppRoutes'
 import BoxIcon from '../components/BoxIcon'
 import { formatPhoneNumber } from './VisitsList'
 
@@ -87,7 +87,7 @@ const createColumns = (): GridColDef<Client[][number]>[] => [
         />
         <BoxIcon
           size="medium"
-          href={generateClientDetailPath(params.row.id)}
+          href={Paths.clientDetail(params.row.id)}
           sx={{ background: `${AppTheme.palette.primary.light}`, color: `${AppTheme.palette.info.main}` }}
           icon={<PhotoCameraFrontOutlinedIcon fontSize="small" color="primary" />}
         />

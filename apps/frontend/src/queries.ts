@@ -9,6 +9,7 @@ import {
   deleteTeamMember,
   getClientById,
   getClients,
+  getClientVisits,
   getLogs,
   getProcedures,
   getServices,
@@ -305,6 +306,23 @@ export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
       : ['visits'],
     queryFn: () => {
       return getVisits(axios, query)
+    },
+    staleTime: 24 * 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+  })
+}
+export const useClientVisitsQuery = (clientId: string | undefined) => {
+  const axios = useAxios()
+
+  return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
+    queryKey: [clientId, 'visits'],
+    queryFn: () => {
+      if (!clientId) {
+        throw Error('Chybí ID klienta.')
+      }
+
+      return getClientVisits(axios, clientId)
     },
     staleTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,

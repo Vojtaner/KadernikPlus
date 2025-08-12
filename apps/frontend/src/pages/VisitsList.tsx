@@ -3,13 +3,13 @@ import AppDataGrid from '../components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
 import { formatNameShort } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import { AppRoutes } from '../routes/AppRoutes'
 import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
 import type { VisitWithServices } from '../entities/visit'
 import { BasicDatePicker } from '../components/DateTimePicker'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
+import { Paths } from '../routes/AppRoutes'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
@@ -50,7 +50,14 @@ const VisitsList = (props: VisitListProps) => {
 }
 export default VisitsList
 
-type VisitListItem = { id: string; date: string; client: string; serviceName: string; visitState: boolean }
+type VisitListItem = {
+  id: string
+  date: string
+  client: string
+  serviceName: string
+  visitState: boolean
+  clientId: string
+}
 
 export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
   {
@@ -97,11 +104,13 @@ export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
     width: 10,
     editable: false,
     disableColumnMenu: true,
-    renderCell: (params) => (
-      <IconButton href={`${AppRoutes.VisitsList}/${params.id}`}>
-        <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
-      </IconButton>
-    ),
+    renderCell: (params) => {
+      return (
+        <IconButton href={Paths.visitDetail(params.row.clientId, params.row.id)}>
+          <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
+        </IconButton>
+      )
+    },
   },
 ]
 
@@ -117,6 +126,7 @@ const createVisitsTable = (visits: VisitWithServices[]): VisitListItem[] => {
       client: `${visit.client.firstName} ${visit.client.lastName}`,
       serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
       visitState: visit.visitStatus,
+      clientId: visit.client.id,
     }
   })
   return visitsList.filter((visitList) => !!visitList)
