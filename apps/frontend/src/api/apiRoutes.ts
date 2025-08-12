@@ -10,6 +10,7 @@ export const apiRoutes = {
   getClientByIdUrl: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
   getClientsUrl: () => `/api/clients/`,
   getCreateNewClientUrl: () => `/api/clients`,
+  getClientVisits: (clientId: string) => `api/visits/client/${encodeURIComponent(clientId)}`,
   getCreateOrUpdateStockItemUrl: () => `/api/stock`,
   getProceduresUrl: (visitId: string) => `/api/procedures/visit/${encodeURIComponent(visitId)}`,
   getStocksUrl: () => `/api/stock`,

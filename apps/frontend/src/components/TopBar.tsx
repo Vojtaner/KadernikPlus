@@ -4,7 +4,7 @@ import SearchBar from './SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
 import { useState } from 'react'
-import { AppRoutes } from '../routes/AppRoutes'
+import { ROUTES } from '../routes/AppRoutes'
 import logo from '../../public/assets/logofornow.png'
 
 type TopBarProps = {
@@ -140,7 +140,7 @@ export const AppLogo = (props: AppLogoProps) => {
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
       <Box
         component="a"
-        href={AppRoutes.Dashboard}
+        href={ROUTES.home.path}
         sx={{
           textDecoration: 'none',
           display: 'flex',

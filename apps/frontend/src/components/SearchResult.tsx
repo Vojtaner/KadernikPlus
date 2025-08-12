@@ -2,7 +2,7 @@ import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
 import { getDateTime } from '../pages/VisitsList'
-import { generateClientDetailPath } from '../routes/AppRoutes'
+import { Paths } from '../routes/AppRoutes'
 
 type SearchResultProps = { clientData: ClientWithVisitsWithVisitServices; sx?: SxProps }
 
@@ -24,7 +24,7 @@ const SearchResult = (props: SearchResultProps) => {
         ...sx,
       }}
       component="a"
-      href={generateClientDetailPath(clientData.id)}>
+      href={Paths.clientDetail(clientData.id)}>
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>

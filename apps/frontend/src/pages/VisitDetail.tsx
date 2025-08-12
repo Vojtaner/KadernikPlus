@@ -4,21 +4,28 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import ProcedureCard from '../components/ProcedureCard'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../components/Note'
-import { generateClientDetailPath } from '../routes/AppRoutes'
 import EditVisitDetailDialog from '../components/FormDialog/EditVisitDetailDialog'
-import { useProceduresQuery, useVisitQuery } from '../queries'
+import { useClientVisitsQuery, useProceduresQuery, useVisitQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import AddProcedureButton from '../components/FormDialog/AddProcedureButton'
 import Loader from './Loader'
 import { useAppDispatch } from '../store'
 import { setCurrentLocationAppendix } from '../store/appUiSlice'
 import AppTheme from '../AppTheme'
+import { Paths } from '../routes/AppRoutes'
 
 const VisitDetail = () => {
-  const { visitId } = useParams()
+  const { visitId, clientId } = useParams()
+
   const { data: visitData, isLoading: isLoadingVisit, isSuccess: isSuccessVisitData } = useVisitQuery(visitId)
+  const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
   const dispatch = useAppDispatch()
+
+  const lastVisitWithProcedure =
+    clientVisits && clientVisits.filter((visit) => visit.procedures.length && visitData?.id !== visit.id)
+
+  const previusVisitProcedure = lastVisitWithProcedure && lastVisitWithProcedure[0]
 
   if (isLoadingVisit || isLoadingProcedure) {
     return <Loader />
@@ -55,7 +62,7 @@ const VisitDetail = () => {
             size="medium"
             startIcon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
             sx={{ background: `${AppTheme.palette.primary.light}` }}
-            href={generateClientDetailPath(visitData.clientId)}>
+            href={Paths.clientDetail(visitData.clientId)}>
             Profil zákazníka
           </Button>
         )}
@@ -96,6 +103,18 @@ const VisitDetail = () => {
             }
           />
         )}
+        {previusVisitProcedure &&
+          hasZeroProcedures &&
+          previusVisitProcedure.procedures.map((procedure) => (
+            <ProcedureCard
+              isDisabled={true}
+              procedureId={procedure.id}
+              orderNumber={procedure.stepOrder}
+              description={procedure.description ?? ''}
+              stockAllowances={procedure.stockAllowances}
+              key={procedure.id}
+            />
+          ))}
       </Stack>
     </>
   )

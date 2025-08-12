@@ -97,6 +97,13 @@ export const getVisits = async (
   const response = await axios.get(apiRoutes.getVisitUrl(query))
   return response.data
 }
+export const getClientVisits = async (
+  axios: AxiosInstance,
+  clientId: string
+): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
+  const response = await axios.get(apiRoutes.getClientVisits(clientId))
+  return response.data
+}
 
 export const postCreateNewClient = async (
   axios: AxiosInstance,

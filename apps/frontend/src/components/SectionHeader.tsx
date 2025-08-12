@@ -2,14 +2,20 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Box, IconButton } from '@mui/material'
-import { getNthPathName, getPathNameWithOutSlash, useAppLocation } from '../routes/reactRouter'
 import { useAppSelector } from '../store'
+import { useCurrentRoute } from '../routes/AppRoutes'
+import { useNavigate } from 'react-router-dom'
 
 const SectionHeader = () => {
-  const { pathname } = useAppLocation()
-  const appedix = useAppSelector((state) => state.appUi.currentLocationAppendix)
-  const { pageTitle, appendix } = getNthPathName(getPathNameWithOutSlash(pathname), 0, appedix)
-  console.log({ pageTitle, appedix })
+  const route = useCurrentRoute()
+  const appendix = useAppSelector((state) => state.appUi.currentLocationAppendix)
+  const navigate = useNavigate()
+
+  if (!route) {
+    navigate('/')
+    return
+  }
+
   return (
     <Box bgcolor="#c81f5b">
       <Stack
@@ -29,7 +35,7 @@ const SectionHeader = () => {
               fontSize: '15px',
               fontWeight: 600,
             }}>
-            {pageTitle}
+            {route.breadcrumb}
           </Typography>
           {appendix && (
             <Typography

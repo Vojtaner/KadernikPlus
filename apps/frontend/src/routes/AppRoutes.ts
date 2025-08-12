@@ -1,57 +1,61 @@
-export const AppRoutes = {
-  Dashboard: '/',
-  ClientProfile: '/client-profile/:clientId',
-  VisitsList: '/visits-list',
-  VisitDetail: '/visits-list/:visitId',
-  NotFound: '*',
-  Sms: '/sms',
-  Logs: '/logs',
-  stock: '/stock/:stockId',
-  PriceList: '/prices',
-  ClientList: '/clients',
-  Consumption: '/consumption',
-  MyProfile: '/my-profile',
-  ShoppingList: '/shopping-list',
-  Login: '/login',
-  Team: '/team/:teamId',
+import { generatePath, matchPath, useLocation, type Params } from 'react-router-dom'
+
+export type AppRoute = {
+  path: string
+  breadcrumb: string
+}
+export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path']
+
+export const ROUTES = {
+  clients: { path: '/clients', breadcrumb: 'Klienti' },
+  clientDetail: { path: '/clients/:clientId', breadcrumb: 'Detail klienta' },
+  visitDetail: { path: '/clients/:clientId/visits/:visitId', breadcrumb: 'Detail návštěvy' },
+  visits: { path: '/visits', breadcrumb: 'Všechny návštěvy' },
+  login: { path: '/login', breadcrumb: 'Přihlášení' },
+  team: { path: '/team/:teamId', breadcrumb: 'Tým' },
+  shoppingList: { path: '/shopping-list', breadcrumb: 'Nákupní seznam' },
+  profile: { path: '/profile', breadcrumb: 'Můj profil' },
+  consumption: { path: '/consumption', breadcrumb: 'Spotřeba' },
+  services: { path: '/services', breadcrumb: 'Služby' },
+  stock: { path: '/stock/:stockId', breadcrumb: 'Sklad' },
+  logs: { path: '/logs', breadcrumb: 'Záznamy o aktivitě' },
+  sms: { path: '/sms', breadcrumb: 'SMSky' },
+  notFound: { path: '*', breadcrumb: 'Nenalezeno' },
+  home: { path: '/', breadcrumb: 'Přehled' },
 } as const
 
-export type AppRoutePath = (typeof AppRoutes)[keyof typeof AppRoutes]
+export const Paths = {
+  clientDetail: (clientId: string) => generatePath(ROUTES.clientDetail.path, { clientId }),
 
-export const breadCrumbNameMap: Record<string, string> = {
-  '/': 'Dashboard',
-  'client-profile': 'Profil zákazníka',
-  'visits-list': 'Návštěvy',
-  sms: 'SMS',
-  logs: 'Záznamy o aktivitě',
-  stock: 'Sklad',
-  prices: 'Ceník',
-  consumption: 'Spotřeba',
-  'my-profile': 'Můj profil',
-  'shopping-list': 'Nákupní seznam',
-  '*': 'Stránka nenalezena',
-  clients: 'Klienti',
-  team: 'Tým',
+  visitDetail: (clientId: string, visitId: string) => generatePath(ROUTES.visitDetail.path, { clientId, visitId }),
+
+  team: (teamId: string) => generatePath(ROUTES.team.path, { teamId }),
+
+  stock: (stockId: string) => generatePath(ROUTES.stock.path, { stockId }),
 }
 
-export const generateClientDetailPath = (clientId: string) => AppRoutes.ClientProfile.replace(':clientId', clientId)
-export const generateStockPath = (stockId: string) => AppRoutes.stock.replace(':stockId', stockId)
-export const generateTeamPath = (teamId: string) => AppRoutes.Team.replace(':teamId', teamId)
+type CurrentRoute = {
+  key: keyof typeof ROUTES
+  path: string
+  breadcrumb: string
+  params: Params<string>
+} | null
 
-export function isActiveRoute(pathname: string, route: AppRoutePath): boolean {
-  if (route === '*') {
-    return false
-  }
+export const useCurrentRoute = (): CurrentRoute => {
+  const location = useLocation()
 
-  if (route.includes('/:')) {
-    const base = route.split('/:')[0]
+  for (const [key, route] of Object.entries(ROUTES)) {
+    const match = matchPath({ path: route.path, end: route.path !== '*' }, location.pathname)
 
-    if (!pathname) {
-      return false
+    if (match) {
+      return {
+        key: key as keyof typeof ROUTES,
+        path: route.path,
+        breadcrumb: route.breadcrumb,
+        params: match.params,
+      }
     }
-
-    return pathname.startsWith(base)
   }
 
-  return pathname === route.split('/')[1]
+  return null
 }
