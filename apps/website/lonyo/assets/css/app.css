@@ -4181,11 +4181,13 @@ a.light-color {
 img.mynusicon {
   opacity: 1;
   position: relative;
+  width: 30px;
 }
 
 img.plasicon {
   opacity: 0;
   position: absolute;
+  width: 30px;
 }
 
 .lonyo-active-icon {
