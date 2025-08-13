@@ -31,7 +31,6 @@ const MyProfile = () => {
             <DetailColumn label={'Souhlasné ID'} input={user.sub?.slice(-4)} />
           </Grid>
         </Grid>
-
         <Divider sx={{ marginY: '30px' }} />
 
         <Grid container rowSpacing={2}>
