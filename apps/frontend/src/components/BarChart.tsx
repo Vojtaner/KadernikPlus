@@ -135,7 +135,7 @@ function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllow
 
   for (const procedure of visit.procedures ?? []) {
     for (const allowance of procedure.stockAllowances ?? []) {
-      const qty = parseFloat(allowance.quantity)
+      const qty = parseFloat(`${allowance.quantity}`)
       const price = allowance.stockItem?.price ?? 0
       total += qty * price
     }
