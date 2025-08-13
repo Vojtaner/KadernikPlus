@@ -9,6 +9,7 @@ import { IntlProvider } from 'react-intl'
 import store from './store/index.ts'
 import { enableMocking } from './mswWorkerSetup/browser.ts'
 import { Auth0Provider } from '@auth0/auth0-react'
+import initializeSentry from './sentry/sentry.ts'
 
 const messages: { [key: string]: Record<string, string> } = {
   cs: csMessages,
@@ -25,6 +26,8 @@ const AppWithIntl: React.FC = () => {
     </IntlProvider>
   )
 }
+
+initializeSentry()
 
 enableMocking().then(() => {
   createRoot(document.getElementById('root')!).render(
