@@ -30,8 +30,6 @@ const jwtCheck = auth({
   tokenSigningAlg: getEnvVar("AUTH0_TOKE_SIGNING_ALG"),
 });
 
-console.log("AUTH0_M2M_CLIENT_SECRET:", process.env.AUTH0_M2M_CLIENT_SECRET);
-
 app.use(cors());
 app.use(express.json());
 

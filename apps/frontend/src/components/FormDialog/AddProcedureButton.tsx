@@ -16,7 +16,7 @@ import { useState, type ReactElement } from 'react'
 import FormDialog from '../Dialog'
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import React from 'react'
-import { useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../queries'
+import { useDeleteProcedureMutation, useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../queries'
 import type { PostNewProcedure } from '../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../entities/stock-item'
@@ -62,10 +62,16 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     },
   })
 
-  // @@ts-expect-error: shut up TypeScript, it works
   const { fields, append, remove, replace } = useFieldArray<StockAllowanceFormValues, 'stockAllowances'>({
     name: 'stockAllowances',
     control,
+  })
+  const { mutation: deleteProcedure } = useDeleteProcedureMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+    },
   })
 
   const { mutation: createNewProcedure } = useProceduresMutation({
@@ -113,6 +119,13 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       }
       actions={
         <>
+          {procedureId && (
+            <Button
+              onClick={() => deleteProcedure.mutate(procedureId)}
+              endIcon={<DeleteOutlineIcon fontSize="small" />}>
+              Smazat
+            </Button>
+          )}
           <Button onClick={handleClose}>Zavřít</Button>
           <Button type="submit">Uložit</Button>
         </>

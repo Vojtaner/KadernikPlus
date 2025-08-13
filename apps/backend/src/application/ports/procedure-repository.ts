@@ -16,4 +16,5 @@ export type ProcedureCreateData = {
 export type ProcedureRepositoryPort = {
   findByVisitId: (visitId: string) => Promise<Procedure[]>;
   addOrUpdate: (data: ProcedureCreateData) => Promise<Procedure>;
+  delete: (procedureId: string) => Promise<string>;
 };

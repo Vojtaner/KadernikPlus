@@ -5,6 +5,7 @@ import { mockUserLogs } from './api/mocks'
 
 import { apiRoutes } from './api/apiRoutes'
 import {
+  deleteProcedure,
   deleteStockItem,
   deleteTeamMember,
   getClientById,
@@ -173,6 +174,28 @@ export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedu
     },
     onError: (error) => {
       addSnackBarMessage({ text: 'Proceduru se nepovedlo upravit.', type: 'error' })
+      console.error(error)
+    },
+  })
+
+  return { mutation }
+}
+
+export const useDeleteProcedureMutation = (options?: UseMutationOptions<string, unknown, string>) => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  const mutation = useMutation({
+    mutationFn: (procedureId: string) => deleteProcedure(axios, procedureId),
+
+    onSuccess: (procedureId: string, variables, context) => {
+      options?.onSuccess?.(procedureId, variables, context)
+      queryClient.invalidateQueries({ queryKey: ['procedures', procedureId] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      addSnackBarMessage({ text: 'Procedura byla smazána.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Proceduru se nepovedlo smazat.', type: 'error' })
       console.error(error)
     },
   })

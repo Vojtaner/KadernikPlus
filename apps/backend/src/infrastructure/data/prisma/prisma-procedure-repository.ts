@@ -143,6 +143,43 @@ const createProcedureRepositoryDb = (
       return created;
     });
   },
+
+  delete: async (id: string) => {
+    await prisma.$transaction(async (tx) => {
+      const existing = await tx.procedure.findUnique({
+        where: { id },
+        include: { stockAllowances: true },
+      });
+
+      if (!existing) {
+        throw new Error("Procedura nenalezena.");
+      }
+
+      // Restore stock quantities
+      if (existing.stockAllowances.length > 0) {
+        await Promise.all(
+          existing.stockAllowances.map((item) =>
+            tx.stockItem.update({
+              where: { id: item.stockItemId },
+              data: {
+                quantity: { increment: item.quantity },
+              },
+            })
+          )
+        );
+      }
+
+      await tx.stockAllowance.deleteMany({
+        where: { procedureId: id },
+      });
+
+      return tx.procedure.delete({
+        where: { id },
+      });
+    });
+
+    return id;
+  },
 });
 
 const procedureRepositoryDb = createProcedureRepositoryDb(prisma);

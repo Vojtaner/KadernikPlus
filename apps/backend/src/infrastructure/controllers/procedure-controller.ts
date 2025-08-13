@@ -7,6 +7,9 @@ import addOrUpdateProcedureUseCase, {
 import getProceduresUseCase, {
   GetProceduresUseCaseType,
 } from "../../application/use-cases/procedures/get-procedures";
+import deleteProcedureUseCase, {
+  DeleteProcedureUseCaseType,
+} from "../../application/use-cases/procedures/delete-procedure";
 
 type AddOrUpdateProcedureControllerType = {
   params: { visitId: string };
@@ -15,10 +18,14 @@ type AddOrUpdateProcedureControllerType = {
 type GetProceduresControllerType = {
   params: { visitId: string };
 };
+type DeleteProcedureControllerType = {
+  params: { id: string };
+};
 
 export const createProcedureController = (dependencies: {
   getProceduresUseCase: GetProceduresUseCaseType;
   addOrUpdateProcedureUseCase: AddOrUpdateProcedureUseCaseType;
+  deleteProcedureUseCase: DeleteProcedureUseCaseType;
 }) => {
   const getProceduresController: ControllerFunction<
     GetProceduresControllerType
@@ -30,6 +37,22 @@ export const createProcedureController = (dependencies: {
       return { statusCode: 200, body: result };
     } catch (error: any) {
       console.error("getProceduresController", error);
+      return { statusCode: 500, body: { error: error.message } };
+    }
+  };
+  const deleteProcedureController: ControllerFunction<
+    DeleteProcedureControllerType
+  > = async (httpRequest) => {
+    console.log({ httpRequest });
+    try {
+      const procedureId = httpRequest.params.id;
+      const result = await dependencies.deleteProcedureUseCase.execute(
+        procedureId
+      );
+
+      return { statusCode: 200, body: result };
+    } catch (error: any) {
+      console.error("deleteProcedureController", error);
       return { statusCode: 500, body: { error: error.message } };
     }
   };
@@ -59,12 +82,14 @@ export const createProcedureController = (dependencies: {
   return {
     getProceduresController,
     addOrUpdateProcedureController,
+    deleteProcedureController,
   };
 };
 
 const procedureController = createProcedureController({
   getProceduresUseCase,
   addOrUpdateProcedureUseCase,
+  deleteProcedureUseCase,
 });
 
 export default procedureController;

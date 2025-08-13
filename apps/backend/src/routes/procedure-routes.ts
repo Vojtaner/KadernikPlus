@@ -12,5 +12,9 @@ procedureRoutes.post(
   "/visit/:visitId",
   makeExpressCallback(procedureController.addOrUpdateProcedureController)
 );
+procedureRoutes.delete(
+  "/:id",
+  makeExpressCallback(procedureController.deleteProcedureController)
+);
 
 export default procedureRoutes;

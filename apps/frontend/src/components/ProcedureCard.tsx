@@ -4,6 +4,10 @@ import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormD
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import type { StockAllowance } from '../entities/stock-item'
+import { useProceduresMutation, useStocksQuery } from '../queries'
+import { queryClient } from '../reactQuery/reactTanstackQuerySetup'
+import { useParams } from 'react-router-dom'
+import type { PostNewProcedure } from '../entities/procedure'
 
 type ProcedureCardProps = {
   description: string
@@ -16,7 +20,18 @@ type ProcedureCardProps = {
 //spojit proceduru s SMSkou
 
 const ProcedureCard = (props: ProcedureCardProps) => {
+  const { visitId } = useParams()
+  const { data: stocks } = useStocksQuery()
+
   const { description, orderNumber, isDisabled, stockAllowances: defaultStockAllowances, procedureId } = props
+
+  const { mutation: createNewProcedure } = useProceduresMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+    },
+  })
 
   return (
     <Stack
@@ -66,11 +81,17 @@ const ProcedureCard = (props: ProcedureCardProps) => {
             variant="contained"
             color="success"
             endIcon={<EventRepeatIcon />}
-            onClick={() => alert('Procedura se zkopíruje.')}>
+            onClick={() =>
+              createNewProcedure.mutate({
+                description,
+                visitId,
+                id: procedureId,
+                stockAllowances: defaultStockAllowances,
+              } as unknown as PostNewProcedure)
+            }>
             Opakovat
           </Button>
         ) : (
-          // <Typography>Opakovat</Typography>
           <AddProcedureButton
             defaultValues={{ stockAllowances: defaultStockAllowances, description }}
             procedureId={procedureId}

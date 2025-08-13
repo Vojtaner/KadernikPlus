@@ -127,7 +127,6 @@ const createStockItemController = (dependencies: {
   const deleteStockItemByIdController: ControllerFunction<
     DeleteStockItemByIdControllerType
   > = async (httpRequest) => {
-    console.log({ httpRequest: httpRequest.params });
     const { stockItemId } = httpRequest.params;
     const userId = httpRequest.userId;
 

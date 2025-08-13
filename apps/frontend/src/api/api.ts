@@ -195,7 +195,7 @@ export const getTeamMembers = async (
 }
 
 export const getProcedures = async (axios: AxiosInstance, visitId: string): Promise<CreateProcedure[]> => {
-  const response = await axios.get(apiRoutes.getProceduresUrl(visitId))
+  const response = await axios.get(apiRoutes.getVisitProceduresUrl(visitId))
   return response.data
 }
 
@@ -204,7 +204,12 @@ export const postNewProcedure = async (
   visitId: string,
   data: PostNewProcedure
 ): Promise<CreateProcedure> => {
-  const response = await axios.post(apiRoutes.getProceduresUrl(visitId), data)
+  const response = await axios.post(apiRoutes.getVisitProceduresUrl(visitId), data)
+  return response.data
+}
+
+export const deleteProcedure = async (axios: AxiosInstance, procedureId: string): Promise<string> => {
+  const response = await axios.delete(apiRoutes.getProceduresUrl(procedureId))
   return response.data
 }
 

@@ -35,7 +35,7 @@ const MyProfile = () => {
 
         <Grid container rowSpacing={2}>
           <Grid size={12}>
-            <DetailColumn label={'Facebook link'} input={'https://facebook.com/sdílení_fotek '} />
+            <DetailColumn label={'Facebook link'} input={'https://facebook.com/sdílení_fotek'} />
           </Grid>
 
           <Grid size={12}>
