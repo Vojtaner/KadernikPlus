@@ -14,7 +14,7 @@ export const useAxios = (): AxiosInstance => {
 }
 
 export const AxiosProvider = ({ children }: { children: ReactNode }) => {
-  const { getAccessTokenSilently } = useAuth0()
+  const { getAccessTokenSilently, loginWithRedirect } = useAuth0()
 
   const axiosInstance = useMemo(() => {
     const instance = axios.create({
@@ -26,7 +26,7 @@ export const AxiosProvider = ({ children }: { children: ReactNode }) => {
         authorizationParams: {
           audience: import.meta.env.VITE_AUT0_AUDIENCE,
         },
-      })
+      }).catch(() => loginWithRedirect())
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`

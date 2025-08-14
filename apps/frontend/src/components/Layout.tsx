@@ -21,7 +21,7 @@ const Layout = (props: PropsWithChildren) => {
     if (!isLoading && !isAuthenticated) {
       loginWithRedirect()
     }
-  }, [isLoading, isAuthenticated])
+  }, [isLoading, isAuthenticated, loginWithRedirect])
 
   document.body.style.background = '#f6f6f6'
 
