@@ -1,6 +1,6 @@
-import { Service } from "@/entities/service";
 import { ServiceRepositoryPort } from "../../ports/service-repository";
 import serviceRepositoryDb from "../../../infrastructure/data/prisma/prisma-service-repository";
+import { Service } from "@prisma/client";
 
 const createGetAllServicesUseCase = (dependencies: {
   serviceRepositoryDb: ServiceRepositoryPort;

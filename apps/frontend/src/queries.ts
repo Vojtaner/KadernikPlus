@@ -2,7 +2,6 @@ import { useQuery, type UseMutationOptions } from '@tanstack/react-query'
 import type { Stock, UserLog } from './api/entity'
 import { http, HttpResponse, type PathParams } from 'msw'
 import { mockUserLogs } from './api/mocks'
-
 import { apiRoutes } from './api/apiRoutes'
 import {
   deleteProcedure,
@@ -26,12 +25,11 @@ import {
   patchUpdateVisitStatus,
   postCreateNewClient,
   postCreateNewStockItem,
-  postCreateService,
+  postCreateOrUpdateService,
   postCreateVisit,
   postInviteTeamMember,
   postNewProcedure,
 } from './api/api'
-
 import { type UseMutationResult, useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
 import type {
@@ -42,7 +40,7 @@ import type {
   ClientWithVisitsWithVisitServices,
 } from './entities/client'
 import type { StockItemCreateData } from './entities/stock-item'
-import type { Service, ServiceCreateData } from './entities/service'
+import type { Service, ServiceCreateOrUpdateData } from './entities/service'
 import { type StockItem } from './entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type {
@@ -212,19 +210,20 @@ export const useServicesQuery = () => {
     queryFn: () => getServices(axios),
   })
 }
-export const useCreateServiceMutation = () => {
+
+export const useCreateNewOrUpdateServiceMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
 
-  return useMutation<ServiceCreateData, Error, ServiceCreateData>({
-    mutationFn: (serviceData: ServiceCreateData) => postCreateService(axios, serviceData),
+  return useMutation<ServiceCreateOrUpdateData, Error, ServiceCreateOrUpdateData>({
+    mutationFn: (serviceData: ServiceCreateOrUpdateData) => postCreateOrUpdateService(axios, serviceData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['services'] })
-      addSnackBarMessage({ text: 'Služba byla vytvořena a přidána do ceníku.', type: 'success' })
+      addSnackBarMessage({ text: 'Služba byla upravena nebo přidána do ceníku.', type: 'success' })
     },
 
     onError: (error) => {
-      addSnackBarMessage({ text: 'Službu se nepovedlo vytvořit.', type: 'error' })
+      addSnackBarMessage({ text: 'Službu se nepovedlo upravit či přidat.', type: 'error' })
       console.error(error)
     },
   })

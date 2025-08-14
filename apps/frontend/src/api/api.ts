@@ -14,7 +14,7 @@ import type { StockItemCreateData } from '../entities/stock-item'
 import type { CreateProcedure, PostNewProcedure } from '../entities/procedure'
 import type { LogData } from '../entities/logs'
 import { type StockItem } from '../entities/stock-item'
-import type { Service, ServiceCreateData } from '../entities/service'
+import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
 import type {
   VisitCreateData,
   VisitDetailFormType,
@@ -113,10 +113,10 @@ export const postCreateNewClient = async (
   return response.data
 }
 
-export const postCreateService = async (
+export const postCreateOrUpdateService = async (
   axios: AxiosInstance,
-  serviceData: ServiceCreateData
-): Promise<ServiceCreateData> => {
+  serviceData: ServiceCreateOrUpdateData
+): Promise<Service> => {
   const response = await axios.post(apiRoutes.getServiceUrl(), serviceData)
   return response.data
 }

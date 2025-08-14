@@ -6,6 +6,7 @@ import AddServiceItemButton from './FormDialog/AddServiceItemButton'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import MenuIconButton from './MenuIconButton'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
+import ContentCutIcon from '@mui/icons-material/ContentCut'
 
 const BottomBar = () => {
   const paddingX = '10px'
@@ -28,7 +29,9 @@ const BottomBar = () => {
         position: 'sticky',
         bottom: 'env(safe-area-inset-bottom)',
       }}>
-      <AddServiceItemButton />
+      <AddServiceItemButton
+        openButton={<MenuIconButton icon={<ContentCutIcon fontSize="large" />} title="Přidat službu" />}
+      />
       <AddOrUpdateClientItemButton
         openButton={<MenuIconButton icon={<PersonAddAlt1OutlinedIcon fontSize="large" />} title="Přidat klienta" />}
       />

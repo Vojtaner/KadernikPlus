@@ -1,10 +1,10 @@
-// src/infrastructure/data/prisma/prisma-service-repository.ts
-import { Service, ServiceCreateData } from "@/entities/service";
-import { ServiceRepositoryPort } from "@/application/ports/service-repository";
-import { PrismaClient } from "@prisma/client";
+import { ServiceCreateOrUpdateData } from "../../../entities/service";
+import { ServiceRepositoryPort } from "../../../application/ports/service-repository";
+import { PrismaClient, Service } from "@prisma/client";
 import prisma from "./prisma";
 import mapToDomainService from "../../../infrastructure/mappers/service-mapper";
-import { WithUserId } from "@/entities/user";
+import { WithUserId } from "../../../entities/user";
+import teamMemberRepositoryDb from "./prisma-team-member-repository";
 
 const createServiceRepositoryDb = (
   prismaServiceRepository: PrismaClient
@@ -14,7 +14,8 @@ const createServiceRepositoryDb = (
       const services = await prismaServiceRepository.service.findMany({
         where: { userId },
       });
-      return services.map(mapToDomainService);
+
+      return services;
     },
     findByName: async (
       serviceName: string,
@@ -29,24 +30,51 @@ const createServiceRepositoryDb = (
         },
       });
 
-      return service ? mapToDomainService(service) : null;
+      return service ?? null;
     },
-
-    addService: async (
-      serviceData: WithUserId<ServiceCreateData>
+    addOrUpdate: async (
+      serviceData: WithUserId<ServiceCreateOrUpdateData>
     ): Promise<Service> => {
+      const { id: serviceId, userId } = serviceData;
+      console.log({ serviceData });
+      if (serviceId) {
+        const existingService = await prismaServiceRepository.service.findFirst(
+          {
+            where: { id: serviceId },
+          }
+        );
+
+        if (existingService) {
+          const { userId, id, ...updateFields } = serviceData;
+
+          const updatedService = await prismaServiceRepository.service.update({
+            where: { id: serviceId },
+            data: { ...updateFields },
+          });
+
+          return updatedService;
+        }
+      }
+
+      const teamMember = await teamMemberRepositoryDb.findUniqueMember(userId);
+
+      if (!teamMember) {
+        throw Error("Chybí teamId nelze upravit službu.");
+      }
+
+      if (!serviceData.serviceName) {
+        throw new Error("Zadejte název služby.");
+      }
+
       const newService = await prismaServiceRepository.service.create({
         data: {
           serviceName: serviceData.serviceName,
           basePrice: serviceData.basePrice,
-          user: {
-            connect: {
-              id: serviceData.userId,
-            },
-          },
+          user: { connect: { id: serviceData.userId } },
         },
       });
-      return mapToDomainService(newService);
+
+      return newService;
     },
   };
 };

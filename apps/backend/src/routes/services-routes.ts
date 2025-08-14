@@ -6,7 +6,7 @@ const serviceRoutes = Router();
 
 serviceRoutes.post(
   "/",
-  makeExpressCallback(serviceController.addServiceController)
+  makeExpressCallback(serviceController.addOrUpdateServiceController)
 );
 
 serviceRoutes.get(

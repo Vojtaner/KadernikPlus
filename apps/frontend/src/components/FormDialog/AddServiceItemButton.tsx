@@ -1,19 +1,34 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
 import FormDialog from '../Dialog'
-import MenuIconButton from '../MenuIconButton'
 import TextField from '../TextField'
-import ContentCutIcon from '@mui/icons-material/ContentCut'
-import { useCreateServiceMutation } from '../../queries'
+import { useCreateNewOrUpdateServiceMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
-import type { ServiceCreateData } from '../../entities/service'
+import type { ServiceCreateOrUpdateData } from '../../entities/service'
+import React from 'react'
 
-const AddServiceItemButton = () => {
+type AddServiceItemButtonProps = {
+  defaultValues?: Partial<ServiceCreateOrUpdateData>
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
+}
+
+const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
+  const { openButton, defaultValues } = props
   const [open, setOpen] = useState(false)
-  const { control, handleSubmit } = useForm<ServiceCreateData>()
-  const { mutate: createServicemMutation } = useCreateServiceMutation()
+  const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues })
+  const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation()
+
+  const openDialogButton = React.cloneElement(openButton, {
+    onClick: (e: React.MouseEvent) => {
+      openButton.props.onClick?.(e)
+      handleClickOpen()
+    },
+  })
 
   const handleClickOpen = () => {
+    if (!defaultValues) {
+      reset({ serviceName: undefined, basePrice: undefined })
+    }
     setOpen(true)
   }
 
@@ -21,7 +36,7 @@ const AddServiceItemButton = () => {
     setOpen(false)
   }
 
-  const onSubmit = (data: ServiceCreateData) => {
+  const onSubmit = (data: ServiceCreateOrUpdateData) => {
     createServicemMutation(data)
     handleClose()
   }
@@ -43,9 +58,7 @@ const AddServiceItemButton = () => {
           <TextField control={control} fieldPath="basePrice" label="Cena za službu" type="number" fullWidth required />
         </>
       }
-      onOpenButton={
-        <MenuIconButton icon={<ContentCutIcon fontSize="large" />} onClick={handleClickOpen} title="Přidat službu" />
-      }
+      onOpenButton={openDialogButton}
       title="Přidat službu"
       dialogHelperText="Zde přidáte službu do ceníku."
     />

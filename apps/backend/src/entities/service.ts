@@ -3,6 +3,9 @@ export type Service = {
   serviceName: string;
   basePrice: number;
   userId?: string;
-  teamId?: string;
+  teamId: string;
 };
-export type ServiceCreateData = Omit<Service, "id">;
+
+//možná tu teamId bude konfliktit byllo ?
+
+export type ServiceCreateOrUpdateData = Omit<Service, "id"> & { id?: string };

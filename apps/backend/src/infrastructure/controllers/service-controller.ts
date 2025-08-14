@@ -1,35 +1,37 @@
-import { ServiceCreateData } from "@/entities/service";
+import { ServiceCreateOrUpdateData } from "../../entities/service";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getAllServicesUseCase, {
   GetAllServicesUseCaseType,
 } from "../../application/use-cases/service/get-all-services";
-import addServiceUseCase, {
-  AddServiceUseCaseType,
-} from "../../application/use-cases/service/add-service";
+import addOrUpdateServiceUseCase, {
+  AddOrUpdateServiceUseCaseType,
+} from "../../application/use-cases/service/add-or-update-service";
 import { WithUserId } from "@/entities/user";
 
-type AddServiceControllerType = {
-  body: ServiceCreateData;
+type AddOrUpdateServiceControllerType = {
+  body: ServiceCreateOrUpdateData;
 };
 type GetAllServicesControllerType = {};
 
 const createServiceController = (dependencies: {
-  addServiceUseCase: AddServiceUseCaseType;
+  addOrUpdateServiceUseCase: AddOrUpdateServiceUseCaseType;
   getAllServicesUseCase: GetAllServicesUseCaseType;
 }) => {
-  const addServiceController: ControllerFunction<
-    AddServiceControllerType
+  const addOrUpdateServiceController: ControllerFunction<
+    AddOrUpdateServiceControllerType
   > = async (httpRequest) => {
-    const { serviceName, basePrice } = httpRequest.body;
+    const { serviceName, basePrice, teamId, id } = httpRequest.body;
     const userId = httpRequest.userId;
 
-    const serviceData: WithUserId<ServiceCreateData> = {
+    const serviceData: WithUserId<ServiceCreateOrUpdateData> = {
       serviceName,
-      basePrice: Number(basePrice),
+      basePrice,
       userId,
+      teamId,
+      id,
     };
 
-    const newService = await dependencies.addServiceUseCase.execute(
+    const newService = await dependencies.addOrUpdateServiceUseCase.execute(
       serviceData
     );
 
@@ -53,13 +55,13 @@ const createServiceController = (dependencies: {
   };
 
   return {
-    addServiceController,
+    addOrUpdateServiceController,
     getAllServicesController,
   };
 };
 
 const serviceController = createServiceController({
-  addServiceUseCase,
+  addOrUpdateServiceUseCase,
   getAllServicesUseCase,
 });
 

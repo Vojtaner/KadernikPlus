@@ -7,6 +7,7 @@ import { useServicesQuery } from '../queries'
 import type { Service } from '../entities/service'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
+import AddServiceItemButton from '../components/FormDialog/AddServiceItemButton'
 
 const PriceList = () => {
   const { data: services, isLoading, isError } = useServicesQuery()
@@ -18,6 +19,7 @@ const PriceList = () => {
   if (isError || !services) {
     return <ErrorBoundary />
   }
+  const columns = createColumns()
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -47,38 +49,55 @@ export default PriceList
 //   { id: '16', serviceName: 'Trvalá', basePrice: 490 },
 //   { id: '17', serviceName: 'Trvalá', basePrice: 890 },
 // ]
-
-const columns: GridColDef<Service[][number]>[] = [
-  { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
-  {
-    field: 'basePrice',
-    headerName: 'Cena',
-    disableColumnMenu: true,
-    minWidth: 100,
-    renderCell: (params) => `${params.value},00 Kč`,
-  },
-  // {
-  //   field: 'category',
-  //   headerName: 'Kategorie',
-  //   type: 'string',
-  //   disableColumnMenu: true,
-  //   minWidth: 80,
-  // },
-  {
-    field: 'edit',
-    headerName: '',
-    width: 20,
-    editable: false,
-    display: 'flex',
-    disableColumnMenu: true,
-    renderCell: (params) => (
-      <BoxIcon
-        size={'small'}
-        key={params.id}
-        onClick={() => console.log(params.id)}
-        icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
-        boxColor="secondary.light"
-      />
-    ),
-  },
-]
+const createColumns = (): GridColDef<Service[][number]>[] => {
+  return [
+    { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
+    {
+      field: 'basePrice',
+      headerName: 'Cena',
+      disableColumnMenu: true,
+      minWidth: 100,
+      renderCell: (params) => `${params.value},00 Kč`,
+    },
+    // {
+    //   field: 'category',
+    //   headerName: 'Kategorie',
+    //   type: 'string',
+    //   disableColumnMenu: true,
+    //   minWidth: 80,
+    // },
+    {
+      field: 'edit',
+      headerName: '',
+      width: 20,
+      editable: false,
+      display: 'flex',
+      disableColumnMenu: true,
+      renderCell: (params) => {
+        const { id, basePrice, serviceName } = params.row
+        return (
+          <AddServiceItemButton
+            defaultValues={{
+              id,
+              basePrice,
+              serviceName,
+            }}
+            openButton={
+              <BoxIcon
+                size={'small'}
+                key={params.id}
+                icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
+                boxColor="secondary.light"
+              />
+            }
+          />
+        )
+      },
+    },
+  ]
+}
+// id: string
+// serviceName: string
+// basePrice: number
+// userId?: string
+// teamId?: string
