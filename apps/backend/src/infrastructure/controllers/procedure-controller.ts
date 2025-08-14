@@ -43,7 +43,6 @@ export const createProcedureController = (dependencies: {
   const deleteProcedureController: ControllerFunction<
     DeleteProcedureControllerType
   > = async (httpRequest) => {
-    console.log({ httpRequest });
     try {
       const procedureId = httpRequest.params.id;
       const result = await dependencies.deleteProcedureUseCase.execute(

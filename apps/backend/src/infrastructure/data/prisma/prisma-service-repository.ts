@@ -36,7 +36,7 @@ const createServiceRepositoryDb = (
       serviceData: WithUserId<ServiceCreateOrUpdateData>
     ): Promise<Service> => {
       const { id: serviceId, userId } = serviceData;
-      console.log({ serviceData });
+
       if (serviceId) {
         const existingService = await prismaServiceRepository.service.findFirst(
           {
