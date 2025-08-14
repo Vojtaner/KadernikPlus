@@ -1,7 +1,7 @@
 import type { FieldPath } from 'react-hook-form'
 import { UnitsObject, type StockItemCreateData } from '../entities/stock-item'
 import type { Client } from '../entities/client'
-import type { ServiceCreateData } from '../entities/service'
+import type { ServiceCreateOrUpdateData } from '../entities/service'
 import type { VisitCreateData, VisitDetailFormType } from '../entities/visit'
 import type { Dayjs } from 'dayjs'
 
@@ -29,7 +29,7 @@ export type AppFieldPath = FieldPath<AppFormState>
 
 export type ClientForm = Pick<Client, 'firstName' | 'lastName' | 'phone' | 'note'>
 export type StockItemForm = StockItemCreateData
-export type ServiceForm = ServiceCreateData
+export type ServiceForm = ServiceCreateOrUpdateData
 export type VisitCreateForm = VisitCreateData
 export type VisitDetailForm = VisitDetailFormType
 export type SearchForm = { searchValue: string }
