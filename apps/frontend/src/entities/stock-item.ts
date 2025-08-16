@@ -9,11 +9,12 @@ export type StockItem = {
   createdAt: Date
   updatedAt: Date
   stockId: string
+  packageCount: number
 }
 
 export type StockItemDefaultValuesType = Pick<
   StockItem,
-  'quantity' | 'price' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId'
+  'quantity' | 'price' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId' | 'packageCount'
 >
 
 export type StockItemCreateData = Omit<StockItem, 'createdAt' | 'updatedAt' | 'isActive'> & { stockId: string }

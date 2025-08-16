@@ -32,10 +32,12 @@ export const isPurchaseStockItem = (
   data: StockItemCreateData | StockItemBuyData
 ): data is StockItemBuyData => {
   return (
-    Object.keys(data).length === 3 &&
+    Object.keys(data).length === 5 &&
     "id" in data &&
     "quantity" in data &&
-    "price" in data
+    "price" in data &&
+    "packageCount" in data &&
+    "stockId" in data
   );
 };
 

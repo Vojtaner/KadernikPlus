@@ -41,13 +41,27 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     field: 'price',
     headerName: 'Cena',
     disableColumnMenu: true,
-    minWidth: 90,
-    renderCell: (params) => formatToCZK(params.value),
+    minWidth: 75,
+    renderCell: (params) => {
+      const pricePerUnit = params.row.price
+      const totalQuantity = params.row.quantity
+
+      return formatToCZK(pricePerUnit * totalQuantity)
+    },
+  },
+  {
+    field: 'packageCount',
+    headerName: 'Balení',
+    disableColumnMenu: true,
+    minWidth: 50,
+    renderCell: (params) => {
+      return params.row.packageCount
+    },
   },
   {
     field: 'quantity',
     headerName: 'Množ.',
-    minWidth: 67,
+    minWidth: 60,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
@@ -59,7 +73,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     field: 'threshold',
     headerName: 'Min.',
     type: 'number',
-    minWidth: 67,
+    minWidth: 60,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
@@ -86,6 +100,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
             quantity: params.row.quantity,
             threshold: params.row.threshold,
             unit: params.row.unit,
+            packageCount: params.row.packageCount,
           }}
           openButton={
             <BoxIcon

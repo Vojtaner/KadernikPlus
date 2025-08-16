@@ -136,7 +136,8 @@ model StockItem {
   itemName  String
   unit      String
   quantity  Decimal  @db.Decimal(10, 2)
-  price     Decimal  @db.Decimal(10, 2)
+  packageCount  Decimal  @db.Decimal(10, 2)
+  price     Decimal  @db.Decimal(15, 5)
   threshold Decimal  @db.Decimal(10, 2)
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now())
@@ -147,7 +148,7 @@ model StockItem {
 
   stockAllowances StockAllowance[]
 
-  @@unique([stockId, itemName]) // 👈 Ensure itemName is unique within each stock
+  @@unique([stockId, itemName, isActive]) 
   @@map("stock_items")
 }
 

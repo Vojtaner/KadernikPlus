@@ -171,7 +171,8 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
       {fields.map((field, index) => {
         const fielArrayStockItem =
           watchedStockAllowanecs.stockAllowances && watchedStockAllowanecs.stockAllowances[index]
-
+        //průměrné množství na balení v g
+        //
         {
           const stockItem =
             fielArrayStockItem &&

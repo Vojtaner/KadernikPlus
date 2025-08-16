@@ -69,19 +69,35 @@ CREATE TABLE `procedures` (
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- CreateTable
+CREATE TABLE `LogEntry` (
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `teamId` VARCHAR(191) NOT NULL,
+    `action` VARCHAR(191) NOT NULL,
+    `entityType` VARCHAR(191) NOT NULL,
+    `entityId` VARCHAR(191) NULL,
+    `message` VARCHAR(191) NOT NULL,
+    `metadata` JSON NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `stock_items` (
     `id` VARCHAR(191) NOT NULL,
     `itemName` VARCHAR(191) NOT NULL,
     `unit` VARCHAR(191) NOT NULL,
     `quantity` DECIMAL(10, 2) NOT NULL,
-    `price` DECIMAL(10, 2) NOT NULL,
+    `packageCount` DECIMAL(10, 2) NOT NULL,
+    `price` DECIMAL(15, 5) NOT NULL,
     `threshold` DECIMAL(10, 2) NOT NULL,
     `is_active` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `stockId` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `stock_items_stockId_itemName_key`(`stockId`, `itemName`),
+    UNIQUE INDEX `stock_items_stockId_itemName_is_active_key`(`stockId`, `itemName`, `is_active`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -169,6 +185,12 @@ ALTER TABLE `photos` ADD CONSTRAINT `photos_visit_id_fkey` FOREIGN KEY (`visit_i
 
 -- AddForeignKey
 ALTER TABLE `procedures` ADD CONSTRAINT `procedures_visit_id_fkey` FOREIGN KEY (`visit_id`) REFERENCES `visits`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `LogEntry` ADD CONSTRAINT `LogEntry_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `LogEntry` ADD CONSTRAINT `LogEntry_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `stock_items` ADD CONSTRAINT `stock_items_stockId_fkey` FOREIGN KEY (`stockId`) REFERENCES `stocks`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

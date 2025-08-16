@@ -22,11 +22,10 @@ services:
   backend:
     build:
       context: .
-      dockerfile: backend/Dockerfile
+      dockerfile: backend/Dockerfile.dev
     container_name: node-hairdresser-api
     volumes:
-      - ./backend/src:/backend/src
-      - ./backend/.env:/backend/.env
+      - ./backend:/backend # mount everything (src, prisma, env, etc.)
       - /backend/node_modules
     command: sh ./init.sh
     restart: always

@@ -89,16 +89,28 @@ const createProcedureRepositoryDb = (
 
         if (toCreate.length > 0) {
           await Promise.all(
-            toCreate.map((item) =>
-              tx.stockItem.update({
+            toCreate.map(async (item) => {
+              const stock = await tx.stockItem.findUnique({
+                where: { id: item.stockItemId },
+              });
+              if (!stock) return;
+
+              const oldQuantity = Number(stock.quantity);
+              const oldPackageCount = Number(stock.packageCount ?? 1);
+              const decrementedQuantity = Number(item.quantity);
+
+              const newQuantity = oldQuantity - decrementedQuantity;
+              const newPackageCount =
+                oldPackageCount * (newQuantity / oldQuantity);
+
+              await tx.stockItem.update({
                 where: { id: item.stockItemId },
                 data: {
-                  quantity: {
-                    decrement: item.quantity,
-                  },
+                  quantity: { decrement: decrementedQuantity },
+                  packageCount: new Prisma.Decimal(newPackageCount),
                 },
-              })
-            )
+              });
+            })
           );
         }
 
@@ -127,16 +139,32 @@ const createProcedureRepositoryDb = (
 
       if (stockAllowances.length > 0) {
         await Promise.all(
-          stockAllowances.map((item) =>
-            tx.stockItem.update({
+          stockAllowances.map(async (item) => {
+            const stockItem = await prisma.stockItem.findUnique({
+              where: { id: item.stockItemId },
+            });
+
+            if (!stockItem) {
+              return;
+            }
+
+            const oldQuantity = Number(stockItem.quantity);
+            const oldPackageCount = Number(stockItem.packageCount ?? 1);
+            const decrementedQuantity = Number(item.quantity);
+
+            const newQuantity = oldQuantity - decrementedQuantity;
+
+            const newPackageCount =
+              oldPackageCount * (newQuantity / oldQuantity);
+
+            await tx.stockItem.update({
               where: { id: item.stockItemId },
               data: {
-                quantity: {
-                  decrement: item.quantity,
-                },
+                quantity: { decrement: decrementedQuantity },
+                packageCount: new Prisma.Decimal(newPackageCount),
               },
-            })
-          )
+            });
+          })
         );
       }
 
@@ -155,17 +183,33 @@ const createProcedureRepositoryDb = (
         throw new Error("Procedura nenalezena.");
       }
 
-      // Restore stock quantities
+      // Restore stock quantities and packageCount
       if (existing.stockAllowances.length > 0) {
         await Promise.all(
-          existing.stockAllowances.map((item) =>
-            tx.stockItem.update({
+          existing.stockAllowances.map(async (item) => {
+            const stock = await tx.stockItem.findUnique({
+              where: { id: item.stockItemId },
+            });
+            if (!stock) return;
+
+            const oldQuantity = Number(stock.quantity);
+            const oldPackageCount = Number(stock.packageCount ?? 1);
+            const incrementQuantity = Number(item.quantity);
+
+            const newQuantity = oldQuantity + incrementQuantity;
+
+            // Restore packageCount proportionally
+            const newPackageCount =
+              oldPackageCount * (newQuantity / oldQuantity);
+
+            await tx.stockItem.update({
               where: { id: item.stockItemId },
               data: {
-                quantity: { increment: item.quantity },
+                quantity: { increment: incrementQuantity },
+                packageCount: new Prisma.Decimal(newPackageCount),
               },
-            })
-          )
+            });
+          })
         );
       }
 

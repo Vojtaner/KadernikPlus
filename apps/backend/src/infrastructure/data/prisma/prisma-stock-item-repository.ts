@@ -1,8 +1,5 @@
 import { Prisma, PrismaClient, StockItem } from ".prisma/client";
-import {
-  StockItemBuyData,
-  StockItemCreateData,
-} from "../../../entities/stock-item";
+import { StockItemCreateData } from "../../../entities/stock-item";
 import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
@@ -26,33 +23,56 @@ const createStockItemRepositoryDb = (
 
         const isPurchase = isPurchaseStockItem(data);
 
+        console.log({ isPurchase, data });
         if (isPurchase) {
-          const { id, price, quantity } = data;
+          const { id, price, quantity, packageCount } = data;
           const existing = await prismaStockRepository.stockItem.findFirst({
             where: { id },
           });
 
           const newQty = Number(quantity);
           const newPrice = Number(price);
+          const newPackageCount = Number(packageCount);
           const avgPrice = getAvgPrice(newPrice, newQty);
           const totalQty = Number(existing?.quantity ?? 0) + newQty;
+          const totalPackageCount =
+            Number(existing?.packageCount ?? 0) + newPackageCount;
+
+          console.log({
+            newQty,
+            newPackageCount,
+            newPrice,
+            avgPrice,
+            totalPackageCount,
+            totalQty,
+          });
 
           if (existing) {
+            console.log("exisitng");
             return await prismaStockRepository.stockItem.update({
               where: { id },
               data: {
                 quantity: new Prisma.Decimal(totalQty),
                 price: new Prisma.Decimal(avgPrice),
+                packageCount: new Prisma.Decimal(totalPackageCount),
               },
             });
           }
 
-          return; // If purchasing but item not found
+          return;
         }
 
         if (data.id) {
-          const { id, itemName, quantity, price, threshold, unit, stockId } =
-            data;
+          const {
+            id,
+            itemName,
+            quantity,
+            price,
+            threshold,
+            unit,
+            stockId,
+            packageCount,
+          } = data;
           const avgPrice = getAvgPrice(Number(price), Number(quantity));
 
           return await prisma.stockItem.update({
@@ -62,13 +82,22 @@ const createStockItemRepositoryDb = (
               quantity: new Prisma.Decimal(quantity),
               price: new Prisma.Decimal(avgPrice),
               threshold: new Prisma.Decimal(threshold),
+              packageCount: new Prisma.Decimal(packageCount),
               unit,
               stockId,
             },
           });
         }
 
-        const { itemName, unit, quantity, threshold, price, stockId } = data;
+        const {
+          itemName,
+          unit,
+          quantity,
+          threshold,
+          price,
+          stockId,
+          packageCount,
+        } = data;
         const avgPrice = getAvgPrice(Number(price), Number(quantity));
 
         return await prismaStockRepository.stockItem.create({
@@ -79,6 +108,8 @@ const createStockItemRepositoryDb = (
             price: new Prisma.Decimal(avgPrice),
             threshold: new Prisma.Decimal(threshold),
             isActive: true,
+            packageCount: new Prisma.Decimal(packageCount),
+
             stock: { connect: { id: stockId } },
           },
         });

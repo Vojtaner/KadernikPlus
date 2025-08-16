@@ -1,4 +1,4 @@
-import { Button, Stack } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import { useState } from 'react'
 import FormDialog from '../Dialog'
 import TextField from '../TextField'
@@ -8,7 +8,7 @@ import { useCreateOrUpdateStockItemMutation, useStocksQuery } from '../../querie
 import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import type { StockItemDefaultValuesType } from '../../entities/stock-item'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 
 type AddEditBuyStockItemButtonProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
@@ -22,11 +22,15 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
   const isOnlyShoppingForm = formUsage === 'purchase'
   const isPurchaseAndNewStockItemForm = formUsage === 'purchaseAndNewStockItem'
   const isNewStockItemForm = formUsage === 'stockItem'
-  const { control, reset, handleSubmit } = useForm<StockItemDefaultValuesType>({
+  const { control, reset, handleSubmit, getValues } = useForm<StockItemDefaultValuesType>({
     defaultValues: {
       ...defaultValues,
     },
   })
+
+  const price = useWatch({ control, name: 'price' })
+  const unit = useWatch({ control, name: 'unit' })
+  const quantity = useWatch({ control, name: 'quantity' })
 
   const [isPurchaseStockItem, setIsPurchaseStockItem] = useState(defaultValues ? false : true)
   const { mutate: createOrUpdateStockItemMutation } = useCreateOrUpdateStockItemMutation({
@@ -53,6 +57,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
         price: undefined,
         unit: undefined,
         threshold: undefined,
+        packageCount: undefined,
         stockId: undefined,
       })
     }
@@ -110,8 +115,24 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
           {isPurchaseStockItem || isOnlyShoppingForm ? (
             <>
               <StockItemsAutoComplete fieldPath="id" control={control} />
-              <TextField fieldPath="quantity" label="Počet" type="number" fullWidth required control={control} />
-              <TextField fieldPath="price" label="Cena" type="number" fullWidth control={control} />
+              <Stack direction="row" spacing={1}>
+                <TextField fieldPath="packageCount" label="Počet balení" type="number" required control={control} />
+                <TextField
+                  fieldPath="quantity"
+                  label={`Množství v jednom balení v ${unit}`}
+                  type="number"
+                  fullWidth
+                  required
+                  control={control}
+                />
+              </Stack>
+              <TextField
+                fieldPath="price"
+                label="Cena za všechna balení v Kč"
+                type="number"
+                fullWidth
+                control={control}
+              />
             </>
           ) : (
             (isPurchaseAndNewStockItemForm || isNewStockItemForm) && (
@@ -126,15 +147,50 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
                 />
                 <SelectField
                   items={unitList}
-                  label={'Vyberte jednotku'}
+                  label="Vyberte jednotku materiálu (bude vždy stejná)"
                   control={control}
                   keyExtractor={(unit) => unit.name}
                   labelExtractor={(unit) => unit.name}
                   fieldPath="unit"
                 />
-                <TextField fieldPath="quantity" label="Množství" type="number" fullWidth required control={control} />
-                <TextField fieldPath="price" label="Cena celkem" type="number" fullWidth control={control} />
-                <TextField fieldPath="threshold" label="Minimální množství" type="number" control={control} fullWidth />
+                <Stack direction="row" spacing={1}>
+                  <TextField fieldPath="packageCount" label="Počet balení" type="number" required control={control} />
+                  <TextField
+                    fieldPath="quantity"
+                    label={`Množství v jednom balení v ${unit}`}
+                    type="number"
+                    fullWidth
+                    required
+                    control={control}
+                  />
+                </Stack>
+                <TextField
+                  fieldPath="price"
+                  label="Cena za všechna balení v Kč"
+                  type="number"
+                  fullWidth
+                  control={control}
+                />
+                <Stack direction="column" spacing={0.5}>
+                  <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
+                    <Box component="span" color="success.main" fontWeight="bold">
+                      Kontrola:{' '}
+                    </Box>
+                    Za 100 {unit} {getValues('itemName')} zaplatíte
+                    <Box component="span" color="success" fontWeight="bold">
+                      {` ${Math.round((price / quantity) * 100)} Kč`}
+                    </Box>
+                    <br />
+                    Je tomu přibližně tak?
+                  </Typography>
+                </Stack>
+                <TextField
+                  fieldPath="threshold"
+                  label="Minimální počet balení"
+                  type="number"
+                  control={control}
+                  fullWidth
+                />
               </>
             )
           )}
