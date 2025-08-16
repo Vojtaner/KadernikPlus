@@ -10,7 +10,7 @@ npx prisma generate
 echo "🚀 Starting server..."
 
 #pro produkci možná byly další dva řádky vypnuté
-npm run dev
-npm run start
+# npm run dev
+# npm run start
 
 exec "$@"
