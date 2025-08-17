@@ -8,7 +8,7 @@ COPY ./package.json ./
 
 ENV AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
-ENV DATABASE_URL="mysql://root:MWnDsLipQFXbPNMAirgLxmIHNFvpDtlR@shuttle.proxy.rlwy.net:49824/railway"
+ENV DATABASE_URL="mysql://root:BGMPtqVUNHimbWymuAHWiefwqSQELZQG@mysql.railway.internal:3306/railway"
 ENV AUTH0_ISSUER_BASE_URL="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/"
 ENV AUTH0_TOKE_SIGNING_ALG="RS256"
 ENV AUTH0_M2M_CLIENT_ID="CCqEi1S2XNdIUr0efwCBcjkwYgutj3Sq"
