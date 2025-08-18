@@ -37,16 +37,7 @@ app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
 
-app.use((req, res, next) => {
-  jwtCheck(req, res, (err) => {
-    if (err) {
-      return next(err);
-    }
-
-    console.log("Decoded JWT:", req.auth);
-    next();
-  });
-});
+app.use(jwtCheck);
 
 // app.use((req, res, next) => jwtCheck(req, res, next));
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
