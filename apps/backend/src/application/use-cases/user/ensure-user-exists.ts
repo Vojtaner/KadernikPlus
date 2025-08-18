@@ -3,7 +3,6 @@ import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-re
 import { auth0ManagementApi } from "../../services/auth0ManagementApi";
 import addUserUseCase, { AddUserUseCaseType } from "./add-user";
 import { UserRepositoryPort } from "@/application/ports/user-repository";
-import { getEnvVar } from "@/utils/getEnvVar";
 
 export const createEnsureUserExists = (dependencies: {
   addUserUseCase: AddUserUseCaseType;
@@ -16,27 +15,25 @@ export const createEnsureUserExists = (dependencies: {
         throw new Error("User could not be created.");
       }
 
-      console.log({
-        secret: getEnvVar("AUTH0_M2M_CLIENT_SECRET"),
-        clientId: getEnvVar("AUTH0_M2M_CLIENT_ID"),
-        domain: getEnvVar("AUTH0_M2M_DOMAIN"),
-      });
-
       const user = await dependencies.userRepositoryDb.findById(userId);
 
       if (!user) {
-        const {
-          data: { email, name },
-        } = await dependencies.auth0ManagementApi.users.get({
-          id: userId,
-        });
+        try {
+          const {
+            data: { email, name },
+          } = await dependencies.auth0ManagementApi.users.get({
+            id: userId,
+          });
 
-        const user = await dependencies.addUserUseCase.execute({
-          email,
-          id: userId,
-          name,
-          authProvider: "auth0",
-        });
+          const user = await dependencies.addUserUseCase.execute({
+            email,
+            id: userId,
+            name,
+            authProvider: "auth0",
+          });
+        } catch {
+          throw new Error("Špatně nastavená pravidla v Auth0.");
+        }
       }
     },
   };
