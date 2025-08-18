@@ -10,6 +10,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AxiosProvider } from './axios/axios'
 import ReactRouterRoutes from './routes/ReactRouterRoutes'
 import { SnackbarMessages } from './components/SnackBarMessages'
+import AuthGuard from './components/AuthGuard'
 
 function App() {
   const methods = useAppForm()
@@ -20,9 +21,11 @@ function App() {
         <AxiosProvider>
           <FormProvider {...methods}>
             <QueryClientProvider client={queryClient}>
-              <Layout>
-                <ReactRouterRoutes />
-              </Layout>
+              <AuthGuard>
+                <Layout>
+                  <ReactRouterRoutes />
+                </Layout>
+              </AuthGuard>
               <SnackbarMessages />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

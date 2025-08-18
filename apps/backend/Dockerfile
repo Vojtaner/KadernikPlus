@@ -15,7 +15,6 @@ ENV AUTH0_M2M_CLIENT_SECRET="wCEn3R3_7f8w6E0jjPN1zC9P7CFnKx6qmpfiH_M2-PBVFlSMvQc
 ENV AUTH0_M2M_DOMAIN="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/api/v2"
 ENV PORT="3021"
 
-
 RUN npm install
 
 COPY . .
