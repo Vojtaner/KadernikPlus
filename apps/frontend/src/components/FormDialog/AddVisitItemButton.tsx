@@ -12,12 +12,15 @@ import type { Visit } from '../../entities/visit'
 import TextField from '../TextField'
 import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
+import { useScrollToTheTop } from './AddProcedureButton'
 
 export const AddVisitItemButton = () => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [open, setOpen] = useState(false)
   const [isNewClient, setIsNewClient] = useState(false)
   const { control, resetField, handleSubmit } = useForm<Visit>()
+  const scroll = useScrollToTheTop()
+
   const { mutate: createVisitMutation } = useCreateVisitMutation({
     onSuccess: () => {
       addSnackbarMessage({ type: 'success', text: 'Návštěva byla vytvořena.' })
@@ -34,11 +37,13 @@ export const AddVisitItemButton = () => {
   const handleClose = () => {
     setIsNewClient(false)
     setOpen(false)
+    scroll()
   }
 
   const onSubmit = (data: Visit) => {
     createVisitMutation(data)
     handleClose()
+    scroll()
   }
 
   return (

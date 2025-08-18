@@ -1,7 +1,7 @@
-import { Button, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import FormDialog from '../Dialog'
 import BasicDateTimePicker from '../DateTimePicker'
-import { useUpdateVisitMutation, useVisitQuery } from '../../queries'
+import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../../queries'
 import SelectField from '../SelectField'
 import TextField from '../TextField'
 import { depositStatusOptions, type VisitDetailFormType } from '../../entities/visit'
@@ -11,6 +11,9 @@ import { useState } from 'react'
 import Loader from '../../pages/Loader'
 import { useForm } from 'react-hook-form'
 import React from 'react'
+import { useScrollToTheTop } from './AddProcedureButton'
+import RedSwitch from '../RedSwitch'
+import { isVisitFinished } from '../../pages/VisitDetailGrid'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -20,6 +23,9 @@ const EditVisitDetailDialog = (props: {
   const { visitId } = useParams()
   const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId)
   const { data: visit, isLoading, isError } = useVisitQuery(visitId)
+  const scroll = useScrollToTheTop()
+  const { mutate: changeVisitStatus } = useVisitStatusMutation()
+
   const { control, handleSubmit } = useForm<VisitDetailFormType>({
     defaultValues: {
       date: visit?.date,
@@ -52,11 +58,13 @@ const EditVisitDetailDialog = (props: {
 
   const handleClose = () => {
     setOpen(false)
+    scroll()
   }
 
   const onSubmit = (data: VisitDetailFormType) => {
     updateVisitMutation(data)
     handleClose()
+    scroll()
   }
 
   return (
@@ -103,8 +111,29 @@ const EditVisitDetailDialog = (props: {
             control={control}
             minRows={2}
             maxRows={5}
-            required
           />
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            bgcolor="#dddddd"
+            paddingX="1rem"
+            borderRadius="10px"
+            boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
+            <Typography fontWeight={600} color="secondary.main">
+              Uzavřít návštěvu
+            </Typography>
+            <RedSwitch
+              disabled={!isVisitFinished(visit)}
+              checked={visit.visitStatus}
+              onSubmitEndpoint={(checked) => {
+                changeVisitStatus({ status: checked, visitId })
+              }}
+            />
+          </Stack>
+          <Typography color="primary.main">
+            Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a případně zálohu.
+          </Typography>
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}

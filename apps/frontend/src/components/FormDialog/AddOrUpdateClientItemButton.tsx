@@ -6,6 +6,7 @@ import type { ClientOrUpdateCreateData } from '../../entities/client'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import TextField from '../TextField'
+import { useScrollToTheTop } from './AddProcedureButton'
 
 type AddOrUpdateClientItemButtonProps = {
   defaultValues?: ClientOrUpdateCreateData
@@ -16,6 +17,8 @@ type AddOrUpdateClientItemButtonProps = {
 const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) => {
   const { defaultValues, openButton, clientId } = props
   const [open, setOpen] = useState(false)
+  const scroll = useScrollToTheTop()
+
   const { mutate: createNewClientMutation } = useCreateNewOrUpdateClientMutation()
   const { control, reset, handleSubmit } = useForm<ClientOrUpdateCreateData>({ defaultValues: { ...defaultValues } })
 
@@ -36,11 +39,13 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
 
   const handleClose = () => {
     setOpen(false)
+    scroll()
   }
 
   const onSubmit = (data: ClientOrUpdateCreateData) => {
     createNewClientMutation(clientId ? { ...data, id: clientId } : data)
     handleClose()
+    scroll()
   }
 
   return (

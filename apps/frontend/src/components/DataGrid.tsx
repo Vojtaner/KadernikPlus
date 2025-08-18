@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import React from 'react'
 
@@ -39,10 +38,11 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
   )
 
   return (
-    <Box sx={{ height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DataGrid
         rows={rows}
         columns={gridColumns}
+        autosizeOnMount
         sx={{
           fontSize: '12px',
           border: 'none',
@@ -64,7 +64,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
       />
-    </Box>
+    </div>
   )
 }
 

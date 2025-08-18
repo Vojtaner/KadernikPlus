@@ -53,7 +53,7 @@ const VisitDetail = () => {
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
               startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
-              Upravit návštěvu
+              Dokončit návštěvu
             </Button>
           }
         />

@@ -15,10 +15,14 @@ export const Dashboard = () => {
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" color="secondary" />}>
         <VisitsList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
+
       <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
         <ShoppingList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
-      <DashBoardCard title="Tržby" icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
+      <DashBoardCard
+        sx={{ height: 'auto' }}
+        title="Tržby"
+        icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
         <RevenuChart />
       </DashBoardCard>
     </Stack>

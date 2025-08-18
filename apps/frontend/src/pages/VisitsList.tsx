@@ -34,7 +34,7 @@ const VisitsList = (props: VisitListProps) => {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} height={'100%'}>
       <Stack direction="row" spacing={2}>
         <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
         <BasicDatePicker label="Datum od" control={control} fieldPath="to" />

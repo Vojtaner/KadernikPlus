@@ -54,6 +54,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
   const { data: stocks } = useStocksQuery()
   const { openButton, defaultValues, procedureId } = props
   const [open, setOpen] = useState(false)
+  const scroll = useScrollToTheTop()
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -66,6 +67,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     name: 'stockAllowances',
     control,
   })
+
   const { mutation: deleteProcedure } = useDeleteProcedureMutation({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
@@ -89,13 +91,14 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     if (defaultValues) {
       const stockAllowancesDefault = mapDefaultStockAlowances(defaultValues.stockAllowances)
       replace(stockAllowancesDefault)
-      reset({ stockAllowances: stockAllowancesDefault })
+      reset({ stockAllowances: stockAllowancesDefault, description: defaultValues.description })
     }
 
     setOpen(true)
   }
 
   const handleClose = () => {
+    scroll()
     setOpen(false)
   }
 
@@ -115,6 +118,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
         handleSubmit((formData) => {
           createNewProcedure.mutate({ ...formData, visitId, id: procedureId } as unknown as PostNewProcedure)
           handleClose()
+          scroll()
         })
       }
       actions={
@@ -171,8 +175,6 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
       {fields.map((field, index) => {
         const fielArrayStockItem =
           watchedStockAllowanecs.stockAllowances && watchedStockAllowanecs.stockAllowances[index]
-        //průměrné množství na balení v g
-        //
         {
           const stockItem =
             fielArrayStockItem &&
@@ -192,7 +194,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
                 <Grid size={3}>
                   <TextField
                     type="number"
-                    label="Počet"
+                    label={`Množství (${stockItem?.unit ? stockItem?.unit : ''})`}
                     fieldPath={`stockAllowances.${index}.quantity`}
                     control={control}
                   />
@@ -220,7 +222,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
         }
       })}
       <Button onClick={() => append({ stockItemId: '', quantity: 0, id: '' })} variant="outlined">
-        Přidat položku
+        Přidat materiál
       </Button>
     </Stack>
   )
@@ -237,4 +239,14 @@ const mapDefaultStockAlowances = (
     quantity: Number(stockAllowance.quantity),
     id: stockAllowance.id ?? '',
   }))
+}
+
+export const useScrollToTheTop = () => {
+  const scroll = () =>
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
+  return scroll
 }

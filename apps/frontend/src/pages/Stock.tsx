@@ -43,41 +43,31 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     disableColumnMenu: true,
     minWidth: 75,
     renderCell: (params) => {
-      const pricePerUnit = params.row.price
-      const totalQuantity = params.row.quantity
-
-      return formatToCZK(pricePerUnit * totalQuantity)
+      return formatToCZK(params.row.price, 0, 0)
     },
   },
   {
     field: 'packageCount',
-    headerName: 'Balení',
+    headerName: 'Bal./Min.',
     disableColumnMenu: true,
-    minWidth: 50,
+    width: 85,
     renderCell: (params) => {
-      return params.row.packageCount
+      return (
+        <>
+          <span style={{ color: '#888', marginLeft: 0 }}>{params.row.packageCount} ks</span> {'/'}
+          <span style={{ color: '#888', marginLeft: 0 }}>{params.row.threshold} ks</span>
+        </>
+      )
     },
   },
   {
     field: 'quantity',
     headerName: 'Množ.',
-    minWidth: 60,
+    minWidth: 65,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
-        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
-      </>
-    ),
-  },
-  {
-    field: 'threshold',
-    headerName: 'Min.',
-    type: 'number',
-    minWidth: 60,
-    disableColumnMenu: true,
-    renderCell: (params) => (
-      <>
-        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
+        {params.row.quantity} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
       </>
     ),
   },
@@ -97,7 +87,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
             itemName: params.row.itemName,
             stockId: params.row.stockId,
             price: params.row.price,
-            quantity: params.row.quantity,
+            quantity: params.row.quantity / params.row.packageCount,
             threshold: params.row.threshold,
             unit: params.row.unit,
             packageCount: params.row.packageCount,

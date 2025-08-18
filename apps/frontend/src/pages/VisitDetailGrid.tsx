@@ -1,11 +1,8 @@
 import { Grid, Stack, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
-import { useParams } from 'react-router-dom'
-import { useVisitStatusMutation } from '../queries'
 import Loader from './Loader'
 import { getDateTime } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
-import RedSwitch from '../components/RedSwitch'
 import { formatNameShort } from '../entity'
 
 type VisitDetailGridProps = {
@@ -13,8 +10,6 @@ type VisitDetailGridProps = {
 }
 const VisitDetailGrid = (props: VisitDetailGridProps) => {
   const { visitData } = props
-  const { visitId } = useParams()
-  const { mutate: changeVisitStatus } = useVisitStatusMutation()
 
   if (!visitData) {
     return <Loader />
@@ -65,16 +60,14 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
       )}
       <Grid size={4} padding={0}>
         <DetailColumn
-          label={visitData.visitStatus ? 'Uzavřeno' : 'Neuzavřeno'}
+          label="Stav návštěvy"
           input={
-            <RedSwitch
-              tooltip="Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a případně zálohu."
-              disabled={!isVisitFinished(visitData)}
-              checked={visitData.visitStatus}
-              onSubmitEndpoint={(checked) => {
-                changeVisitStatus({ status: checked, visitId })
-              }}
-            />
+            <Typography
+              textTransform="uppercase"
+              color={visitData.visitStatus ? 'success.main' : 'error.main'}
+              fontWeight={600}>
+              {visitData.visitStatus ? 'Uzavřeno' : 'Neuzavřeno'}
+            </Typography>
           }
         />
       </Grid>
@@ -84,7 +77,11 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
 
 export default VisitDetailGrid
 
-export function formatToCZK(value: string | number | undefined): string {
+export function formatToCZK(
+  value: string | number | undefined,
+  minimumFractionDigits?: number,
+  maximumFractionDigits?: number
+): string {
   if (!value) {
     return '0,00 Kč'
   }
@@ -96,8 +93,8 @@ export function formatToCZK(value: string | number | undefined): string {
   return numberValue.toLocaleString('cs-CZ', {
     style: 'currency',
     currency: 'CZK',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: minimumFractionDigits ?? 2,
+    maximumFractionDigits: maximumFractionDigits ?? 2,
   })
 }
 

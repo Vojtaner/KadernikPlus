@@ -6,6 +6,7 @@ import { useCreateNewOrUpdateServiceMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
 import type { ServiceCreateOrUpdateData } from '../../entities/service'
 import React from 'react'
+import { useScrollToTheTop } from './AddProcedureButton'
 
 type AddServiceItemButtonProps = {
   defaultValues?: Partial<ServiceCreateOrUpdateData>
@@ -17,6 +18,7 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
   const [open, setOpen] = useState(false)
   const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues })
   const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation()
+  const scroll = useScrollToTheTop()
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
@@ -34,11 +36,13 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
 
   const handleClose = () => {
     setOpen(false)
+    scroll()
   }
 
   const onSubmit = (data: ServiceCreateOrUpdateData) => {
     createServicemMutation(data)
     handleClose()
+    scroll()
   }
 
   return (

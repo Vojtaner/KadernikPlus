@@ -9,6 +9,9 @@ import StockItemsAutoComplete from '../AutoCompletes/StockItemsAutoComplete'
 import type { StockItemDefaultValuesType } from '../../entities/stock-item'
 import React from 'react'
 import { useForm, useWatch } from 'react-hook-form'
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
+import Loader from '../../pages/Loader'
+import { useScrollToTheTop } from './AddProcedureButton'
 
 type AddEditBuyStockItemButtonProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
@@ -18,7 +21,10 @@ type AddEditBuyStockItemButtonProps = {
 
 const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
   const { defaultValues, openButton, formUsage } = props
+  const scroll = useScrollToTheTop()
+
   const [open, setOpen] = useState(false)
+  const { data: stocks, isLoading: isLoadingStocks } = useStocksQuery()
   const isOnlyShoppingForm = formUsage === 'purchase'
   const isPurchaseAndNewStockItemForm = formUsage === 'purchaseAndNewStockItem'
   const isNewStockItemForm = formUsage === 'stockItem'
@@ -27,17 +33,24 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
       ...defaultValues,
     },
   })
-
+  const [isPurchaseStockItem, setIsPurchaseStockItem] = useState(defaultValues ? false : true)
+  const { mutate: createOrUpdateStockItemMutation } = useCreateOrUpdateStockItemMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+      reset()
+    },
+  })
   const price = useWatch({ control, name: 'price' })
   const unit = useWatch({ control, name: 'unit' })
   const quantity = useWatch({ control, name: 'quantity' })
 
-  const [isPurchaseStockItem, setIsPurchaseStockItem] = useState(defaultValues ? false : true)
-  const { mutate: createOrUpdateStockItemMutation } = useCreateOrUpdateStockItemMutation({
-    onSuccess: () => {
-      reset()
-    },
-  })
+  if (stocks && !stocks.length && !isLoadingStocks) {
+    throw new Error('Nepodařilo se načíst sklad.')
+  }
+
+  if (!stocks) {
+    return <Loader />
+  }
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
@@ -45,8 +58,6 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
       handleClickOpen()
     },
   })
-
-  const { data: stocks } = useStocksQuery()
 
   const handleClickOpen = () => {
     if (!defaultValues) {
@@ -66,6 +77,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
 
   const handleClose = () => {
     setOpen(false)
+    scroll()
   }
 
   if (!stocks) {
@@ -75,6 +87,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
   const onSubmit = (data: StockItemDefaultValuesType) => {
     createOrUpdateStockItemMutation({ ...data, stockId: stocks[0].id })
     handleClose()
+    scroll()
   }
 
   return (

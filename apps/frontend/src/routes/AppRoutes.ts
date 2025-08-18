@@ -20,8 +20,8 @@ export const ROUTES = {
   stock: { path: '/stock/:stockId', breadcrumb: 'Sklad' },
   logs: { path: '/logs', breadcrumb: 'Záznamy o aktivitě' },
   sms: { path: '/sms', breadcrumb: 'SMSky' },
-  notFound: { path: '*', breadcrumb: 'Nenalezeno' },
   home: { path: '/', breadcrumb: 'Přehled' },
+  notFound: { path: '*', breadcrumb: 'Nenalezeno' },
 } as const
 
 export const Paths = {

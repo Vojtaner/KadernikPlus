@@ -17,10 +17,22 @@ const createStockItemRepositoryDb = (
     createOrUpdateStockItem: async (
       data: StockItemCreateData
     ): Promise<StockItem | undefined> => {
-      try {
-        const getAvgPrice = (price: number, quantity: number) =>
-          new Decimal((price / quantity).toFixed(2));
+      //nakup obdržím jednotkové informace
+      // id: "8bba12fc-c5cc-4112-92d3-c56be1000358";
+      // packageCount: "1";
+      // price: "100";
+      // quantity: "100";
+      // stockId: "8e9ba494-0cf6-4039-b46b-a665be5d09eb";
 
+      //na skladě mám
+      // packageCount: "1";
+      // price: "100"; /celkem
+      // quantity: "100"; /celkem
+
+      //newpackagecount + oldpackagecount
+      //oldprice + newpackagecount + newprice
+      //oldquantity + newpackagecount*newquantity
+      try {
         const isPurchase = isPurchaseStockItem(data);
 
         console.log({ isPurchase, data });
@@ -30,31 +42,28 @@ const createStockItemRepositoryDb = (
             where: { id },
           });
 
-          const newQty = Number(quantity);
+          if (!existing) {
+            throw new Error("Nepodařilo se najít položku na skladu.");
+          }
+
+          const newQuantityPerPiece = Number(quantity);
           const newPrice = Number(price);
           const newPackageCount = Number(packageCount);
-          const avgPrice = getAvgPrice(newPrice, newQty);
-          const totalQty = Number(existing?.quantity ?? 0) + newQty;
-          const totalPackageCount =
-            Number(existing?.packageCount ?? 0) + newPackageCount;
 
-          console.log({
-            newQty,
-            newPackageCount,
-            newPrice,
-            avgPrice,
-            totalPackageCount,
-            totalQty,
-          });
+          const newTotalQuantity = newQuantityPerPiece * newPackageCount;
+
+          const updatedQuantity = newTotalQuantity + Number(existing.quantity);
+          const updatedPrice = newPrice + Number(existing.price);
+          const updatedPackageCount =
+            newPackageCount + Number(existing.packageCount);
 
           if (existing) {
-            console.log("exisitng");
             return await prismaStockRepository.stockItem.update({
               where: { id },
               data: {
-                quantity: new Prisma.Decimal(totalQty),
-                price: new Prisma.Decimal(avgPrice),
-                packageCount: new Prisma.Decimal(totalPackageCount),
+                quantity: new Prisma.Decimal(updatedQuantity),
+                price: new Prisma.Decimal(updatedPrice),
+                packageCount: new Prisma.Decimal(updatedPackageCount),
               },
             });
           }
@@ -73,14 +82,15 @@ const createStockItemRepositoryDb = (
             stockId,
             packageCount,
           } = data;
-          const avgPrice = getAvgPrice(Number(price), Number(quantity));
+
+          const updatedQuantity = packageCount * quantity;
 
           return await prisma.stockItem.update({
             where: { id },
             data: {
               itemName,
-              quantity: new Prisma.Decimal(quantity),
-              price: new Prisma.Decimal(avgPrice),
+              quantity: new Prisma.Decimal(updatedQuantity),
+              price: new Prisma.Decimal(price),
               threshold: new Prisma.Decimal(threshold),
               packageCount: new Prisma.Decimal(packageCount),
               unit,
@@ -98,14 +108,15 @@ const createStockItemRepositoryDb = (
           stockId,
           packageCount,
         } = data;
-        const avgPrice = getAvgPrice(Number(price), Number(quantity));
+
+        const updatedQuantity = packageCount * quantity;
 
         return await prismaStockRepository.stockItem.create({
           data: {
             itemName,
             unit,
-            quantity: new Prisma.Decimal(quantity),
-            price: new Prisma.Decimal(avgPrice),
+            quantity: new Prisma.Decimal(updatedQuantity),
+            price: new Prisma.Decimal(price),
             threshold: new Prisma.Decimal(threshold),
             isActive: true,
             packageCount: new Prisma.Decimal(packageCount),

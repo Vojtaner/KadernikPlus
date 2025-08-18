@@ -4,6 +4,7 @@ import FormDialog from '../Dialog'
 import TextField from '../TextField'
 import { useAddTeamMemberMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
+import { useScrollToTheTop } from './AddProcedureButton'
 
 type TeamMemberForm = {
   email: string
@@ -14,6 +15,7 @@ const AddTeamMemberButton = () => {
   const [open, setOpen] = useState(false)
   const { control, handleSubmit } = useForm<TeamMemberForm>()
   const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation()
+  const scroll = useScrollToTheTop()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -21,11 +23,13 @@ const AddTeamMemberButton = () => {
 
   const handleClose = () => {
     setOpen(false)
+    scroll()
   }
 
   const onSubmit = (data: TeamMemberForm) => {
     addTeamMemberMutation({ email: data.email, consentId: data.consentId })
     handleClose()
+    scroll()
   }
 
   return (
