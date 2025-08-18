@@ -3,6 +3,7 @@ import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-re
 import { auth0ManagementApi } from "../../services/auth0ManagementApi";
 import addUserUseCase, { AddUserUseCaseType } from "./add-user";
 import { UserRepositoryPort } from "@/application/ports/user-repository";
+import { getEnvVar } from "@/utils/getEnvVar";
 
 export const createEnsureUserExists = (dependencies: {
   addUserUseCase: AddUserUseCaseType;
@@ -14,6 +15,12 @@ export const createEnsureUserExists = (dependencies: {
       if (!userId) {
         throw new Error("User could not be created.");
       }
+
+      console.log({
+        secret: getEnvVar("AUTH0_M2M_CLIENT_SECRET"),
+        clientId: getEnvVar("AUTH0_M2M_CLIENT_ID"),
+        domain: getEnvVar("AUTH0_M2M_DOMAIN"),
+      });
 
       const user = await dependencies.userRepositoryDb.findById(userId);
 
