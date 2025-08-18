@@ -98,13 +98,16 @@ export function formatToCZK(
   })
 }
 
-export const isVisitFinished = (visitData: VisitWithServices): boolean => {
-  const {
-    paidPrice,
-    deposit,
-    depositStatus,
-    client: { deposit: isDepositRequired },
-  } = visitData
+export const isVisitFinished = (
+  clientDeposit: boolean,
+  watchFormVisitData: {
+    paidPrice: number | undefined
+    deposit: number | undefined
+    depositStatus: 'NEZAPLACENO' | 'ZAPLACENO' | null | undefined
+  }
+): boolean => {
+  const { paidPrice, deposit, depositStatus } = watchFormVisitData
+  const isDepositRequired = clientDeposit
 
   if (!paidPrice || (!deposit && isDepositRequired)) {
     return false

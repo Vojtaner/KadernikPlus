@@ -9,7 +9,7 @@ import TeamMemberAutoComplete from '../AutoCompletes/TeamMemberAutoComplete'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import Loader from '../../pages/Loader'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import React from 'react'
 import { useScrollToTheTop } from './AddProcedureButton'
 import RedSwitch from '../RedSwitch'
@@ -25,7 +25,6 @@ const EditVisitDetailDialog = (props: {
   const { data: visit, isLoading, isError } = useVisitQuery(visitId)
   const scroll = useScrollToTheTop()
   const { mutate: changeVisitStatus } = useVisitStatusMutation()
-
   const { control, handleSubmit } = useForm<VisitDetailFormType>({
     defaultValues: {
       date: visit?.date,
@@ -36,6 +35,9 @@ const EditVisitDetailDialog = (props: {
       note: visit?.note,
     },
   })
+  const paidPrice = useWatch({ control, name: 'paidPrice' })
+  const deposit = useWatch({ control, name: 'deposit' })
+  const depositStatus = useWatch({ control, name: 'depositStatus' })
 
   if (isLoading) {
     return <Loader />
@@ -124,7 +126,7 @@ const EditVisitDetailDialog = (props: {
               Uzavřít návštěvu
             </Typography>
             <RedSwitch
-              disabled={!isVisitFinished(visit)}
+              disabled={!isVisitFinished(visit.client.deposit, { paidPrice, deposit, depositStatus })}
               checked={visit.visitStatus}
               onSubmitEndpoint={(checked) => {
                 changeVisitStatus({ status: checked, visitId })
