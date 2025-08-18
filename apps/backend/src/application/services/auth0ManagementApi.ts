@@ -5,5 +5,5 @@ export const auth0ManagementApi = new ManagementClient({
   clientSecret: getEnvVar("AUTH0_M2M_CLIENT_SECRET"),
   clientId: getEnvVar("AUTH0_M2M_CLIENT_ID"),
   domain: getEnvVar("AUTH0_M2M_DOMAIN"),
-  audience: getEnvVar("AUTH0_M2M_AUDIENCE"),
+  audience: getEnvVar("AUTH0_M2M_IDENTIFIER"),
 });
