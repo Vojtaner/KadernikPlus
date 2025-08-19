@@ -34,7 +34,7 @@ const VisitsList = (props: VisitListProps) => {
   if (!visitData) {
     return <Loader />
   }
-  console.log({ visitData })
+
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
 
   return (
