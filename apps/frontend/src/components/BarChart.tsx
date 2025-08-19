@@ -136,8 +136,11 @@ function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllow
   for (const procedure of visit.procedures ?? []) {
     for (const allowance of procedure.stockAllowances ?? []) {
       const qty = parseFloat(`${allowance.quantity}`)
-      const price = allowance.stockItem?.price ?? 0
-      total += qty * price
+      if (!allowance.stockItem) {
+        throw new Error(`Stock item not found for allowance: ${JSON.stringify(allowance)}`)
+      }
+      const pricePerUnit = allowance.stockItem.price / allowance.stockItem.quantity
+      total += qty * pricePerUnit
     }
   }
   return total

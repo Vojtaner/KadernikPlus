@@ -180,8 +180,8 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
             fielArrayStockItem &&
             stockItems &&
             stockItems.find((stockItem) => stockItem.id === fielArrayStockItem.stockItemId)
-
-          const updatedStockQuantity = stockItem && stockItem.quantity - (fielArrayStockItem?.quantity ?? 0)
+          // const updatedStockQuantity = stockItem && stockItem.quantity - (fielArrayStockItem?.quantity ?? 0)
+          const updatedStockQuantity = stockItem && stockItem.quantity
           const stockItemQuantityCritical = updatedStockQuantity && updatedStockQuantity < stockItem.threshold
 
           return (

@@ -87,29 +87,60 @@ const createProcedureRepositoryDb = (
           include: { stockAllowances: { include: { stockItem: true } } },
         });
 
+        // Handle stock restore for deleted allowances
+        if (toDelete.length > 0) {
+          const deletedItems = existing.stockAllowances.filter((sa) =>
+            toDelete.includes(sa.id)
+          );
+
+          await Promise.all(
+            deletedItems.map(async (item) => {
+              console.log("delete haha");
+              await adjustStockItem(
+                tx,
+                item.stockItemId,
+                Number(item.quantity)
+              );
+            })
+          );
+        }
+
+        // Handle stock adjust for updated allowances
+        if (toUpdate.length > 0) {
+          await Promise.all(
+            toUpdate.map(async (item) => {
+              const prev = existing.stockAllowances.find(
+                (sa) => sa.id === item.stockAllowanceId
+              );
+              if (!prev) return;
+
+              // if stockItem changed
+              if (prev.stockItemId !== item.stockItemId) {
+                // restore old stock
+                await adjustStockItem(
+                  tx,
+                  prev.stockItemId,
+                  Number(prev.quantity)
+                );
+                // decrement new stock
+                await adjustStockItem(tx, item.stockItemId, -item.quantity);
+              } else {
+                // same stockItem → adjust by delta
+                const diff = item.quantity - Number(prev.quantity);
+                if (diff !== 0) {
+                  // use adjustStockItem with quantity delta
+                  await adjustStockItem(tx, item.stockItemId, diff);
+                }
+              }
+            })
+          );
+        }
+
+        // Handle stock decrement for newly created allowances
         if (toCreate.length > 0) {
           await Promise.all(
             toCreate.map(async (item) => {
-              const stock = await tx.stockItem.findUnique({
-                where: { id: item.stockItemId },
-              });
-              if (!stock) return;
-
-              const oldQuantity = Number(stock.quantity);
-              const oldPackageCount = Number(stock.packageCount ?? 1);
-              const decrementedQuantity = Number(item.quantity);
-
-              const newQuantity = oldQuantity - decrementedQuantity;
-              const newPackageCount =
-                oldPackageCount * (newQuantity / oldQuantity);
-
-              await tx.stockItem.update({
-                where: { id: item.stockItemId },
-                data: {
-                  quantity: { decrement: decrementedQuantity },
-                  packageCount: new Prisma.Decimal(newPackageCount),
-                },
-              });
+              await adjustStockItem(tx, item.stockItemId, -item.quantity);
             })
           );
         }
@@ -140,30 +171,7 @@ const createProcedureRepositoryDb = (
       if (stockAllowances.length > 0) {
         await Promise.all(
           stockAllowances.map(async (item) => {
-            const stockItem = await prisma.stockItem.findUnique({
-              where: { id: item.stockItemId },
-            });
-
-            if (!stockItem) {
-              return;
-            }
-
-            const oldQuantity = Number(stockItem.quantity);
-            const oldPackageCount = Number(stockItem.packageCount ?? 1);
-            const decrementedQuantity = Number(item.quantity);
-
-            const newQuantity = oldQuantity - decrementedQuantity;
-
-            const newPackageCount =
-              oldPackageCount * (newQuantity / oldQuantity);
-
-            await tx.stockItem.update({
-              where: { id: item.stockItemId },
-              data: {
-                quantity: { decrement: decrementedQuantity },
-                packageCount: new Prisma.Decimal(newPackageCount),
-              },
-            });
+            await adjustStockItem(tx, item.stockItemId, -Number(item.quantity));
           })
         );
       }
@@ -187,28 +195,8 @@ const createProcedureRepositoryDb = (
       if (existing.stockAllowances.length > 0) {
         await Promise.all(
           existing.stockAllowances.map(async (item) => {
-            const stock = await tx.stockItem.findUnique({
-              where: { id: item.stockItemId },
-            });
-            if (!stock) return;
-
-            const oldQuantity = Number(stock.quantity);
-            const oldPackageCount = Number(stock.packageCount ?? 1);
-            const incrementQuantity = Number(item.quantity);
-
-            const newQuantity = oldQuantity + incrementQuantity;
-
-            // Restore packageCount proportionally
-            const newPackageCount =
-              oldPackageCount * (newQuantity / oldQuantity);
-
-            await tx.stockItem.update({
-              where: { id: item.stockItemId },
-              data: {
-                quantity: { increment: incrementQuantity },
-                packageCount: new Prisma.Decimal(newPackageCount),
-              },
-            });
+            console.log({ item });
+            await adjustStockItem(tx, item.stockItemId, Number(item.quantity));
           })
         );
       }
@@ -228,3 +216,43 @@ const createProcedureRepositoryDb = (
 
 const procedureRepositoryDb = createProcedureRepositoryDb(prisma);
 export default procedureRepositoryDb;
+
+async function adjustStockItem(
+  tx: Prisma.TransactionClient,
+  stockItemId: string,
+  quantityDelta: number
+) {
+  const stockItem = await tx.stockItem.findUnique({
+    where: { id: stockItemId },
+    select: { quantity: true, price: true, packageCount: true },
+  });
+
+  if (!stockItem) throw new Error(`Stock item ${stockItemId} not found`);
+
+  const oldQuantity = Number(stockItem.quantity);
+  const oldPrice = Number(stockItem.price);
+  const oldPackageCount = Number(stockItem.packageCount);
+
+  const oldUnitPrice = oldQuantity > 0 ? oldPrice / oldQuantity : 0;
+
+  const newQuantity = oldQuantity + quantityDelta;
+  const priceDelta = oldUnitPrice * quantityDelta;
+  const packageDelta =
+    oldQuantity > 0
+      ? (oldPackageCount * newQuantity) / oldQuantity - oldPackageCount
+      : 0;
+
+  await tx.stockItem.update({
+    where: { id: stockItemId },
+    data: {
+      quantity: { increment: quantityDelta },
+      price: { increment: priceDelta },
+      packageCount: { increment: packageDelta },
+    },
+  });
+
+  // Optional: check consistency
+  const updated = await tx.stockItem.findUnique({ where: { id: stockItemId } });
+  if (!updated || Number(updated.quantity) < 0)
+    throw new Error(`Stock item ${stockItemId} quantity negative!`);
+}
