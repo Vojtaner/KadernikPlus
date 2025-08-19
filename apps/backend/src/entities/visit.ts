@@ -16,7 +16,7 @@ export type Visit = {
   hairdresserId?: string;
   userId?: string;
 
-  serviceIds: string[];
+  serviceIds: string;
 } & Pick<Client, "firstName" | "lastName" | "phone" | "note">;
 
 export type VisitCreateData = Visit;

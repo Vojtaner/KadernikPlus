@@ -24,6 +24,8 @@ export const createVisitRepositoryDb = (
       throw new Error("User is not assigned to any team.");
     }
 
+    const serviceIds = [visitData.serviceIds];
+
     const newVisit = await prismaRepository.visit.create({
       data: {
         clientId: visitData.clientId,
@@ -32,7 +34,7 @@ export const createVisitRepositoryDb = (
         paidPrice: Number(visitData.paidPrice),
         teamId: userTeam.teamId,
         visitServices: {
-          create: visitData.serviceIds.map((serviceId) => ({
+          create: serviceIds.map((serviceId) => ({
             service: { connect: { id: serviceId } },
           })),
         },
