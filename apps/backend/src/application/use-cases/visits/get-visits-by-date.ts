@@ -6,15 +6,13 @@ export function createGetVisitsByDatesUseCase(dependencies: {
   visitRepositoryDb: VisitRepositoryPort;
 }) {
   return {
-    execute: async (dateOrRange: {
+    execute: async (queryData: {
       date?: Date;
       from?: Date;
       to?: Date;
       userId: string;
     }): Promise<VisitWithServices[]> => {
-      const visits = await dependencies.visitRepositoryDb.findByDate(
-        dateOrRange
-      );
+      const visits = await dependencies.visitRepositoryDb.findByDate(queryData);
 
       return visits;
     },

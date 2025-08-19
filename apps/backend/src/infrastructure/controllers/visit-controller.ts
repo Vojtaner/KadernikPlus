@@ -156,19 +156,19 @@ const createVisitController = (dependencies: {
       return d;
     }
 
-    const effectiveFrom = from ? from : now;
     const effectiveTo = to
       ? endOfDay(to)
       : endOfDay(new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000)); // 10 days ahead
 
     const userId = httpRequest.userId;
 
+    const queryData =
+      to && from ? { from, to: effectiveTo, userId } : { userId };
+    console.log({ queryData });
     try {
-      const visits = await dependencies.getVisitsByDatesUseCase.execute({
-        from: effectiveFrom,
-        to: effectiveTo,
-        userId: userId,
-      });
+      const visits = await dependencies.getVisitsByDatesUseCase.execute(
+        queryData
+      );
 
       return {
         statusCode: 200,

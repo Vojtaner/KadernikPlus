@@ -14,10 +14,11 @@ import { Paths } from '../routes/AppRoutes'
 type VisitListProps = {
   columnHeaderHeight?: 0
   hideFooter?: boolean
+  onlyOpenVisits?: boolean
 }
 
 const VisitsList = (props: VisitListProps) => {
-  const { columnHeaderHeight, hideFooter = false } = props
+  const { columnHeaderHeight, hideFooter = false, onlyOpenVisits = false } = props
   const { control, watch } = useForm({
     defaultValues: {
       from: dayjs().subtract(1, 'day'),
@@ -27,20 +28,25 @@ const VisitsList = (props: VisitListProps) => {
 
   const fromDate = watch('from')
   const toDate = watch('to')
-  const { data: visitData } = useVisitsQuery({ from: fromDate, to: toDate })
+
+  const { data: visitData } = useVisitsQuery(!onlyOpenVisits ? { from: fromDate, to: toDate } : undefined)
 
   if (!visitData) {
     return <Loader />
   }
+  console.log({ visitData })
+  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
 
   return (
     <Stack spacing={2} height={'100%'}>
-      <Stack direction="row" spacing={2}>
-        <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
-        <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
-      </Stack>
+      {!onlyOpenVisits && (
+        <Stack direction="row" spacing={2}>
+          <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
+          <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+        </Stack>
+      )}
       <AppDataGrid
-        rows={createVisitsTable(visitData)}
+        rows={createVisitsTable(onlyOpenVisits ? onlyOpenVisitsData : visitData)}
         columns={createColumns()}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}

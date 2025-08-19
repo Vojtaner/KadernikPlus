@@ -1,6 +1,6 @@
 import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
 import { VisitRepositoryPort } from "../../../application/ports/visit-repository";
-import { PrismaClient } from ".prisma/client";
+import { Prisma, PrismaClient } from ".prisma/client";
 import {
   CreatedVisit,
   VisitWithServices,
@@ -110,35 +110,7 @@ export const createVisitRepositoryDb = (
   }): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
     const { date, from, to, userId } = filter;
 
-    const where: any = {
-      userId,
-    };
-
-    if (date) {
-      const start = new Date(date);
-
-      start.setHours(0, 0, 0, 0);
-      const end = new Date(date);
-      end.setHours(23, 59, 59, 999);
-
-      where.date = {
-        gte: start,
-        lte: end,
-      };
-    } else if (from && to) {
-      where.date = {
-        gte: new Date(from),
-        lte: new Date(to),
-      };
-    } else if (from) {
-      where.date = {
-        gte: new Date(from),
-      };
-    } else if (to) {
-      where.date = {
-        lte: new Date(to),
-      };
-    }
+    const where = getWhereFilter(userId, date, from, to);
 
     const visits: VisitWithServicesWithProceduresWithStockAllowances[] =
       await prismaRepository.visit.findMany({
@@ -156,7 +128,7 @@ export const createVisitRepositoryDb = (
           },
         },
       });
-
+    console.log({ visits });
     return visits;
   },
 
@@ -205,3 +177,43 @@ export const createVisitRepositoryDb = (
 const visitRepositoryDb = createVisitRepositoryDb(prisma);
 
 export default visitRepositoryDb;
+
+const getWhereFilter = (
+  userId: string,
+  date?: Date,
+  from?: Date,
+  to?: Date
+) => {
+  const where: Prisma.VisitWhereInput | undefined = {
+    userId,
+  };
+
+  if (date) {
+    const start = new Date(date);
+
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    where.date = {
+      gte: start,
+      lte: end,
+    };
+  } else if (from && to) {
+    where.date = {
+      gte: new Date(from),
+      lte: new Date(to),
+    };
+  } else if (from) {
+    where.date = {
+      gte: new Date(from),
+    };
+  } else if (to) {
+    where.date = {
+      lte: new Date(to),
+    };
+  } else {
+    return where;
+  }
+  return where;
+};

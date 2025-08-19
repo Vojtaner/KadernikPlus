@@ -107,10 +107,15 @@ function aggregateVisitsByDate(
 
   for (const visit of visits) {
     const visitDate = new Date(visit.date)
+    const visitOpen = !visit.visitStatus
     if (range?.from && visitDate < range.from) {
       continue
     }
     if (range?.to && visitDate > range.to) {
+      continue
+    }
+
+    if (visitOpen) {
       continue
     }
 

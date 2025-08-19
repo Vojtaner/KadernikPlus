@@ -6,6 +6,7 @@ import VisitsList from './VisitsList'
 import DashBoardCard from '../components/DashBoardCard'
 import RevenuChart from '../components/RevenueChart'
 import ShoppingList from './ShoppingList'
+import NewReleasesIcon from '@mui/icons-material/NewReleases'
 
 export const Dashboard = () => {
   return (
@@ -18,6 +19,9 @@ export const Dashboard = () => {
 
       <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
         <ShoppingList columnHeaderHeight={0} hideFooter={true} />
+      </DashBoardCard>
+      <DashBoardCard title="Neuzavřené návštěvy" icon={<NewReleasesIcon fontSize="medium" color="secondary" />}>
+        <VisitsList columnHeaderHeight={0} hideFooter={true} onlyOpenVisits />
       </DashBoardCard>
       <DashBoardCard
         sx={{ height: 'auto' }}
