@@ -182,10 +182,18 @@ export const createVisitRepositoryDb = (
         date: visitData.date,
         deposit: Number(visitData.deposit),
         note: visitData.note,
-        depositStatus: { set: visitData.depositStatus as any }, //po restartu dockeru se srovná
-      },
-      include: {
-        visitServices: true,
+
+        depositStatus: { set: visitData.depositStatus },
+        visitServices: {
+          update: {
+            where: {
+              id: visitData.visitServiceId,
+            },
+            data: {
+              serviceId: visitData.hairCutId,
+            },
+          },
+        },
       },
     });
     return updatedVisit;

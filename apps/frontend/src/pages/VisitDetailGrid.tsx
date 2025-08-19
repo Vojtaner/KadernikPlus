@@ -36,7 +36,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
             <DetailColumn
               label="Stav zálohy"
               input={
-                <Typography textTransform="uppercase" color="info.main" fontWeight={600}>
+                <Typography textTransform="uppercase" fontSize="0.9rem" color="info.main" fontWeight={600}>
                   {visitData.depositStatus}
                 </Typography>
               }
@@ -63,6 +63,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
           label="Stav návštěvy"
           input={
             <Typography
+              fontSize="0.9rem"
               textTransform="uppercase"
               color={visitData.visitStatus ? 'success.main' : 'error.main'}
               fontWeight={600}>

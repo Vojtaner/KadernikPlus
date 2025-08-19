@@ -70,4 +70,4 @@ export const depositStatusOptions = Object.entries(DepositStatus).map(([key, val
 export type VisitDetailFormType = Pick<
   Visit,
   'date' | 'paidPrice' | 'deposit' | 'depositStatus' | 'hairdresserId' | 'note'
->
+> & { hairCutId?: string; visitServiceId: string }

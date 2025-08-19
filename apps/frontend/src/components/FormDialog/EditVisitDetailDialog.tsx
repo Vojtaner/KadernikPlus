@@ -14,6 +14,7 @@ import React from 'react'
 import { useScrollToTheTop } from './AddProcedureButton'
 import RedSwitch from '../RedSwitch'
 import { isVisitFinished } from '../../pages/VisitDetailGrid'
+import HairCutAutoComplete from '../AutoCompletes/HairCutAutoComplete'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -33,8 +34,11 @@ const EditVisitDetailDialog = (props: {
       hairdresserId: visit?.userId,
       paidPrice: visit?.paidPrice,
       note: visit?.note,
+      hairCutId: visit?.visitServices[0].serviceId,
+      visitServiceId: visit?.visitServices[0].id,
     },
   })
+
   const paidPrice = useWatch({ control, name: 'paidPrice' })
   const deposit = useWatch({ control, name: 'deposit' })
   const depositStatus = useWatch({ control, name: 'depositStatus' })
@@ -64,7 +68,7 @@ const EditVisitDetailDialog = (props: {
   }
 
   const onSubmit = (data: VisitDetailFormType) => {
-    updateVisitMutation(data)
+    updateVisitMutation({ ...data, visitServiceId: visit.visitServices[0].id })
     handleClose()
     scroll()
   }
@@ -96,6 +100,7 @@ const EditVisitDetailDialog = (props: {
           )}
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} />
           <BasicDateTimePicker fieldPath="date" control={control} />
+          <HairCutAutoComplete fieldPath="hairCutId" control={control} />
           <TextField
             fieldPath="paidPrice"
             label={`${visit.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}
