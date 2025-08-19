@@ -40,9 +40,10 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
       reset()
     },
   })
-  const price = useWatch({ control, name: 'price' })
+  const price = useWatch({ control, name: 'totalPrice' })
   const unit = useWatch({ control, name: 'unit' })
   const quantity = useWatch({ control, name: 'quantity' })
+  const packageCount = useWatch({ control, name: 'packageCount' })
 
   if (stocks && !stocks.length && !isLoadingStocks) {
     throw new Error('Nepodařilo se načíst sklad.')
@@ -65,7 +66,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
         id: undefined,
         itemName: undefined,
         quantity: undefined,
-        price: undefined,
+        totalPrice: undefined,
         unit: undefined,
         threshold: undefined,
         packageCount: undefined,
@@ -140,7 +141,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
                 />
               </Stack>
               <TextField
-                fieldPath="price"
+                fieldPath="totalPrice"
                 label="Cena za všechna balení v Kč"
                 type="number"
                 fullWidth
@@ -178,7 +179,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
                   />
                 </Stack>
                 <TextField
-                  fieldPath="price"
+                  fieldPath="totalPrice"
                   label="Cena za všechna balení v Kč"
                   type="number"
                   fullWidth
@@ -191,7 +192,7 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
                     </Box>
                     Za 100 {unit} {getValues('itemName')} zaplatíte
                     <Box component="span" color="success" fontWeight="bold">
-                      {` ${Math.round((price / quantity) * 100)} Kč`}
+                      {` ${Math.round((price / (quantity * packageCount)) * 100)} Kč`}
                     </Box>
                     <br />
                     Je tomu přibližně tak?

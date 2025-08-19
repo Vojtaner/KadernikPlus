@@ -42,17 +42,18 @@ export default ShoppingList
 const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => {
   return stockItems.flatMap((item): ShoppingListItemType[] => {
     const threshold = Number(item.threshold)
-    const quantity = Number(item.quantity)
+    const packageCount = Number(item.packageCount)
 
-    if (item.id && threshold > quantity) {
-      const missingQuantity = threshold - (quantity < 0 ? Math.abs(quantity) : quantity)
+    if (item.id && threshold > packageCount) {
+      const missingPackageCount = threshold - (packageCount < 0 ? Math.abs(packageCount) : packageCount)
+      // cena za packageCount nejde vypočítat neboť stále se mění
 
       return [
         {
           id: item.id,
           item: item.itemName,
-          price: missingQuantity * item.price,
-          amount: missingQuantity,
+          price: missingPackageCount / item.totalPrice,
+          amount: Math.ceil(missingPackageCount),
           unit: item.unit,
         },
       ]

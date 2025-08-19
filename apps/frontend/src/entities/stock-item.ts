@@ -2,7 +2,7 @@ export type StockItem = {
   id?: string
   itemName: string
   unit: Units
-  price: number
+  totalPrice: number
   quantity: number
   threshold: number
   isActive: boolean
@@ -10,11 +10,12 @@ export type StockItem = {
   updatedAt: Date
   stockId: string
   packageCount: number
+  avgUnitPrice: number
 }
 
 export type StockItemDefaultValuesType = Pick<
   StockItem,
-  'quantity' | 'price' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId' | 'packageCount'
+  'quantity' | 'totalPrice' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId' | 'packageCount' | 'avgUnitPrice'
 >
 
 export type StockItemCreateData = Omit<StockItem, 'createdAt' | 'updatedAt' | 'isActive'> & { stockId: string }

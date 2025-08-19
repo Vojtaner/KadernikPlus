@@ -144,7 +144,7 @@ function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllow
       if (!allowance.stockItem) {
         throw new Error(`Stock item not found for allowance: ${JSON.stringify(allowance)}`)
       }
-      const pricePerUnit = allowance.stockItem.price / allowance.stockItem.quantity
+      const pricePerUnit = allowance.stockItem.totalPrice / allowance.stockItem.quantity
       total += qty * pricePerUnit
     }
   }

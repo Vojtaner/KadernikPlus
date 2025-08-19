@@ -3,10 +3,7 @@ import { StockItemCreateData } from "../../../entities/stock-item";
 import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
-import {
-  Decimal,
-  PrismaClientKnownRequestError,
-} from "@prisma/client/runtime/library";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { DEFAULT_USERS_TEAM } from "../../../entities/team-member";
 import StockItemAlreadyExistsError from "../../../domain/errors/stock-item-errors";
 
@@ -17,27 +14,12 @@ const createStockItemRepositoryDb = (
     createOrUpdateStockItem: async (
       data: StockItemCreateData
     ): Promise<StockItem | undefined> => {
-      //nakup obdržím jednotkové informace
-      // id: "8bba12fc-c5cc-4112-92d3-c56be1000358";
-      // packageCount: "1";
-      // price: "100";
-      // quantity: "100";
-      // stockId: "8e9ba494-0cf6-4039-b46b-a665be5d09eb";
-
-      //na skladě mám
-      // packageCount: "1";
-      // price: "100"; /celkem
-      // quantity: "100"; /celkem
-
-      //newpackagecount + oldpackagecount
-      //oldprice + newpackagecount + newprice
-      //oldquantity + newpackagecount*newquantity
       try {
         const isPurchase = isPurchaseStockItem(data);
 
-        console.log({ isPurchase, data });
         if (isPurchase) {
-          const { id, price, quantity, packageCount } = data;
+          console.log("nákup", data);
+          const { id, totalPrice, quantity, packageCount } = data;
           const existing = await prismaStockRepository.stockItem.findFirst({
             where: { id },
           });
@@ -47,22 +29,33 @@ const createStockItemRepositoryDb = (
           }
 
           const newQuantityPerPiece = Number(quantity);
-          const newPrice = Number(price);
+          const newTotalPrice = Number(totalPrice);
           const newPackageCount = Number(packageCount);
 
           const newTotalQuantity = newQuantityPerPiece * newPackageCount;
 
           const updatedQuantity = newTotalQuantity + Number(existing.quantity);
-          const updatedPrice = newPrice + Number(existing.price);
+          const updatedTotalPrice = newTotalPrice + Number(existing.totalPrice);
           const updatedPackageCount =
             newPackageCount + Number(existing.packageCount);
+
+          const updatedAvgPrice =
+            updatedQuantity > 0 ? updatedTotalPrice / updatedQuantity : 0;
+
+          console.log({
+            updatedQuantity,
+            updatedTotalPrice,
+            updatedAvgPrice,
+            updatedPackageCount,
+          });
 
           if (existing) {
             return await prismaStockRepository.stockItem.update({
               where: { id },
               data: {
                 quantity: new Prisma.Decimal(updatedQuantity),
-                price: new Prisma.Decimal(updatedPrice),
+                totalPrice: new Prisma.Decimal(updatedTotalPrice),
+                avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
                 packageCount: new Prisma.Decimal(updatedPackageCount),
               },
             });
@@ -76,7 +69,7 @@ const createStockItemRepositoryDb = (
             id,
             itemName,
             quantity,
-            price,
+            totalPrice,
             threshold,
             unit,
             stockId,
@@ -84,13 +77,16 @@ const createStockItemRepositoryDb = (
           } = data;
 
           const updatedQuantity = packageCount * quantity;
+          const avgPrice =
+            updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
 
           return await prisma.stockItem.update({
             where: { id },
             data: {
               itemName,
               quantity: new Prisma.Decimal(updatedQuantity),
-              price: new Prisma.Decimal(price),
+              totalPrice: new Prisma.Decimal(totalPrice),
+              avgUnitPrice: new Prisma.Decimal(avgPrice),
               threshold: new Prisma.Decimal(threshold),
               packageCount: new Prisma.Decimal(packageCount),
               unit,
@@ -104,19 +100,21 @@ const createStockItemRepositoryDb = (
           unit,
           quantity,
           threshold,
-          price,
+          totalPrice,
           stockId,
           packageCount,
         } = data;
 
         const updatedQuantity = packageCount * quantity;
+        const avgPrice = updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
 
         return await prismaStockRepository.stockItem.create({
           data: {
             itemName,
             unit,
             quantity: new Prisma.Decimal(updatedQuantity),
-            price: new Prisma.Decimal(price),
+            totalPrice: new Prisma.Decimal(totalPrice),
+            avgUnitPrice: new Prisma.Decimal(avgPrice),
             threshold: new Prisma.Decimal(threshold),
             isActive: true,
             packageCount: new Prisma.Decimal(packageCount),
@@ -202,17 +200,13 @@ const createStockItemRepositoryDb = (
     findStockItemByName: async (
       itemName: string
     ): Promise<StockItem | null> => {
-      //tady ten endpoint asi nebude potřeba
       const stockItem = await prismaStockRepository.stockItem.findFirst({
         where: { itemName: itemName },
       });
       return stockItem ?? null;
     },
 
-    getStockItemsByStockId: async (
-      stockId: string,
-      userId: string
-    ): Promise<StockItem[]> => {
+    getStockItemsByStockId: async (userId: string): Promise<StockItem[]> => {
       const teamMember = await prisma.teamMember.findUnique({
         where: { userId },
       });

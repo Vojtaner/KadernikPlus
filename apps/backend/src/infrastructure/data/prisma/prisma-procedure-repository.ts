@@ -224,16 +224,16 @@ async function adjustStockItem(
 ) {
   const stockItem = await tx.stockItem.findUnique({
     where: { id: stockItemId },
-    select: { quantity: true, price: true, packageCount: true },
+    select: { quantity: true, totalPrice: true, packageCount: true },
   });
 
   if (!stockItem) throw new Error(`Stock item ${stockItemId} not found`);
 
   const oldQuantity = Number(stockItem.quantity);
-  const oldPrice = Number(stockItem.price);
+  const oldTotalPrice = Number(stockItem.totalPrice);
   const oldPackageCount = Number(stockItem.packageCount);
 
-  const oldUnitPrice = oldQuantity > 0 ? oldPrice / oldQuantity : 0;
+  const oldUnitPrice = oldQuantity > 0 ? oldTotalPrice / oldQuantity : 0;
 
   const newQuantity = oldQuantity + quantityDelta;
   const priceDelta = oldUnitPrice * quantityDelta;
@@ -241,13 +241,16 @@ async function adjustStockItem(
     oldQuantity > 0
       ? (oldPackageCount * newQuantity) / oldQuantity - oldPackageCount
       : 0;
+  const newTotalPrice = oldTotalPrice + priceDelta;
+  const newAvgUnitPrice = newQuantity > 0 ? newTotalPrice / newQuantity : 0;
 
   await tx.stockItem.update({
     where: { id: stockItemId },
     data: {
       quantity: { increment: quantityDelta },
-      price: { increment: priceDelta },
+      totalPrice: { increment: priceDelta },
       packageCount: { increment: packageDelta },
+      avgUnitPrice: new Prisma.Decimal(newAvgUnitPrice),
     },
   });
 

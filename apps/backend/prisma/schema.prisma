@@ -137,7 +137,10 @@ model StockItem {
   unit      String
   quantity  Decimal  @db.Decimal(10, 2)
   packageCount  Decimal  @db.Decimal(10, 2)
-  price     Decimal  @db.Decimal(15, 5)
+
+  totalPrice     Decimal  @db.Decimal(15, 5)
+  avgUnitPrice  Decimal  @db.Decimal(15, 5) 
+
   threshold Decimal  @db.Decimal(10, 2)
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now())

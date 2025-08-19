@@ -43,7 +43,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     disableColumnMenu: true,
     minWidth: 75,
     renderCell: (params) => {
-      return formatToCZK(params.row.price, 0, 0)
+      return formatToCZK(params.row.totalPrice, 0, 0)
     },
   },
   {
@@ -86,8 +86,8 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
             id: params.row.id,
             itemName: params.row.itemName,
             stockId: params.row.stockId,
-            price: params.row.price,
-            quantity: params.row.quantity / params.row.packageCount,
+            totalPrice: Math.round(params.row.totalPrice),
+            quantity: Math.round(params.row.quantity / params.row.packageCount),
             threshold: params.row.threshold,
             unit: params.row.unit,
             packageCount: params.row.packageCount,

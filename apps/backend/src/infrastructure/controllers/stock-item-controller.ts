@@ -35,7 +35,7 @@ export const isPurchaseStockItem = (
     Object.keys(data).length === 5 &&
     "id" in data &&
     "quantity" in data &&
-    "price" in data &&
+    "totalPrice" in data &&
     "packageCount" in data &&
     "stockId" in data
   );
