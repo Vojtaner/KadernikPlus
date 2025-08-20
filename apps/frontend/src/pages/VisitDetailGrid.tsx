@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
 import Loader from './Loader'
-import { getDateTime } from './VisitsList'
+import { getTimeFromUtcToLocal } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import { formatNameShort } from '../entity'
 
@@ -28,7 +28,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
         />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Datum" input={getDateTime(visitData.date)} />
+        <DetailColumn label="Datum" input={getTimeFromUtcToLocal(visitData.date)} />
       </Grid>
       {visitData.client.deposit ? (
         <>

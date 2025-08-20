@@ -5,20 +5,23 @@ import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import BasicDateTimePicker from '../DateTimePicker'
 import ClientAutoComplete from '../AutoCompletes/ClientAutoComplete'
 import HairCutAutoComplete from '../AutoCompletes/HairCutAutoComplete'
-import { useCreateVisitMutation } from '../../queries'
+import { useCreateVisitMutation, useVisitsQuery } from '../../queries'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import type { Visit } from '../../entities/visit'
 import TextField from '../TextField'
 import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClientItemButton'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { useScrollToTheTop } from './AddProcedureButton'
+import dayjs from 'dayjs'
 
 export const AddVisitItemButton = () => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [open, setOpen] = useState(false)
   const [isNewClient, setIsNewClient] = useState(false)
   const { control, resetField, handleSubmit } = useForm<Visit>()
+  const date = useWatch({ control, name: 'date' })
+  const { data: visitData } = useVisitsQuery({ date: dayjs(date) })
   const scroll = useScrollToTheTop()
 
   const { mutate: createVisitMutation } = useCreateVisitMutation({
@@ -39,6 +42,7 @@ export const AddVisitItemButton = () => {
     setOpen(false)
     scroll()
   }
+  console.log({ visitData })
 
   const onSubmit = (data: Visit) => {
     createVisitMutation(data)

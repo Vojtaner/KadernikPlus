@@ -55,6 +55,7 @@ import type { Dayjs } from 'dayjs'
 import type { AxiosError } from 'axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
+import dayjs from 'dayjs'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -319,15 +320,17 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
   })
 }
 
-export const useVisitsQuery = (query?: { from?: Dayjs; to?: Dayjs }) => {
+export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; to?: Dayjs } }) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
-    queryKey: query
-      ? ['visits', query?.from?.format('YYYY-MM-DD') ?? null, query?.to?.format('YYYY-MM-DD') ?? null]
-      : ['visits'],
+    queryKey: params?.query
+      ? ['visits', params.query?.from?.format('YYYY-MM-DD') ?? null, params.query?.to?.format('YYYY-MM-DD') ?? null]
+      : params?.date
+        ? ['visits', dayjs(params.date).format('YYYY-MM-DD')]
+        : ['visits'],
     queryFn: () => {
-      return getVisits(axios, query)
+      return getVisits(axios, params.query, params.date)
     },
     staleTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,

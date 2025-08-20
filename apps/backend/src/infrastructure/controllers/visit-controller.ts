@@ -58,14 +58,14 @@ const createVisitController = (dependencies: {
   const addVisitController: ControllerFunction<AddVisitControllerType> = async (
     httpRequest
   ) => {
-    function addHours(date: Date, hours: number): Date {
-      return new Date(date.getTime() + hours * 60 * 60 * 1000);
-    }
+    // function addHours(date: Date, hours: number): Date {
+    //   return new Date(date.getTime() + hours * 60 * 60 * 1000);
+    // }
 
     try {
       const visitData = httpRequest.body;
       const original = new Date(visitData.date);
-      const shiftedTime = addHours(original, 2);
+      const shiftedTime = original;
       const userId = httpRequest.userId;
       const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
 
@@ -134,9 +134,10 @@ const createVisitController = (dependencies: {
   const getVisitsByDatesController: ControllerFunction<
     GetVisitsByDatesControllerType
   > = async (httpRequest) => {
-    const { to, from } = httpRequest.query;
+    const { to, from, date } = httpRequest.query;
 
     const now = new Date();
+    console.log({ to, from, date });
 
     function endOfDay(date: any) {
       // If it's a dayjs object, convert to Date
@@ -163,8 +164,12 @@ const createVisitController = (dependencies: {
     const userId = httpRequest.userId;
 
     const queryData =
-      to && from ? { from, to: effectiveTo, userId } : { userId };
-    console.log({ queryData });
+      to && from
+        ? { from, to: effectiveTo, userId }
+        : date
+        ? { date, userId }
+        : { userId };
+
     try {
       const visits = await dependencies.getVisitsByDatesUseCase.execute(
         queryData

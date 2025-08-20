@@ -16,7 +16,7 @@ export const apiRoutes = {
   getProceduresUrl: (procedureId: string) => `/api/procedures/${encodeURIComponent(procedureId)}`,
   getStocksUrl: () => `/api/stock`,
   getServiceUrl: () => `/api/services`,
-  getVisitUrl: (query?: { from?: Dayjs; to?: Dayjs }) => getVisitUrlComposed(query),
+  getVisitUrl: (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => getVisitUrlComposed(date, query),
   getUpdateVisitStatusUrl: () => `/api/visits/status`,
   getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
@@ -28,19 +28,25 @@ export const apiRoutes = {
   getSearchClientsUrl: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
 }
 
-const getVisitUrlComposed = (query?: { from?: Dayjs; to?: Dayjs }) => {
-  if (!query) {
-    return '/api/visits'
-  }
-
+const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => {
   const params = new URLSearchParams()
+  console.log({ y: date, query })
 
-  if (query.from) {
-    params.append('from', query.from.toISOString())
-  }
-  if (query.to) {
-    params.append('to', query.to.toISOString())
+  if (date && date.isValid()) {
+    params.append('date', date.toISOString())
+    return `/api/visits?${params.toString()}`
   }
 
-  return `/api/visits?${params.toString()}`
+  if (query) {
+    if (query.from) {
+      params.append('from', query.from.toISOString())
+    }
+    if (query.to) {
+      params.append('to', query.to.toISOString())
+    }
+
+    return `/api/visits?${params.toString()}`
+  }
+
+  return '/api/visits'
 }

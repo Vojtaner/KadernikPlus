@@ -29,41 +29,16 @@ const VisitsList = (props: VisitListProps) => {
   const fromDate = watch('from')
   const toDate = watch('to')
 
-  const { data: visitData } = useVisitsQuery(!onlyOpenVisits ? { from: fromDate, to: toDate } : undefined)
+  const { data: visitData } = useVisitsQuery({ query: !onlyOpenVisits ? { from: fromDate, to: toDate } : undefined })
 
   if (!visitData) {
     return <Loader />
   }
 
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
-  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : visitData)].sort((a, b) =>
-    a.date.localeCompare(b.date)
-  )
-
-  // Build rows with group headers
-  const getRowsWithHeaders = (visits: VisitWithServicesWithProceduresWithStockAllowances[]) => {
-    const rows: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[] =
-      []
-    let lastDate: string | null = null
-    const sortedVisits = [...visits].sort((a, b) => a.date.localeCompare(b.date))
-
-    for (const visit of sortedVisits) {
-      const visitDay = new Date(visit.date).toDateString()
-      const lastDay = lastDate ? new Date(lastDate).toDateString() : null
-
-      if (visitDay !== lastDay) {
-        rows.push({
-          id: `header-${visit.date}`,
-          isHeader: true,
-          label: 'Den - ' + dayjs(visit.date).format('DD.MM.YYYY - dddd'),
-        })
-        lastDate = visit.date
-      }
-      rows.push(visit)
-    }
-    return rows
-  }
-
+  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : visitData)].sort((a, b) => {
+    return getTimeFromUtcToLocal(a.date).localeCompare(getTimeFromUtcToLocal(b.date))
+  })
   const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
   const rows = createVisitsTable(rowsWithHeaders)
 
@@ -226,7 +201,7 @@ const createVisitsTable = (
     return {
       id: visit.id,
       isHeader: false,
-      date: dayjs(visit.date).format('HH:mm'),
+      date: getTimeFromUtcToLocal(visit.date),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
       serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
       visitState: visit.visitStatus,
@@ -237,14 +212,14 @@ const createVisitsTable = (
   return visitsList.filter((visit) => visit !== undefined)
 }
 
-export const getDateTime = (date: string) => {
-  const convertedDate = new Date(date)
-
-  const hours = convertedDate.getUTCHours()
-  const minutes = convertedDate.getUTCMinutes().toString().padStart(2, '0')
-  const day = convertedDate.getUTCDate()
-  const month = convertedDate.getUTCMonth() + 1
-  return `${day}.${month}. - ${hours}:${minutes}`
+export const getTimeFromUtcToLocal = (date: Date) => {
+  return dayjs(date).format('HH:mm')
+}
+export const getDate = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY')
+}
+export const getDateWithDay = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY - dddd')
 }
 
 export const formatPhoneNumber = (digits: string | null): string | undefined => {
@@ -253,4 +228,27 @@ export const formatPhoneNumber = (digits: string | null): string | undefined => 
   }
 
   return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+}
+
+const getRowsWithHeaders = (visits: VisitWithServicesWithProceduresWithStockAllowances[]) => {
+  const rows: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[] =
+    []
+
+  let lastDate: Date | null = null
+
+  for (const visit of visits) {
+    const visitDay = getDate(visit.date)
+    const lastDay = lastDate ? getDate(lastDate) : null
+
+    if (visitDay !== lastDay) {
+      rows.push({
+        id: `header-${visit.date}`,
+        isHeader: true,
+        label: 'Den - ' + getDateWithDay(visit.date),
+      })
+      lastDate = visit.date
+    }
+    rows.push(visit)
+  }
+  return rows
 }

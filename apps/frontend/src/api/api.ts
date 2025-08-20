@@ -92,9 +92,10 @@ export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
 
 export const getVisits = async (
   axios: AxiosInstance,
-  query?: { from?: Dayjs; to?: Dayjs }
+  query?: { from?: Dayjs; to?: Dayjs },
+  date?: Dayjs
 ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
-  const response = await axios.get(apiRoutes.getVisitUrl(query))
+  const response = await axios.get(apiRoutes.getVisitUrl(date, query))
   return response.data
 }
 export const getClientVisits = async (

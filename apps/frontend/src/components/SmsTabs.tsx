@@ -5,7 +5,7 @@ import TabList from '@mui/lab/TabList'
 import { TabPanel } from '@mui/lab'
 import { useState } from 'react'
 import { useVisitsQuery } from '../queries'
-import { getDateTime } from '../pages/VisitsList'
+import { getTimeFromUtcToLocal } from '../pages/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import Loader from '../pages/Loader'
@@ -16,7 +16,7 @@ const SmsTabs = () => {
   const from = dayjs().subtract(4, 'day')
   const to = dayjs().add(8, 'day')
 
-  const { data: visitData, isLoading } = useVisitsQuery({ from, to })
+  const { data: visitData, isLoading } = useVisitsQuery({ query: { from, to } })
 
   if (isLoading) {
     return <Loader />
@@ -107,7 +107,7 @@ function formatVisitToSms(visit: VisitWithServices): string {
       .filter(Boolean)
       .join(', ') || 'službu'
 
-  const date = getDateTime(visit.date)
+  const date = getTimeFromUtcToLocal(visit.date)
 
   return `Dobrý den, ${isWoman(firstName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(firstName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${date}. Těšíme se na Vás!`
 }
@@ -134,7 +134,7 @@ function formatVisitPartialPaymentReminderSms(visit: VisitWithServices): string 
       .filter(Boolean)
       .join(', ') || 'službu'
 
-  const date = getDateTime(visit.date)
+  const date = getTimeFromUtcToLocal(visit.date)
   const shouldPay = visit.depositStatus === DepositStatus.NEZAPLACENO || client.deposit === false
 
   if (shouldPay) {

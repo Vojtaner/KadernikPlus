@@ -42,7 +42,7 @@ export type ReturnedClientVisit = {
   userId: string
   teamId: string
   clientId: string
-  date: string
+  date: Date
   depositStatus: string | null
   visitStatus: boolean | null
   paidPrice: number | null

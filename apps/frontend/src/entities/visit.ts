@@ -7,7 +7,7 @@ import { type User, type WithUserId } from './user'
 export type Visit = {
   id?: string
   clientId: string
-  date: string
+  date: Date
   paidPrice?: number
   deposit?: number
   depositStatus?: DepositStatus | null

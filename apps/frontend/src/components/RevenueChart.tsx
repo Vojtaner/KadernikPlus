@@ -17,7 +17,7 @@ const RevenuChart = () => {
   const fromDate = watch('from')
   const toDate = watch('to')
 
-  const { data: visitData } = useVisitsQuery({ from: fromDate, to: toDate })
+  const { data: visitData } = useVisitsQuery({ query: { from: fromDate, to: toDate } })
 
   if (!visitData) {
     return <Loader />

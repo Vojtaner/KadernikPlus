@@ -36,7 +36,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
       })),
     [columns, rows]
   )
-  console.log({ props })
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DataGrid

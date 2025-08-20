@@ -1,7 +1,7 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
-import { getDateTime } from '../pages/VisitsList'
+import { getTimeFromUtcToLocal } from '../pages/VisitsList'
 import { Paths } from '../routes/AppRoutes'
 
 type SearchResultProps = { clientData: ClientWithVisitsWithVisitServices; sx?: SxProps }
@@ -45,7 +45,7 @@ const SearchResult = (props: SearchResultProps) => {
             -
           </Typography>
           <Typography variant="caption" color="#ff6221" alignItems="center">
-            {latestVisit?.date && getDateTime(latestVisit?.date)}
+            {latestVisit?.date && getTimeFromUtcToLocal(latestVisit?.date)}
           </Typography>
         </Stack>
       </Stack>

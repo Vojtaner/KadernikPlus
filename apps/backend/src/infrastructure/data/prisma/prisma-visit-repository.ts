@@ -128,7 +128,6 @@ export const createVisitRepositoryDb = (
           },
         },
       });
-    console.log({ visits });
     return visits;
   },
 

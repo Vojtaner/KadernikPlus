@@ -95,7 +95,6 @@ const createProcedureRepositoryDb = (
 
           await Promise.all(
             deletedItems.map(async (item) => {
-              console.log("delete haha");
               await adjustStockItem(
                 tx,
                 item.stockItemId,
@@ -195,7 +194,6 @@ const createProcedureRepositoryDb = (
       if (existing.stockAllowances.length > 0) {
         await Promise.all(
           existing.stockAllowances.map(async (item) => {
-            console.log({ item });
             await adjustStockItem(tx, item.stockItemId, Number(item.quantity));
           })
         );
