@@ -11,6 +11,7 @@ export type StockItem = {
   stockId: string
   packageCount: number
   avgUnitPrice: number
+  lastPackageQuantity: number
 }
 
 export type StockItemDefaultValuesType = Pick<

@@ -18,7 +18,6 @@ const createStockItemRepositoryDb = (
         const isPurchase = isPurchaseStockItem(data);
 
         if (isPurchase) {
-          console.log("nákup", data);
           const { id, totalPrice, quantity, packageCount } = data;
           const existing = await prismaStockRepository.stockItem.findFirst({
             where: { id },
@@ -42,13 +41,6 @@ const createStockItemRepositoryDb = (
           const updatedAvgPrice =
             updatedQuantity > 0 ? updatedTotalPrice / updatedQuantity : 0;
 
-          console.log({
-            updatedQuantity,
-            updatedTotalPrice,
-            updatedAvgPrice,
-            updatedPackageCount,
-          });
-
           if (existing) {
             return await prismaStockRepository.stockItem.update({
               where: { id },
@@ -57,6 +49,7 @@ const createStockItemRepositoryDb = (
                 totalPrice: new Prisma.Decimal(updatedTotalPrice),
                 avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
                 packageCount: new Prisma.Decimal(updatedPackageCount),
+                lastPackageQuantity: new Prisma.Decimal(quantity),
               },
             });
           }
@@ -89,6 +82,7 @@ const createStockItemRepositoryDb = (
               avgUnitPrice: new Prisma.Decimal(avgPrice),
               threshold: new Prisma.Decimal(threshold),
               packageCount: new Prisma.Decimal(packageCount),
+              lastPackageQuantity: new Prisma.Decimal(quantity),
               unit,
               stockId,
             },
@@ -118,7 +112,7 @@ const createStockItemRepositoryDb = (
             threshold: new Prisma.Decimal(threshold),
             isActive: true,
             packageCount: new Prisma.Decimal(packageCount),
-
+            lastPackageQuantity: new Prisma.Decimal(quantity),
             stock: { connect: { id: stockId } },
           },
         });

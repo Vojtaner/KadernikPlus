@@ -15,8 +15,10 @@ docker compose logs db
 When schema.prisma is changed
 
 ```
-npx prisma migrate dev --name NAME_OF_MIGRATION
-npx prisma generate
+docker compose exec backend npx prisma migrate reset (vyprázdní schéma)
+docker compose exec backend npx prisma migrate dev (vyprázdní schéma)
+- smazat lokální node_modules/.prisma a dát lokálně v backend složce npx prisma generate
+- cmd+shift+p a restartovat typescript
 ```
 
 Error Error: P3014 risma Migrate could not create the shadow database.

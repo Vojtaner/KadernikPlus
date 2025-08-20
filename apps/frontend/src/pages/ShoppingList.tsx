@@ -42,18 +42,26 @@ export default ShoppingList
 const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => {
   return stockItems.flatMap((item): ShoppingListItemType[] => {
     const threshold = Number(item.threshold)
+    const avgPrice = Number(item.avgUnitPrice)
+    const lastPackageQuantity = Number(item.lastPackageQuantity)
     const packageCount = Number(item.packageCount)
 
-    if (item.id && threshold > packageCount) {
-      const missingPackageCount = threshold - (packageCount < 0 ? Math.abs(packageCount) : packageCount)
-      // cena za packageCount nejde vypočítat neboť stále se mění
+    const requiredPackages = threshold + 1
+
+    if (!item.id) {
+      throw new Error(`Položka ${item.itemName} nemá ID.`)
+    }
+
+    if (packageCount < requiredPackages) {
+      const missingPackages = requiredPackages - packageCount
+      const missingUnits = missingPackages * lastPackageQuantity
 
       return [
         {
           id: item.id,
           item: item.itemName,
-          price: missingPackageCount / item.totalPrice,
-          amount: Math.ceil(missingPackageCount),
+          price: missingUnits * avgPrice,
+          amount: missingPackages,
           unit: item.unit,
         },
       ]
@@ -96,11 +104,7 @@ const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
       headerName: 'Množství',
       minWidth: 90,
       disableColumnMenu: true,
-      renderCell: (params) => (
-        <>
-          {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
-        </>
-      ),
+      renderCell: (params) => `${params.value} ks`,
     },
     {
       field: 'edit',

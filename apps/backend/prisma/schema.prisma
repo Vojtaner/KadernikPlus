@@ -135,9 +135,11 @@ model StockItem {
   id        String   @id @default(uuid())
   itemName  String
   unit      String
-  quantity  Decimal  @db.Decimal(10, 2)
   packageCount  Decimal  @db.Decimal(10, 2)
 
+  quantity  Decimal  @db.Decimal(10, 2)
+  lastPackageQuantity  Decimal  @db.Decimal(15, 5) 
+  
   totalPrice     Decimal  @db.Decimal(15, 5)
   avgUnitPrice  Decimal  @db.Decimal(15, 5) 
 
