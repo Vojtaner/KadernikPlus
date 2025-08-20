@@ -26,6 +26,7 @@ import updateVisitStatusUseCase, {
 import addOrUpdateClientUseCase, {
   CreateAddOrUpdateClientUseCaseType,
 } from "../../application/use-cases/clients/add-or-update-client";
+import dayjs from "dayjs";
 
 // type GetVisitsControllerType = { query: HasClientId };
 type GetVisitsByDatesControllerType = {
@@ -58,10 +59,6 @@ const createVisitController = (dependencies: {
   const addVisitController: ControllerFunction<AddVisitControllerType> = async (
     httpRequest
   ) => {
-    // function addHours(date: Date, hours: number): Date {
-    //   return new Date(date.getTime() + hours * 60 * 60 * 1000);
-    // }
-
     try {
       const visitData = httpRequest.body;
       const original = new Date(visitData.date);
@@ -136,36 +133,18 @@ const createVisitController = (dependencies: {
   > = async (httpRequest) => {
     const { to, from, date } = httpRequest.query;
 
-    const now = new Date();
     console.log({ to, from, date });
 
-    function endOfDay(date: any) {
-      // If it's a dayjs object, convert to Date
-      if (
-        date &&
-        typeof date === "object" &&
-        typeof date.toDate === "function"
-      ) {
-        date = date.toDate();
-      }
-      // If it's a string, convert to Date
-      if (typeof date === "string") {
-        date = new Date(date);
-      }
-      const d = new Date(date); // ensure native Date
-      d.setHours(23, 59, 59, 999);
-      return d;
-    }
-
+    const effectiveFrom = dayjs(from).startOf("day").toDate();
     const effectiveTo = to
-      ? endOfDay(to)
-      : endOfDay(new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000)); // 10 days ahead
+      ? dayjs(to).endOf("day").toDate()
+      : dayjs(from).endOf("day").add(10, "day").toDate();
 
     const userId = httpRequest.userId;
 
     const queryData =
       to && from
-        ? { from, to: effectiveTo, userId }
+        ? { from: effectiveFrom, to: effectiveTo, userId }
         : date
         ? { date, userId }
         : { userId };
