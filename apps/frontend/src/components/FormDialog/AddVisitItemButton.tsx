@@ -14,6 +14,7 @@ import { firstNameValidationrule, phoneValidationRule } from './AddOrUpdateClien
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { useScrollToTheTop } from './AddProcedureButton'
 import dayjs from 'dayjs'
+import { getDateTimeFromUtcToLocal } from '../../pages/VisitsList'
 
 export const AddVisitItemButton = () => {
   const addSnackbarMessage = useAddSnackbarMessage()
@@ -21,7 +22,7 @@ export const AddVisitItemButton = () => {
   const [isNewClient, setIsNewClient] = useState(false)
   const { control, resetField, handleSubmit } = useForm<Visit>()
   const date = useWatch({ control, name: 'date' })
-  const { data: visitData } = useVisitsQuery({ date: dayjs(date) })
+  const { data: visitDataByDate } = useVisitsQuery({ date: dayjs(date) })
   const scroll = useScrollToTheTop()
 
   const { mutate: createVisitMutation } = useCreateVisitMutation({
@@ -32,7 +33,6 @@ export const AddVisitItemButton = () => {
       resetField('serviceIds')
     },
   })
-
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -42,7 +42,6 @@ export const AddVisitItemButton = () => {
     setOpen(false)
     scroll()
   }
-  console.log({ visitData })
 
   const onSubmit = (data: Visit) => {
     createVisitMutation(data)
@@ -62,7 +61,23 @@ export const AddVisitItemButton = () => {
       }
       formFields={
         <>
-          <BasicDateTimePicker fieldPath="date" control={control} />
+          <BasicDateTimePicker
+            fieldPath="date"
+            control={control}
+            rules={{
+              validate: (value) => {
+                if (!value) {
+                  return 'Musíte vybrat datum a čas'
+                }
+
+                const isTaken = visitDataByDate?.some(
+                  (visit) => getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date)
+                )
+
+                return isTaken ? 'Na tento čas máte již objednanou návštěvu.' : true
+              },
+            }}
+          />
           <Stack direction="row" spacing={1} alignItems="center">
             {!isNewClient && (
               <Box sx={{ flex: 9 }}>

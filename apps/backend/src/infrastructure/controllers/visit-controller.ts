@@ -148,7 +148,7 @@ const createVisitController = (dependencies: {
         : date
         ? { date, userId }
         : { userId };
-
+    console.log({ queryData });
     try {
       const visits = await dependencies.getVisitsByDatesUseCase.execute(
         queryData

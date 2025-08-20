@@ -30,7 +30,6 @@ export const apiRoutes = {
 
 const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => {
   const params = new URLSearchParams()
-  console.log({ y: date, query })
 
   if (date && date.isValid()) {
     params.append('date', date.toISOString())

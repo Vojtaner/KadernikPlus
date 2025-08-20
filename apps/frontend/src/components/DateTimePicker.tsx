@@ -4,7 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DateTimePicker, DatePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/cs'
-import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
+import { Controller, type Control, type FieldPath, type FieldValues, type RegisterOptions } from 'react-hook-form'
 
 dayjs.locale('cs')
 
@@ -15,26 +15,35 @@ type DatePickerProps<TFieldValues extends FieldValues> = {
   defaultValue?: Dayjs
   minDate?: Dayjs
   maxDate?: Dayjs
+  rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>
 }
 
 export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
   fieldPath,
   control,
   label,
+  rules,
 }: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
       <Controller
         name={fieldPath}
         control={control}
-        render={({ field }) => (
+        rules={rules}
+        render={({ field, fieldState: { error } }) => (
           <DateTimePicker
             {...field}
             label={label ?? 'Datum'}
             ampm={false}
             value={dayjs(field.value)}
             onChange={(date) => field.onChange(date?.toDate())}
-            slotProps={{ textField: { fullWidth: true } }}
+            slotProps={{
+              textField: {
+                fullWidth: true,
+                error: !!error, // ✅ shows red outline
+                helperText: error?.message, // ✅ shows error message
+              },
+            }}
           />
         )}
       />
