@@ -1,11 +1,11 @@
-import { IconButton, Stack, Typography } from '@mui/material'
+import { Box, IconButton, Stack, Typography } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
-import type { GridColDef } from '@mui/x-data-grid'
+import { type GridColDef } from '@mui/x-data-grid'
 import { formatNameShort } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
-import type { VisitWithServices } from '../entities/visit'
+import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entities/visit'
 import { BasicDatePicker } from '../components/DateTimePicker'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
@@ -36,6 +36,36 @@ const VisitsList = (props: VisitListProps) => {
   }
 
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
+  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : visitData)].sort((a, b) =>
+    a.date.localeCompare(b.date)
+  )
+
+  // Build rows with group headers
+  const getRowsWithHeaders = (visits: VisitWithServicesWithProceduresWithStockAllowances[]) => {
+    const rows: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[] =
+      []
+    let lastDate: string | null = null
+    const sortedVisits = [...visits].sort((a, b) => a.date.localeCompare(b.date))
+
+    for (const visit of sortedVisits) {
+      const visitDay = new Date(visit.date).toDateString()
+      const lastDay = lastDate ? new Date(lastDate).toDateString() : null
+
+      if (visitDay !== lastDay) {
+        rows.push({
+          id: `header-${visit.date}`,
+          isHeader: true,
+          label: 'Den - ' + dayjs(visit.date).format('DD.MM.YYYY - dddd'),
+        })
+        lastDate = visit.date
+      }
+      rows.push(visit)
+    }
+    return rows
+  }
+
+  const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
+  const rows = createVisitsTable(rowsWithHeaders)
 
   return (
     <Stack spacing={2} height={'100%'}>
@@ -46,26 +76,53 @@ const VisitsList = (props: VisitListProps) => {
         </Stack>
       )}
       <AppDataGrid
-        rows={createVisitsTable(onlyOpenVisits ? onlyOpenVisitsData : visitData)}
+        rows={rows}
         columns={createColumns()}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
+        getRowClassName={(params) => {
+          return params.row.isHeader ? 'header-row' : ''
+        }}
+        getRowHeight={(params) => {
+          return params.model.isHeader ? 20 : 40
+        }}
+        sx={{
+          '& .header-row .MuiDataGrid-cell': {
+            backgroundColor: '#fff656',
+            fontWeight: 'bold',
+            textAlign: 'center',
+            justifyContent: 'center',
+          },
+        }}
       />
     </Stack>
   )
 }
 export default VisitsList
 
-type VisitListItem = {
-  id: string
-  date: string
-  client: string
-  serviceName: string
-  visitState: boolean
-  clientId: string
-}
+type VisitRow =
+  | {
+      isHeader: true
+      label: string
+      id: string
+      date?: never
+      client?: never
+      serviceName?: never
+      visitState?: never
+      clientId?: never
+    }
+  | {
+      id: string
+      date: string
+      client: string
+      serviceName: string
+      visitState: boolean
+      clientId: string
+      isHeader?: false
+      label?: never
+    }
 
-export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
+export const createColumns = (): GridColDef<VisitRow[][number]>[] => [
   {
     field: 'date',
     headerName: 'Čas',
@@ -73,15 +130,31 @@ export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
     width: 80,
     display: 'flex',
     minWidth: 20,
-    renderCell: (params) => <Typography fontSize="12px">{params.value}</Typography>,
+    renderCell: (params) =>
+      params.row.isHeader ? (
+        <Box
+          sx={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            position: 'absolute',
+            display: 'flex',
+            left: '10px',
+          }}>
+          {params.row.label}
+        </Box>
+      ) : (
+        <Typography fontSize="12px">{params.value}</Typography>
+      ),
   },
+
   {
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
     disableColumnMenu: true,
     minWidth: 55,
-    renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
+    renderCell: (params) =>
+      !params.row.isHeader && <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
   {
     field: 'serviceName',
@@ -91,16 +164,17 @@ export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
   },
   {
     field: 'visitState',
-    headerName: 'Zavřít',
+    headerName: 'Stav',
     width: 90,
     display: 'flex',
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      return params.row.visitState ? (
-        <Typography color="success">Uzavřeno</Typography>
-      ) : (
-        <Typography color="error">Neuzavřeno</Typography>
+      const isVisitOpen = params.row.visitState
+      return (
+        !params.row.isHeader && (
+          <Typography color={isVisitOpen ? 'success ' : 'error'}>{isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}</Typography>
+        )
       )
     },
   },
@@ -111,34 +185,59 @@ export const createColumns = (): GridColDef<VisitListItem[][number]>[] => [
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      return (
-        <IconButton href={Paths.visitDetail(params.row.clientId, params.row.id)}>
-          <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
-        </IconButton>
-      )
+      if (!params.row.isHeader) {
+        return (
+          <IconButton href={Paths.visitDetail(params.row.clientId, params.row.id)}>
+            <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
+          </IconButton>
+        )
+      }
     },
   },
 ]
 
-const createVisitsTable = (visits: VisitWithServices[]): VisitListItem[] => {
+const isTypeRowHeader = (
+  item: VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string }
+): item is { isHeader: true; label: string; id: string } => {
+  return 'isHeader' in item
+}
+
+const createVisitsTable = (
+  visits: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[]
+): VisitRow[] => {
   const visitsList = visits.map((visit) => {
     if (!visit.id) {
       return
     }
 
+    if (isTypeRowHeader(visit)) {
+      return {
+        isHeader: true,
+        label: visit.label,
+        id: visit.id,
+        date: undefined,
+        client: undefined,
+        serviceName: undefined,
+        visitState: undefined,
+        clientId: undefined,
+      } satisfies VisitRow
+    }
+
     return {
       id: visit.id,
-      date: getDateTime(visit.date),
+      isHeader: false,
+      date: dayjs(visit.date).format('HH:mm'),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
       serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
       visitState: visit.visitStatus,
       clientId: visit.client.id,
-    }
+    } satisfies VisitRow
   })
-  return visitsList.filter((visitList) => !!visitList)
+
+  return visitsList.filter((visit) => visit !== undefined)
 }
 
-export const getDateTime = (date: Date) => {
+export const getDateTime = (date: string) => {
   const convertedDate = new Date(date)
 
   const hours = convertedDate.getUTCHours()

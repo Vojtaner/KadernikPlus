@@ -36,14 +36,16 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
       })),
     [columns, rows]
   )
-
+  console.log({ props })
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
       <DataGrid
+        {...props}
         rows={rows}
         columns={gridColumns}
         autosizeOnMount
         sx={{
+          ...props.sx,
           fontSize: '12px',
           border: 'none',
           '& .MuiDataGrid-columnSeparator': {
