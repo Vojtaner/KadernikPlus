@@ -37,7 +37,7 @@ const VisitsList = (props: VisitListProps) => {
 
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
   const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : visitData)].sort((a, b) => {
-    return getTimeFromUtcToLocal(a.date).localeCompare(getTimeFromUtcToLocal(b.date))
+    return getDateTimeFromUtcToLocal(a.date).localeCompare(getDateTimeFromUtcToLocal(b.date))
   })
   const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
   const rows = createVisitsTable(rowsWithHeaders)
@@ -214,6 +214,9 @@ const createVisitsTable = (
 
 export const getTimeFromUtcToLocal = (date: Date) => {
   return dayjs(date).format('HH:mm')
+}
+export const getDateTimeFromUtcToLocal = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY - HH:mm')
 }
 export const getDate = (date: Date) => {
   return dayjs(date).format('DD.MM.YYYY')
