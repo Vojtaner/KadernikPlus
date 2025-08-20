@@ -19,7 +19,9 @@ export type StockItemDefaultValuesType = Pick<
   'quantity' | 'totalPrice' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId' | 'packageCount' | 'avgUnitPrice'
 >
 
-export type StockItemCreateData = Omit<StockItem, 'createdAt' | 'updatedAt' | 'isActive'> & { stockId: string }
+export type StockItemCreateData = Omit<StockItem, 'createdAt' | 'updatedAt' | 'isActive' | 'lastPackageQuantity'> & {
+  stockId: string
+}
 
 export type StockItemBuyData = {
   id: string
