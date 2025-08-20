@@ -9,14 +9,14 @@ COPY ./package.json ./
 
 
 
-ENV AUDIENCE="http://kadernikplus908.io"
+# ENV AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
 ENV AUTH0_ISSUER_BASE_URL="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/"
-ENV AUTH0_TOKE_SIGNING_ALG="RS256"
+# ENV AUTH0_TOKE_SIGNING_ALG="RS256"
 ENV AUTH0_M2M_CLIENT_ID="CCqEi1S2XNdIUr0efwCBcjkwYgutj3Sq"
 
-ENV AUTH0_M2M_DOMAIN="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/api/v2"
-ENV PORT="3021"
+# ENV AUTH0_M2M_DOMAIN="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/api/v2"
+# ENV PORT="3021"
 
 RUN npm install
 
