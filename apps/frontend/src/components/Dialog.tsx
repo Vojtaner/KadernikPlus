@@ -17,7 +17,7 @@ type FormDialogProps = {
   onOpenButton: React.ReactNode
   isOpen: boolean
   onClose: () => void
-  handleSubmit: UseFormHandleSubmit<AppFormState>
+  handleSubmit?: UseFormHandleSubmit<AppFormState>
 }
 
 export default function FormDialog(props: FormDialogProps) {
@@ -37,7 +37,7 @@ export default function FormDialog(props: FormDialogProps) {
             component: 'form',
             onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault()
-              handleSubmit(onValidHandle, onInvalidHandle)()
+              handleSubmit?.(onValidHandle, onInvalidHandle)()
             },
             sx: {
               minWidth: '80vw',

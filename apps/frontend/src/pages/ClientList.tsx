@@ -8,12 +8,12 @@ import Stack from '@mui/material/Stack'
 import type { Client } from '../entities/client'
 import { Typography } from '@mui/material'
 import AppTheme from '../AppTheme'
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
-import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
-import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import { Paths } from '../routes/AppRoutes'
 import BoxIcon from '../components/BoxIcon'
 import { formatPhoneNumber } from './VisitsList'
+import SendMessageDialog from '../components/FormDialog/SendMessageDialog'
+import SendIcon from '@mui/icons-material/Send'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()
@@ -45,7 +45,7 @@ const createColumns = (): GridColDef<Client[][number]>[] => [
   {
     field: 'name',
     headerName: 'Klient',
-    minWidth: 140,
+    flex: 2.5,
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -55,7 +55,8 @@ const createColumns = (): GridColDef<Client[][number]>[] => [
   {
     field: 'phone',
     headerName: 'Telefon',
-    minWidth: 90,
+    flex: 2.5,
+
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -67,29 +68,28 @@ const createColumns = (): GridColDef<Client[][number]>[] => [
   {
     field: 'edit',
     headerName: '',
-    width: 160,
     editable: false,
+    flex: 2,
+
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
       <Stack direction="row" spacing={2}>
-        <BoxIcon
-          size="medium"
-          href={`tel:+420${params.row.phone}`}
-          sx={{ background: `${AppTheme.palette.success.light}`, color: `${AppTheme.palette.success.main}` }}
-          icon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}
-        />
-        <BoxIcon
-          size="medium"
-          href={`sms:+420${params.row.phone}`}
-          sx={{ background: `${AppTheme.palette.info.light}`, color: `${AppTheme.palette.info.main}` }}
-          icon={<SmsOutlinedIcon fontSize="small" color="info" />}
+        <SendMessageDialog
+          clientId={params.row.id}
+          openButton={
+            <BoxIcon
+              size="medium"
+              sx={{ background: `${AppTheme.palette.info.light}`, color: `${AppTheme.palette.info.main}` }}
+              icon={<SendIcon fontSize="small" color="info" />}
+            />
+          }
         />
         <BoxIcon
           size="medium"
           href={Paths.clientDetail(params.row.id)}
           sx={{ background: `${AppTheme.palette.primary.light}`, color: `${AppTheme.palette.info.main}` }}
-          icon={<PhotoCameraFrontOutlinedIcon fontSize="small" color="primary" />}
+          icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
         />
       </Stack>
     ),

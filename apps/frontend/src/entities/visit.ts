@@ -10,6 +10,7 @@ export type Visit = {
   date: Date
   paidPrice?: number
   deposit?: number
+
   depositStatus?: DepositStatus | null
   visitStatus?: boolean
   note?: string | null
@@ -48,7 +49,7 @@ export type VisitWithServicesWithProceduresWithStockAllowances = VisitWithServic
   procedures: (Procedure & { stockAllowances: AddProcedureStockAllowanceType })[]
 }
 
-type VisitService = {
+export type VisitService = {
   id: string
   service: Service
   serviceId: string

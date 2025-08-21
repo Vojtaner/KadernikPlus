@@ -65,6 +65,7 @@ const createVisitController = (dependencies: {
       const shiftedTime = original;
       const userId = httpRequest.userId;
       const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
+      console.log({ addVisitController: httpRequest.body });
 
       if (
         !visitData.clientId &&
@@ -79,7 +80,7 @@ const createVisitController = (dependencies: {
           phone: visitData.phone,
           note: visitData.note,
           userId,
-          deposit: true,
+          deposit: visitData.depositRequired,
         };
 
         const newClient = await dependencies.addOrUpdateClientUseCase.execute(
@@ -133,8 +134,6 @@ const createVisitController = (dependencies: {
   > = async (httpRequest) => {
     const { to, from, date } = httpRequest.query;
 
-    console.log({ to, from, date });
-
     const effectiveFrom = dayjs(from).startOf("day").toDate();
     const effectiveTo = to
       ? dayjs(to).endOf("day").toDate()
@@ -148,7 +147,7 @@ const createVisitController = (dependencies: {
         : date
         ? { date, userId }
         : { userId };
-    console.log({ queryData });
+
     try {
       const visits = await dependencies.getVisitsByDatesUseCase.execute(
         queryData

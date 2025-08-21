@@ -78,6 +78,8 @@ const createClientRepositoryDb = (
     ): Promise<Client> => {
       const { id: clientId } = clientData;
 
+      console.log({ clientData });
+
       if (clientId) {
         const existingClient = await prismaRepository.client.findFirst({
           where: {
@@ -116,6 +118,7 @@ const createClientRepositoryDb = (
           phone: clientData.phone,
           note: clientData.note,
           userId: clientData.userId,
+          deposit: clientData.deposit,
           teamId: userTeam.teamId,
         },
       });

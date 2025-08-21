@@ -1,15 +1,16 @@
-import { Box, Stack, Tab, Typography } from '@mui/material'
+import { Box, IconButton, Stack, Tab, Typography } from '@mui/material'
 import SmsCard from './SmsCard'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { TabPanel } from '@mui/lab'
-import { useState } from 'react'
+import { useState, type ReactElement } from 'react'
 import { useVisitsQuery } from '../queries'
-import { getTimeFromUtcToLocal } from '../pages/VisitsList'
+import { getDateTimeFromUtcToLocal } from '../pages/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
-import { DepositStatus, type VisitWithServices } from '../entities/visit'
+import { DepositStatus, type VisitService, type VisitWithServices } from '../entities/visit'
 import Loader from '../pages/Loader'
 import dayjs from 'dayjs'
+import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')
@@ -21,75 +22,56 @@ const SmsTabs = () => {
   if (isLoading) {
     return <Loader />
   }
-
   if (!visitData) {
     return <Typography>Žádné SMS nenalezeny.</Typography>
   }
+
   const groupedVisits = groupVisits(visitData)
 
-  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => setValue(newValue)
 
   return (
     <Box sx={{ width: '100%', typography: 'body1' }}>
       <TabContext value={value}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange} aria-label="lab API tabs example">
+          <TabList onChange={handleChange}>
             <Tab label="Upozornění" value="1" />
             <Tab label="Zálohy" value="2" />
             <Tab label="Recenze" value="3" />
           </TabList>
         </Box>
-        <TabPanel value="1" sx={{ paddingY: 2, paddingX: 0 }}>
-          <Stack spacing={2}>
-            {groupedVisits.invitations.map((invitationVisit) => {
-              return (
-                <SmsCard
-                  text={formatVisitToSms(invitationVisit)}
-                  phone={invitationVisit.phone}
-                  key={invitationVisit.id}
-                  customerName={`${invitationVisit.client.firstName} ${invitationVisit.client.lastName}`}
-                  haircut={invitationVisit.visitServices
-                    .map((visitService) => visitService.service.serviceName)
-                    .join(', ')}
-                  visitDistance={getVisitDistanceLabel(invitationVisit.date)}
-                />
-              )
-            })}
-          </Stack>
+
+        <TabPanel value="1" sx={{ py: 2, px: 0 }}>
+          <SmsList
+            icon={<InsertInvitationIcon />}
+            visits={groupedVisits.invitations}
+            getText={(invitationVisit) =>
+              formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
+                date: invitationVisit.date,
+              })
+            }
+          />
         </TabPanel>
-        <TabPanel value="2" sx={{ paddingY: 2, paddingX: 0 }}>
-          <Stack spacing={2}>
-            {groupedVisits.payments.map((payment) => {
-              return (
-                <SmsCard
-                  phone={payment.phone}
-                  text={formatVisitPartialPaymentReminderSms(payment)}
-                  key={payment.id}
-                  customerName={`${payment.client.firstName} ${payment.client.lastName}`}
-                  haircut={payment.visitServices.map((visitService) => visitService.service.serviceName).join(', ')}
-                  visitDistance={getVisitDistanceLabel(payment.date)}
-                />
-              )
-            })}
-          </Stack>
+
+        <TabPanel value="2" sx={{ py: 2, px: 0 }}>
+          <SmsList
+            visits={groupedVisits.payments}
+            getText={(payment) =>
+              formatVisitPartialPaymentReminderSms(payment.client.lastName, payment.visitServices, {
+                date: payment.date,
+                depositRequired: payment.client.deposit,
+                depositAmount: payment.deposit,
+                depositStatus: payment.depositStatus,
+              })
+            }
+          />
         </TabPanel>
-        <TabPanel value="3" sx={{ paddingY: 2, paddingX: 0 }}>
-          <Stack spacing={2}>
-            {groupedVisits.reviews.map((review) => {
-              return (
-                <SmsCard
-                  phone={review.phone}
-                  text={formatVisitReviewRequestSms(review)}
-                  key={review.id}
-                  customerName={`${review.client.firstName} ${review.client.lastName}`}
-                  haircut={review.visitServices.map((visitService) => visitService.service.serviceName).join(', ')}
-                  visitDistance={getVisitDistanceLabel(review.date)}
-                />
-              )
-            })}
-          </Stack>
+
+        <TabPanel value="3" sx={{ py: 2, px: 0 }}>
+          <SmsList
+            visits={groupedVisits.reviews}
+            getText={(review) => formatVisitReviewRequestSms(review.client.lastName)}
+          />
         </TabPanel>
       </TabContext>
     </Box>
@@ -98,47 +80,83 @@ const SmsTabs = () => {
 
 export default SmsTabs
 
-function formatVisitToSms(visit: VisitWithServices): string {
-  const client = visit.client
-  const firstName = client.firstName ?? ''
+export const SmsList = <T extends VisitWithServices>({
+  visits,
+  getText,
+  icon,
+  title,
+}: {
+  visits: T[]
+  getText: (visit: T) => string
+  title?: string
+  icon?: ReactElement
+}) => {
+  return (
+    <Stack spacing={2}>
+      <Stack direction="row" alignItems="center" spacing={2}>
+        <IconButton href="/">{icon}</IconButton>
+        <Typography
+          color="secondary"
+          sx={{
+            fontSize: '15px',
+            fontWeight: 600,
+          }}>
+          {title}
+        </Typography>
+      </Stack>
+      {visits.map((visit) => (
+        <SmsCard
+          key={visit.id}
+          phone={visit.phone}
+          text={getText(visit)}
+          customerName={`${visit.client.firstName} ${visit.client.lastName}`}
+          haircut={visit.visitServices.map((s) => s.service.serviceName).join(', ')}
+          visitDistance={getVisitDistanceLabel(visit.date)}
+        />
+      ))}
+    </Stack>
+  )
+}
+
+export function formatVisitInvitationToSms(lastName: string, services: VisitService[], visit: { date: Date }): string {
+  const { date } = visit
   const serviceNames =
-    visit.visitServices
+    services
       ?.map((visitService) => visitService.service?.serviceName?.trim())
       .filter(Boolean)
       .join(', ') || 'službu'
 
-  const date = getTimeFromUtcToLocal(visit.date)
-
-  return `Dobrý den, ${isWoman(firstName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(firstName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${date}. Těšíme se na Vás!`
+  const localDate = getDateTimeFromUtcToLocal(date)
+  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${localDate}. Těšíme se na Vás!`
 }
 
-function formatVisitReviewRequestSms(visit: VisitWithServices): string {
-  const client = visit.client
-  const firstName = client.firstName ?? ''
-
-  // const serviceNames =
-  //   visit.visitServices
-  //     ?.map((visitService) => visitService.service?.serviceName?.trim())
-  //     .filter(Boolean)
-  //     .join(', ') || 'službu'
-
-  return `Dobrý den, ${isWoman(firstName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(firstName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Děkujeme!`
+export function formatVisitReviewRequestSms(lastName: string): string {
+  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Děkujeme!`
 }
 
-function formatVisitPartialPaymentReminderSms(visit: VisitWithServices): string {
-  const client = visit.client
-  const firstName = client.firstName
+export function formatVisitPartialPaymentReminderSms(
+  lastName: string,
+  services: VisitService[],
+  visit: {
+    date: Date
+    depositRequired?: boolean | undefined
+    depositStatus: DepositStatus | null | undefined
+    depositAmount?: number | undefined
+  }
+): string {
+  const { date, depositRequired, depositStatus, depositAmount } = visit
+
   const serviceNames =
-    visit.visitServices
+    services
       ?.map((visitService) => visitService.service?.serviceName?.trim())
       .filter(Boolean)
       .join(', ') || 'službu'
 
-  const date = getTimeFromUtcToLocal(visit.date)
-  const shouldPay = visit.depositStatus === DepositStatus.NEZAPLACENO || client.deposit === false
+  const localDate = getDateTimeFromUtcToLocal(date)
+  const shouldPay = depositStatus === DepositStatus.NEZAPLACENO || depositRequired === false
 
   if (shouldPay) {
-    return `Dobrý den, ${isWoman(firstName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(firstName))}, připomínáme částečnou platbu ve výši ${visit.deposit ? `${visit.deposit} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} za službu ${serviceNames}, která je naplánována na ${date}. Prosíme o její uhrazení. Děkujeme!`
+    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`
   }
   return ''
 }
@@ -151,7 +169,7 @@ type VisitGroups = {
   reviews: VisitWithServices[]
 }
 
-function groupVisits(visits: VisitWithServices[]): VisitGroups {
+export function groupVisits(visits: VisitWithServices[]): VisitGroups {
   const now = new Date()
 
   const invitations: VisitWithServices[] = []

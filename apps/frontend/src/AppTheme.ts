@@ -81,6 +81,10 @@ const AppTheme = createTheme({
       secondary: '#797979',
       disabled: '#79797940',
     },
+    grey: {
+      200: '#B0BEC520',
+      500: '#B0BEC5CC',
+    },
   },
 })
 

@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import FormDialog from '../Dialog'
 import MenuIconButton from '../MenuIconButton'
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
@@ -15,12 +15,13 @@ import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { useScrollToTheTop } from './AddProcedureButton'
 import dayjs from 'dayjs'
 import { getDateTimeFromUtcToLocal } from '../../pages/VisitsList'
+import Switch from '../../pages/SwitchButton'
 
 export const AddVisitItemButton = () => {
   const addSnackbarMessage = useAddSnackbarMessage()
   const [open, setOpen] = useState(false)
   const [isNewClient, setIsNewClient] = useState(false)
-  const { control, resetField, handleSubmit } = useForm<Visit>()
+  const { control, resetField, handleSubmit } = useForm<Visit & { depositRequired: boolean }>()
   const date = useWatch({ control, name: 'date' })
   const { data: visitDataByDate } = useVisitsQuery({ date: dayjs(date) })
   const scroll = useScrollToTheTop()
@@ -133,6 +134,18 @@ export const AddVisitItemButton = () => {
                 maxRows={10}
                 fullWidth
               />
+              <Stack
+                direction="row"
+                alignItems="center"
+                bgcolor="#dddddd"
+                paddingX="1rem"
+                borderRadius="10px"
+                boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
+                <Typography fontWeight={600} color="secondary.main">
+                  Chci zálohu
+                </Typography>
+                <Switch control={control} fieldPath="depositRequired" />
+              </Stack>
             </Stack>
           )}
           <HairCutAutoComplete fieldPath="serviceIds" control={control} />

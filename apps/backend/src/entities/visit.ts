@@ -12,6 +12,7 @@ export type Visit = {
   deposit?: number;
   depositStatus?: DepositStatus | null;
   visitStatus?: boolean;
+  depositRequired?: boolean;
   note?: string | null;
   hairdresserId?: string;
   userId?: string;

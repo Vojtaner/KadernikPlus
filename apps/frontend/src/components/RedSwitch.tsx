@@ -1,7 +1,8 @@
-import { alpha, styled } from '@mui/material'
-import Switch from '../pages/SwitchButton'
+import { styled } from '@mui/material/styles'
+import { alpha } from '@mui/material/styles'
+import Switch, { type SwitchProps } from '../pages/SwitchButton'
 
-const RedSwitch = styled(Switch)(({ theme }) => ({
+const RedSwitch = styled((props: SwitchProps) => <Switch {...props} />)(({ theme }) => ({
   '& .MuiSwitch-switchBase': {
     color: theme.palette.secondary.main,
     '&:hover': {

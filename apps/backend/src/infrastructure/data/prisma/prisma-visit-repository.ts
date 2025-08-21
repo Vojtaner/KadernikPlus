@@ -112,8 +112,6 @@ export const createVisitRepositoryDb = (
 
     const where = getWhereFilter(userId, date, from, to);
 
-    console.log({ where });
-
     const visits: VisitWithServicesWithProceduresWithStockAllowances[] =
       await prismaRepository.visit.findMany({
         where,

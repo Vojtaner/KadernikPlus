@@ -1,18 +1,6 @@
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import React from 'react'
 
-const CHAR_WIDTH_PX = 6.5
-
-function getMaxWordLength<T>(rows: readonly T[], field: keyof T): number {
-  let longest = String(field).length
-  for (const row of rows) {
-    const cellValue = row[field]
-    const valueStr = String(cellValue)
-    longest = Math.max(longest, valueStr.length)
-  }
-  return longest
-}
-
 import type { DataGridProps, GridValidRowModel } from '@mui/x-data-grid'
 
 type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & {
@@ -30,8 +18,6 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
     () =>
       columns.map((col) => ({
         ...col,
-        width: col.width ?? getMaxWordLength(rows, col.field as keyof T[number]) * CHAR_WIDTH_PX,
-        minWidth: col.minWidth ?? 50,
         field: col.field,
       })),
     [columns, rows]

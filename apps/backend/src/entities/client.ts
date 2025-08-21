@@ -16,6 +16,7 @@ export type Client = {
 export type ClientOrUpdateCreateData = {
   firstName?: string;
   lastName?: string;
+  depositRequired?: boolean;
   phone?: string | null;
   note?: string | null;
   id?: string;

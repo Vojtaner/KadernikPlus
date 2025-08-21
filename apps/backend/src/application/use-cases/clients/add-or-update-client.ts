@@ -21,12 +21,13 @@ const createAddOrUpdateClientUseCase = (dependencies: {
     execute: async (
       clientData: WithUserId<ClientOrUpdateCreateData>
     ): Promise<Client> => {
+      const newOrUpdatedClient =
+        await dependencies.clientRepositoryDb.addOrUpdate(clientData);
+
+      //udělat na to usecase a přidat to jako usecase
       let action = "create";
       let clientId: string | undefined = undefined;
       let message = "";
-
-      const newOrUpdatedClient =
-        await dependencies.clientRepositoryDb.addOrUpdate(clientData);
 
       if (clientData.id) {
         action = "update";
