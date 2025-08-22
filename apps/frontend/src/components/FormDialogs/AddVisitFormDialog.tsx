@@ -5,10 +5,11 @@ import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import AddVisitForm, { useAddVisitForm } from '../Forms/AddVisitForm'
 import { useState } from 'react'
 import type { CreateVisitType } from '../../entities/visit'
+import { FormattedMessage } from 'react-intl'
 
 export const AddVisitFormDialog = () => {
   const [open, setOpen] = useState(false)
-  const { setIsNewClient, handleSubmit, createVisitMutation, ...formProps } = useAddVisitForm()
+  const { setIsNewClient, handleSubmit, title, createVisitMutation, ...formProps } = useAddVisitForm()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -31,14 +32,18 @@ export const AddVisitFormDialog = () => {
       onClose={handleClose}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={<AddVisitForm {...formProps} setIsNewClient={setIsNewClient} />}
       handleSubmit={() => handleSubmit(onSubmit)}
       onOpenButton={
-        <MenuIconButton icon={<MoreTimeOutlinedIcon fontSize="large" />} onClick={handleClickOpen} title="Objednat" />
+        <MenuIconButton icon={<MoreTimeOutlinedIcon fontSize="large" />} onClick={handleClickOpen} title={title} />
       }
       title="Objednat"
     />

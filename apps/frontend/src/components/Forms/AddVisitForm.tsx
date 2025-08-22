@@ -11,11 +11,13 @@ import BasicDateTimePicker from '../DateTimePicker'
 import { firstNameValidationrule, phoneValidationRule } from '../FormDialogs/AddOrUpdateClientItemButton'
 import TextField from '../TextField'
 import Switch from '../../pages/SwitchButton'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)
   const { control, resetField, handleSubmit } = useForm<CreateVisitType>()
   const date = useWatch({ control, name: 'date' })
+  const intl = useIntl()
   const depositRequired = useWatch({ control, name: 'depositRequired' })
   const { data: visitsOnSelectedDate } = useVisitsQuery({ date: dayjs(date) })
 
@@ -28,6 +30,7 @@ export const useAddVisitForm = () => {
   })
 
   return {
+    title: intl.formatMessage({ defaultMessage: 'Objednat', id: 'addVisit.order' }),
     control,
     isNewClient,
     setIsNewClient,
@@ -39,9 +42,10 @@ export const useAddVisitForm = () => {
   }
 }
 
-type AddVisitFormProps = Omit<ReturnType<typeof useAddVisitForm>, 'handleSubmit' | 'createVisitMutation'>
+type AddVisitFormProps = Omit<ReturnType<typeof useAddVisitForm>, 'handleSubmit' | 'createVisitMutation' | 'title'>
 
 const AddVisitForm = (props: AddVisitFormProps) => {
+  const intl = useIntl()
   const { control, isNewClient, setIsNewClient, resetField, depositRequired, visitsOnSelectedDate } = props
 
   return (
@@ -52,14 +56,19 @@ const AddVisitForm = (props: AddVisitFormProps) => {
         rules={{
           validate: (value) => {
             if (!value) {
-              return 'Musíte vybrat datum a čas'
+              return intl.formatMessage({ defaultMessage: 'Musíte vybrat datum a čas', id: 'addVisit.chooseDateTime' })
             }
 
             const isTaken = visitsOnSelectedDate?.some(
               (visit) => getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date)
             )
 
-            return isTaken ? 'Na tento čas máte již objednanou návštěvu.' : true
+            return isTaken
+              ? intl.formatMessage({
+                  defaultMessage: 'Na tento čas máte již objednanou návštěvu.',
+                  id: 'addVisit.visitTimeAlreadyBooked',
+                })
+              : true
           },
         }}
       />
@@ -78,7 +87,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
               setIsNewClient((prev) => !prev)
               resetField('clientId')
             }}>
-            Nový klient
+            <FormattedMessage id="addVisit.newClientButton" defaultMessage="Nový klient" />
           </Button>
         </Box>
       </Stack>
@@ -126,7 +135,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             borderRadius="10px"
             boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
             <Typography fontWeight={600} color="secondary.main">
-              Chci zálohu
+              <FormattedMessage id="addVisit.depositRequiredSwitch" defaultMessage="Chci zálohu" />
             </Typography>
             <Switch control={control} fieldPath="depositRequired" />
           </Stack>
