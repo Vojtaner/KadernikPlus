@@ -34,6 +34,8 @@ export const AddVisitItemButton = () => {
       resetField('serviceIds')
     },
   })
+  const depositRequired = useWatch({ control, name: 'depositRequired' })
+
   const handleClickOpen = () => {
     setOpen(true)
   }
@@ -146,6 +148,9 @@ export const AddVisitItemButton = () => {
                 </Typography>
                 <Switch control={control} fieldPath="depositRequired" />
               </Stack>
+              {depositRequired && (
+                <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
+              )}
             </Stack>
           )}
           <HairCutAutoComplete fieldPath="serviceIds" control={control} />
