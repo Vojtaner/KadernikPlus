@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack'
 import AddOrUpdateClientItemButton from './FormDialogs/AddOrUpdateClientItemButton'
-import { AddVisitItemButton } from './FormDialogs/AddVisitItemButton'
+import AddVisitFormDialog from './FormDialogs/AddVisitFormDialog'
 import AddStockItemButton from './FormDialogs/AddEditBuyStockItemButton'
 import AddServiceItemButton from './FormDialogs/AddServiceItemButton'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
@@ -35,7 +35,7 @@ const BottomBar = () => {
       <AddOrUpdateClientItemButton
         openButton={<MenuIconButton icon={<PersonAddAlt1OutlinedIcon fontSize="large" />} title="Přidat klienta" />}
       />
-      <AddVisitItemButton />
+      <AddVisitFormDialog />
       <AddStockItemButton
         formUsage="purchaseAndNewStockItem"
         openButton={<MenuIconButton icon={<WarehouseIcon fontSize="large" />} title="Sklad" />}

@@ -5,11 +5,11 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Stack } from '@mui/material'
-import type { AppFormState } from '../reactHookForm/entity'
 
-import type { UseFormHandleSubmit } from 'react-hook-form'
+import type { FieldValues, UseFormHandleSubmit } from 'react-hook-form'
+import { useScrollToTheTop } from './FormDialogs/AddProcedureButton'
 
-type FormDialogProps = {
+type FormDialogProps<TFieldValues extends FieldValues = FieldValues> = {
   actions: React.ReactNode
   formFields: React.ReactNode
   title: string
@@ -17,42 +17,50 @@ type FormDialogProps = {
   onOpenButton: React.ReactNode
   isOpen: boolean
   onClose: () => void
-  handleSubmit?: UseFormHandleSubmit<AppFormState>
+  handleSubmit?: UseFormHandleSubmit<TFieldValues>
 }
 
-export default function FormDialog(props: FormDialogProps) {
+export default function FormDialog<TFieldValues extends FieldValues = FieldValues>(
+  props: FormDialogProps<TFieldValues>
+) {
   const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose, handleSubmit } = props
+  const scroll = useScrollToTheTop()
 
   const onValidHandle = () => {}
   const onInvalidHandle = () => {}
 
   return (
     <>
-      {onOpenButton}
+      {onOpenButton}{' '}
       <Dialog
         open={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          onClose()
+          scroll()
+        }}
         slotProps={{
           paper: {
             component: 'form',
             onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault()
               handleSubmit?.(onValidHandle, onInvalidHandle)()
+              scroll()
             },
-            sx: {
-              minWidth: '80vw',
-            },
+            sx: { minWidth: '80vw' },
           },
         }}>
-        <DialogTitle>{title}</DialogTitle>
+        {' '}
+        <DialogTitle>{title}</DialogTitle>{' '}
         <DialogContent>
-          {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}
+          {' '}
+          {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}{' '}
           <Stack direction="column" rowGap={2} paddingY={2}>
-            {formFields}
-          </Stack>
-        </DialogContent>
-        <DialogActions>{actions}</DialogActions>
-      </Dialog>
+            {' '}
+            {formFields}{' '}
+          </Stack>{' '}
+        </DialogContent>{' '}
+        <DialogActions>{actions}</DialogActions>{' '}
+      </Dialog>{' '}
     </>
   )
 }

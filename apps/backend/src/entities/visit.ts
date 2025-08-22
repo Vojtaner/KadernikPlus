@@ -21,6 +21,17 @@ export type Visit = {
 } & Pick<Client, "firstName" | "lastName" | "phone" | "note">;
 
 export type VisitCreateData = Visit;
+export type CreateVisitType = {
+  clientId: string;
+  date: Date;
+  depositAmount?: number;
+  depositRequired: boolean;
+  serviceIds: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  clientNote?: string;
+};
 
 export type GetVisitsType = Omit<Visit, "serviceIds" | "id"> & {
   services: Service[];

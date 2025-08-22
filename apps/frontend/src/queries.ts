@@ -44,7 +44,7 @@ import type { Service, ServiceCreateOrUpdateData } from './entities/service'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type {
   VisitWithServices,
-  VisitCreateData,
+  CreateVisitType,
   VisitDetailFormType,
   VisitWithServicesWithProceduresWithStockAllowances,
 } from './entities/visit'
@@ -249,12 +249,12 @@ export const useVisitQuery = (visitId: string | undefined) => {
   })
 }
 
-export const useCreateVisitMutation = (options?: UseMutationOptions<VisitCreateData, Error, VisitCreateData>) => {
+export const useCreateVisitMutation = (options?: UseMutationOptions<CreateVisitType, Error, CreateVisitType>) => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
 
-  return useMutation<VisitCreateData, Error, VisitCreateData>({
-    mutationFn: (visitData: VisitCreateData) => postCreateVisit(axios, visitData),
+  return useMutation<CreateVisitType, Error, CreateVisitType>({
+    mutationFn: (visitData: CreateVisitType) => postCreateVisit(axios, visitData),
     onSuccess: (visitData, variables, context) => {
       options?.onSuccess?.(visitData, variables, context)
       queryClient.invalidateQueries({ queryKey: ['visits'] })

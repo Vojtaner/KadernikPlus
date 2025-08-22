@@ -15,7 +15,7 @@ import type { CreateProcedure, PostNewProcedure } from '../entities/procedure'
 import type { LogData } from '../entities/logs'
 import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
 import type {
-  VisitCreateData,
+  CreateVisitType,
   VisitDetailFormType,
   VisitWithServices,
   VisitWithServicesWithProceduresWithStockAllowances,
@@ -120,7 +120,7 @@ export const postCreateOrUpdateService = async (
   const response = await axios.post(apiRoutes.getServiceUrl(), serviceData)
   return response.data
 }
-export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCreateData): Promise<VisitCreateData> => {
+export const postCreateVisit = async (axios: AxiosInstance, visitData: CreateVisitType): Promise<CreateVisitType> => {
   const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
   return response.data
 }
