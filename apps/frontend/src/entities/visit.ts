@@ -1,4 +1,4 @@
-import type { AddProcedureStockAllowanceType } from '../components/FormDialog/AddProcedureButton'
+import type { AddProcedureStockAllowanceType } from '../components/FormDialogs/AddProcedureButton'
 import { type Client } from './client'
 import { type Procedure } from './procedure'
 import { type Service } from './service'

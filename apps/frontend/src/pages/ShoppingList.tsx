@@ -6,7 +6,7 @@ import type { StockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import BoxIcon from '../components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import AddEditBuyStockItemButton from '../components/FormDialog/AddEditBuyStockItemButton'
+import AddEditBuyStockItemButton from '../components/FormDialogs/AddEditBuyStockItemButton'
 import { formatToCZK } from './VisitDetailGrid'
 
 type ShoppingListProps = {

@@ -1,4 +1,4 @@
-import type { AddProcedureStockAllowanceType } from '../components/FormDialog/AddProcedureButton'
+import type { AddProcedureStockAllowanceType } from '../components/FormDialogs/AddProcedureButton'
 
 export type Procedure = {
   id: string

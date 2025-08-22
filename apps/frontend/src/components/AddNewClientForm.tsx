@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack'
-import { firstNameValidationrule, phoneValidationRule } from './FormDialog/AddOrUpdateClientItemButton'
+import { firstNameValidationrule, phoneValidationRule } from './FormDialogs/AddOrUpdateClientItemButton'
 import TextField from './TextField'
 import type { Control } from 'react-hook-form'
 

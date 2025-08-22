@@ -12,7 +12,7 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import { Paths } from '../routes/AppRoutes'
 import BoxIcon from '../components/BoxIcon'
 import { formatPhoneNumber } from './VisitsList'
-import SendMessageDialog from '../components/FormDialog/SendMessageDialog'
+import SendMessageDialog from '../components/FormDialogs/SendMessageDialog'
 import SendIcon from '@mui/icons-material/Send'
 
 const ClientsList = () => {

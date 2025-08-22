@@ -7,7 +7,7 @@ import { useServicesQuery } from '../queries'
 import type { Service } from '../entities/service'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
-import AddServiceItemButton from '../components/FormDialog/AddServiceItemButton'
+import AddServiceItemButton from '../components/FormDialogs/AddServiceItemButton'
 
 const PriceList = () => {
   const { data: services, isLoading, isError } = useServicesQuery()

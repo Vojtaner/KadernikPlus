@@ -1,4 +1,4 @@
-import { Stack, IconButton, Button, Typography, Box, type ButtonProps } from '@mui/material'
+import { Stack, IconButton, Button, Typography, Box } from '@mui/material'
 import { Grid } from '@mui/material'
 import {
   Controller,
@@ -21,8 +21,7 @@ import type { PostNewProcedure } from '../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../entities/stock-item'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import type { CommonProps } from '@mui/material/OverridableComponent'
-import type { AppPaletteColor } from '../../entity'
+import { addPropsToReactElement } from '../entity'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
@@ -104,14 +103,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     setOpen(false)
   }
 
-  const openDialogButton = addPropsToReactElement(openButton, {
-    onClick: (e: React.MouseEvent) => {
-      openButton.props.onClick?.(e)
-      handleClickOpen()
-    },
-    color: 'error',
-  })
-
   return (
     <FormDialog
       isOpen={open}
@@ -157,7 +148,13 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
           />
         </>
       }
-      onOpenButton={openDialogButton}
+      onOpenButton={addPropsToReactElement(openButton, {
+        onClick: (e: React.MouseEvent) => {
+          openButton.props.onClick?.(e)
+          handleClickOpen()
+        },
+        color: 'error',
+      })}
       title="Přidat postup"
       dialogHelperText="Zde zadejte popis úkonu, časy, komplikace, kompromisy."
     />
@@ -165,13 +162,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 }
 
 export default AddProcedureButton
-
-const addPropsToReactElement = (
-  element: ReactElement,
-  props: ButtonProps & CommonProps & { color: AppPaletteColor }
-) => {
-  return React.cloneElement(element, { ...props })
-}
 
 const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceFormValues>) => {
   const { control, append, remove, fields } = props

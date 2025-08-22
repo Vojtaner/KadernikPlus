@@ -9,7 +9,7 @@ import { type StockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
-import AddEditBuyStockItemButton from '../components/FormDialog/AddEditBuyStockItemButton'
+import AddEditBuyStockItemButton from '../components/FormDialogs/AddEditBuyStockItemButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
 

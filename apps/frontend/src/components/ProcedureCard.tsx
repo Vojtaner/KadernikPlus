@@ -1,6 +1,6 @@
 import { Box, Typography, Stack, IconButton, Button } from '@mui/material'
 import AppTheme from '../AppTheme'
-import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormDialog/AddProcedureButton'
+import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormDialogs/AddProcedureButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import type { StockAllowance } from '../entities/stock-item'
