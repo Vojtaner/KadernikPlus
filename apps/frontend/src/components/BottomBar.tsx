@@ -7,7 +7,7 @@ import MenuIconButton from './MenuIconButton'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import { useIntl } from 'react-intl'
-import { StockItemDialog } from './FormDialogs/AddEditBuyStockItemButton'
+import { StockItemDialog } from './FormDialogs/StockItemDialog'
 
 const BottomBar = () => {
   const intl = useIntl()

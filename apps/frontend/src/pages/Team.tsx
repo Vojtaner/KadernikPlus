@@ -14,12 +14,6 @@ import AddTeamMemberButton from '../components/FormDialogs/AddTeamMemberButton'
 import BoxIcon from '../components/BoxIcon'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
-// const rows: TeamSettings[] = [
-//   { name: 'Vojtěch Laurin', id: '1', canAccessStocks: true, canAccessClients: true, canAccessVisits: true },
-//   { name: 'Monika Laurinová', id: '2', canAccessStocks: true, canAccessClients: false, canAccessVisits: true },
-//   { name: 'Jan Špecián', id: '3', canAccessStocks: true, canAccessClients: true, canAccessVisits: false },
-// ]
-
 const Team = () => {
   const { teamId } = useParams()
   const { data: teamMembers, isLoading } = useTeamMembersQuery(teamId)
@@ -63,40 +57,6 @@ const createTeamMemberSettingsRows = (
 }
 
 export default Team
-
-// const columns: GridColDef<TeamSettings[][number]>[] = [
-//   { field: 'name', headerName: 'Uživatel', disableColumnMenu: true, minWidth: 110 },
-
-//   {
-//     field: 'canAccessStocks',
-//     headerName: 'Sklad',
-//     width: 100,
-//     editable: false,
-//     display: 'flex',
-//     disableColumnMenu: true,
-//     renderCell: (params) => <Checkbox color={params.value ? 'success' : 'default'} checked={params.value} />,
-//   },
-
-//   {
-//     field: 'canAccessClients',
-//     headerName: 'Klienti',
-//     width: 100,
-//     editable: false,
-//     display: 'flex',
-//     disableColumnMenu: true,
-//     renderCell: (params) => <Checkbox color={params.value ? 'success' : 'default'} checked={params.value} />,
-//   },
-
-//   {
-//     field: 'canAccessVisits',
-//     headerName: 'Návštěvy',
-//     width: 100,
-//     editable: false,
-//     display: 'flex',
-//     disableColumnMenu: true,
-//     renderCell: (params) => <Checkbox color={params.value ? 'success' : 'default'} checked={params.value} />,
-//   },
-// ]
 
 const createColumns = (
   updateFn: (data: SkillUpdateInput) => void,

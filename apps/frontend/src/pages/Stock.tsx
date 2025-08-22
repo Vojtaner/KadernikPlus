@@ -11,7 +11,7 @@ import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
-import { StockItemDialog } from '../components/FormDialogs/AddEditBuyStockItemButton'
+import { StockItemDialog } from '../components/FormDialogs/StockItemDialog'
 
 const Stock = () => {
   const { stockId } = useParams()
