@@ -14,7 +14,6 @@ type SmsCardProps = {
 
 const SmsCard = (props: SmsCardProps) => {
   const { text, customerName, haircut, visitDistance, phone } = props
-
   return (
     <Stack
       direction="row"

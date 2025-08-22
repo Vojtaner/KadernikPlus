@@ -107,7 +107,7 @@ export const SmsList = <T extends VisitWithServices>({
       {visits.map((visit) => (
         <SmsCard
           key={visit.id}
-          phone={visit.phone}
+          phone={visit.client.phone}
           text={getText(visit)}
           customerName={`${visit.client.firstName} ${visit.client.lastName}`}
           haircut={visit.visitServices.map((s) => s.service.serviceName).join(', ')}
