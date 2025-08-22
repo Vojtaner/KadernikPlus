@@ -14,9 +14,20 @@ export type StockItem = {
   lastPackageQuantity: number
 }
 
+export type StockItemFormUsagePurposeType = 'purchase' | 'purchaseAndNewStockItem' | 'stockItem'
+
 export type StockItemDefaultValuesType = Pick<
   StockItem,
-  'quantity' | 'totalPrice' | 'id' | 'threshold' | 'unit' | 'itemName' | 'stockId' | 'packageCount' | 'avgUnitPrice'
+  | 'quantity'
+  | 'totalPrice'
+  | 'id'
+  | 'threshold'
+  | 'unit'
+  | 'itemName'
+  | 'stockId'
+  | 'packageCount'
+  | 'avgUnitPrice'
+  | 'lastPackageQuantity'
 >
 
 export type ExistingStockItem = {

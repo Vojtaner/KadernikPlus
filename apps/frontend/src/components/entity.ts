@@ -30,3 +30,9 @@ export const firstNameValidationrule = {
     message: 'Jméno musí mít alespoň 3 znaky.',
   },
 }
+
+export const getButtonStyles = (active: boolean) => ({
+  lineHeight: '18px',
+  backgroundColor: active ? 'primary.main' : undefined,
+  color: active ? 'white' : undefined,
+})

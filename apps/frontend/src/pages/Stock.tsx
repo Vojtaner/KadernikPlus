@@ -9,9 +9,9 @@ import { type ExistingStockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
-import AddEditBuyStockItemButton from '../components/FormDialogs/AddEditBuyStockItemButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
+import { StockItemDialog } from '../components/FormDialogs/AddEditBuyStockItemButton'
 
 const Stock = () => {
   const { stockId } = useParams()
@@ -80,14 +80,16 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<Existi
     disableColumnMenu: true,
     renderCell: (params) => (
       <Stack direction="row" spacing={1}>
-        <AddEditBuyStockItemButton
-          formUsage="stockItem"
+        <StockItemDialog
+          formUsagePurpose="stockItem"
           defaultValues={{
             id: params.row.id,
             itemName: params.row.itemName,
             stockId: params.row.stockId,
             totalPrice: Math.round(params.row.totalPrice),
             quantity: Math.round(params.row.quantity / params.row.packageCount),
+            lastPackageQuantity: params.row.lastPackageQuantity,
+            avgUnitPrice: params.row.avgUnitPrice,
             threshold: params.row.threshold,
             unit: params.row.unit,
             packageCount: params.row.packageCount,

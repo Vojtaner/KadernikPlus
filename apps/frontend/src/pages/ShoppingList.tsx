@@ -6,8 +6,8 @@ import type { StockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import BoxIcon from '../components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import AddEditBuyStockItemButton from '../components/FormDialogs/AddEditBuyStockItemButton'
 import { formatToCZK } from './VisitDetailGrid'
+import { StockItemDialog } from '../components/FormDialogs/AddEditBuyStockItemButton'
 
 type ShoppingListProps = {
   columnHeaderHeight?: 0
@@ -114,8 +114,8 @@ const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
       display: 'flex',
       disableColumnMenu: true,
       renderCell: (params) => (
-        <AddEditBuyStockItemButton
-          formUsage="purchase"
+        <StockItemDialog
+          formUsagePurpose="purchase"
           defaultValues={{
             id: params.row.id,
           }}

@@ -1,13 +1,13 @@
 import Stack from '@mui/material/Stack'
 import AddEditClientFormDialog from './FormDialogs/AddEditClientFormDialog'
 import AddVisitFormDialog from './FormDialogs/AddVisitFormDialog'
-import AddStockItemButton from './FormDialogs/AddEditBuyStockItemButton'
 import AddServiceItemButton from './FormDialogs/AddServiceItemButton'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import MenuIconButton from './MenuIconButton'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import { useIntl } from 'react-intl'
+import { StockItemDialog } from './FormDialogs/AddEditBuyStockItemButton'
 
 const BottomBar = () => {
   const intl = useIntl()
@@ -48,8 +48,8 @@ const BottomBar = () => {
         }
       />
       <AddVisitFormDialog />
-      <AddStockItemButton
-        formUsage="purchaseAndNewStockItem"
+      <StockItemDialog
+        formUsagePurpose="purchaseAndNewStockItem"
         openButton={
           <MenuIconButton
             icon={<WarehouseIcon fontSize="large" />}
