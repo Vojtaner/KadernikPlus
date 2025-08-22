@@ -5,7 +5,28 @@ import type { AppPaletteColor } from '../entity'
 
 export const addPropsToReactElement = (
   element: ReactElement,
-  props: ButtonProps & CommonProps & { color: AppPaletteColor }
+  props: ButtonProps & CommonProps & { color?: AppPaletteColor }
 ) => {
   return cloneElement(element, { ...props })
+}
+
+export const phoneValidationRule = {
+  pattern: {
+    value: /^\+?[0-9]{7,15}$/,
+    message: 'Zadejte platné telefonní číslo.',
+  },
+  maxLength: {
+    value: 9,
+    message: 'Číslo musí mít 9 znaků.',
+  },
+  minLength: {
+    value: 9,
+    message: 'Číslo musí mít 9 znaků.',
+  },
+}
+export const firstNameValidationrule = {
+  minLength: {
+    value: 3,
+    message: 'Jméno musí mít alespoň 3 znaky.',
+  },
 }

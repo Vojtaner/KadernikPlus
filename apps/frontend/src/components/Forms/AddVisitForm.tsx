@@ -8,10 +8,10 @@ import { useVisitsQuery, useCreateVisitMutation } from '../../queries'
 import ClientAutoComplete from '../AutoCompletes/ClientAutoComplete'
 import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
 import BasicDateTimePicker from '../DateTimePicker'
-import { firstNameValidationrule, phoneValidationRule } from '../FormDialogs/AddOrUpdateClientItemButton'
 import TextField from '../TextField'
 import Switch from '../../pages/SwitchButton'
 import { FormattedMessage, useIntl } from 'react-intl'
+import { firstNameValidationrule, phoneValidationRule } from '../entity'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)

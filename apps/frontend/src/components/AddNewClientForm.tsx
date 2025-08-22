@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack'
-import { firstNameValidationrule, phoneValidationRule } from './FormDialogs/AddOrUpdateClientItemButton'
 import TextField from './TextField'
 import type { Control } from 'react-hook-form'
+import { firstNameValidationrule, phoneValidationRule } from './entity'
 
 type AddNewClientFormProps = {
   control: Control<AddNewClientFields>

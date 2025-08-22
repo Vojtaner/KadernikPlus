@@ -31,7 +31,7 @@ export default function FormDialog<TFieldValues extends FieldValues = FieldValue
 
   return (
     <>
-      {onOpenButton}{' '}
+      {onOpenButton}
       <Dialog
         open={isOpen}
         onClose={() => {
@@ -49,18 +49,15 @@ export default function FormDialog<TFieldValues extends FieldValues = FieldValue
             sx: { minWidth: '80vw' },
           },
         }}>
-        {' '}
-        <DialogTitle>{title}</DialogTitle>{' '}
+        <DialogTitle>{title}</DialogTitle>
         <DialogContent>
-          {' '}
-          {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}{' '}
+          {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}
           <Stack direction="column" rowGap={2} paddingY={2}>
-            {' '}
-            {formFields}{' '}
-          </Stack>{' '}
-        </DialogContent>{' '}
-        <DialogActions>{actions}</DialogActions>{' '}
-      </Dialog>{' '}
+            {formFields}
+          </Stack>
+        </DialogContent>
+        <DialogActions>{actions}</DialogActions>
+      </Dialog>
     </>
   )
 }

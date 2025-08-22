@@ -6,8 +6,8 @@ export type Client = {
   id: string
   firstName: string
   lastName: string
-  phone: string | null
-  note?: string | null
+  phone: string
+  note?: string
   deposit: boolean
   userId?: string
   teamId?: string
@@ -22,6 +22,15 @@ export type ClientOrUpdateCreateData = {
   deposit?: boolean
   teamId?: string
 }
+
+export type EditClient = {
+  firstName: string
+  lastName: string
+  phone: string
+  note?: string
+}
+
+export type NewClient = Partial<EditClient>
 
 /**
  * Interface for creating a new Client.

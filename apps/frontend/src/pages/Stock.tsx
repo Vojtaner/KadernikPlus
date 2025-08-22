@@ -5,7 +5,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../components/DataGrid'
 import { useDeleteStockItemMutation, useStockItemsQuery } from '../queries'
 import ErrorBoundary from './ErrorBoundary'
-import { type StockItem } from '../entities/stock-item'
+import { type ExistingStockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
@@ -35,7 +35,7 @@ const Stock = () => {
 
 export default Stock
 
-const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockItem[][number]>[] => [
+const createColumns = (deleteStockItem: (id: string) => void): GridColDef<ExistingStockItem[][number]>[] => [
   { field: 'itemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'price',
