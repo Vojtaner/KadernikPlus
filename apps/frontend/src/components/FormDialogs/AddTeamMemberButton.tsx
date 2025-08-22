@@ -5,6 +5,7 @@ import TextField from '../TextField'
 import { useAddTeamMemberMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
 import { useScrollToTheTop } from './AddProcedureButton'
+import { FormattedMessage } from 'react-intl'
 
 type TeamMemberForm = {
   email: string
@@ -39,8 +40,12 @@ const AddTeamMemberButton = () => {
       handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={

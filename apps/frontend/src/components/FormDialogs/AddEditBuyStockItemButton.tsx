@@ -12,6 +12,7 @@ import { useForm, useWatch } from 'react-hook-form'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 import Loader from '../../pages/Loader'
 import { useScrollToTheTop } from './AddProcedureButton'
+import { FormattedMessage } from 'react-intl'
 
 type AddEditBuyStockItemButtonProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
@@ -98,8 +99,12 @@ const AddEditBuyStockItemButton = (props: AddEditBuyStockItemButtonProps) => {
       onClose={handleClose}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={

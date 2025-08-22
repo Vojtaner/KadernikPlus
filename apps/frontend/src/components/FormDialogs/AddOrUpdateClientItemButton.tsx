@@ -7,6 +7,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form'
 import TextField from '../TextField'
 import { useScrollToTheTop } from './AddProcedureButton'
+import { FormattedMessage } from 'react-intl'
 
 type AddOrUpdateClientItemButtonProps = {
   defaultValues?: ClientOrUpdateCreateData
@@ -54,8 +55,12 @@ const AddOrUpdateClientItemButton = (props: AddOrUpdateClientItemButtonProps) =>
       onClose={handleClose}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
