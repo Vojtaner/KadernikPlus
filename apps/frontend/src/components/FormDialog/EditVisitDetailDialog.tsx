@@ -14,7 +14,7 @@ import React from 'react'
 import { useScrollToTheTop } from './AddProcedureButton'
 import RedSwitch from '../RedSwitch'
 import { isVisitFinished } from '../../pages/VisitDetailGrid'
-import HairCutAutoComplete from '../AutoCompletes/HairCutAutoComplete'
+import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -100,7 +100,7 @@ const EditVisitDetailDialog = (props: {
           )}
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} />
           <BasicDateTimePicker fieldPath="date" control={control} />
-          <HairCutAutoComplete fieldPath="hairCutId" control={control} />
+          <ServicesAutoComplete fieldPath="hairCutId" control={control} />
           <TextField
             fieldPath="paidPrice"
             label={`${visit.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}

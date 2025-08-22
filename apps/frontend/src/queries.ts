@@ -39,9 +39,8 @@ import type {
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
 } from './entities/client'
-import type { StockItemCreateData } from './entities/stock-item'
+import type { ExistingStockItem, StockItemCreateData } from './entities/stock-item'
 import type { Service, ServiceCreateOrUpdateData } from './entities/service'
-import { type StockItem } from './entities/stock-item'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type {
   VisitWithServices,
@@ -464,7 +463,7 @@ export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, un
 export const useStockItemsQuery = (stockId: string | undefined) => {
   const axios = useAxios()
 
-  return useQuery<StockItem[]>({
+  return useQuery<ExistingStockItem[]>({
     queryKey: ['stockItems', stockId],
     queryFn: () => {
       if (!stockId) {

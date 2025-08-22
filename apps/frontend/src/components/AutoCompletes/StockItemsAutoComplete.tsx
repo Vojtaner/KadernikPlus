@@ -1,15 +1,9 @@
-import { Autocomplete, TextField, Typography } from '@mui/material'
-import {
-  Controller,
-  type Control,
-  type FieldPath,
-  type FieldPathValue,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
+import { type Control, type FieldPath, type FieldPathValue, type FieldValues, type Path } from 'react-hook-form'
 import { useStockItemsQuery, useStocksQuery } from '../../queries'
 import Loader from '../../pages/Loader'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
+import AutoComplete from '../../app/components/AutoComplete'
+import { FormattedMessage } from 'react-intl'
 
 type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: Path<TFieldValues>
@@ -17,11 +11,8 @@ type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
 }
 
-export default function StockItemsAutoComplete<TFieldValues extends FieldValues>({
-  fieldPath,
-  control,
-  defaultValue,
-}: StockItemsAutoCompleteProps<TFieldValues>) {
+const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockItemsAutoCompleteProps<TFieldValues>) => {
+  const { control, fieldPath, defaultValue } = props
   const { data: stocks } = useStocksQuery()
   const { data: stockItems, isLoading, isError } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
 
@@ -30,7 +21,7 @@ export default function StockItemsAutoComplete<TFieldValues extends FieldValues>
   }
 
   if (!stockItems || isError) {
-    return <Typography>Žádní členové týmu nebyli nalezeni.</Typography>
+    return <FormattedMessage defaultMessage={'Skladové položky nebyly nalezeny.'} id="stockItem.notFound" />
   }
 
   const stockItemsOptions = stockItems.map((stockItem) => ({
@@ -39,27 +30,17 @@ export default function StockItemsAutoComplete<TFieldValues extends FieldValues>
   }))
 
   return (
-    <Controller
-      name={fieldPath}
-      control={control}
+    <AutoComplete
+      options={stockItemsOptions}
       defaultValue={defaultValue}
-      render={({ field }) => {
-        const selectedOption = stockItemsOptions.find((option) => option.id === field.value) || null
-
-        return (
-          <Autocomplete
-            options={stockItemsOptions}
-            getOptionLabel={(option) => option.name}
-            value={selectedOption}
-            onChange={(_, newValue) => {
-              queryClient.invalidateQueries({ queryKey: ['procedures'] })
-              return field.onChange(newValue?.id ?? null)
-            }}
-            isOptionEqualToValue={(option, value) => value != null && option.id === value.id}
-            renderInput={(params) => <TextField {...params} label="Vyberte položku" />}
-          />
-        )
+      control={control}
+      fieldPath={fieldPath}
+      label="Vyberte položku"
+      onChange={() => {
+        queryClient.invalidateQueries({ queryKey: ['procedures'] })
       }}
     />
   )
 }
+
+export default StockItemsAutoComplete

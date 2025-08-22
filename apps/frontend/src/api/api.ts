@@ -10,10 +10,9 @@ import type {
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
 } from '../entities/client'
-import type { StockItemCreateData } from '../entities/stock-item'
+import type { ExistingStockItem, StockItemCreateData } from '../entities/stock-item'
 import type { CreateProcedure, PostNewProcedure } from '../entities/procedure'
 import type { LogData } from '../entities/logs'
-import { type StockItem } from '../entities/stock-item'
 import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
 import type {
   VisitCreateData,
@@ -52,7 +51,7 @@ export const getUserLogs = async (axios: AxiosInstance, userId: string): Promise
   return response.data
 }
 
-export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<StockItem[]> => {
+export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<ExistingStockItem[]> => {
   const response = await axios.get(apiRoutes.getStockItemsUrl(stockId))
   return response.data
 }

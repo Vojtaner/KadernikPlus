@@ -1,7 +1,8 @@
-import { Autocomplete, TextField, Typography } from '@mui/material'
-import { Controller, type Control, type FieldValues, type Path } from 'react-hook-form'
+import { type Control, type FieldValues, type Path } from 'react-hook-form'
 import { useTeamMembersQuery } from '../../queries'
 import Loader from '../../pages/Loader'
+import { FormattedMessage } from 'react-intl'
+import AutoComplete from '../../app/components/AutoComplete'
 
 type TeamMemberAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: Path<TFieldValues>
@@ -19,7 +20,7 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
   }
 
   if (!teamMembers || isError) {
-    return <Typography>Žádní členové týmu nebyli nalezeni.</Typography>
+    return <FormattedMessage defaultMessage={'Žádní členové týmu nebyli nalezeni.'} id="teamMembers.notFound" />
   }
 
   const teamMemberOptions = teamMembers.map((member) => ({
@@ -27,26 +28,5 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
     name: member.user.name,
   }))
 
-  // const teamMembers = [{ id: 'google-oauth2|113238590142888685973', name: 'Vojtěch Laurin' }]
-
-  return (
-    <Controller
-      name={fieldPath}
-      control={control}
-      render={({ field }) => {
-        const selectedOption = teamMemberOptions.find((option) => option.id === field.value) || null
-
-        return (
-          <Autocomplete
-            options={teamMemberOptions}
-            getOptionLabel={(option) => option.name}
-            value={selectedOption}
-            onChange={(_, newValue) => field.onChange(newValue?.id ?? null)}
-            isOptionEqualToValue={(option, value) => value != null && option.id === value.id}
-            renderInput={(params) => <TextField {...params} label="Vyberte člena týmu" />}
-          />
-        )
-      }}
-    />
-  )
+  return <AutoComplete options={teamMemberOptions} control={control} fieldPath={fieldPath} label="Vyberte člena týmu" />
 }

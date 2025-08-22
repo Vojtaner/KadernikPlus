@@ -4,7 +4,7 @@ import { FormControl, InputLabel, MenuItem, Select, type SxProps, type Theme } f
 
 export type Unit = (typeof UnitsObject)[keyof typeof UnitsObject]
 
-type Identifiable = {
+export type Identifiable = {
   id: string | number
   name: string
 }

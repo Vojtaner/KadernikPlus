@@ -4,7 +4,7 @@ import MenuIconButton from '../MenuIconButton'
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import BasicDateTimePicker from '../DateTimePicker'
 import ClientAutoComplete from '../AutoCompletes/ClientAutoComplete'
-import HairCutAutoComplete from '../AutoCompletes/HairCutAutoComplete'
+import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
 import { useCreateVisitMutation, useVisitsQuery } from '../../queries'
 import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -153,7 +153,7 @@ export const AddVisitItemButton = () => {
               )}
             </Stack>
           )}
-          <HairCutAutoComplete fieldPath="serviceIds" control={control} />
+          <ServicesAutoComplete fieldPath="serviceIds" control={control} />
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
