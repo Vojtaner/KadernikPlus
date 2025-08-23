@@ -70,9 +70,10 @@ model Team {
   stocks   Stock[]
   services Service[]
 
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  LogEntry  LogEntry[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  LogEntry       LogEntry[]
+  StockAllowance StockAllowance[]
 }
 
 /// Junction table for the many-to-many relationship between Visit and Service
@@ -132,16 +133,16 @@ model LogEntry {
 }
 
 model StockItem {
-  id        String   @id @default(uuid())
-  itemName  String
-  unit      String
-  packageCount  Decimal  @db.Decimal(10, 2)
+  id           String  @id @default(uuid())
+  itemName     String
+  unit         String
+  packageCount Decimal @db.Decimal(10, 2)
 
-  quantity  Decimal  @db.Decimal(10, 2)
-  lastPackageQuantity  Decimal  @db.Decimal(15, 5) 
-  
-  totalPrice     Decimal  @db.Decimal(15, 5)
-  avgUnitPrice  Decimal  @db.Decimal(15, 5) 
+  quantity            Decimal @db.Decimal(10, 2)
+  lastPackageQuantity Decimal @db.Decimal(15, 5)
+
+  totalPrice   Decimal @db.Decimal(15, 5)
+  avgUnitPrice Decimal @db.Decimal(15, 5)
 
   threshold Decimal  @db.Decimal(10, 2)
   isActive  Boolean  @default(true) @map("is_active")
@@ -153,13 +154,15 @@ model StockItem {
 
   stockAllowances StockAllowance[]
 
-  @@unique([stockId, itemName, isActive]) 
+  @@unique([stockId, itemName, isActive])
   @@map("stock_items")
 }
 
 model StockAllowance {
-  id          String @id @default(uuid())
-  userId      String @map("user_id")
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  teamId String @map("team_id")
+
   stockItemId String @map("stock_item_id")
 
   procedureId String    @map("procedure_id")
@@ -170,6 +173,7 @@ model StockAllowance {
 
   user      User      @relation(fields: [userId], references: [id])
   stockItem StockItem @relation(fields: [stockItemId], references: [id])
+  team      Team      @relation(fields: [teamId], references: [id])
 
   @@map("stock_allowances")
 }

@@ -12,6 +12,7 @@ const Layout = (props: PropsWithChildren) => {
   const [isSearchActive, setIsSearchActive] = useState(false)
 
   const onActiveSearch = (state: boolean) => {
+    console.log('ahoj')
     setIsSearchActive(state)
   }
 
@@ -29,7 +30,7 @@ const Layout = (props: PropsWithChildren) => {
           top: 0,
           width: { md: '100%' },
         }}>
-        <TopBar onActiveSearch={onActiveSearch} />
+        <TopBar onActiveSearch={onActiveSearch} isSearchActive={isSearchActive} />
         {!isSearchActive && <SectionHeader />}
       </Stack>
       <Box
@@ -41,7 +42,7 @@ const Layout = (props: PropsWithChildren) => {
         sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
-          {isSearchActive && <SearchResults isSearchActive={isSearchActive} />}
+          {isSearchActive && <SearchResults isSearchActive={isSearchActive} onActiveSearch={onActiveSearch} />}
         </>
       </Box>
       <BottomBar />

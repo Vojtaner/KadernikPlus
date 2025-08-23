@@ -5,6 +5,12 @@ import {
   userRoutes,
   visitRoutes,
   stockItemRoutes,
+  stockAllowanceRoutes,
+  logRoutes,
+  procedureRoutes,
+  serviceRoutes,
+  teamMemberRoutes,
+  teamRoutes,
 } from "./routes";
 import prisma from "./infrastructure/data/prisma/prisma";
 import cors from "cors";
@@ -13,11 +19,6 @@ import errorHandler from "./utils/errorHandler";
 import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
 import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
-import serviceRoutes from "./routes/services-routes";
-import teamMemberRoutes from "./routes/team-member-routes";
-import teamRoutes from "./routes/team";
-import procedureRoutes from "./routes/procedure-routes";
-import logRoutes from "./routes/log-routes";
 
 dotenv.config();
 
@@ -38,8 +39,6 @@ app.get("/", (req, res) => {
 });
 
 app.use(jwtCheck);
-
-// app.use((req, res, next) => jwtCheck(req, res, next));
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 
 app.use("/api/visits", visitRoutes);
@@ -51,6 +50,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);
 app.use("/api/services", serviceRoutes);
+app.use("/api/stock-allowance", stockAllowanceRoutes);
 
 app.use(errorHandler);
 

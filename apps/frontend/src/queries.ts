@@ -13,6 +13,7 @@ import {
   getLogs,
   getProcedures,
   getServices,
+  getStockAllowances,
   getStockItems,
   getStocks,
   getTeamMember,
@@ -55,6 +56,7 @@ import type { AxiosError } from 'axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import dayjs from 'dayjs'
+import type { GetStockAllowance } from './entities/stock-allowance'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -471,6 +473,18 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
       }
       return getStockItems(axios, stockId)
     },
+  })
+}
+
+//
+
+// ---- Stock Allowances ----
+export const useStockAllowancesQuery = (params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }) => {
+  const axios = useAxios()
+
+  return useQuery<GetStockAllowance[]>({
+    queryKey: ['stockAllowances', params],
+    queryFn: () => getStockAllowances(axios, params),
   })
 }
 

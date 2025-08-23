@@ -3,17 +3,17 @@ import MenuBox from './MenuBox'
 import SearchBar from './SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
-import { useState } from 'react'
 import { ROUTES } from '../routes/AppRoutes'
 import logo from '../../public/assets/logofornow.png'
+import { useNavigate } from 'react-router-dom'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
+  isSearchActive: boolean
 }
 
 function TopBar(props: TopBarProps) {
-  const { onActiveSearch } = props
-  const [searchActive, setSearchActive] = useState(false)
+  const { onActiveSearch, isSearchActive } = props
 
   return (
     <Stack
@@ -23,7 +23,7 @@ function TopBar(props: TopBarProps) {
         position: 'sticky',
         overflow: 'hidden',
         paddingY: '10px',
-        paddingBottom: searchActive ? '0px' : '8px',
+        paddingBottom: isSearchActive ? '0px' : '8px',
         top: 0,
         transition: 'padding-bottom 0.7s ease',
         background: '#c81f5b',
@@ -31,7 +31,7 @@ function TopBar(props: TopBarProps) {
       <Stack direction="column" spacing={1}>
         <AppLogo
           sx={{
-            transform: `${searchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
+            transform: `${isSearchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
             transition: 'transform 0.5s ease-in-out',
           }}
         />
@@ -40,21 +40,21 @@ function TopBar(props: TopBarProps) {
           spacing={1}
           alignItems="center"
           sx={{
-            transform: `${searchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
+            transform: `${isSearchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
             transition: 'transform 0.5s ease-in-out',
             position: 'relative',
           }}>
           <SearchBar
-            isActive={searchActive}
+            isActive={isSearchActive}
             onToggleActive={(state) => {
-              setSearchActive(state)
+              onActiveSearch(state)
               onActiveSearch(state)
             }}
           />
           <MenuBox />
           <TopBarFilterButtonsStack
             sx={{
-              transform: `${!searchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
               transition: 'transform 0.5s ease-in-out',
               position: 'absolute',
               top: '45px',
@@ -135,12 +135,13 @@ type AppLogoProps = { sx?: SxProps<Theme> }
 
 export const AppLogo = (props: AppLogoProps) => {
   const { sx } = props
+  const navigate = useNavigate()
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
       <Box
         component="a"
-        href={ROUTES.home.path}
+        onClick={() => navigate(ROUTES.home.path)}
         sx={{
           textDecoration: 'none',
           display: 'flex',

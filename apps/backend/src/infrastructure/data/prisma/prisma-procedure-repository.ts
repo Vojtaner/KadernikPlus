@@ -41,6 +41,12 @@ const createProcedureRepositoryDb = (
       return lastStep ? lastStep.stepOrder + 1 : 1;
     };
 
+    const teamMember = await prisma.teamMember.findFirst({ where: { userId } });
+
+    if (!teamMember) {
+      throw new Error("Nepodařilo se identifikovat váš team.");
+    }
+
     if (id) {
       const existing = await prisma.procedure.findUnique({
         where: { id },
@@ -81,6 +87,7 @@ const createProcedureRepositoryDb = (
                 stockItemId: s.stockItemId,
                 quantity: s.quantity,
                 userId,
+                teamId: teamMember.teamId,
               })),
             },
           },
@@ -161,6 +168,7 @@ const createProcedureRepositoryDb = (
               stockItemId: s.stockItemId,
               quantity: s.quantity,
               userId,
+              teamId: teamMember.teamId,
             })),
           },
         },

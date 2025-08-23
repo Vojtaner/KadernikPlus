@@ -14,9 +14,11 @@ import BoxIcon from '../components/BoxIcon'
 import { formatPhoneNumber } from './VisitsList'
 import SendMessageDialog from '../components/FormDialogs/SendMessageDialog'
 import SendIcon from '@mui/icons-material/Send'
+import { useNavigate } from 'react-router-dom'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()
+  const navigate = useNavigate()
 
   if (isLoading) {
     return <Loader />
@@ -31,7 +33,7 @@ const ClientsList = () => {
       <AppDataGrid
         rowHeight={80}
         rows={clientList}
-        columns={createColumns()}
+        columns={createColumns(navigate)}
         columnHeaderHeight={50}
         hideFooter={true}
       />
@@ -41,7 +43,7 @@ const ClientsList = () => {
 
 export default ClientsList
 
-const createColumns = (): GridColDef<Client[][number]>[] => [
+const createColumns = (navigate: (path: string) => void): GridColDef<Client[][number]>[] => [
   {
     field: 'name',
     headerName: 'Klient',
@@ -87,7 +89,7 @@ const createColumns = (): GridColDef<Client[][number]>[] => [
         />
         <BoxIcon
           size="medium"
-          href={Paths.clientDetail(params.row.id)}
+          onClick={() => navigate(Paths.clientDetail(params.row.id))}
           sx={{ background: `${AppTheme.palette.primary.light}`, color: `${AppTheme.palette.info.main}` }}
           icon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
         />
