@@ -199,11 +199,19 @@ const createStockItemRepositoryDb = (
       });
       return stockItem ?? null;
     },
-
-    getStockItemsByStockId: async (userId: string): Promise<StockItem[]> => {
+    getStockItemsByStockId: async (
+      stockId: string,
+      userId: string
+    ): Promise<StockItem[]> => {
       const teamMember = await prisma.teamMember.findUnique({
         where: { userId },
       });
+
+      if (!teamMember) {
+        throw new Error("Nejste součástí žádného týmu.");
+      }
+
+      console.log({ userId });
 
       if (teamMember?.canAccessStocks) {
         const stockIds = await prismaStockRepository.stock
