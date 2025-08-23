@@ -15,7 +15,7 @@ export const ROUTES = {
   team: { path: '/team/:teamId', breadcrumb: 'Tým' },
   shoppingList: { path: '/shopping-list', breadcrumb: 'Nákupní seznam' },
   profile: { path: '/profile', breadcrumb: 'Můj profil' },
-  consumption: { path: '/consumption', breadcrumb: 'Spotřeba' },
+  consumption: { path: '/consumption/:teamId', breadcrumb: 'Spotřeba' },
   services: { path: '/services', breadcrumb: 'Služby' },
   stock: { path: '/stock/:stockId', breadcrumb: 'Sklad' },
   logs: { path: '/logs', breadcrumb: 'Záznamy o aktivitě' },
@@ -32,6 +32,8 @@ export const Paths = {
   team: (teamId: string) => generatePath(ROUTES.team.path, { teamId }),
 
   stock: (stockId: string) => generatePath(ROUTES.stock.path, { stockId }),
+
+  consumption: (teamId: string) => generatePath(ROUTES.consumption.path, { teamId }),
 }
 
 type CurrentRoute = {

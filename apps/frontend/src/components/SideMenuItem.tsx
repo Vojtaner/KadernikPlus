@@ -15,7 +15,7 @@ type SideMenuListItemProps = {
 }
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
-  const { title, to, icon, isActive = false, disabled = false } = props
+  const { title, to, icon, isActive = false, disabled = false, onClick } = props
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -23,7 +23,8 @@ const SideMenuButton = (props: SideMenuListItemProps) => {
     <ListItem disablePadding sx={isActive ? { bgcolor: AppTheme.palette.primary.main, fontWeight: 700 } : {}}>
       <ListItemButton
         disabled={disabled}
-        onClick={() => {
+        onClick={(e) => {
+          onClick?.(e)
           dispatch(setCurrentLocationAppendix(''))
           navigate(to)
         }}

@@ -115,7 +115,7 @@ export const SideMenu = () => {
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.consumption.path, location.pathname)}
-        to={ROUTES.consumption.path}
+        to={teamMember?.teamId ? Paths.consumption(teamMember.teamId) : '#'}
         title={intl.formatMessage({ id: 'consumption' })}
         icon={<ContentCutIcon />}
       />
@@ -152,7 +152,15 @@ export const SideMenu = () => {
         icon={<LanguageIcon />}
       />
       <SideMenuButton
-        onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+        onClick={() => {
+          console.log('ahoj')
+          Object.keys(localStorage).forEach((key) => {
+            if (key.startsWith('@@auth0spajs@@')) {
+              localStorage.removeItem(key)
+            }
+          })
+          logout({ logoutParams: { returnTo: window.location.origin } })
+        }}
         to={ROUTES.home.path}
         title={intl.formatMessage({ id: 'logOut', defaultMessage: `Odhlásit se` })}
         icon={<LogoutIcon />}

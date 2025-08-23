@@ -18,36 +18,29 @@ import {
 import { getDateShort } from './VisitsList'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { Paths } from '../routes/AppRoutes'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { FormattedMessage } from 'react-intl'
+import { getButtonStyle } from '../components/entity'
 
 const Consumption = () => {
   const navigate = useNavigate()
+  const { teamId } = useParams()
   const [tabelView, setTabelView] = useState<StockViewKey>('byUser')
-
-  const now = new Date()
-  const before = new Date(now)
-  before.setDate(now.getDate() - 10)
-
-  const after = new Date(now)
-  after.setDate(now.getDate() + 10)
 
   const { control, watch } = useForm({
     defaultValues: {
-      from: dayjs().subtract(1, 'day'),
-      to: dayjs().add(1, 'day'),
+      from: dayjs().startOf('month'),
+      to: dayjs().endOf('month'),
     },
   })
 
-  const fromDate = watch('from')
-  const toDate = watch('to')
-
   const { data: stockAllowances, isLoading } = useStockAllowancesQuery({
-    teamId: 'f3ed6dab-0761-4ab5-9523-8e52c2a6341f',
-    fromDate: fromDate,
-    toDate: toDate,
+    teamId,
+    fromDate: watch('from'),
+    toDate: watch('to'),
   })
+
   if (!stockAllowances && isLoading) {
     return <Loader />
   }
@@ -65,9 +58,6 @@ const Consumption = () => {
     stockAllowances,
     (stockAllowance) => stockAllowance.user.name
   )
-  const getButtonStyle = (tabelView: StockViewKey, key: StockViewKey) => {
-    return tabelView === key ? 'contained' : 'text'
-  }
 
   return (
     <Stack spacing={4}>
