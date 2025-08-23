@@ -4,6 +4,7 @@ import Loader from './Loader'
 import { getTimeFromUtcToLocal } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import { formatNameShort } from '../entity'
+import type { Procedure } from '../entities/procedure'
 
 type VisitDetailGridProps = {
   visitData: VisitWithServices | undefined
@@ -105,15 +106,17 @@ export const isVisitFinished = (
     paidPrice: number | undefined
     deposit: number | undefined
     depositStatus: 'NEZAPLACENO' | 'ZAPLACENO' | null | undefined
+    procedures: undefined | Procedure[]
   }
 ): boolean => {
-  const { paidPrice, deposit, depositStatus } = watchFormVisitData
+  const { paidPrice, deposit, depositStatus, procedures } = watchFormVisitData
   const isDepositRequired = clientDeposit
 
   if (!paidPrice || (!deposit && isDepositRequired)) {
     return false
   }
 
+  const isProcedureCreated = Boolean(procedures?.length)
   const hasPaid = paidPrice > 0
   const hasDeposit = deposit ? deposit > 0 : false
 
@@ -121,5 +124,5 @@ export const isVisitFinished = (
     return true
   }
 
-  return hasPaid && isDepositRequired && DepositStatus.ZAPLACENO === depositStatus && hasDeposit
+  return hasPaid && isDepositRequired && DepositStatus.ZAPLACENO === depositStatus && hasDeposit && isProcedureCreated
 }
