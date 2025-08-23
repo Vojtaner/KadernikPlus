@@ -44,7 +44,7 @@ const Consumption = () => {
   const toDate = watch('to')
 
   const { data: stockAllowances, isLoading } = useStockAllowancesQuery({
-    teamId: '8881bf3f-8ef0-4e13-a54f-ffd78e4ca52d',
+    teamId: 'f3ed6dab-0761-4ab5-9523-8e52c2a6341f',
     fromDate: fromDate,
     toDate: toDate,
   })
