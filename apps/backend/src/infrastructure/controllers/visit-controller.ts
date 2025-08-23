@@ -2,7 +2,7 @@ import {
   addVisitUseCase,
   CreateAddVisitUseCaseType,
 } from "../../application/use-cases/visits/add-visit";
-import { VisitCreateData, VisitDetailFormType } from "@/entities/visit";
+import { CreateVisitType, VisitDetailFormType } from "@/entities/visit";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import getVisitByIdUseCase, {
   CreateGetVisitByIdUseCaseType,
@@ -32,7 +32,7 @@ import dayjs from "dayjs";
 type GetVisitsByDatesControllerType = {
   query: { date?: Date; to?: Date; from?: Date };
 };
-type AddVisitControllerType = { body: VisitCreateData };
+type AddVisitControllerType = { body: CreateVisitType };
 type UpdateVisitStatusControllerType = {
   body: { visitId: string; status: boolean };
 };
@@ -78,7 +78,7 @@ const createVisitController = (dependencies: {
           firstName: visitData.firstName,
           lastName: visitData.lastName,
           phone: visitData.phone,
-          note: visitData.note,
+          note: visitData.clientNote,
           userId,
           deposit: visitData.depositRequired,
         };

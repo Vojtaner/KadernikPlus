@@ -1,64 +1,169 @@
-import { Box, Typography } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
 import { formatNameShort } from '../entity'
+import { useStockAllowancesQuery } from '../queries'
+import { BasicDatePicker } from '../components/DateTimePicker'
+import dayjs from 'dayjs'
+import { useForm } from 'react-hook-form'
+import Loader from './Loader'
+import ErrorBoundary from './ErrorBoundary'
+import {
+  createStockAllowancesTableAllRecords,
+  createStockAllowancesTableByProductByUser,
+  type ConsumptionTableAllRecordType,
+  type ConsumptionTableByProductByUserType,
+  type StockViewKey,
+} from '../entities/stock-allowance'
+import { getDateShort } from './VisitsList'
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import { Paths } from '../routes/AppRoutes'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const Consumption = () => {
+  const navigate = useNavigate()
+  const [tabelView, setTabelView] = useState<StockViewKey>('byUser')
+
+  const now = new Date()
+  const before = new Date(now)
+  before.setDate(now.getDate() - 10)
+
+  const after = new Date(now)
+  after.setDate(now.getDate() + 10)
+
+  const { control, watch } = useForm({
+    defaultValues: {
+      from: dayjs().subtract(1, 'day'),
+      to: dayjs().add(1, 'day'),
+    },
+  })
+
+  const fromDate = watch('from')
+  const toDate = watch('to')
+
+  const { data: stockAllowances, isLoading } = useStockAllowancesQuery({
+    teamId: '8881bf3f-8ef0-4e13-a54f-ffd78e4ca52d',
+    fromDate: fromDate,
+    toDate: toDate,
+  })
+  if (!stockAllowances && isLoading) {
+    return <Loader />
+  }
+
+  if (!stockAllowances) {
+    return <ErrorBoundary />
+  }
+
+  const stockAllowancesTableAllRecords = createStockAllowancesTableAllRecords(stockAllowances)
+  const stockAllowancesTableByProduct = createStockAllowancesTableByProductByUser(
+    stockAllowances,
+    (stockAllowance) => `${stockAllowance.user.name}-${stockAllowance.stockItem.itemName}`
+  )
+  const stockAllowancesTableByUser = createStockAllowancesTableByProductByUser(
+    stockAllowances,
+    (stockAllowance) => stockAllowance.user.name
+  )
+  const getButtonStyle = (tabelView: StockViewKey, key: StockViewKey) => {
+    return tabelView === key ? 'contained' : 'text'
+  }
+
   return (
-    <Box
-      sx={{
-        height: '100%',
-        width: '100%',
-        '& .super-app-theme--header': {
-          backgroundColor: 'rgba(255, 7, 0, 0.55)',
-        },
-      }}>
-      <AppDataGrid rows={rows} columns={columns} />
-    </Box>
+    <Stack spacing={4}>
+      <Stack direction="row" spacing={2} justifyContent="flex-start">
+        <Button
+          onClick={() => setTabelView('byProduct')}
+          variant={getButtonStyle(tabelView, 'byProduct')}
+          color="primary">
+          <FormattedMessage id="consumption.stockViewKey.byProducts" defaultMessage="Podle produktů" />
+        </Button>
+        <Button onClick={() => setTabelView('byUser')} variant={getButtonStyle(tabelView, 'byUser')}>
+          <FormattedMessage id="consumption.stockViewKey.byUser" defaultMessage="Podle lidí" />
+        </Button>
+        <Button onClick={() => setTabelView('allRecords')} variant={getButtonStyle(tabelView, 'allRecords')}>
+          <FormattedMessage id="consumption.stockViewKey.allRecords" defaultMessage="Historie záznamů" />
+        </Button>
+      </Stack>
+      <Stack spacing={1} height={'100%'}>
+        <Stack direction="row" spacing={2}>
+          <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
+          <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+        </Stack>
+        {tabelView === 'allRecords' && (
+          <AppDataGrid rows={stockAllowancesTableAllRecords} columns={createColumnsAllRecords(navigate)} />
+        )}
+        {tabelView === 'byProduct' && (
+          <AppDataGrid rows={stockAllowancesTableByProduct} columns={createColumnsByProductByUser()} />
+        )}
+        {tabelView === 'byUser' && (
+          <AppDataGrid rows={stockAllowancesTableByUser} columns={createColumnsByProductByUser()} />
+        )}
+      </Stack>
+    </Stack>
   )
 }
 
 export default Consumption
 
-type ConsumptionItemType = { id: number; item: string; price: number; amount: number; unit: string; person: string }
-
-const rows: ConsumptionItemType[] = [
-  { id: 1, item: 'Peroxid 6%', price: 890, amount: 1000, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 2, item: 'Blondor Multi Blonde', price: 1450, amount: 400, unit: 'g', person: 'Pavla Slaničková' },
-  { id: 3, item: 'Alpecin tonikum', price: 350, amount: 200, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 4, item: 'Holicí pláštěnka', price: 250, amount: 1, unit: 'ks', person: 'Pavla Slaničková' },
-  { id: 5, item: 'Barva Igora Royal 7-0', price: 180, amount: 60, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 6, item: 'Alufolie na melír', price: 320, amount: 100, unit: 'ks', person: 'Pavla Slaničková' },
-  { id: 7, item: 'Šampon Silver', price: 290, amount: 300, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 8, item: 'Kondicionér bez oplachu', price: 310, amount: 200, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 9, item: 'Rukavice nitrilové', price: 120, amount: 100, unit: 'ks', person: 'Pavla Slaničková' },
-  { id: 10, item: 'Miska na barvu', price: 90, amount: 1, unit: 'ks', person: 'Pavla Slaničková' },
-  { id: 11, item: 'Štětec na barvení', price: 70, amount: 1, unit: 'ks', person: 'Pavla Slaničková' },
-  { id: 12, item: 'Oxidant 9%', price: 890, amount: 1000, unit: 'ml', person: 'Pavla Slaničková' },
-  { id: 13, item: 'Toner Silver Pearl', price: 310, amount: 60, unit: 'ml', person: 'Pavla Slaničková' },
-]
-
-const columns: GridColDef<(typeof rows)[number]>[] = [
-  { field: 'item', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
+const createColumnsByProductByUser = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
+  { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
-    field: 'price',
-    headerName: 'Cena',
-    disableColumnMenu: true,
-    minWidth: 80,
-  },
-  {
-    field: 'amount',
-    headerName: 'Množ.',
-    minWidth: 60,
+    field: 'totalQuantity',
+    headerName: 'Množ./Kč',
+    minWidth: 70,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
-        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
+        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
+        {' / '}
+        {params.row.totalPrice}
+        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
       </>
     ),
   },
   {
-    field: 'person',
+    field: 'user',
+    headerName: 'Kdo',
+    disableColumnMenu: true,
+    display: 'flex',
+    renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
+  },
+]
+const createColumnsAllRecords = (
+  navigate: (path: string) => void
+): GridColDef<ConsumptionTableAllRecordType[][number]>[] => [
+  {
+    field: 'date',
+    headerName: 'Datum',
+    disableColumnMenu: true,
+    minWidth: 40,
+    renderCell: (params) => (
+      <Button
+        sx={{ paddingY: '2px' }}
+        endIcon={<PhotoCameraFrontOutlinedIcon />}
+        onClick={() => navigate(Paths.visitDetail(params.row.clientId, params.row.visitId))}>
+        {getDateShort(params.value)}
+      </Button>
+    ),
+  },
+  { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
+  {
+    field: 'stockAllowanceQuantity',
+    headerName: 'Množ./Kč',
+    minWidth: 40,
+    disableColumnMenu: true,
+    renderCell: (params) => (
+      <>
+        {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
+        {' / '}
+        {params.row.totalPrice}
+        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
+      </>
+    ),
+  },
+  {
+    field: 'user',
     headerName: 'Kdo',
     disableColumnMenu: true,
     display: 'flex',

@@ -1,9 +1,12 @@
+import type dayjs from 'dayjs'
 import type { Dayjs } from 'dayjs'
 
 export const apiRoutes = {
   getUserLogsUrl: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
   getStockItemsUrl: (stockId: string) => `/api/stock/${encodeURIComponent(stockId)}/items`,
   getLogsUrl: () => `/api/logs/`,
+  getStockAllowancesUrl: (params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }) =>
+    `/api/stock-allowance/${encodeURIComponent(params.teamId)}?fromDate=${encodeURIComponent(params.fromDate.toISOString())}&toDate=${encodeURIComponent(params.toDate.toISOString())}`,
   getStockItemByIdUrl: (stockItemId: string) => `/item/${encodeURIComponent(stockItemId)}`,
   deleteStockItemByIdUrl: (stockItemId: string) => `api/stock/item/${encodeURIComponent(stockItemId)}`,
   getUserUrl: (userId: string) => `/api/user?userId=${encodeURIComponent(userId)}`,

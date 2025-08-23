@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom'
 import Loader from '../pages/Loader'
 import { formatToCZK } from './VisitDetailGrid'
 import { getTimeFromUtcToLocal } from './VisitsList'
-import AddOrUpdateClientItemButton from '../components/FormDialogs/AddOrUpdateClientItemButton'
+import AddEditClientFormDialog from '../components/FormDialogs/AddEditClientFormDialog'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
@@ -40,7 +40,7 @@ const ClientProfile = () => {
           startIcon={<SmsOutlinedIcon fontSize="small" color="info" />}>
           Poslat SMS
         </Button>
-        <AddOrUpdateClientItemButton
+        <AddEditClientFormDialog
           defaultValues={{
             firstName: clientData.firstName,
             lastName: clientData.lastName,

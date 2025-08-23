@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import type { ServiceCreateOrUpdateData } from '../../entities/service'
 import React from 'react'
 import { useScrollToTheTop } from './AddProcedureButton'
+import { FormattedMessage } from 'react-intl'
 
 type AddServiceItemButtonProps = {
   defaultValues?: Partial<ServiceCreateOrUpdateData>
@@ -52,8 +53,12 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
       handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={

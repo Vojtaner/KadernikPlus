@@ -15,7 +15,7 @@ import type { CreateProcedure, PostNewProcedure } from '../entities/procedure'
 import type { LogData } from '../entities/logs'
 import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
 import type {
-  VisitCreateData,
+  CreateVisitType,
   VisitDetailFormType,
   VisitWithServices,
   VisitWithServicesWithProceduresWithStockAllowances,
@@ -25,6 +25,8 @@ import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'
 import type { Dayjs } from 'dayjs'
 import { extractErrorMessage } from './errorHandler'
+import type dayjs from 'dayjs'
+import type { GetStockAllowance } from '../entities/stock-allowance'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -53,6 +55,13 @@ export const getUserLogs = async (axios: AxiosInstance, userId: string): Promise
 
 export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<ExistingStockItem[]> => {
   const response = await axios.get(apiRoutes.getStockItemsUrl(stockId))
+  return response.data
+}
+export const getStockAllowances = async (
+  axios: AxiosInstance,
+  params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }
+): Promise<GetStockAllowance[]> => {
+  const response = await axios.get(apiRoutes.getStockAllowancesUrl(params))
   return response.data
 }
 
@@ -120,7 +129,7 @@ export const postCreateOrUpdateService = async (
   const response = await axios.post(apiRoutes.getServiceUrl(), serviceData)
   return response.data
 }
-export const postCreateVisit = async (axios: AxiosInstance, visitData: VisitCreateData): Promise<VisitCreateData> => {
+export const postCreateVisit = async (axios: AxiosInstance, visitData: CreateVisitType): Promise<CreateVisitType> => {
   const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
   return response.data
 }

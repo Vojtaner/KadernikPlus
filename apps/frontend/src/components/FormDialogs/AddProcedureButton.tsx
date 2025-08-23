@@ -22,6 +22,7 @@ import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../entities/stock-item'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 import { addPropsToReactElement } from '../entity'
+import { FormattedMessage } from 'react-intl'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
@@ -123,8 +124,12 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
               Smazat
             </Button>
           )}
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={

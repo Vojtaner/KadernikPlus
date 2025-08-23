@@ -10,7 +10,7 @@ const DashBoardCard = (props: DashBoardCardProps) => {
     <Paper sx={{ ...sx, boxShadow: '0px 4px 6px rgba(0,0,0,1)' }}>
       <Stack direction="column" rowGap="10px">
         <Stack direction="row" alignItems="center" spacing={2}>
-          <IconButton href="/">{icon}</IconButton>
+          <IconButton>{icon}</IconButton>
           <Typography
             color="secondary"
             sx={{

@@ -6,7 +6,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../components/Note'
 import EditVisitDetailDialog from '../components/FormDialogs/EditVisitDetailDialog'
 import { useClientVisitsQuery, useProceduresQuery, useVisitQuery } from '../queries'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import AddProcedureButton from '../components/FormDialogs/AddProcedureButton'
 import Loader from './Loader'
 import { useAppDispatch } from '../store'
@@ -21,6 +21,7 @@ const VisitDetail = () => {
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const lastVisitWithProcedure =
     clientVisits && clientVisits.filter((visit) => visit.procedures.length && visitData?.id !== visit.id)
@@ -62,7 +63,7 @@ const VisitDetail = () => {
             size="medium"
             startIcon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
             sx={{ background: `${AppTheme.palette.primary.light}` }}
-            href={Paths.clientDetail(visitData.clientId)}>
+            onClick={() => navigate(Paths.clientDetail(visitData.clientId))}>
             Profil zákazníka
           </Button>
         )}

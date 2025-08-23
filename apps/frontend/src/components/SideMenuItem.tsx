@@ -1,6 +1,9 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import type { AppRoutePath } from '../routes/AppRoutes'
 import AppTheme from '../AppTheme'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch } from '../store'
+import { setCurrentLocationAppendix } from '../store/appUiSlice'
 
 type SideMenuListItemProps = {
   title: string
@@ -13,12 +16,17 @@ type SideMenuListItemProps = {
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
   const { title, to, icon, isActive = false, disabled = false } = props
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   return (
     <ListItem disablePadding sx={isActive ? { bgcolor: AppTheme.palette.primary.main, fontWeight: 700 } : {}}>
       <ListItemButton
         disabled={disabled}
-        href={to}
+        onClick={() => {
+          dispatch(setCurrentLocationAppendix(''))
+          navigate(to)
+        }}
         sx={
           isActive
             ? {

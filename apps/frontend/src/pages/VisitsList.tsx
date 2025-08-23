@@ -10,6 +10,7 @@ import { BasicDatePicker } from '../components/DateTimePicker'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { Paths } from '../routes/AppRoutes'
+import { useNavigate } from 'react-router-dom'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
@@ -19,6 +20,8 @@ type VisitListProps = {
 
 const VisitsList = (props: VisitListProps) => {
   const { columnHeaderHeight, hideFooter = false, onlyOpenVisits = false } = props
+  const navigate = useNavigate()
+
   const { control, watch } = useForm({
     defaultValues: {
       from: dayjs().subtract(1, 'day'),
@@ -52,7 +55,7 @@ const VisitsList = (props: VisitListProps) => {
       )}
       <AppDataGrid
         rows={rows}
-        columns={createColumns()}
+        columns={createColumns(navigate)}
         columnHeaderHeight={columnHeaderHeight}
         hideFooter={hideFooter}
         getRowClassName={(params) => {
@@ -97,7 +100,7 @@ type VisitRow =
       label?: never
     }
 
-export const createColumns = (): GridColDef<VisitRow[][number]>[] => [
+export const createColumns = (navigate: (path: string) => void): GridColDef<VisitRow[][number]>[] => [
   {
     field: 'date',
     headerName: 'Čas',
@@ -160,9 +163,10 @@ export const createColumns = (): GridColDef<VisitRow[][number]>[] => [
     editable: false,
     disableColumnMenu: true,
     renderCell: (params) => {
-      if (!params.row.isHeader) {
+      if (!params.row.isHeader && params.row.clientId) {
+        const clientId = params.row.clientId
         return (
-          <IconButton href={Paths.visitDetail(params.row.clientId, params.row.id)}>
+          <IconButton onClick={() => navigate(Paths.visitDetail(clientId, params.row.id))}>
             <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
           </IconButton>
         )
@@ -220,6 +224,9 @@ export const getDateTimeFromUtcToLocal = (date: Date) => {
 }
 export const getDate = (date: Date) => {
   return dayjs(date).format('DD.MM.YYYY')
+}
+export const getDateShort = (date: Date) => {
+  return dayjs(date).format('DD.MM.')
 }
 export const getDateWithDay = (date: Date) => {
   return dayjs(date).format('DD.MM.YYYY - dddd')

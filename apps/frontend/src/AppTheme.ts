@@ -31,8 +31,8 @@ const AppTheme = createTheme({
       )`,
           color: '#fff',
           '&:hover': {
-            backgroundColor: '#ffffff',
-            color: '#D02964',
+            backgroundColor: '#D02964',
+            color: '#ffffff',
           },
         },
       },

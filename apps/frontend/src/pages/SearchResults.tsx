@@ -5,8 +5,8 @@ import { useSearchClientsQuery } from '../queries'
 import { useAppCurrentWatch } from '../reactHookForm/store'
 import Loader from './Loader'
 
-const SearchResults = (props: { isSearchActive: boolean }) => {
-  const { isSearchActive } = props
+const SearchResults = (props: { isSearchActive: boolean; onActiveSearch: (state: boolean) => void }) => {
+  const { isSearchActive, onActiveSearch } = props
   const searchValue = useAppCurrentWatch('searchValue')
   const {
     data: searchData,
@@ -38,6 +38,7 @@ const SearchResults = (props: { isSearchActive: boolean }) => {
       {searchData.map((client) => {
         return (
           <SearchResult
+            onActiveSearch={onActiveSearch}
             key={client.id}
             sx={{
               transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,

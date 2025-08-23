@@ -94,7 +94,7 @@ export const SmsList = <T extends VisitWithServices>({
   return (
     <Stack spacing={2}>
       <Stack direction="row" alignItems="center" spacing={2}>
-        <IconButton href="/">{icon}</IconButton>
+        <IconButton href="#">{icon}</IconButton>
         <Typography
           color="secondary"
           sx={{

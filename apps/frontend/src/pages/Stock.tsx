@@ -5,13 +5,13 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../components/DataGrid'
 import { useDeleteStockItemMutation, useStockItemsQuery } from '../queries'
 import ErrorBoundary from './ErrorBoundary'
-import { type StockItem } from '../entities/stock-item'
+import { type ExistingStockItem } from '../entities/stock-item'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
 import { formatToCZK } from './VisitDetailGrid'
-import AddEditBuyStockItemButton from '../components/FormDialogs/AddEditBuyStockItemButton'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
+import { StockItemDialog } from '../components/FormDialogs/StockItemDialog'
 
 const Stock = () => {
   const { stockId } = useParams()
@@ -35,7 +35,7 @@ const Stock = () => {
 
 export default Stock
 
-const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockItem[][number]>[] => [
+const createColumns = (deleteStockItem: (id: string) => void): GridColDef<ExistingStockItem[][number]>[] => [
   { field: 'itemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'price',
@@ -80,14 +80,16 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<StockI
     disableColumnMenu: true,
     renderCell: (params) => (
       <Stack direction="row" spacing={1}>
-        <AddEditBuyStockItemButton
-          formUsage="stockItem"
+        <StockItemDialog
+          formUsagePurpose="stockItem"
           defaultValues={{
             id: params.row.id,
             itemName: params.row.itemName,
             stockId: params.row.stockId,
             totalPrice: Math.round(params.row.totalPrice),
             quantity: Math.round(params.row.quantity / params.row.packageCount),
+            lastPackageQuantity: params.row.lastPackageQuantity,
+            avgUnitPrice: params.row.avgUnitPrice,
             threshold: params.row.threshold,
             unit: params.row.unit,
             packageCount: params.row.packageCount,

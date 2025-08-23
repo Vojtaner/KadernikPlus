@@ -15,6 +15,7 @@ import { useScrollToTheTop } from './AddProcedureButton'
 import RedSwitch from '../RedSwitch'
 import { isVisitFinished } from '../../pages/VisitDetailGrid'
 import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
+import { FormattedMessage } from 'react-intl'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -79,8 +80,12 @@ const EditVisitDetailDialog = (props: {
       onClose={handleClose}
       actions={
         <>
-          <Button onClick={handleClose}>Zavřít</Button>
-          <Button type="submit">Uložit</Button>
+          <Button onClick={handleClose}>
+            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+          </Button>
+          <Button type="submit">
+            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+          </Button>
         </>
       }
       formFields={
