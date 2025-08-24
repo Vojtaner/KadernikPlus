@@ -35,6 +35,7 @@ model User {
 
   teamMemberships TeamMember[]
   LogEntry        LogEntry[]
+  Subscription    Subscription[]
 
   @@map("users")
 }
@@ -59,6 +60,7 @@ enum DepositStatus {
   NEZAPLACENO // deposit not paid
   BEZ_ZALOHY // deposit should not be paid
 }
+
 
 model Team {
   id   String @id @default(uuid())
@@ -249,4 +251,38 @@ model Service {
 
   @@unique([userId, serviceName])
   @@map("services")
+}
+
+enum SubscriptionStatus {
+  PENDING 
+  ACTIVE
+  CANCELLED
+  EXPIRED
+}
+
+model Subscription {
+  id        String    @id @default(uuid())
+  userId    String
+  plan      String
+  status    SubscriptionStatus? @default(PENDING)
+  startDate DateTime  @default(now())
+  endDate   DateTime?
+
+
+  user    User      @relation(fields: [userId], references: [id])
+  Payment Payment[]
+}
+
+model Payment {
+  id             String       @id @default(uuid())
+  subscriptionId String
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  refId     Int  @unique
+  provider      String // "comgate"
+  transactionId String   @unique
+  amount        Decimal @db.Decimal(15,5)
+  currency      String   @default("CZK")
+  status        String  // INITIATED | SUCCESS | FAILED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

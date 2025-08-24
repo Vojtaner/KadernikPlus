@@ -5,6 +5,8 @@ export const apiRoutes = {
   getUserLogsUrl: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
   getStockItemsUrl: (stockId: string) => `/api/stock/${encodeURIComponent(stockId)}/items`,
   getLogsUrl: () => `/api/logs/`,
+  getSubscription: () => 'api/subscription',
+  postCreateSubscriptionUrl: () => `/api/subscription/`,
   getStockAllowancesUrl: (params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }) =>
     `/api/stock-allowance/${encodeURIComponent(params.teamId)}?fromDate=${encodeURIComponent(params.fromDate.toISOString())}&toDate=${encodeURIComponent(params.toDate.toISOString())}`,
   getStockItemByIdUrl: (stockItemId: string) => `/item/${encodeURIComponent(stockItemId)}`,

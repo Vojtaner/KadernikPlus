@@ -67,21 +67,6 @@ function TopBar(props: TopBarProps) {
   )
 }
 
-//  <Stack
-//                     gap={2}
-//                     direction={'row'}
-//                     sx={{
-//                       transform: `${!active ? 'translateX(120%)' : 'translateX(0)'}`,
-//                       transition: 'transform 0.5s ease-in-out',
-//                     }}>
-//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
-//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
-//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
-//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
-//                     <Box sx={{ width: '20%', height: '30px', backgroundColor: 'pink' }} />
-//                   </Stack>
-//                 </Stack>
-
 export default TopBar
 
 type TopBarFilterButtonsStackProps = {

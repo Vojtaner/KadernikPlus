@@ -168,6 +168,35 @@ CREATE TABLE `services` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
+-- CreateTable
+CREATE TABLE `Subscription` (
+    `id` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NOT NULL,
+    `plan` VARCHAR(191) NOT NULL,
+    `status` ENUM('PENDING', 'ACTIVE', 'CANCELLED') NULL DEFAULT 'PENDING',
+    `startDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `endDate` DATETIME(3) NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Payment` (
+    `id` VARCHAR(191) NOT NULL,
+    `subscriptionId` VARCHAR(191) NOT NULL,
+    `provider` VARCHAR(191) NOT NULL,
+    `transactionId` VARCHAR(191) NOT NULL,
+    `amount` DECIMAL(15, 5) NOT NULL,
+    `currency` VARCHAR(191) NOT NULL DEFAULT 'CZK',
+    `status` VARCHAR(191) NOT NULL,
+    `externalId` VARCHAR(191) NOT NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Payment_externalId_key`(`externalId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 -- AddForeignKey
 ALTER TABLE `TeamMember` ADD CONSTRAINT `TeamMember_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -230,3 +259,9 @@ ALTER TABLE `services` ADD CONSTRAINT `services_userId_fkey` FOREIGN KEY (`userI
 
 -- AddForeignKey
 ALTER TABLE `services` ADD CONSTRAINT `services_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Subscription` ADD CONSTRAINT `Subscription_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Payment` ADD CONSTRAINT `Payment_subscriptionId_fkey` FOREIGN KEY (`subscriptionId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

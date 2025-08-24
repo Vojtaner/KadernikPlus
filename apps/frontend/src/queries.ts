@@ -16,6 +16,7 @@ import {
   getStockAllowances,
   getStockItems,
   getStocks,
+  getSubscription,
   getTeamMember,
   getTeamMembers,
   getVisitByVisitId,
@@ -27,6 +28,7 @@ import {
   postCreateNewClient,
   postCreateNewStockItem,
   postCreateOrUpdateService,
+  postCreateSubscription,
   postCreateVisit,
   postInviteTeamMember,
   postNewProcedure,
@@ -57,6 +59,7 @@ import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import dayjs from 'dayjs'
 import type { GetStockAllowance } from './entities/stock-allowance'
+import type { Subscription, SubscriptionCreateData } from './entities/subscription'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {
@@ -229,6 +232,45 @@ export const useCreateNewOrUpdateServiceMutation = () => {
       console.error(error)
     },
   })
+}
+
+// ---- Subscription ----
+
+export const useSubscriptionQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Subscription>({
+    queryKey: ['subscription'],
+    queryFn: () => getSubscription(axios),
+  })
+}
+
+export const useSubscriptionMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  const mutation = useMutation<
+    {
+      code: number
+      message: string
+      transId: string
+      redirect: string
+    },
+    Error,
+    SubscriptionCreateData
+  >({
+    mutationFn: async (data) => postCreateSubscription(axios, data),
+    onSuccess: (data) => {
+      addSnackBarMessage({ text: 'Platba založena', type: 'success' })
+      window.location.href = data.redirect
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: 'Platbu se nepovedlo založit.', type: 'error' })
+      console.error(error)
+    },
+  })
+
+  return { mutation }
 }
 
 // ---- Visits ----

@@ -9,7 +9,7 @@ npx prisma generate
 # Start the server
 echo "🚀 Starting server..."
 
-#pro produkci možná byly další dva řádky vypnuté
+#pro produkci musí být další dva řádky vypnuté
 # npm run dev
 # npm run start
 
