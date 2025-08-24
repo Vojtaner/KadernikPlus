@@ -41,6 +41,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
+app.options("/api/paymentt/callback", cors());
 app.post(
   "/api/payment/callback",
   makeExpressCallback(paymentController.updatePaymentStatusController)
