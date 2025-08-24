@@ -30,15 +30,16 @@ const createSubscriptionRepositoryDb = (
     });
     return sub;
   },
-  findById: (id) => prismaClient.subscription.findUnique({ where: { id } }),
+  findById: async (id) =>
+    await prismaClient.subscription.findUnique({ where: { id } }),
   findByUserId: async (userId: string) =>
     await prismaClient.subscription.findFirst({ where: { userId } }),
-  findActiveByUserId: (userId: string) =>
-    prismaClient.subscription.findFirst({
+  findActiveByUserId: async (userId: string) =>
+    await prismaClient.subscription.findFirst({
       where: { userId, status: "ACTIVE" },
     }),
   cancel: async (id) =>
-    prismaClient.subscription.update({
+    await prismaClient.subscription.update({
       where: { id },
       data: { status: "CANCELLED", endDate: new Date() },
     }),
