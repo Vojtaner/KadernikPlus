@@ -27,6 +27,7 @@ import type { Dayjs } from 'dayjs'
 import { extractErrorMessage } from './errorHandler'
 import type dayjs from 'dayjs'
 import type { GetStockAllowance } from '../entities/stock-allowance'
+import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
 
 export const mockGetUser = () =>
   http.get<object, PathParams<string>, UserType>('todos/1', () => {
@@ -178,6 +179,23 @@ export const postCreateNewStockItem = async (
   }
 }
 
+export const postCreateSubscription = async (
+  axios: AxiosInstance,
+  params: SubscriptionCreateData
+): Promise<{
+  code: number
+  message: string
+  transId: string
+  redirect: string
+}> => {
+  try {
+    const response = await axios.post(apiRoutes.postCreateSubscriptionUrl(), params)
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Platbu se nepovedlo vytvořit.'))
+  }
+}
+
 export const postInviteTeamMember = async (
   axios: AxiosInstance,
   data: { email: string; consentId: string }
@@ -206,6 +224,14 @@ export const getTeamMembers = async (
 export const getProcedures = async (axios: AxiosInstance, visitId: string): Promise<CreateProcedure[]> => {
   const response = await axios.get(apiRoutes.getVisitProceduresUrl(visitId))
   return response.data
+}
+export const getSubscription = async (axios: AxiosInstance): Promise<Subscription> => {
+  try {
+    const response = await axios.get(apiRoutes.getSubscription())
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Nepovedlo se načíst předplatné.'))
+  }
 }
 
 export const postNewProcedure = async (

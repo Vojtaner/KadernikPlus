@@ -19,6 +19,8 @@ import errorHandler from "./utils/errorHandler";
 import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
 import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
+import subscriptionRouter from "./routes/subscription-routes";
+import paymentRouter from "./routes/payment-routes";
 
 dotenv.config();
 
@@ -51,6 +53,8 @@ app.use("/api/clients", clientRoutes);
 app.use("/api/stock", stockItemRoutes);
 app.use("/api/services", serviceRoutes);
 app.use("/api/stock-allowance", stockAllowanceRoutes);
+app.use("/api/subscription", subscriptionRouter);
+app.use("/api/payment", paymentRouter);
 
 app.use(errorHandler);
 
