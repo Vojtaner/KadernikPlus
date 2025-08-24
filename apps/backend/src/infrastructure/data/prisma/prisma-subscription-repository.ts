@@ -5,6 +5,7 @@ import {
 } from "../../../application/ports/subscription-repository";
 import prisma from "./prisma";
 import { WithUserId } from "@/entities/user";
+import dayjs from "dayjs";
 
 const createSubscriptionRepositoryDb = (
   prismaClient: PrismaClient
@@ -17,8 +18,7 @@ const createSubscriptionRepositoryDb = (
         userId: data.userId,
         plan: data.plan,
         status: data.status,
-        startDate: "",
-        endDate: "",
+        endDate: dayjs().add(10, "days").toString(),
       },
     });
     return newSub;
