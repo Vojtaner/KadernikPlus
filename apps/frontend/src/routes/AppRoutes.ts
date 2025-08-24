@@ -14,7 +14,7 @@ export const ROUTES = {
   team: { path: '/team/:teamId', breadcrumb: 'Tým' },
   shoppingList: { path: '/shopping-list', breadcrumb: 'Nákupní seznam' },
   profile: { path: '/profile', breadcrumb: 'Můj profil' },
-  subscription: { path: '/pub/subscription', breadcrumb: '' },
+  subscription: { path: '/subscription', breadcrumb: '' },
   consumption: { path: '/consumption/:teamId', breadcrumb: 'Spotřeba' },
   services: { path: '/services', breadcrumb: 'Služby' },
   stock: { path: '/stock/:stockId', breadcrumb: 'Sklad' },
