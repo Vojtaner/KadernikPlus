@@ -18,7 +18,7 @@ const createSubscriptionRepositoryDb = (
         userId: data.userId,
         plan: data.plan,
         status: data.status,
-        endDate: dayjs().add(10, "days").toString(),
+        endDate: dayjs().add(10, "days").toISOString(),
       },
     });
     return newSub;
