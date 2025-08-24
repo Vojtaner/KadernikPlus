@@ -67,7 +67,7 @@ const createAddSubscriptionUseCase = (dependencies: {
       provider: "comgate",
       status: "PENDING",
       refId: generate8DigitNumber(),
-      transactionId: "",
+      transactionId: generate8DigitNumber().toString(),
     });
 
     const comgatePaymentData =
