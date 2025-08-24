@@ -60,7 +60,7 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
       price: data.price.toString(),
       curr: data.currency,
       label: `Subscription ${data.label}`,
-      refId: generate8DigitNumber().toString(),
+      refId: data.refId,
       method: "ALL",
       email: data.email,
       fullName: data.fullName,
