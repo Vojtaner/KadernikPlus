@@ -24,10 +24,12 @@ const createSubscriptionRepositoryDb = (
     return newSub;
   },
   async update(id: string, data: Partial<Subscription>): Promise<Subscription> {
+    console.log({ data, id });
     const sub = await prisma.subscription.update({
       where: { id },
       data,
     });
+
     return sub;
   },
   findById: async (id) =>
