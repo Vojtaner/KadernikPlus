@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
 app.post(
-  "/api/payments/callback",
+  "/api/payment/callback",
   makeExpressCallback(paymentController.updatePaymentStatusController)
 );
 app.use(jwtCheck);
