@@ -10,6 +10,8 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   const { data: subscription, isLoading, isError } = useSubscriptionQuery()
   const navigate = useNavigate()
 
+  console.log({ isError, subscription, isLoading })
+
   if (isLoading && !subscription) {
     return <Loader />
   }
