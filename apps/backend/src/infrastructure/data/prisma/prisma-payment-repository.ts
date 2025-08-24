@@ -14,6 +14,7 @@ const createProcedureRepositoryDb = (
     },
 
     updatePayment: async (data: Partial<Payment>, id) => {
+      console.log({ updatePayment: data });
       if (!id && !data.refId) {
         throw new Error("Platbu nelze aktualizovat chybí ID nebo REFID.");
       }

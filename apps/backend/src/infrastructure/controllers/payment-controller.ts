@@ -36,7 +36,8 @@ export const createPaymentController = (dependencies: {
       transactionId: data.transId,
       status: data.status,
     };
-
+    console.log({ http: httpRequest.body });
+    console.log({ paymentData });
     try {
       const payment = await dependencies.updatePaymentStatusUseCase.execute(
         paymentData
