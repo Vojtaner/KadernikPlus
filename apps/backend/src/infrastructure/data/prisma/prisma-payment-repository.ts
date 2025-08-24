@@ -19,9 +19,9 @@ const createProcedureRepositoryDb = (
         throw new Error("Platbu nelze aktualizovat chybí ID nebo REFID.");
       }
 
-      if (data.refId) {
+      if (data.transactionId) {
         const updatedPayment = await prisma.payment.update({
-          where: { refId: data.refId },
+          where: { transactionId: data.transactionId },
           data,
         });
 
