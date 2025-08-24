@@ -1,11 +1,8 @@
 import { Subscription } from ".prisma/client";
 
 export type SubscriptionCreateData = {
-  userId: string;
   plan: SubscriptionPlans;
-  startDate?: Date;
   status: SubscriptionStates;
-  endDate?: Date | null;
   currency: "CZK";
   price: number;
 };

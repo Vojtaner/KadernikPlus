@@ -4,18 +4,21 @@ import {
   SubscriptionRepositoryPort,
 } from "../../../application/ports/subscription-repository";
 import prisma from "./prisma";
+import { WithUserId } from "@/entities/user";
 
 const createSubscriptionRepositoryDb = (
   prismaClient: PrismaClient
 ): SubscriptionRepositoryPort => ({
-  add: async (data: SubscriptionCreateData): Promise<Subscription> => {
+  add: async (
+    data: WithUserId<SubscriptionCreateData>
+  ): Promise<Subscription> => {
     const newSub = await prismaClient.subscription.create({
       data: {
         userId: data.userId,
         plan: data.plan,
         status: data.status,
-        startDate: data.startDate ?? new Date(),
-        endDate: data.endDate ?? null,
+        startDate: "",
+        endDate: "",
       },
     });
     return newSub;

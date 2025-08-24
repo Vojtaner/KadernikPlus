@@ -19,6 +19,7 @@ import { auth0ManagementApi } from "../../../application/services/auth0Managemen
 import updatePaymentUseCase, {
   UpdatePaymentUseCaseType,
 } from "../payment/update-payment";
+import { WithUserId } from "@/entities/user";
 
 export type PaymentStatus = "PENDING" | "AUTHORIZED" | "PAID" | "CANCELLED";
 
@@ -31,7 +32,7 @@ const createAddSubscriptionUseCase = (dependencies: {
   auth0ManagementApi: ManagementClient;
 }) => ({
   execute: async (
-    data: SubscriptionCreateData
+    data: WithUserId<SubscriptionCreateData>
   ): Promise<ComgateCreatePaymentReturnType> => {
     const existingSubscription =
       await dependencies.subscriptionRepositoryDb.findByUserId(data.userId);

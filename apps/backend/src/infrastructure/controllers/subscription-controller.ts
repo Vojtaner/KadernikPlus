@@ -37,9 +37,11 @@ const createSubscriptionController = (dependencies: {
     SubscriptionControllerType["addSubscriptionController"]
   > = async (httpRequest) => {
     try {
-      const paymentUrl = await dependencies.addSubscriptionUseCase.execute(
-        httpRequest.body
-      );
+      const paymentUrl = await dependencies.addSubscriptionUseCase.execute({
+        ...httpRequest.body,
+        userId: httpRequest.userId,
+      });
+
       return { statusCode: 201, body: paymentUrl };
     } catch (error: any) {
       return { statusCode: 400, body: { error: error.message } };
