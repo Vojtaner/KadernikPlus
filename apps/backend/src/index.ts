@@ -21,6 +21,8 @@ import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-ex
 import { getEnvVar } from "./utils/getEnvVar";
 import subscriptionRouter from "./routes/subscription-routes";
 import paymentRouter from "./routes/payment-routes";
+import { makeExpressCallback } from "./adapters/express/make-express-callback";
+import paymentController from "./infrastructure/controllers/payment-controller";
 
 dotenv.config();
 
@@ -39,7 +41,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
-
+app.post(
+  "/api/payments/callback",
+  makeExpressCallback(paymentController.updatePaymentStatusController)
+);
 app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 
