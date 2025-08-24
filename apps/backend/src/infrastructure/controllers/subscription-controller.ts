@@ -72,7 +72,7 @@ const createSubscriptionController = (dependencies: {
   const getSubscriptionController: ControllerFunction<
     SubscriptionControllerType["getActiveSubscriptionController"]
   > = async (httpRequest) => {
-    const { userId } = httpRequest.params;
+    const userId = httpRequest.userId;
     const sub = await dependencies.getSubscriptionUseCase.execute(userId);
     return { statusCode: 200, body: sub };
   };
