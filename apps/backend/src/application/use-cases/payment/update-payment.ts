@@ -6,7 +6,7 @@ const createUpdatePaymentUseCase = (dependencies: {
   paymentRepositoryDb: PaymentRepositoryPort;
 }) => ({
   execute: async (data: Partial<Payment>, id?: string) => {
-    return dependencies.paymentRepositoryDb.updatePayment(data, id);
+    return await dependencies.paymentRepositoryDb.updatePayment(data, id);
   },
 });
 
