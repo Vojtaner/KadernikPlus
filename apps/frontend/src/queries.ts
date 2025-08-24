@@ -46,10 +46,10 @@ import type { ExistingStockItem, StockItemCreateData } from './entities/stock-it
 import type { Service, ServiceCreateOrUpdateData } from './entities/service'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type {
-  VisitWithServices,
   CreateVisitType,
   VisitDetailFormType,
   VisitWithServicesWithProceduresWithStockAllowances,
+  VisitWithServicesHotFix,
 } from './entities/visit'
 import { DEFAULT_USERS_TEAM, type TeamMember } from './entities/team-member'
 import type { CreateProcedure, PostNewProcedure } from './entities/procedure'
@@ -277,7 +277,7 @@ export const useSubscriptionMutation = () => {
 export const useVisitQuery = (visitId: string | undefined) => {
   const axios = useAxios()
 
-  return useQuery<VisitWithServices>({
+  return useQuery<VisitWithServicesHotFix>({
     queryKey: ['visit', visitId],
     queryFn: () => {
       if (!visitId) {

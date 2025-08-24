@@ -17,7 +17,7 @@ import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
 import type {
   CreateVisitType,
   VisitDetailFormType,
-  VisitWithServices,
+  VisitWithServicesHotFix,
   VisitWithServicesWithProceduresWithStockAllowances,
 } from '../entities/visit'
 import type { TeamMember } from '../entities/team-member'
@@ -80,7 +80,7 @@ export const getServices = async (axios: AxiosInstance): Promise<Service[]> => {
   const response = await axios.get(apiRoutes.getServiceUrl())
   return response.data
 }
-export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServices> => {
+export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServicesHotFix> => {
   const response = await axios.get(apiRoutes.getVisitByVisitIdUrl(visitId))
   return response.data
 }

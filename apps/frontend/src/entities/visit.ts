@@ -1,6 +1,6 @@
 import type { AddProcedureStockAllowanceType } from '../components/FormDialogs/AddProcedureButton'
 import { type Client } from './client'
-import { type Procedure } from './procedure'
+import type { Procedure } from './procedure'
 import { type Service } from './service'
 import { type User, type WithUserId } from './user'
 
@@ -10,13 +10,11 @@ export type Visit = {
   date: Date
   paidPrice?: number
   deposit?: number
-
   depositStatus?: DepositStatus | null
   visitStatus?: boolean
   note?: string | null
   hairdresserId?: string
   userId?: string
-
   serviceIds: string[]
 } & Pick<Client, 'firstName' | 'lastName' | 'phone' | 'note'>
 
@@ -50,13 +48,37 @@ export type VisitWithServices = {
     phone: string | null
   }
   user: User
+  visitServices: VisitService[]
+  visitStatus: boolean
+} & Omit<Visit, 'visitStatus' | 'hairdresserId'>
+
+export type VisitWithServicesHotFix = {
+  client: {
+    id: string
+    userId: string
+    note: string | null
+    deposit: boolean
+    teamId: string
+    firstName: string
+    lastName: string
+    phone: string | null
+  }
   procedures: Procedure[]
+  user: User
   visitServices: VisitService[]
   visitStatus: boolean
 } & Omit<Visit, 'visitStatus' | 'hairdresserId'>
 
 export type VisitWithServicesWithProceduresWithStockAllowances = VisitWithServices & {
-  procedures: (Procedure & { stockAllowances: AddProcedureStockAllowanceType })[]
+  procedures: {
+    id: string
+    visitId: string
+    stepOrder: number
+    description: string | null
+    stockAllowanceId: string | null
+    createdAt: Date
+    stockAllowances: AddProcedureStockAllowanceType
+  }[]
 }
 
 export type VisitService = {
