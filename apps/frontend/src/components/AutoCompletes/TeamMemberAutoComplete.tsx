@@ -23,6 +23,10 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
     return <FormattedMessage defaultMessage={'Žádní členové týmu nebyli nalezeni.'} id="teamMembers.notFound" />
   }
 
+  if (teamMembers.length === 0) {
+    return null
+  }
+
   const teamMemberOptions = teamMembers.map((member) => ({
     id: member.userId,
     name: member.user.name,

@@ -521,12 +521,25 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
 //
 
 // ---- Stock Allowances ----
-export const useStockAllowancesQuery = (params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }) => {
+export const useStockAllowancesQuery = ({
+  teamId,
+  fromDate,
+  toDate,
+}: {
+  teamId: string | undefined
+  fromDate: dayjs.Dayjs
+  toDate: dayjs.Dayjs
+}) => {
   const axios = useAxios()
 
   return useQuery<GetStockAllowance[]>({
-    queryKey: ['stockAllowances', params],
-    queryFn: () => getStockAllowances(axios, params),
+    queryKey: ['stockAllowances', teamId, fromDate, toDate],
+    queryFn: () => {
+      if (!teamId) {
+        throw new Error('Chybí týmové ID.')
+      }
+      return getStockAllowances(axios, { teamId, fromDate, toDate })
+    },
   })
 }
 

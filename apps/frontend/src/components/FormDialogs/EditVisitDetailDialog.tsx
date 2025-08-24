@@ -39,10 +39,10 @@ const EditVisitDetailDialog = (props: {
       visitServiceId: visit?.visitServices[0].id,
     },
   })
-
   const paidPrice = useWatch({ control, name: 'paidPrice' })
   const deposit = useWatch({ control, name: 'deposit' })
   const depositStatus = useWatch({ control, name: 'depositStatus' })
+  const procedures = visit?.procedures
 
   if (isLoading) {
     return <Loader />
@@ -124,7 +124,6 @@ const EditVisitDetailDialog = (props: {
             minRows={2}
             maxRows={5}
           />
-
           <Stack
             direction="row"
             alignItems="center"
@@ -136,7 +135,7 @@ const EditVisitDetailDialog = (props: {
               Uzavřít návštěvu
             </Typography>
             <RedSwitch
-              disabled={!isVisitFinished(visit.client.deposit, { paidPrice, deposit, depositStatus })}
+              disabled={!isVisitFinished(visit.client.deposit, { paidPrice, deposit, depositStatus, procedures })}
               checked={visit.visitStatus}
               onSubmitEndpoint={(checked) => {
                 changeVisitStatus({ status: checked, visitId })
@@ -144,7 +143,7 @@ const EditVisitDetailDialog = (props: {
             />
           </Stack>
           <Typography color="primary.main">
-            Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a případně zálohu.
+            Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a proceduru a případně zálohu.
           </Typography>
         </>
       }

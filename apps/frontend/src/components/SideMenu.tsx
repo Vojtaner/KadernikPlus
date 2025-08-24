@@ -53,6 +53,7 @@ export const SideMenu = () => {
     navigate('/')
     return
   }
+
   const isLocationActive = useCallback((route: string, location: string): boolean => {
     return route === location
   }, [])
@@ -71,7 +72,7 @@ export const SideMenu = () => {
       <SideMenuButton
         isActive={isLocationActive(ROUTES.profile.path, location.pathname)}
         to={ROUTES.profile.path}
-        title={intl.formatMessage({ id: 'myProfile' })}
+        title={intl.formatMessage({ id: 'myProfile', defaultMessage: 'Můj profil' })}
         icon={<Face4Icon />}
       />
 
@@ -79,63 +80,63 @@ export const SideMenu = () => {
         disabled={!teamMember}
         isActive={isLocationActive(ROUTES.team.path, location.pathname)}
         to={teamMember?.teamId ? Paths.team(teamMember.teamId) : '#'}
-        title={intl.formatMessage({ id: 'team' })}
+        title={intl.formatMessage({ id: 'team', defaultMessage: 'Tým' })}
         icon={<Face4Icon />}
       />
       <Divider />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.home.path, location.pathname)}
         to={ROUTES.home.path}
-        title={intl.formatMessage({ id: 'dashboard' })}
+        title={intl.formatMessage({ id: 'dashboard', defaultMessage: 'Přehledy' })}
         icon={<DashboardIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.clients.path, location.pathname)}
         to={ROUTES.clients.path}
-        title={intl.formatMessage({ id: 'clients' })}
+        title={intl.formatMessage({ id: 'clients', defaultMessage: 'Klienti' })}
         icon={<Face4Icon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.visits.path, location.pathname)}
         to={ROUTES.visits.path}
-        title={intl.formatMessage({ id: 'visitsList' })}
+        title={intl.formatMessage({ id: 'visitsList', defaultMessage: 'Návštěvy' })}
         icon={<PhotoCameraFrontOutlinedIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.sms.path, location.pathname)}
         to={ROUTES.sms.path}
-        title={intl.formatMessage({ id: 'sms' })}
+        title={intl.formatMessage({ id: 'sms', defaultMessage: 'SMSky' })}
         icon={<SmsOutlinedIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.shoppingList.path, location.pathname)}
         to={ROUTES.shoppingList.path}
-        title={intl.formatMessage({ id: 'shoppingList' })}
+        title={intl.formatMessage({ id: 'shoppingList', defaultMessage: 'Nákupní seznam' })}
         icon={<ProductionQuantityLimitsIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.consumption.path, location.pathname)}
-        to={ROUTES.consumption.path}
-        title={intl.formatMessage({ id: 'consumption' })}
+        to={teamMember?.teamId ? Paths.consumption(teamMember.teamId) : '#'}
+        title={intl.formatMessage({ id: 'consumption', defaultMessage: 'Spotřeba' })}
         icon={<ContentCutIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.services.path, location.pathname)}
         to={ROUTES.services.path}
-        title={intl.formatMessage({ id: 'pricing' })}
+        title={intl.formatMessage({ id: 'pricing', defaultMessage: 'Ceník' })}
         icon={<LocalOfferIcon />}
       />
       <SideMenuButton
         isActive={isLocationActive(ROUTES.logs.path, location.pathname)}
         to={ROUTES.logs.path}
-        title={intl.formatMessage({ id: 'logs' })}
+        title={intl.formatMessage({ id: 'logs', defaultMessage: 'Záznamy o aktivitě' })}
         icon={<LightbulbOutlineIcon />}
       />
       {stocks && (
         <SideMenuButton
           isActive={isLocationActive(ROUTES.stock.path, location.pathname)}
           to={Paths.stock(stocks[0].id)}
-          title={intl.formatMessage({ id: 'stock' })}
+          title={intl.formatMessage({ id: 'stock', defaultMessage: 'Sklad' })}
           icon={<WarehouseIcon />}
         />
       )}
@@ -146,13 +147,21 @@ export const SideMenu = () => {
         }}
         to={ROUTES.home.path}
         title={intl.formatMessage(
-          { id: 'currentLanguage', defaultMessage: `Language: ${currentLanguage.toUpperCase()}` },
-          { lang: currentLanguage }
+          { id: 'currentLanguage', defaultMessage: `Language: {lang}` },
+          { lang: currentLanguage.toUpperCase() }
         )}
         icon={<LanguageIcon />}
       />
       <SideMenuButton
-        onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+        onClick={() => {
+          console.log('ahoj')
+          Object.keys(localStorage).forEach((key) => {
+            if (key.startsWith('@@auth0spajs@@')) {
+              localStorage.removeItem(key)
+            }
+          })
+          logout({ logoutParams: { returnTo: window.location.origin } })
+        }}
         to={ROUTES.home.path}
         title={intl.formatMessage({ id: 'logOut', defaultMessage: `Odhlásit se` })}
         icon={<LogoutIcon />}

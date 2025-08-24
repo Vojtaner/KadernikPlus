@@ -36,7 +36,6 @@ const Switch = <TFieldValues extends FieldValues = FieldValues>(props: SwitchPro
                 {...muiProps}
                 checked={!!field.value}
                 onChange={(e, checked) => handleChange(e, checked, field.onChange)}
-                required
               />
             </Box>
           </Tooltip>

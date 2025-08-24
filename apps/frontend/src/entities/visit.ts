@@ -50,7 +50,7 @@ export type VisitWithServices = {
     phone: string | null
   }
   user: User
-
+  procedures: Procedure[]
   visitServices: VisitService[]
   visitStatus: boolean
 } & Omit<Visit, 'visitStatus' | 'hairdresserId'>
