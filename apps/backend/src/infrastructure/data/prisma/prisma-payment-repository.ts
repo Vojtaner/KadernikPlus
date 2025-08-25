@@ -2,7 +2,7 @@ import { PaymentRepositoryPort } from "../../../application/ports/payment-reposi
 import { Payment, PrismaClient } from ".prisma/client";
 import prisma from "./prisma";
 
-const createProcedureRepositoryDb = (
+const createPaymentRepositoryDb = (
   prismaClient: PrismaClient
 ): PaymentRepositoryPort => {
   return {
@@ -14,26 +14,40 @@ const createProcedureRepositoryDb = (
     },
 
     updatePayment: async (data: Partial<Payment>, id) => {
-      console.log({ updatePayment: data });
       if (!id && !data.refId) {
-        console.log("chyba", data);
         throw new Error("Platbu nelze aktualizovat chybí ID nebo REFID.");
       }
 
       try {
-        if (data.refId) {
-          console.log("refId", data.refId, typeof data.refId);
+        if (id) {
           const updatedPayment = await prisma.payment.update({
-            where: { refId: data.refId },
+            where: { id },
             data,
           });
 
-          console.log({ updatedPayment, nic: "dsfdsf" });
+          return updatedPayment;
+        }
+      } catch (error) {
+        console.log("prismaPaymentRepositoryDb - updatePayment error", error);
+        throw new Error("Platbu nelze aktualizovat.");
+      }
+    },
+    updatePaymentAndSubscription: async (data: Partial<Payment>, id) => {
+      if (!data.refId) {
+        throw new Error("Platbu nelze aktualizovat chybí REFID.");
+      }
 
-          const now = new Date();
-          const plus30DaysDate = new Date(now); // clone date
-          plus30DaysDate.setDate(now.getDate() + 30);
+      try {
+        const updatedPayment = await prisma.payment.update({
+          where: { refId: data.refId },
+          data,
+        });
 
+        const now = new Date();
+        const plus30DaysDate = new Date(now); // clone date
+        plus30DaysDate.setDate(now.getDate() + 30);
+
+        if (updatedPayment.status === "PAID") {
           const updatedSubscription = await prisma.subscription.update({
             where: { id: updatedPayment.subscriptionId },
             data: {
@@ -45,16 +59,7 @@ const createProcedureRepositoryDb = (
 
           return updatedPayment;
         }
-
-        if (id) {
-          console.log("id", data.id, typeof data.id);
-          const updatedPayment = await prisma.payment.update({
-            where: { id },
-            data,
-          });
-
-          return updatedPayment;
-        }
+        return updatedPayment;
       } catch (error) {
         console.log("prismaPaymentRepositoryDb - updatePayment error", error);
         throw new Error("Platbu nelze aktualizovat.");
@@ -71,5 +76,5 @@ const createProcedureRepositoryDb = (
   };
 };
 
-const procedureRepositoryDb = createProcedureRepositoryDb(prisma);
-export default procedureRepositoryDb;
+const paymentRepositoryDb = createPaymentRepositoryDb(prisma);
+export default paymentRepositoryDb;

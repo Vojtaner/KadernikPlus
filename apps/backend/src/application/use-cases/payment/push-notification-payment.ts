@@ -11,37 +11,11 @@ const createPushNotificationPaymentUseCase = (dependencies: {
   execute: async (data: Partial<Payment>, id?: string) => {
     try {
       const updatedPayment =
-        await dependencies.paymentRepositoryDb.updatePayment({
+        await dependencies.paymentRepositoryDb.updatePaymentAndSubscription({
           transactionId: data.transactionId,
           status: data.status,
           refId: Number(data.refId),
         });
-      if (updatedPayment)
-        console.log("UpdatedPayment keys:", Object.keys(updatedPayment));
-
-      console.log(
-        "UpdatedPayment JSON:",
-        JSON.stringify(updatedPayment, null, 2)
-      );
-
-      const now = new Date();
-      const plus30DaysDate = new Date(now); // clone date
-      plus30DaysDate.setDate(now.getDate() + 30);
-
-      if (updatedPayment && updatedPayment.status === "PAID") {
-        const updatedSubscription =
-          await dependencies.subscriptionRepositoryDb.update(
-            updatedPayment.subscriptionId,
-            {
-              status: "ACTIVE",
-              startDate: now,
-              endDate: plus30DaysDate,
-            }
-          );
-
-        return updatedSubscription;
-      }
-      console.log("error po platbě");
     } catch (error) {
       console.log("createPushNotificationPaymentUseCase", error);
       throw new Error("Platbu se nepovedlo zpracovat.");
