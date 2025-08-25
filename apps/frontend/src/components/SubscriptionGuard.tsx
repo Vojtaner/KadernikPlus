@@ -19,7 +19,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
     return <ErrorBoundary />
   }
 
-  if (subscription.status !== 'ACTIVE') {
+  if (subscription.status === 'EXPIRED' || subscription.status === 'CANCELLED') {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 
