@@ -22,7 +22,7 @@ const createPushNotificationPaymentUseCase = (dependencies: {
       const plus30DaysDate = new Date(now); // clone date
       plus30DaysDate.setDate(now.getDate() + 30);
 
-      if (updatedPayment.status === "PAID") {
+      if (updatedPayment && updatedPayment.status === "PAID") {
         const updatedSubscription =
           await dependencies.subscriptionRepositoryDb.update(
             updatedPayment.subscriptionId,
