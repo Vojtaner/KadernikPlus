@@ -262,7 +262,7 @@ export const useSubscriptionMutation = () => {
     mutationFn: async (data) => postCreateSubscription(axios, data),
     onSuccess: (data) => {
       addSnackBarMessage({ text: 'Platba založena', type: 'success' })
-      window.location.href = data.redirect
+      window.location.assign(data.redirect)
     },
     onError: (error) => {
       addSnackBarMessage({ text: 'Platbu se nepovedlo založit.', type: 'error' })
