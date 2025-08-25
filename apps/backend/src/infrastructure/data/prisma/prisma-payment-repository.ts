@@ -28,6 +28,21 @@ const createProcedureRepositoryDb = (
             data,
           });
 
+          console.log({ updatedPayment, nic: "dsfdsf" });
+
+          const now = new Date();
+          const plus30DaysDate = new Date(now); // clone date
+          plus30DaysDate.setDate(now.getDate() + 30);
+
+          const updatedSubscription = await prisma.subscription.update({
+            where: { id: updatedPayment.subscriptionId },
+            data: {
+              status: "ACTIVE",
+              startDate: now,
+              endDate: plus30DaysDate,
+            },
+          });
+
           return updatedPayment;
         }
 
