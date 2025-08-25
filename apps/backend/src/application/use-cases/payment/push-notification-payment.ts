@@ -16,7 +16,13 @@ const createPushNotificationPaymentUseCase = (dependencies: {
           status: data.status,
           refId: Number(data.refId),
         });
-      console.log({ updatedPayment });
+      if (updatedPayment)
+        console.log("UpdatedPayment keys:", Object.keys(updatedPayment));
+
+      console.log(
+        "UpdatedPayment JSON:",
+        JSON.stringify(updatedPayment, null, 2)
+      );
 
       const now = new Date();
       const plus30DaysDate = new Date(now); // clone date
