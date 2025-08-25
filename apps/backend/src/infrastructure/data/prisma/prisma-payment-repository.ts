@@ -16,11 +16,13 @@ const createProcedureRepositoryDb = (
     updatePayment: async (data: Partial<Payment>, id) => {
       console.log({ updatePayment: data });
       if (!id && !data.refId) {
+        console.log("chyba", data);
         throw new Error("Platbu nelze aktualizovat chybí ID nebo REFID.");
       }
 
       try {
         if (data.refId) {
+          console.log("refId", data.refId, typeof data.refId);
           const updatedPayment = await prisma.payment.update({
             where: { refId: data.refId },
             data,
@@ -30,6 +32,7 @@ const createProcedureRepositoryDb = (
         }
 
         if (id) {
+          console.log("id", data.id, typeof data.id);
           const updatedPayment = await prisma.payment.update({
             where: { id },
             data,
