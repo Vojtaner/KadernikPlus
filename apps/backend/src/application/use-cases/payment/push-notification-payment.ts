@@ -11,11 +11,29 @@ const createPushNotificationPaymentUseCase = (dependencies: {
   execute: async (data: Partial<Payment>, id?: string) => {
     try {
       const updatedPayment =
-        await dependencies.paymentRepositoryDb.updatePaymentAndSubscription({
+        await dependencies.paymentRepositoryDb.updatePayment({
           transactionId: data.transactionId,
           status: data.status,
           refId: Number(data.refId),
         });
+
+      const now = new Date();
+      const plus30DaysDate = new Date(now);
+      plus30DaysDate.setDate(now.getDate() + 30);
+
+      if (updatedPayment && updatedPayment.status === "PAID") {
+        const updatedSubscription =
+          await dependencies.subscriptionRepositoryDb.update(
+            updatedPayment.subscriptionId,
+            {
+              status: "ACTIVE",
+              startDate: now,
+              endDate: plus30DaysDate,
+            }
+          );
+
+        return updatedSubscription;
+      }
     } catch (error) {
       console.log("createPushNotificationPaymentUseCase", error);
       throw new Error("Platbu se nepovedlo zpracovat.");
@@ -23,13 +41,14 @@ const createPushNotificationPaymentUseCase = (dependencies: {
   },
 });
 
-export type UpdatePaymentUseCaseType = ReturnType<
+export type UpdatePushNotificationPaymentUseCaseType = ReturnType<
   typeof createPushNotificationPaymentUseCase
 >;
 
-const updatePaymentUseCase = createPushNotificationPaymentUseCase({
-  paymentRepositoryDb,
-  subscriptionRepositoryDb,
-});
+const updatePushNotificationPaymentUseCase =
+  createPushNotificationPaymentUseCase({
+    paymentRepositoryDb,
+    subscriptionRepositoryDb,
+  });
 
-export default updatePaymentUseCase;
+export default updatePushNotificationPaymentUseCase;

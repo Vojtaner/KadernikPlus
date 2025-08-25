@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
 app.options("/api/payment/callback", cors());
 app.post(
   "/api/payment/callback",
-  makeExpressCallback(paymentController.updatePaymentStatusController)
+  makeExpressCallback(paymentController.updatePushNotificationPaymentController)
 );
 app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));

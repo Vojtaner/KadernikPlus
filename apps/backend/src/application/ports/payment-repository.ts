@@ -8,9 +8,6 @@ export interface PaymentRepositoryPort {
     data: Partial<Payment>,
     id?: string
   ) => Promise<Payment | undefined>;
-  updatePaymentAndSubscription: (
-    data: Partial<Payment>,
-    id?: string
-  ) => Promise<Payment | undefined>;
+
   findByExternalId(externalId: string): Promise<Payment | null>;
 }

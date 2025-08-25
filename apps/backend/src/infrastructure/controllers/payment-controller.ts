@@ -7,6 +7,9 @@ import updatePaymentStatusUseCase, {
 } from "../../application/use-cases/payment/update-payment";
 import { ComgateUpdatePaymentRequired } from "@/application/services/comgatePaymentApi";
 import { Payment } from "@prisma/client";
+import updatePushNotificationPaymentUseCase, {
+  UpdatePushNotificationPaymentUseCaseType,
+} from "../../application/use-cases/payment/push-notification-payment";
 
 type PaymentControllerType = {
   createPaymentController: ControllerFunction<{
@@ -24,9 +27,9 @@ type PaymentControllerType = {
 
 export const createPaymentController = (dependencies: {
   createPaymentUseCase: CreatePaymentUseCaseType;
-  updatePaymentStatusUseCase: UpdatePaymentUseCaseType;
+  updatePushNotificationPaymentUseCase: UpdatePushNotificationPaymentUseCaseType;
 }) => {
-  const updatePaymentStatusController: ControllerFunction<{
+  const updatePushNotificationPaymentController: ControllerFunction<{
     body: ComgateUpdatePaymentRequired;
   }> = async (httpRequest) => {
     const data = httpRequest.body;
@@ -36,12 +39,12 @@ export const createPaymentController = (dependencies: {
       transactionId: data.transId,
       status: data.status,
     };
-    console.log({ http: httpRequest.body });
-    console.log({ paymentData });
+
     try {
-      const payment = await dependencies.updatePaymentStatusUseCase.execute(
-        paymentData
-      );
+      const payment =
+        await dependencies.updatePushNotificationPaymentUseCase.execute(
+          paymentData
+        );
       return { statusCode: 200, message: "OK" };
     } catch (error) {
       throw new Error("Platbu se nepovedlo aktualizovat.");
@@ -49,13 +52,13 @@ export const createPaymentController = (dependencies: {
   };
   return {
     createPaymentController,
-    updatePaymentStatusController,
+    updatePushNotificationPaymentController,
   };
 };
 
 const paymentController = createPaymentController({
   createPaymentUseCase,
-  updatePaymentStatusUseCase,
+  updatePushNotificationPaymentUseCase,
 });
 
 export default paymentController;
