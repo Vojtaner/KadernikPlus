@@ -6,7 +6,7 @@ const paymentRouter = Router();
 
 paymentRouter.post(
   "/callback",
-  makeExpressCallback(paymentController.updatePaymentStatusController)
+  makeExpressCallback(paymentController.updatePushNotificationPaymentController)
 );
 
 export default paymentRouter;
