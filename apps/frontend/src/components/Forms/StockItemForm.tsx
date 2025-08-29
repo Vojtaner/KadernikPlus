@@ -23,9 +23,13 @@ export const StockItemForm = (props: StockItemFormProps) => {
     isPurchaseStockItem,
     setIsPurchaseStockItem,
     formUsagePurpose,
-    getValues,
-    stockItem: { unit, lastPackageQuantity, avgUnitPrice },
+    stockItem: { unit },
   } = props
+
+  const itemNameWatch = useWatch({ control, name: 'itemName' })
+  const packageCount = useWatch({ control, name: 'packageCount' })
+  const totalPrice = useWatch({ control, name: 'totalPrice' })
+  const pricePerPackage = totalPrice / packageCount
 
   const isOnlyShoppingForm = formUsagePurpose === 'purchase'
   const isPurchaseAndNewStockItemForm = formUsagePurpose === 'purchaseAndNewStockItem'
@@ -68,7 +72,7 @@ export const StockItemForm = (props: StockItemFormProps) => {
               label={
                 <FormattedMessage
                   id="stockItem.packageQuantity"
-                  defaultMessage={`Množství v jednom balení v ${unit}`}
+                  defaultMessage={`Množství v jednom balení v ${unit ?? ''}`}
                 />
               }
               type="number"
@@ -117,7 +121,10 @@ export const StockItemForm = (props: StockItemFormProps) => {
               <TextField
                 fieldPath="quantity"
                 label={
-                  <FormattedMessage id="stockItem.quantity" defaultMessage={`Množství v jednom balení v ${unit}`} />
+                  <FormattedMessage
+                    id="stockItem.quantity"
+                    defaultMessage={`Množství v jednom balení v ${unit ?? ''}`}
+                  />
                 }
                 type="number"
                 fullWidth
@@ -134,23 +141,22 @@ export const StockItemForm = (props: StockItemFormProps) => {
               control={control}
             />
 
-            <Stack direction="column" spacing={0.5}>
-              <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-                <Box component="span" color="success.main" fontWeight="bold">
-                  <FormattedMessage id="stockItem.checkTitle" defaultMessage="Kontrola: " />
-                </Box>
-                <FormattedMessage
-                  id="stockItem.checkCalculation"
-                  defaultMessage={`Za 1 balení ${getValues().itemName} zaplatíte`}
-                />
-                <Box
-                  component="span"
-                  color="success"
-                  fontWeight="bold">{` ${Math.round(lastPackageQuantity * avgUnitPrice)} Kč`}</Box>
-                <br />
-                <FormattedMessage id="stockItem.checkQuestion" defaultMessage="Je tomu přibližně tak?" />
-              </Typography>
-            </Stack>
+            {itemNameWatch && pricePerPackage ? (
+              <Stack direction="column" spacing={0.5}>
+                <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
+                  <Box component="span" color="success.main" fontWeight="bold">
+                    <FormattedMessage id="stockItem.checkTitle" defaultMessage="Kontrola: " />
+                  </Box>
+                  <FormattedMessage
+                    id="stockItem.checkCalculation"
+                    defaultMessage={` Za 1 balení ${itemNameWatch} zaplatíte`}
+                  />
+                  <Box component="span" color="success" fontWeight="bold">{` ${Math.round(pricePerPackage)} Kč`}</Box>
+                  <br />
+                  <FormattedMessage id="stockItem.checkQuestion" defaultMessage="Je tomu přibližně tak?" />
+                </Typography>
+              </Stack>
+            ) : null}
             <TextField fieldPath="threshold" label="Minimální počet balení" type="number" control={control} fullWidth />
           </>
         )
