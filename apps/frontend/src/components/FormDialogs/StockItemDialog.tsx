@@ -88,7 +88,7 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
           handleClickOpen()
         },
       })}
-      title={intl.formatMessage({ defaultMessage: 'Upravit položku na skladě.', id: 'stockItem.editStockItem' })}
+      title={intl.formatMessage({ defaultMessage: 'Upravit skladovou zásobu', id: 'stockItem.editStockItem' })}
     />
   )
 }

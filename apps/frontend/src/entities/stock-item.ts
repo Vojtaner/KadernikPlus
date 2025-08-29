@@ -60,13 +60,8 @@ export type Units = (typeof UnitsObject)[keyof typeof UnitsObject]
 
 export const UnitsObject = {
   G: 'g',
-  MG: 'mg',
-  L: 'l',
   ML: 'ml',
-  CM: 'cm',
-  MM: 'mm',
   KS: 'ks',
-  BALENI: 'balení',
 }
 
 export type StockAllowance = {

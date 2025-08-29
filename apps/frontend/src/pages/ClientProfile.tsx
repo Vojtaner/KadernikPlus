@@ -5,7 +5,7 @@ import { useClientQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import Loader from '../pages/Loader'
 import { formatToCZK } from './VisitDetailGrid'
-import { getTimeFromUtcToLocal } from './VisitsList'
+import { getDateTimeFromUtcToLocal } from './VisitsList'
 import AddEditClientFormDialog from '../components/FormDialogs/AddEditClientFormDialog'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
@@ -71,7 +71,7 @@ const ClientProfile = () => {
         return (
           <VisitDetailCard
             visitId={visit.id}
-            date={getTimeFromUtcToLocal(visit.date)}
+            date={getDateTimeFromUtcToLocal(visit.date)}
             index={index + 1}
             clientId={clientData.id}
             key={index}

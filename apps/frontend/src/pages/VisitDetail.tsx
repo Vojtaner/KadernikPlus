@@ -6,13 +6,14 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../components/Note'
 import EditVisitDetailDialog from '../components/FormDialogs/EditVisitDetailDialog'
 import { useClientVisitsQuery, useProceduresQuery, useVisitQuery } from '../queries'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import AddProcedureButton from '../components/FormDialogs/AddProcedureButton'
 import Loader from './Loader'
 import { useAppDispatch } from '../store'
 import { setCurrentLocationAppendix } from '../store/appUiSlice'
 import AppTheme from '../AppTheme'
 import { Paths } from '../routes/AppRoutes'
+import { useAppNavigate } from '../hooks'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
@@ -21,7 +22,7 @@ const VisitDetail = () => {
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
 
   const lastVisitWithProcedure =
     clientVisits && clientVisits.filter((visit) => visit.procedures.length && visitData?.id !== visit.id)

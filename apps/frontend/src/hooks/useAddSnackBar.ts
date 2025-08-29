@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 export const useAddSnackbarMessage = () => {
   const dispatch = useDispatch()
 
-  return (message: Omit<SnackbarMessage, 'unique'> & Partial<Pick<SnackbarMessage, 'unique'>>, timeout = 5000) => {
+  return (message: Omit<SnackbarMessage, 'unique'> & Partial<Pick<SnackbarMessage, 'unique'>>, timeout = 2500) => {
     const newMessage = { ...(message ?? 'Neznámá chyba'), unique: message.unique || uuidv4() }
 
     dispatch(addedSnackbarMessage(newMessage))

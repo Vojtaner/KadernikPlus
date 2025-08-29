@@ -1,9 +1,9 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import type { AppRoutePath } from '../routes/AppRoutes'
 import AppTheme from '../AppTheme'
-import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../store'
 import { setCurrentLocationAppendix } from '../store/appUiSlice'
+import { useAppNavigate } from '../hooks'
 
 type SideMenuListItemProps = {
   title: string
@@ -16,7 +16,7 @@ type SideMenuListItemProps = {
 
 const SideMenuButton = (props: SideMenuListItemProps) => {
   const { title, to, icon, isActive = false, disabled = false, onClick } = props
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const dispatch = useAppDispatch()
 
   return (

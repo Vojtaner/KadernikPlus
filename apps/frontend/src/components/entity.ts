@@ -2,7 +2,6 @@ import type { ButtonProps } from '@mui/material'
 import type { CommonProps } from '@mui/material/OverridableComponent'
 import { cloneElement, type ReactElement } from 'react'
 import type { AppPaletteColor } from '../entity'
-import type { StockViewKey } from '../entities/stock-allowance'
 
 export const addPropsToReactElement = (
   element: ReactElement,
@@ -38,6 +37,6 @@ export const getButtonStyles = (active: boolean) => ({
   color: active ? 'white' : undefined,
 })
 
-export const getButtonStyle = (tabelView: StockViewKey, key: StockViewKey) => {
+export const getButtonStyle = <T>(tabelView: T, key: T) => {
   return tabelView === key ? 'contained' : 'text'
 }

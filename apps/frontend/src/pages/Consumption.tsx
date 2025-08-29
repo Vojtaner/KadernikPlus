@@ -1,4 +1,4 @@
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Stack, Typography, type ButtonPropsVariantOverrides } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
 import { formatNameShort } from '../entity'
@@ -18,15 +18,18 @@ import {
 import { getDateShort } from './VisitsList'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { Paths } from '../routes/AppRoutes'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { useIntl } from 'react-intl'
 import { getButtonStyle } from '../components/entity'
+import type { OverridableStringUnion } from '@mui/types'
+import { useAppNavigate } from '../hooks'
 
 const Consumption = () => {
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const { teamId } = useParams()
   const [tabelView, setTabelView] = useState<StockViewKey>('byUser')
+  const intl = useIntl()
 
   const { control, watch } = useForm({
     defaultValues: {
@@ -62,18 +65,21 @@ const Consumption = () => {
   return (
     <Stack spacing={4}>
       <Stack direction="row" spacing={2} justifyContent="flex-start">
-        <Button
-          onClick={() => setTabelView('byProduct')}
+        <FilterTableButton
           variant={getButtonStyle(tabelView, 'byProduct')}
-          color="primary">
-          <FormattedMessage id="consumption.stockViewKey.byProducts" defaultMessage="Podle produktů" />
-        </Button>
-        <Button onClick={() => setTabelView('byUser')} variant={getButtonStyle(tabelView, 'byUser')}>
-          <FormattedMessage id="consumption.stockViewKey.byUser" defaultMessage="Podle lidí" />
-        </Button>
-        <Button onClick={() => setTabelView('allRecords')} variant={getButtonStyle(tabelView, 'allRecords')}>
-          <FormattedMessage id="consumption.stockViewKey.allRecords" defaultMessage="Historie záznamů" />
-        </Button>
+          setTableView={() => setTabelView('byProduct')}
+          text={intl.formatMessage({ id: 'consumption.stockViewKey.byProducts', defaultMessage: 'Podle produktů' })}
+        />
+        <FilterTableButton
+          variant={getButtonStyle(tabelView, 'byUser')}
+          setTableView={() => setTabelView('byUser')}
+          text={intl.formatMessage({ defaultMessage: 'Podle lidí', id: 'consumption.stockViewKey.byUser' })}
+        />
+        <FilterTableButton
+          variant={getButtonStyle(tabelView, 'allRecords')}
+          setTableView={() => setTabelView('allRecords')}
+          text={intl.formatMessage({ defaultMessage: 'Historie záznamů', id: 'consumption.stockViewKey.allRecords' })}
+        />
       </Stack>
       <Stack spacing={1} height={'100%'}>
         <Stack direction="row" spacing={2}>
@@ -95,6 +101,18 @@ const Consumption = () => {
 }
 
 export default Consumption
+
+export const FilterTableButton = (props: {
+  setTableView: () => void
+  variant: OverridableStringUnion<'text' | 'outlined' | 'contained', ButtonPropsVariantOverrides>
+  text: string
+}) => {
+  return (
+    <Button onClick={props.setTableView} variant={props.variant} color="primary">
+      {props.text}
+    </Button>
+  )
+}
 
 const createColumnsByProductByUser = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },

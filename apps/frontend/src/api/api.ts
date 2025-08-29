@@ -1,6 +1,4 @@
-import { http, HttpResponse, type PathParams } from 'msw'
-import type { Stock, UserLog, UserType } from './entity'
-import { mockUserLogs, mockUser, mockWarehouseState } from './mocks'
+import type { Stock, UserLog } from './entity'
 import type { AxiosInstance } from 'axios'
 import { apiRoutes } from './apiRoutes'
 import type {
@@ -28,21 +26,6 @@ import { extractErrorMessage } from './errorHandler'
 import type dayjs from 'dayjs'
 import type { GetStockAllowance } from '../entities/stock-allowance'
 import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
-
-export const mockGetUser = () =>
-  http.get<object, PathParams<string>, UserType>('todos/1', () => {
-    return HttpResponse.json(mockUser)
-  })
-
-export const mockGetWareHouseItems = () =>
-  http.get('/api/user/warehouse', () => {
-    return HttpResponse.json(mockWarehouseState)
-  })
-
-export const mockGetUserLogs = () =>
-  http.get<object, PathParams<string>, UserLog[]>(apiRoutes.getUserLogsUrl('unique-user-1'), () => {
-    return HttpResponse.json(mockUserLogs)
-  })
 
 export const getUser = async (axios: AxiosInstance) => {
   const { data: userData } = await axios.get(apiRoutes.getUserUrl('unique-user-1'))

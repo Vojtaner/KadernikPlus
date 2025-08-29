@@ -5,7 +5,7 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 import AppTheme from '../AppTheme'
 import { ROUTES } from '../routes/AppRoutes'
 import logo from '../../public/assets/logofornow.png'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '../hooks'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
@@ -120,7 +120,7 @@ type AppLogoProps = { sx?: SxProps<Theme> }
 
 export const AppLogo = (props: AppLogoProps) => {
   const { sx } = props
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>

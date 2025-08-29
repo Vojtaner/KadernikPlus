@@ -14,14 +14,14 @@ export const Dashboard = () => {
       <DashBoardCard
         title="Přehled návštěv"
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" color="secondary" />}>
-        <VisitsList columnHeaderHeight={0} hideFooter={true} />
+        <VisitsList columnHeaderHeight={0} hideFooter={true} enableFilters={false} />
       </DashBoardCard>
 
       <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
         <ShoppingList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
       <DashBoardCard title="Neuzavřené návštěvy" icon={<NewReleasesIcon fontSize="medium" color="secondary" />}>
-        <VisitsList columnHeaderHeight={0} hideFooter={true} onlyOpenVisits />
+        <VisitsList columnHeaderHeight={0} hideFooter={true} onlyOpenVisits enableFilters={false} />
       </DashBoardCard>
       <DashBoardCard
         sx={{ height: 'auto' }}

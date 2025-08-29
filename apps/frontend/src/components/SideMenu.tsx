@@ -19,9 +19,9 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 import { useAuth0 } from '@auth0/auth0-react'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useStocksQuery, useTeamMemberQuery } from '../queries'
-import { useNavigate } from 'react-router-dom'
 import { useAppLocation } from '../routes/reactRouter'
 import { useCallback } from 'react'
+import { useAppNavigate } from '../hooks'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
@@ -46,7 +46,7 @@ export const SideMenu = () => {
 
   const currentLanguage = useSelector((state: RootState) => state.appUi.language)
   const intl = useIntl()
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
   const route = useCurrentRoute()
 
   if (!route) {

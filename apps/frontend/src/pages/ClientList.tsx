@@ -14,11 +14,11 @@ import BoxIcon from '../components/BoxIcon'
 import { formatPhoneNumber } from './VisitsList'
 import SendMessageDialog from '../components/FormDialogs/SendMessageDialog'
 import SendIcon from '@mui/icons-material/Send'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '../hooks'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
 
   if (isLoading) {
     return <Loader />

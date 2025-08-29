@@ -53,14 +53,14 @@ const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => 
     }
 
     if (packageCount < requiredPackages) {
-      const missingPackages = requiredPackages - packageCount
-      const missingUnits = missingPackages * lastPackageQuantity
+      const missingPackages = Math.round((requiredPackages - packageCount) * 100) / 100
+      const missingUnits = Math.round(missingPackages * lastPackageQuantity * 100) / 100
 
       return [
         {
           id: item.id,
           item: item.itemName,
-          price: missingUnits * avgPrice,
+          price: Math.round(missingUnits * avgPrice * 100) / 100,
           amount: missingPackages,
           unit: item.unit,
         },

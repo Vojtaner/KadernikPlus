@@ -2,16 +2,14 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Box, IconButton } from '@mui/material'
-import { useAppDispatch, useAppSelector } from '../store'
+import { useAppSelector } from '../store'
 import { useCurrentRoute } from '../routes/AppRoutes'
-import { useNavigate } from 'react-router-dom'
-import { setCurrentLocationAppendix } from '../store/appUiSlice'
+import { useAppNavigate } from '../hooks'
 
 const SectionHeader = () => {
   const route = useCurrentRoute()
   const appendix = useAppSelector((state) => state.appUi.currentLocationAppendix)
-  const navigate = useNavigate()
-  const dispatch = useAppDispatch()
+  const navigate = useAppNavigate()
 
   if (!route) {
     navigate('/')
@@ -29,7 +27,6 @@ const SectionHeader = () => {
         justifyContent="space-between">
         <IconButton
           onClick={() => {
-            dispatch(setCurrentLocationAppendix(''))
             navigate(-1)
           }}
           sx={{ flexShrink: 0 }}>

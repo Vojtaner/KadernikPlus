@@ -2,6 +2,7 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import React from 'react'
 
 import type { DataGridProps, GridValidRowModel } from '@mui/x-data-grid'
+import { csCZ } from '@mui/x-data-grid/locales'
 
 type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & {
   rows: T
@@ -30,6 +31,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         rows={rows}
         columns={gridColumns}
         autosizeOnMount
+        localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
         sx={{
           ...props.sx,
           fontSize: '12px',

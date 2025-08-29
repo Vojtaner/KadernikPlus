@@ -10,17 +10,27 @@ import { BasicDatePicker } from '../components/DateTimePicker'
 import { useForm } from 'react-hook-form'
 import dayjs from 'dayjs'
 import { Paths } from '../routes/AppRoutes'
-import { useNavigate } from 'react-router-dom'
+import { getButtonStyle } from '../components/entity'
+import { useIntl } from 'react-intl'
+import { useState } from 'react'
+import { FilterTableButton } from './Consumption'
+import { getMissingStockAllowanceError } from './VisitDetailGrid'
+import { useAppNavigate } from '../hooks'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
   hideFooter?: boolean
   onlyOpenVisits?: boolean
+  enableFilters?: boolean
 }
+type VisitViewKey = 'byClosedNoStockAllowances' | 'byAll'
 
 const VisitsList = (props: VisitListProps) => {
-  const { columnHeaderHeight, hideFooter = false, onlyOpenVisits = false } = props
-  const navigate = useNavigate()
+  const { columnHeaderHeight, hideFooter = false, onlyOpenVisits = false, enableFilters = true } = props
+  const navigate = useAppNavigate()
+  const [tabelView, setTabelView] = useState<VisitViewKey>('byAll')
+
+  const intl = useIntl()
 
   const { control, watch } = useForm({
     defaultValues: {
@@ -39,40 +49,92 @@ const VisitsList = (props: VisitListProps) => {
   }
 
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
-  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : visitData)].sort((a, b) => {
+
+  const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
+    (visit) => visit.visitStatus && getMissingStockAllowanceError(visit.procedures)
+  )
+
+  const filteredData = tabelView === 'byClosedNoStockAllowances' ? onlyClosedVisitsWithoutStockAllowances : visitData
+  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort((a, b) => {
     return getDateTimeFromUtcToLocal(a.date).localeCompare(getDateTimeFromUtcToLocal(b.date))
   })
   const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
   const rows = createVisitsTable(rowsWithHeaders)
 
   return (
-    <Stack spacing={2} height={'100%'}>
-      {!onlyOpenVisits && (
-        <Stack direction="row" spacing={2}>
-          <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
-          <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+    <Stack spacing={4}>
+      {enableFilters && (
+        <Stack direction="row" spacing={2} justifyContent="flex-start">
+          <FilterTableButton
+            variant={getButtonStyle(tabelView, 'byAll')}
+            setTableView={() => setTabelView('byAll')}
+            text={intl.formatMessage({
+              defaultMessage: 'Všechny',
+              id: 'visits.visitViewKey.byAll',
+            })}
+          />
+          <FilterTableButton
+            variant={getButtonStyle(tabelView, 'byClosedNoStockAllowances')}
+            setTableView={() => setTabelView('byClosedNoStockAllowances')}
+            text={intl.formatMessage({
+              defaultMessage: 'Uzavřené bez spotřeby',
+              id: 'visits.visitViewKey.byClosedNoStockAllowances',
+            })}
+          />
         </Stack>
       )}
-      <AppDataGrid
-        rows={rows}
-        columns={createColumns(navigate)}
-        columnHeaderHeight={columnHeaderHeight}
-        hideFooter={hideFooter}
-        getRowClassName={(params) => {
-          return params.row.isHeader ? 'header-row' : ''
-        }}
-        getRowHeight={(params) => {
-          return params.model.isHeader ? 20 : 40
-        }}
-        sx={{
-          '& .header-row .MuiDataGrid-cell': {
-            backgroundColor: '#fff656',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            justifyContent: 'center',
-          },
-        }}
-      />
+      <Stack spacing={2} height={'100%'}>
+        {!onlyOpenVisits && (
+          <Stack direction="row" spacing={2}>
+            <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
+            <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+          </Stack>
+        )}
+        {tabelView === 'byAll' && (
+          <AppDataGrid
+            rows={rows}
+            columns={createColumns(navigate)}
+            columnHeaderHeight={columnHeaderHeight}
+            hideFooter={hideFooter}
+            getRowClassName={(params) => {
+              return params.row.isHeader ? 'header-row' : ''
+            }}
+            getRowHeight={(params) => {
+              return params.model.isHeader ? 20 : 40
+            }}
+            sx={{
+              '& .header-row .MuiDataGrid-cell': {
+                backgroundColor: '#fff656',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        )}
+        {tabelView === 'byClosedNoStockAllowances' && (
+          <AppDataGrid
+            rows={rows}
+            columns={createColumns(navigate)}
+            columnHeaderHeight={columnHeaderHeight}
+            hideFooter={hideFooter}
+            getRowClassName={(params) => {
+              return params.row.isHeader ? 'header-row' : ''
+            }}
+            getRowHeight={(params) => {
+              return params.model.isHeader ? 20 : 40
+            }}
+            sx={{
+              '& .header-row .MuiDataGrid-cell': {
+                backgroundColor: '#fff656',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        )}
+      </Stack>
     </Stack>
   )
 }
@@ -151,7 +213,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
       const isVisitOpen = params.row.visitState
       return (
         !params.row.isHeader && (
-          <Typography color={isVisitOpen ? 'success ' : 'error'}>{isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}</Typography>
+          <Typography color={isVisitOpen ? 'success' : 'error'}>{isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}</Typography>
         )
       )
     },

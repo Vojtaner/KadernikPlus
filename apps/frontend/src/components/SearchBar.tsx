@@ -49,6 +49,7 @@ const SearchBar = (props: SearchBarProps) => {
   }
 
   const searchPlaceholder = 'Vyhledej zákazníka...'
+  const searchPlaceholderHint = 'Zadejte jméno, přijmení...'
 
   return (
     <Stack
@@ -78,7 +79,7 @@ const SearchBar = (props: SearchBarProps) => {
           sx={{
             width: '100%',
           }}>
-          {searchPlaceholder}
+          {isFieldFocused ? searchPlaceholderHint : searchPlaceholder}
         </Typography>
       )}
 
@@ -87,7 +88,7 @@ const SearchBar = (props: SearchBarProps) => {
           fieldPath="searchValue"
           control={control}
           type="search"
-          placeholder={searchPlaceholder}
+          placeholder={isFieldFocused ? searchPlaceholderHint : searchPlaceholder}
           onClick={(e) => handleFocusField(e)}
           slotProps={{
             input: {

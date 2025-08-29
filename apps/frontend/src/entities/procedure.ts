@@ -7,6 +7,7 @@ export type Procedure = {
   description: string | null
   stockAllowanceId: string | null
   createdAt: Date
+  stockAllowances: AddProcedureStockAllowanceType
 }
 
 export type CreateProcedure = {

@@ -30,21 +30,13 @@ const MyProfile = () => {
           <Grid size={6}>
             <DetailColumn label={'Souhlasné ID'} input={user.sub?.slice(-4)} />
           </Grid>
+          <Grid size={6}>
+            <DetailColumn label={'Číslo bankovního účtu'} input={'111111111/2020'} />
+          </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
 
         <Grid container rowSpacing={2}>
-          <Grid size={12}>
-            <DetailColumn label={'Facebook link'} input={'https://facebook.com/sdílení_fotek'} />
-          </Grid>
-
-          <Grid size={12}>
-            <DetailColumn label={'Instagram link'} input={'https://instagram.com/sdílení_fotek '} />
-          </Grid>
-
-          <Grid size={12}>
-            <DetailColumn label={'Přístup k mému skladu má:'} input={'Pavla Slaničková'} />
-          </Grid>
           <Stack direction={'row'} spacing={2}>
             <Button>Smazat profil</Button>
             <Button>Upravit profil</Button>

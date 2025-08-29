@@ -1,8 +1,5 @@
 import { useQuery, type UseMutationOptions } from '@tanstack/react-query'
-import type { Stock, UserLog } from './api/entity'
-import { http, HttpResponse, type PathParams } from 'msw'
-import { mockUserLogs } from './api/mocks'
-import { apiRoutes } from './api/apiRoutes'
+import type { Stock } from './api/entity'
 import {
   deleteProcedure,
   deleteStockItem,
@@ -544,11 +541,6 @@ export const useStockAllowancesQuery = ({
 }
 
 // ---- Others ----
-
-export const mockGetUserLogs = () =>
-  http.get<object, PathParams<string>, UserLog[]>(apiRoutes.getUserLogsUrl('unique-user-1'), () => {
-    return HttpResponse.json(mockUserLogs)
-  })
 
 export const useLogsQuery = () => {
   const axios = useAxios()

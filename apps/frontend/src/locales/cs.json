@@ -29,7 +29,7 @@
   "stock.addStockItem": "Přidat materiál",
   "stockItem.checkQuestion": "Je tomu přibližně tak?",
   "stockItem.checkTitle": "Kontrola:",
-  "stockItem.editStockItem": "Upravit položku na skladě.",
+  "stockItem.editStockItem": "Upravit materiál",
   "stockItem.itemName": "Skladová položka",
   "stockItem.newStockItem": "Nová položka",
   "stockItem.notFound": "Skladové položky nebyly nalezeny.",

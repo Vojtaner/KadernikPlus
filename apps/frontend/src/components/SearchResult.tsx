@@ -3,7 +3,7 @@ import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
 import { getTimeFromUtcToLocal } from '../pages/VisitsList'
 import { Paths } from '../routes/AppRoutes'
-import { useNavigate } from 'react-router-dom'
+import { useAppNavigate } from '../hooks'
 
 type SearchResultProps = {
   clientData: ClientWithVisitsWithVisitServices
@@ -13,7 +13,7 @@ type SearchResultProps = {
 
 const SearchResult = (props: SearchResultProps) => {
   const { sx, clientData, onActiveSearch } = props
-  const navigate = useNavigate()
+  const navigate = useAppNavigate()
 
   const latestVisit = getLatestVisit(clientData.visits)
 

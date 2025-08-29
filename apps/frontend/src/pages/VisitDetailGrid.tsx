@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from '@mui/material'
 import DetailColumn from '../components/DetailColumn'
 import Loader from './Loader'
-import { getTimeFromUtcToLocal } from './VisitsList'
+import { getDateTimeFromUtcToLocal } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import { formatNameShort } from '../entity'
 import type { Procedure } from '../entities/procedure'
@@ -29,7 +29,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
         />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Datum" input={getTimeFromUtcToLocal(visitData.date)} />
+        <DetailColumn label="Datum" input={getDateTimeFromUtcToLocal(visitData.date)} />
       </Grid>
       {visitData.client.deposit ? (
         <>
@@ -100,29 +100,48 @@ export function formatToCZK(
   })
 }
 
+export const getVisitFinishErrors = (
+  clientDeposit: boolean,
+  watchFormVisitData: {
+    paidPrice: number | undefined
+    deposit: number | undefined
+    depositStatus: DepositStatus | null | undefined
+  }
+): string[] => {
+  const { paidPrice, deposit, depositStatus } = watchFormVisitData
+  const isDepositRequired = clientDeposit
+  const errors: string[] = []
+
+  if (!paidPrice || paidPrice <= 0) {
+    errors.push('Je nutné zadat zaplacenou částku. "Požadovaná cena"')
+  }
+
+  if (isDepositRequired) {
+    if (!deposit || deposit <= 0) {
+      errors.push('Je nutné zadat zálohu,případně v profilu zákazníka zaškrnout, že ji nepožadujete. "Výše zálohy"')
+    }
+    if (depositStatus !== DepositStatus.ZAPLACENO) {
+      errors.push('Záloha musí být ve stavu zaplacena. "Stav zálohy"')
+    }
+  }
+
+  return errors
+}
+
+export const getMissingStockAllowanceError = (procedures: undefined | Procedure[]) => {
+  if (!procedures || procedures.length === 0) {
+    return 'Musí být vytvořena alespoň jedna procedura, bez toho neuvidíte náklady. (nepovinné)'
+  }
+}
+
 export const isVisitFinished = (
   clientDeposit: boolean,
   watchFormVisitData: {
     paidPrice: number | undefined
     deposit: number | undefined
-    depositStatus: 'NEZAPLACENO' | 'ZAPLACENO' | null | undefined
+    depositStatus: DepositStatus | null | undefined
     procedures: undefined | Procedure[]
   }
 ): boolean => {
-  const { paidPrice, deposit, depositStatus, procedures } = watchFormVisitData
-  const isDepositRequired = clientDeposit
-
-  if (!paidPrice || (!deposit && isDepositRequired)) {
-    return false
-  }
-
-  const isProcedureCreated = Boolean(procedures?.length)
-  const hasPaid = paidPrice > 0
-  const hasDeposit = deposit ? deposit > 0 : false
-
-  if (hasPaid && !isDepositRequired) {
-    return true
-  }
-
-  return hasPaid && isDepositRequired && DepositStatus.ZAPLACENO === depositStatus && hasDeposit && isProcedureCreated
+  return getVisitFinishErrors(clientDeposit, watchFormVisitData).length === 0
 }

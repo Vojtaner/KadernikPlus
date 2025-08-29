@@ -74,6 +74,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
       queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
+      queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
       queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
     },
   })
@@ -83,6 +84,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
       queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
       queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+      queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
 
       reset()
       setOpen(false)

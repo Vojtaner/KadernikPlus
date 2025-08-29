@@ -13,9 +13,11 @@ import { useForm, useWatch } from 'react-hook-form'
 import React from 'react'
 import { useScrollToTheTop } from './AddProcedureButton'
 import RedSwitch from '../RedSwitch'
-import { isVisitFinished } from '../../pages/VisitDetailGrid'
+import { getMissingStockAllowanceError, getVisitFinishErrors } from '../../pages/VisitDetailGrid'
 import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
 import { FormattedMessage } from 'react-intl'
+import CloseVisitDialog from './CloseVisitDialog'
+import type { Procedure } from '../../entities/procedure'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -73,6 +75,20 @@ const EditVisitDetailDialog = (props: {
     handleClose()
     scroll()
   }
+
+  const hasVisitStockAllowances = (procedures: Procedure[]) => {
+    if (!procedures || procedures.length === 0) {
+      return false
+    }
+    return procedures.some((p) => p.stockAllowances.length > 0)
+  }
+  // clientDeposit: boolean,
+  // watchFormVisitData: {
+  //   paidPrice: number | undefined
+  //   deposit: number | undefined
+  //   depositStatus: 'NEZAPLACENO' | 'ZAPLACENO' | null | undefined
+  //   procedures: undefined | Procedure[]
+  // }
 
   return (
     <FormDialog
@@ -134,17 +150,16 @@ const EditVisitDetailDialog = (props: {
             <Typography fontWeight={600} color="secondary.main">
               Uzavřít návštěvu
             </Typography>
-            <RedSwitch
-              disabled={!isVisitFinished(visit.client.deposit, { paidPrice, deposit, depositStatus, procedures })}
+
+            <CloseVisitDialog
               checked={visit.visitStatus}
-              onSubmitEndpoint={(checked) => {
-                changeVisitStatus({ status: checked, visitId })
-              }}
+              errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })}
+              missingStockAllowanceError={procedures && getMissingStockAllowanceError(procedures)}
+              canSkipDialog={procedures ? hasVisitStockAllowances(procedures) : false}
+              onConfirm={() => changeVisitStatus({ status: !visit.visitStatus, visitId })}
+              openButton={<RedSwitch checked={visit.visitStatus} />}
             />
           </Stack>
-          <Typography color="primary.main">
-            Uzavřením uvidíte návštěvu v tržbách. Uzavřít lze pokud máte zadanou tržbu a proceduru a případně zálohu.
-          </Typography>
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
