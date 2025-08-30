@@ -132,19 +132,23 @@ export const createVisitRepositoryDb = (
     return visits;
   },
 
-  delete: async (id: string): Promise<void> => {
+  delete: async (visitId: string): Promise<void> => {
     await prismaRepository.$transaction([
       prismaRepository.visitService.deleteMany({
-        where: { visitId: id },
+        where: { visitId },
       }),
-      prismaRepository.photo.deleteMany({
-        where: { visitId: id },
+      prismaRepository.stockAllowance.deleteMany({
+        where: {
+          procedure: {
+            visitId,
+          },
+        },
       }),
       prismaRepository.procedure.deleteMany({
-        where: { visitId: id },
+        where: { visitId },
       }),
       prismaRepository.visit.delete({
-        where: { id },
+        where: { id: visitId },
       }),
     ]);
   },

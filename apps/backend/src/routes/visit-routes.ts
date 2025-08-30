@@ -26,7 +26,7 @@ visitRoutes.get(
   makeExpressCallback(VisitController.getVisitsByClientIdController)
 );
 visitRoutes.delete(
-  "/client/:clientId",
+  "/client/:visitId",
   makeExpressCallback(VisitController.deleteVisitController)
 );
 

@@ -1,11 +1,11 @@
 import { Button, Divider, Stack, Typography } from '@mui/material'
-import VisitDetailGrid from './VisitDetailGrid'
+import VisitDetailGrid, { hasAnyStockAllowance } from './VisitDetailGrid'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import ProcedureCard from '../components/ProcedureCard'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../components/Note'
 import EditVisitDetailDialog from '../components/FormDialogs/EditVisitDetailDialog'
-import { useClientVisitsQuery, useProceduresQuery, useVisitQuery } from '../queries'
+import { useClientVisitsQuery, useDeleteVisitMutation, useProceduresQuery, useVisitQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import AddProcedureButton from '../components/FormDialogs/AddProcedureButton'
 import Loader from './Loader'
@@ -14,6 +14,8 @@ import { setCurrentLocationAppendix } from '../store/appUiSlice'
 import AppTheme from '../AppTheme'
 import { Paths } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import DeleteVisitDialogProps from '../components/FormDialogs/DeleteVisitDialog'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
@@ -23,6 +25,7 @@ const VisitDetail = () => {
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
   const dispatch = useAppDispatch()
   const navigate = useAppNavigate()
+  const { mutate: deleteVisitMutation } = useDeleteVisitMutation()
 
   const lastVisitWithProcedure =
     clientVisits && clientVisits.filter((visit) => visit.procedures.length && visitData?.id !== visit.id)
@@ -45,6 +48,8 @@ const VisitDetail = () => {
 
   const hasZeroProcedures = proceduresData.length === 0
 
+  const isVisitDeletable = !hasAnyStockAllowance(proceduresData)
+
   return (
     <>
       <VisitDetailGrid visitData={visitData} />
@@ -55,7 +60,7 @@ const VisitDetail = () => {
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
               startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
-              Dokončit návštěvu
+              Dokončit
             </Button>
           }
         />
@@ -67,6 +72,26 @@ const VisitDetail = () => {
             onClick={() => navigate(Paths.clientDetail(visitData.clientId))}>
             Profil zákazníka
           </Button>
+        )}
+        {visitData && (
+          <DeleteVisitDialogProps
+            openButton={
+              <Button
+                disabled={!isVisitDeletable}
+                size="medium"
+                startIcon={<DeleteOutlineIcon fontSize="small" color={!isVisitDeletable ? 'disabled' : 'primary'} />}
+                sx={{ background: `${AppTheme.palette.primary.light}` }}
+                onClick={() => {
+                  deleteVisitMutation(visitId)
+                  navigate(Paths.clientDetail(visitData.clientId))
+                }}>
+                Smazat
+              </Button>
+            }
+            onConfirm={function (): void {
+              throw new Error('Function not implemented.')
+            }}
+          />
         )}
       </Stack>
       <Divider />

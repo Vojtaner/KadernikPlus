@@ -195,6 +195,14 @@ export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promis
   const response = await axios.delete(apiRoutes.getTeamMemberUrl(), { data: { id } })
   return response.data
 }
+export const deleteVisit = async (axios: AxiosInstance, visitId: string): Promise<string> => {
+  try {
+    const response = await axios.delete(apiRoutes.getDeleteVisitUrl(visitId))
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Nepovedlo se smazat návštěvu.'))
+  }
+}
 
 export const getTeamMembers = async (
   axios: AxiosInstance,

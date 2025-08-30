@@ -4,7 +4,7 @@ import Loader from './Loader'
 import { getDateTimeFromUtcToLocal } from './VisitsList'
 import { DepositStatus, type VisitWithServices } from '../entities/visit'
 import { formatNameShort } from '../entity'
-import type { Procedure } from '../entities/procedure'
+import type { CreateProcedure, Procedure } from '../entities/procedure'
 
 type VisitDetailGridProps = {
   visitData: VisitWithServices | undefined
@@ -128,9 +128,17 @@ export const getVisitFinishErrors = (
   return errors
 }
 
-export const getMissingStockAllowanceError = (procedures: undefined | Procedure[]) => {
+export const hasAnyStockAllowance = (procedures?: (Procedure | CreateProcedure)[]): boolean => {
   if (!procedures || procedures.length === 0) {
-    return 'Musí být vytvořena alespoň jedna procedura, bez toho neuvidíte náklady. (nepovinné)'
+    return false
+  }
+
+  return procedures.some((p) => p.stockAllowances && p.stockAllowances.length > 0)
+}
+
+export const getMissingStockAllowanceError = (procedures?: (Procedure | CreateProcedure)[]): string | undefined => {
+  if (!hasAnyStockAllowance(procedures)) {
+    return 'Musí být spotřebován alespoň jeden materiál, bez toho neuvidíte náklady. (nepovinné)'
   }
 }
 

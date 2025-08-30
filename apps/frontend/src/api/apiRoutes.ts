@@ -23,6 +23,7 @@ export const apiRoutes = {
   getServiceUrl: () => `/api/services`,
   getVisitUrl: (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => getVisitUrlComposed(date, query),
   getUpdateVisitStatusUrl: () => `/api/visits/status`,
+  getDeleteVisitUrl: (visitId: string) => `/api/visits/client/${encodeURIComponent(visitId)}`,
   getUpdateVisitUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getVisitByVisitIdUrl: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
   getTeamUrl: () => `/api/team/`,

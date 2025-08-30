@@ -4,6 +4,7 @@ import {
   deleteProcedure,
   deleteStockItem,
   deleteTeamMember,
+  deleteVisit,
   getClientById,
   getClients,
   getClientVisits,
@@ -392,6 +393,31 @@ export const useClientVisitsQuery = (clientId: string | undefined) => {
     staleTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,
     refetchOnMount: true,
+  })
+}
+
+export const useDeleteVisitMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  return useMutation<string, Error, string | undefined>({
+    mutationFn: async (visitId: string | undefined) => {
+      if (!visitId) {
+        throw new Error('ID návštěvy je nutné k jejímu smazání.')
+      }
+
+      await deleteVisit(axios, visitId)
+
+      return visitId
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
+      addSnackBarMessage({ text: 'Návštěva byla smazána.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
   })
 }
 

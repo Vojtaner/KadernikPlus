@@ -17,7 +17,6 @@ import { getMissingStockAllowanceError, getVisitFinishErrors } from '../../pages
 import ServicesAutoComplete from '../AutoCompletes/ServicesAutoComplete'
 import { FormattedMessage } from 'react-intl'
 import CloseVisitDialog from './CloseVisitDialog'
-import type { Procedure } from '../../entities/procedure'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
@@ -76,12 +75,6 @@ const EditVisitDetailDialog = (props: {
     scroll()
   }
 
-  const hasVisitStockAllowances = (procedures: Procedure[]) => {
-    if (!procedures || procedures.length === 0) {
-      return false
-    }
-    return procedures.some((p) => p.stockAllowances.length > 0)
-  }
   // clientDeposit: boolean,
   // watchFormVisitData: {
   //   paidPrice: number | undefined
@@ -155,7 +148,10 @@ const EditVisitDetailDialog = (props: {
               checked={visit.visitStatus}
               errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })}
               missingStockAllowanceError={procedures && getMissingStockAllowanceError(procedures)}
-              canSkipDialog={procedures ? hasVisitStockAllowances(procedures) : false}
+              canSkipDialog={
+                getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }).length === 0 &&
+                !getMissingStockAllowanceError(procedures)
+              }
               onConfirm={() => changeVisitStatus({ status: !visit.visitStatus, visitId })}
               openButton={<RedSwitch checked={visit.visitStatus} />}
             />

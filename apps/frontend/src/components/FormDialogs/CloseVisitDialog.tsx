@@ -49,12 +49,11 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
               onConfirm()
               handleClose()
             }}>
-            <FormattedMessage
-              id="formDialog.confirm"
-              defaultMessage={
-                errors?.length === 0 && missingStockAllowanceError ? 'Potvrdit bez procedury' : 'Potvrdit'
-              }
-            />
+            {errors?.length === 0 && missingStockAllowanceError ? (
+              <FormattedMessage id="formDialog.confirmWithoutStockAllowances" defaultMessage="Potvrdit bez procedury" />
+            ) : (
+              <FormattedMessage id="formDialog.confirm" defaultMessage="Potvrdit" />
+            )}
           </Button>
         </>
       }

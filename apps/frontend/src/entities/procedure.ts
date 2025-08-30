@@ -5,8 +5,8 @@ export type Procedure = {
   visitId: string
   stepOrder: number
   description: string | null
-  stockAllowanceId: string | null
   createdAt: Date
+  stockAllowanceId: string | null
   stockAllowances: AddProcedureStockAllowanceType
 }
 

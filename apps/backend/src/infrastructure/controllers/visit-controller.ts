@@ -44,7 +44,7 @@ type UpdateVisitControllerType = {
 type GetVisitsByClientIdControllerType = {
   params: { clientId: string };
 };
-type DeleteVisitControllerType = { params: { id: string } };
+type DeleteVisitControllerType = { params: { visitId: string } };
 
 const createVisitController = (dependencies: {
   addVisitUseCase: CreateAddVisitUseCaseType;
@@ -282,7 +282,7 @@ const createVisitController = (dependencies: {
     DeleteVisitControllerType
   > = async (httpRequest) => {
     try {
-      const visitId = httpRequest.params.id;
+      const { visitId } = httpRequest.params;
 
       await dependencies.deleteVisitUseCase.execute(visitId);
 
