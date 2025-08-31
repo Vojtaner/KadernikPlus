@@ -1,10 +1,16 @@
 // import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateTimePicker, DatePicker } from '@mui/x-date-pickers'
+import {
+  DateTimePicker,
+  DatePicker,
+  type DateValidationError,
+  type PickerChangeHandlerContext,
+} from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/cs'
 import { Controller, type Control, type FieldPath, type FieldValues, type RegisterOptions } from 'react-hook-form'
+import type { PickerValue } from '@mui/x-date-pickers/internals'
 
 dayjs.locale('cs')
 
@@ -16,6 +22,7 @@ type DatePickerProps<TFieldValues extends FieldValues> = {
   minDate?: Dayjs
   maxDate?: Dayjs
   rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>
+  onChange?: ((value: PickerValue, context: PickerChangeHandlerContext<DateValidationError>) => void) | undefined
 }
 
 export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
@@ -40,8 +47,8 @@ export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
             slotProps={{
               textField: {
                 fullWidth: true,
-                error: !!error, // ✅ shows red outline
-                helperText: error?.message, // ✅ shows error message
+                error: !!error,
+                helperText: error?.message,
               },
             }}
           />
@@ -57,6 +64,7 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
   defaultValue,
   minDate,
   maxDate,
+  onChange,
 }: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
@@ -67,7 +75,10 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
           <DatePicker
             label={label ?? 'Datum'}
             value={field.value ? dayjs(field.value) : defaultValue ? dayjs(defaultValue) : null}
-            onChange={(date) => field.onChange(date)}
+            onChange={(date, context) => {
+              field.onChange(date)
+              onChange?.(date, context)
+            }}
             slotProps={{ textField: { fullWidth: true, sx: { zIndex: '0' } } }}
             minDate={minDate}
             maxDate={maxDate}

@@ -1,19 +1,20 @@
 import { Button, Stack, Typography, type ButtonPropsVariantOverrides } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
-import { formatNameShort } from '../entity'
+import {
+  formatNameShort,
+  type ConsumptionTableAllRecordType,
+  type ConsumptionTableByProductByUserType,
+  type StockViewKey,
+} from '../entity'
 import { useStockAllowancesQuery } from '../queries'
 import { BasicDatePicker } from '../components/DateTimePicker'
-import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
 import {
   createStockAllowancesTableAllRecords,
   createStockAllowancesTableByProductByUser,
-  type ConsumptionTableAllRecordType,
-  type ConsumptionTableByProductByUserType,
-  type StockViewKey,
 } from '../entities/stock-allowance'
 import { getDateShort } from './VisitsList'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
@@ -23,25 +24,30 @@ import { useState } from 'react'
 import { useIntl } from 'react-intl'
 import { getButtonStyle } from '../components/entity'
 import type { OverridableStringUnion } from '@mui/types'
-import { useAppNavigate } from '../hooks'
+import { useAppNavigate, usePersistentFilters } from '../hooks'
+import dayjs from 'dayjs'
 
 const Consumption = () => {
   const navigate = useAppNavigate()
-  const { teamId } = useParams()
-  const [tabelView, setTabelView] = useState<StockViewKey>('byUser')
   const intl = useIntl()
+  const { teamId } = useParams()
+  const [filters, updateFilter] = usePersistentFilters()
+  const {
+    consumption: { dates, view },
+  } = filters
 
-  const { control, watch } = useForm({
+  const [tabelView, setTabelView] = useState<StockViewKey>(view)
+  const { control } = useForm({
     defaultValues: {
-      from: dayjs().startOf('month'),
-      to: dayjs().endOf('month'),
+      from: dayjs(dates.from),
+      to: dayjs(dates.to),
     },
   })
 
   const { data: stockAllowances, isLoading } = useStockAllowancesQuery({
     teamId,
-    fromDate: watch('from'),
-    toDate: watch('to'),
+    fromDate: dayjs(dates.from),
+    toDate: dayjs(dates.to),
   })
 
   if (!stockAllowances && isLoading) {
@@ -62,29 +68,54 @@ const Consumption = () => {
     (stockAllowance) => stockAllowance.user.name
   )
 
+  const handleApplyFilter = (filter: StockViewKey) => {
+    setTabelView(filter)
+    updateFilter((draft) => {
+      draft.consumption.view = filter
+    })
+  }
+
   return (
     <Stack spacing={4}>
       <Stack direction="row" spacing={2} justifyContent="flex-start">
         <FilterTableButton
           variant={getButtonStyle(tabelView, 'byProduct')}
-          setTableView={() => setTabelView('byProduct')}
+          setTableView={() => handleApplyFilter('byProduct')}
           text={intl.formatMessage({ id: 'consumption.stockViewKey.byProducts', defaultMessage: 'Podle produktů' })}
         />
         <FilterTableButton
           variant={getButtonStyle(tabelView, 'byUser')}
-          setTableView={() => setTabelView('byUser')}
+          setTableView={() => handleApplyFilter('byUser')}
           text={intl.formatMessage({ defaultMessage: 'Podle lidí', id: 'consumption.stockViewKey.byUser' })}
         />
         <FilterTableButton
           variant={getButtonStyle(tabelView, 'allRecords')}
-          setTableView={() => setTabelView('allRecords')}
+          setTableView={() => handleApplyFilter('allRecords')}
           text={intl.formatMessage({ defaultMessage: 'Historie záznamů', id: 'consumption.stockViewKey.allRecords' })}
         />
       </Stack>
       <Stack spacing={1} height={'100%'}>
         <Stack direction="row" spacing={2}>
-          <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
-          <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+          <BasicDatePicker
+            label="Datum od"
+            control={control}
+            fieldPath="from"
+            onChange={(date) => {
+              updateFilter((draft) => {
+                draft.consumption.dates.from = date?.toISOString()
+              })
+            }}
+          />
+          <BasicDatePicker
+            label="Datum od"
+            control={control}
+            fieldPath="to"
+            onChange={(date) => {
+              updateFilter((draft) => {
+                draft.consumption.dates.to = date?.toISOString()
+              })
+            }}
+          />
         </Stack>
         {tabelView === 'allRecords' && (
           <AppDataGrid rows={stockAllowancesTableAllRecords} columns={createColumnsAllRecords(navigate)} />

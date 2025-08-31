@@ -2,7 +2,7 @@ import { Box, IconButton, Divider, Drawer, Stack } from '@mui/material'
 import { useSelector, useDispatch } from 'react-redux'
 import { Paths, ROUTES, useCurrentRoute } from '../routes/AppRoutes'
 import type { RootState } from '../store'
-import { toggleDrawer, setDrawerOpen, type AppLanguage, setLanguage } from '../store/appUiSlice'
+import { toggleDrawer, setDrawerOpen } from '../store/appUiSlice'
 import LanguageIcon from '@mui/icons-material/Language'
 import CloseIcon from '@mui/icons-material/Close'
 import { useIntl } from 'react-intl'
@@ -21,7 +21,7 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { useStocksQuery, useTeamMemberQuery } from '../queries'
 import { useAppLocation } from '../routes/reactRouter'
 import { useCallback } from 'react'
-import { useAppNavigate } from '../hooks'
+import { useAppNavigate, usePersistentFilters } from '../hooks'
 
 export const SideMenu = () => {
   const isDrawerOpen = useSelector((state: RootState) => state.appUi.isDrawerOpen)
@@ -30,6 +30,7 @@ export const SideMenu = () => {
   const dispatch = useDispatch()
   const { data: teamMember } = useTeamMemberQuery()
   const { data: stocks } = useStocksQuery()
+  const [filters, updateFilter] = usePersistentFilters()
 
   const handleDrawerToggle = (open: boolean) => () => {
     if (open) {
@@ -39,12 +40,6 @@ export const SideMenu = () => {
     }
   }
 
-  const handleLanguageChange = (lang: AppLanguage) => {
-    dispatch(setLanguage(lang))
-    dispatch(setDrawerOpen(false))
-  }
-
-  const currentLanguage = useSelector((state: RootState) => state.appUi.language)
   const intl = useIntl()
   const navigate = useAppNavigate()
   const route = useCurrentRoute()
@@ -143,12 +138,15 @@ export const SideMenu = () => {
       <Divider />
       <SideMenuButton
         onClick={() => {
-          return handleLanguageChange(currentLanguage === 'cs' ? 'en' : 'cs')
+          updateFilter((draft) => {
+            draft.language = filters.language === 'cs' ? 'en' : 'cs'
+          })
+          dispatch(setDrawerOpen(false))
         }}
         to={ROUTES.home.path}
         title={intl.formatMessage(
           { id: 'currentLanguage', defaultMessage: `Language: {lang}` },
-          { lang: currentLanguage.toUpperCase() }
+          { lang: filters.language.toUpperCase() }
         )}
         icon={<LanguageIcon />}
       />

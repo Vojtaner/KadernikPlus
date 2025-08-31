@@ -1,7 +1,7 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import { type GridColDef } from '@mui/x-data-grid'
-import { formatNameShort } from '../entity'
+import { formatNameShort, type VisitViewKey } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
@@ -12,37 +12,72 @@ import dayjs from 'dayjs'
 import { Paths } from '../routes/AppRoutes'
 import { getButtonStyle } from '../components/entity'
 import { useIntl } from 'react-intl'
-import { useState } from 'react'
+import { useCallback } from 'react'
 import { FilterTableButton } from './Consumption'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import { useAppNavigate } from '../hooks'
+import { useAppNavigate, usePersistentFilters, type DatesFilter, type VisitListApplyFilter } from '../hooks'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
   hideFooter?: boolean
   onlyOpenVisits?: boolean
+  visitListApplyFilter: VisitListApplyFilter
   enableFilters?: boolean
 }
-type VisitViewKey = 'byClosedNoStockAllowances' | 'byAll'
+const useVisitListFilters = (
+  type: VisitListApplyFilter
+): [
+  {
+    dates: DatesFilter
+    view?: VisitViewKey
+  },
+  (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
+] => {
+  const [filters, updateFilter] = usePersistentFilters()
+
+  const scopedUpdater = useCallback(
+    (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => {
+      updateFilter((draft) => {
+        if (type === 'dashBoardVisitOverView') {
+          updater(draft.visits.dashBoardVisitOverView)
+        } else if (type === 'allVisitsPage') {
+          updater(draft.visits.allVisitsPage)
+        }
+      })
+    },
+    [type, updateFilter]
+  )
+
+  if (type === 'dashBoardVisitOverView') {
+    return [filters.visits.dashBoardVisitOverView, scopedUpdater]
+  }
+  if (type === 'allVisitsPage') {
+    return [filters.visits.allVisitsPage, scopedUpdater]
+  }
+
+  return [{ dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' }, () => {}]
+}
 
 const VisitsList = (props: VisitListProps) => {
-  const { columnHeaderHeight, hideFooter = false, onlyOpenVisits = false, enableFilters = true } = props
-  const navigate = useAppNavigate()
-  const [tabelView, setTabelView] = useState<VisitViewKey>('byAll')
-
+  const { columnHeaderHeight, hideFooter = false, visitListApplyFilter, enableFilters = true } = props
   const intl = useIntl()
+  const navigate = useAppNavigate()
+  const [visitListFilters, updateVisitFilters] = useVisitListFilters(visitListApplyFilter)
 
-  const { control, watch } = useForm({
+  const { control } = useForm({
     defaultValues: {
-      from: dayjs().subtract(1, 'day'),
-      to: dayjs().add(1, 'day'),
+      from: visitListFilters.dates.from,
+      to: visitListFilters.dates.to,
     },
   })
 
-  const fromDate = watch('from')
-  const toDate = watch('to')
+  const onlyOpenVisits = visitListApplyFilter === 'onlyOpenVisits'
 
-  const { data: visitData } = useVisitsQuery({ query: !onlyOpenVisits ? { from: fromDate, to: toDate } : undefined })
+  const { data: visitData } = useVisitsQuery({
+    query: !onlyOpenVisits
+      ? { from: dayjs(visitListFilters.dates.from), to: dayjs(visitListFilters.dates.to) }
+      : undefined,
+  })
 
   if (!visitData) {
     return <Loader />
@@ -54,7 +89,8 @@ const VisitsList = (props: VisitListProps) => {
     (visit) => visit.visitStatus && getMissingStockAllowanceError(visit.procedures)
   )
 
-  const filteredData = tabelView === 'byClosedNoStockAllowances' ? onlyClosedVisitsWithoutStockAllowances : visitData
+  const filteredData =
+    visitListFilters.view === 'byClosedNoStockAllowances' ? onlyClosedVisitsWithoutStockAllowances : visitData
   const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort((a, b) => {
     return getDateTimeFromUtcToLocal(a.date).localeCompare(getDateTimeFromUtcToLocal(b.date))
   })
@@ -66,16 +102,16 @@ const VisitsList = (props: VisitListProps) => {
       {enableFilters && (
         <Stack direction="row" spacing={2} justifyContent="flex-start">
           <FilterTableButton
-            variant={getButtonStyle(tabelView, 'byAll')}
-            setTableView={() => setTabelView('byAll')}
+            variant={getButtonStyle(visitListFilters.view, 'byAll')}
+            setTableView={() => updateVisitFilters((draft) => (draft.view = 'byAll'))}
             text={intl.formatMessage({
               defaultMessage: 'Všechny',
               id: 'visits.visitViewKey.byAll',
             })}
           />
           <FilterTableButton
-            variant={getButtonStyle(tabelView, 'byClosedNoStockAllowances')}
-            setTableView={() => setTabelView('byClosedNoStockAllowances')}
+            variant={getButtonStyle(visitListFilters.view, 'byClosedNoStockAllowances')}
+            setTableView={() => updateVisitFilters((draft) => (draft.view = 'byClosedNoStockAllowances'))}
             text={intl.formatMessage({
               defaultMessage: 'Uzavřené bez spotřeby',
               id: 'visits.visitViewKey.byClosedNoStockAllowances',
@@ -83,14 +119,32 @@ const VisitsList = (props: VisitListProps) => {
           />
         </Stack>
       )}
-      <Stack spacing={2} height={'100%'}>
+      <Stack spacing={2} height="100%">
         {!onlyOpenVisits && (
           <Stack direction="row" spacing={2}>
-            <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
-            <BasicDatePicker label="Datum od" control={control} fieldPath="to" />
+            <BasicDatePicker
+              label="Datum od"
+              control={control}
+              fieldPath="from"
+              onChange={(date) => {
+                updateVisitFilters((draft) => {
+                  draft.dates.from = date?.toISOString()
+                })
+              }}
+            />
+            <BasicDatePicker
+              label="Datum od"
+              control={control}
+              fieldPath="to"
+              onChange={(date) => {
+                updateVisitFilters((draft) => {
+                  draft.dates.to = date?.toISOString()
+                })
+              }}
+            />
           </Stack>
         )}
-        {tabelView === 'byAll' && (
+        {visitListFilters.view === 'byAll' && (
           <AppDataGrid
             rows={rows}
             columns={createColumns(navigate)}
@@ -112,7 +166,7 @@ const VisitsList = (props: VisitListProps) => {
             }}
           />
         )}
-        {tabelView === 'byClosedNoStockAllowances' && (
+        {visitListFilters.view === 'byClosedNoStockAllowances' && (
           <AppDataGrid
             rows={rows}
             columns={createColumns(navigate)}

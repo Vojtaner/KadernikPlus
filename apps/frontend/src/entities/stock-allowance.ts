@@ -1,46 +1,4 @@
-export type GetStockAllowance = {
-  createdAt: Date
-  id: string
-  procedure: { visitId: string; visit: { clientId: string } }
-  procedureId: string
-  quantity: string
-  stockItem: { itemName: string; avgUnitPrice: string; unit: string }
-  stockItemId: string
-  teamId: string
-  user: { name: string }
-  userId: string
-}
-
-export type ConsumptionTableAllRecordType = {
-  id: string
-  stockItemName: string
-  totalPrice: number
-  stockAllowanceQuantity: number
-  unit: string
-  user: string
-  date: Date
-  visitId: string
-  clientId: string
-}
-export type ConsumptionTableByProductByUserType = {
-  id: string
-  stockItemName: string
-  totalPrice: number
-  totalQuantity: number
-  unit: string
-  user: string
-}
-
-export type UserStockItemAllowanceSummary = {
-  id: string
-  user: string
-  stockItemName: string
-  unit: string
-  totalQuantity: number
-  totalPrice: number
-}
-
-export type StockViewKey = 'byUser' | 'byProduct' | 'allRecords'
+import type { GetStockAllowance, UserStockItemAllowanceSummary, ConsumptionTableAllRecordType } from '../entity'
 
 export function createStockAllowancesTableByProductByUser(
   stockAllowances: GetStockAllowance[],

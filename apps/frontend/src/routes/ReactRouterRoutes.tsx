@@ -26,7 +26,10 @@ const ReactRouterRoutes = () => {
       <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />
       <Route path={ROUTES.services.path} element={<AuthenticationGuard component={PriceList} />} />
       <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} />
-      <Route path={ROUTES.visits.path} element={<AuthenticationGuard component={VisitsList} />} />
+      <Route
+        path={ROUTES.visits.path}
+        element={<AuthenticationGuard component={() => <VisitsList visitListApplyFilter="allVisitsPage" />} />}
+      />
       <Route path={ROUTES.visitDetail.path} element={<AuthenticationGuard component={VisitDetail} />} />
       <Route path={ROUTES.team.path} element={<AuthenticationGuard component={Team} />} />
       <Route path={ROUTES.clientDetail.path} element={<AuthenticationGuard component={ClientProfile} />} />

@@ -5,19 +5,27 @@ import { useVisitsQuery } from '../queries'
 import { useAppForm } from '../reactHookForm/store'
 import AppBarChart from './BarChart'
 import { BasicDatePicker } from './DateTimePicker'
+import { usePersistentFilters } from '../hooks'
 
 const RevenuChart = () => {
-  const { control, watch } = useAppForm({
+  const [filters, updateFilter] = usePersistentFilters()
+  const {
+    revenue: {
+      dates: { from, to },
+    },
+  } = filters
+
+  const dayjsFrom = dayjs(from)
+  const dayjsTo = dayjs(to)
+
+  const { control } = useAppForm({
     defaultValues: {
-      from: dayjs().subtract(7, 'day'),
-      to: dayjs(),
+      from: dayjsFrom,
+      to: dayjsTo,
     },
   })
 
-  const fromDate = watch('from')
-  const toDate = watch('to')
-
-  const { data: visitData } = useVisitsQuery({ query: { from: fromDate, to: toDate } })
+  const { data: visitData } = useVisitsQuery({ query: { from: dayjsFrom, to: dayjsTo } })
 
   if (!visitData) {
     return <Loader />
@@ -26,10 +34,29 @@ const RevenuChart = () => {
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={2}>
-        <BasicDatePicker label="Datum od" control={control} fieldPath="from" />
-        <BasicDatePicker label="Datum do" control={control} fieldPath="to" maxDate={dayjs()} />
+        <BasicDatePicker
+          label="Datum od"
+          control={control}
+          fieldPath="from"
+          onChange={(date) => {
+            updateFilter((draft) => {
+              draft.revenue.dates.from = date?.toISOString()
+            })
+          }}
+        />
+        <BasicDatePicker
+          label="Datum do"
+          control={control}
+          fieldPath="to"
+          maxDate={dayjsTo}
+          onChange={(date) => {
+            updateFilter((draft) => {
+              draft.revenue.dates.to = date?.toISOString()
+            })
+          }}
+        />
       </Stack>
-      <AppBarChart visitData={visitData} from={fromDate} to={toDate} />
+      <AppBarChart visitData={visitData} from={dayjsFrom} to={dayjsTo} />
     </Stack>
   )
 }

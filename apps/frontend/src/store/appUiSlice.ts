@@ -5,14 +5,12 @@ export type AppLanguage = 'cs' | 'en'
 
 interface AppUiState {
   isDrawerOpen: boolean
-  language: AppLanguage
   searchText: string
   currentLocationAppendix: string
 }
 
 const initialState: AppUiState = {
   isDrawerOpen: false,
-  language: 'cs',
   searchText: '',
   currentLocationAppendix: '',
 }
@@ -27,9 +25,7 @@ const appUiSlice = createSlice({
     setDrawerOpen: (state, action: PayloadAction<boolean>) => {
       state.isDrawerOpen = action.payload
     },
-    setLanguage: (state, action: PayloadAction<AppLanguage>) => {
-      state.language = action.payload
-    },
+
     setSearchText: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload
     },
@@ -39,7 +35,6 @@ const appUiSlice = createSlice({
   },
 })
 
-export const { toggleDrawer, setDrawerOpen, setLanguage, setSearchText, setCurrentLocationAppendix } =
-  appUiSlice.actions
+export const { toggleDrawer, setDrawerOpen, setSearchText, setCurrentLocationAppendix } = appUiSlice.actions
 
 export default appUiSlice.reducer

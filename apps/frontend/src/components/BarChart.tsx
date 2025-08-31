@@ -11,6 +11,7 @@ type AppBarChartProps = {
 
 const AppBarChart = (props: AppBarChartProps) => {
   const { visitData, from, to } = props
+
   const { costs, profit, labels } = getCostsProfitRevenue(visitData, {
     from: from.toDate(),
     to: to.toDate(),
