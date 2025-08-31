@@ -36,7 +36,7 @@ export type DatesFilter = {
 
 export type PersistentFiltersType = {
   visits: {
-    dashBoardVisitOverView: { dates: DatesFilter }
+    dashBoardVisitOverView: { dates: DatesFilter; view: 'byAll' }
     allVisitsPage: {
       dates: DatesFilter
       view: VisitViewKey
@@ -54,7 +54,7 @@ export type VisitListApplyFilter = keyof PersistentFiltersType['visits'] | 'only
 
 export const DEFAULT_PERSISTENT_FILTERS: PersistentFiltersType = {
   visits: {
-    dashBoardVisitOverView: { dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') } },
+    dashBoardVisitOverView: { dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' },
     allVisitsPage: {
       dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') },
       view: 'byAll',
