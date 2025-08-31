@@ -56,8 +56,8 @@ import type { AxiosError } from 'axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import dayjs from 'dayjs'
-import type { GetStockAllowance } from './entities/stock-allowance'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
+import type { GetStockAllowance } from './entity'
 
 // ---- Team and TeamMembers ----
 export const useTeamMemberQuery = () => {

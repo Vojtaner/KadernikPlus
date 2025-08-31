@@ -1,4 +1,4 @@
-import type { GetStockAllowance, UserStockItemAllowanceSummary, ConsumptionTableAllRecordType } from '../entity'
+import type { UserStockItemAllowanceSummary, ConsumptionTableAllRecordType, GetStockAllowance } from '../entity'
 
 export function createStockAllowancesTableByProductByUser(
   stockAllowances: GetStockAllowance[],

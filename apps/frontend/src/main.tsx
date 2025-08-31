@@ -1,8 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
-import { Provider, useSelector } from 'react-redux'
-import type { RootState } from './store/index.ts'
+import { Provider } from 'react-redux'
 import csMessages from './locales/cs.json'
 import enMessages from './locales/en.json'
 import { IntlProvider } from 'react-intl'
@@ -10,6 +9,7 @@ import store from './store/index.ts'
 import { enableMocking } from './mswWorkerSetup/browser.ts'
 import { Auth0Provider } from '@auth0/auth0-react'
 import initializeSentry from './sentry/sentry.ts'
+import { usePersistentFilters } from './hooks.ts'
 
 const messages: { [key: string]: Record<string, string> } = {
   cs: csMessages,
@@ -17,11 +17,11 @@ const messages: { [key: string]: Record<string, string> } = {
 }
 
 const AppWithIntl: React.FC = () => {
-  const currentLanguage = useSelector((state: RootState) => state.appUi.language)
-  const appMessages = messages[currentLanguage] || messages.cs
+  const [filter] = usePersistentFilters()
+  const appMessages = messages[filter.language] || messages.cs
 
   return (
-    <IntlProvider locale={currentLanguage} messages={appMessages}>
+    <IntlProvider locale={filter.language} messages={appMessages}>
       <App />
     </IntlProvider>
   )

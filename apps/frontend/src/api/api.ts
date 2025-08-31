@@ -24,8 +24,8 @@ import type { User } from '@auth0/auth0-react'
 import type { Dayjs } from 'dayjs'
 import { extractErrorMessage } from './errorHandler'
 import type dayjs from 'dayjs'
-import type { GetStockAllowance } from '../entities/stock-allowance'
 import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
+import type { GetStockAllowance } from '../entity'
 
 export const getUser = async (axios: AxiosInstance) => {
   const { data: userData } = await axios.get(apiRoutes.getUserUrl('unique-user-1'))
