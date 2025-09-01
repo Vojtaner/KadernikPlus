@@ -48,12 +48,17 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
           onBlur={onBlur}
           onChange={(e) => {
             const raw = e.target.value
-            const num = Number(raw)
 
-            if (!isNaN(num) && num < 0) {
-              onChange(0)
+            if (rest.type === 'number') {
+              const num = Number(raw)
+
+              if (!isNaN(num) && num < 0) {
+                onChange(0)
+              } else {
+                onChange(raw === '' ? '' : num)
+              }
             } else {
-              onChange(raw === '' ? '' : num)
+              onChange(raw)
             }
           }}
         />
