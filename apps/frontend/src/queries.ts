@@ -237,7 +237,7 @@ export const useCreateNewOrUpdateServiceMutation = () => {
 export const useSubscriptionQuery = () => {
   const axios = useAxios()
 
-  return useQuery<Subscription>({
+  return useQuery<Subscription | ''>({
     queryKey: ['subscription'],
     queryFn: () => getSubscription(axios),
   })
