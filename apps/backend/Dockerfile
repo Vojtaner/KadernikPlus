@@ -1,9 +1,7 @@
 
 
 FROM node:22-bullseye
-
 WORKDIR /app
-
 COPY ./package.json ./
 
 ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
