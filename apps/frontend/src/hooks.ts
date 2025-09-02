@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { setCurrentLocationAppendix, type AppLanguage } from './store/appUiSlice'
 import { useScrollToTheTop } from './components/FormDialogs/AddProcedureButton'
 import type { StockViewKey, VisitViewKey } from './entity'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs, { Dayjs } from 'dayjs'
 import { produce } from 'immer'
@@ -96,4 +96,38 @@ export function usePersistentFilters() {
   }
 
   return [filters, updateFilters] as const
+}
+
+export const useVisitListFilters = (
+  type: VisitListApplyFilter
+): [
+  {
+    dates: DatesFilter
+    view?: VisitViewKey
+  },
+  (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
+] => {
+  const [filters, updateFilter] = usePersistentFilters()
+
+  const scopedUpdater = useCallback(
+    (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => {
+      updateFilter((draft) => {
+        if (type === 'dashBoardVisitOverView') {
+          updater(draft.visits.dashBoardVisitOverView)
+        } else if (type === 'allVisitsPage') {
+          updater(draft.visits.allVisitsPage)
+        }
+      })
+    },
+    [type, updateFilter]
+  )
+
+  if (type === 'dashBoardVisitOverView') {
+    return [filters.visits.dashBoardVisitOverView, scopedUpdater]
+  }
+  if (type === 'allVisitsPage') {
+    return [filters.visits.allVisitsPage, scopedUpdater]
+  }
+
+  return [{ dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' }, () => {}]
 }

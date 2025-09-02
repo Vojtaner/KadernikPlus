@@ -35,6 +35,7 @@ function AutoComplete<TFieldValues extends FieldValues>({
       render={({ field }) => {
         return (
           <Autocomplete
+            noOptionsText="Žádné možnosti"
             options={options}
             getOptionLabel={(option) => option.name}
             value={options.find((option) => option.id === field.value) || null}

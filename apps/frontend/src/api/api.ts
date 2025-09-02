@@ -102,8 +102,13 @@ export const postCreateNewClient = async (
   axios: AxiosInstance,
   clientData: ClientOrUpdateCreateData
 ): Promise<ClientOrUpdateCreateData> => {
-  const response = await axios.post(apiRoutes.getCreateNewClientUrl(), clientData)
-  return response.data
+  try {
+    const response = await axios.post(apiRoutes.getCreateNewClientUrl(), clientData)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Klineta se nepodařilo vytvořit.'))
+  }
 }
 
 export const postCreateOrUpdateService = async (
@@ -114,8 +119,13 @@ export const postCreateOrUpdateService = async (
   return response.data
 }
 export const postCreateVisit = async (axios: AxiosInstance, visitData: CreateVisitType): Promise<CreateVisitType> => {
-  const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
-  return response.data
+  try {
+    const response = await axios.post(apiRoutes.getVisitUrl(), visitData)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Návštěvu se nepodařilo vytvořit.'))
+  }
 }
 
 export const patchSearchClients = async (

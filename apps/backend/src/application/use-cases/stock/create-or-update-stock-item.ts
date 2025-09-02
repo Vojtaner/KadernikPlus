@@ -3,6 +3,7 @@ import { StockItemRepositoryPort } from "../../ports/stock-item-repository";
 import stockItemRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-item-repository";
 import { isNewStockItem } from "../../../infrastructure/controllers/stock-item-controller";
 import { StockItem } from "@prisma/client";
+import { httpError } from "../../../adapters/express/httpError";
 
 const createOrUpdateCreateStockItemUseCase = (dependencies: {
   stockItemRepositoryDb: StockItemRepositoryPort;
@@ -13,16 +14,16 @@ const createOrUpdateCreateStockItemUseCase = (dependencies: {
     ): Promise<StockItem | undefined> => {
       if (isNewStockItem(data)) {
         if (!data.itemName || data.itemName.trim() === "") {
-          throw new Error("Název skladové položky nesmí být prázdný.");
+          throw httpError("Název skladové položky nesmí být prázdný.", 422);
         }
         if (!data.unit || data.unit.trim() === "") {
-          throw new Error("Jednotka skladové položky nesmí být prázdná.");
+          throw httpError("Jednotka skladové položky nesmí být prázdná.", 422);
         }
         if (data.quantity < 0) {
-          throw new Error("Množství skladové položky nesmí být záporné.");
+          throw httpError("Množství skladové položky nesmí být záporné.", 400);
         }
         if (data.threshold < 0) {
-          throw new Error("Práh skladové položky nesmí být záporný.");
+          throw httpError("Práh skladové položky nesmí být záporný.", 400);
         }
       }
 

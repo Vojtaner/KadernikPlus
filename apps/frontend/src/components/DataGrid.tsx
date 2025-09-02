@@ -40,13 +40,6 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
             display: 'none',
           },
         }}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 13,
-            },
-          },
-        }}
         pageSizeOptions={[5]}
         disableRowSelectionOnClick
         density="compact"

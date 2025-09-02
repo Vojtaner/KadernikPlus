@@ -157,7 +157,14 @@ export const StockItemForm = (props: StockItemFormProps) => {
                 </Typography>
               </Stack>
             ) : null}
-            <TextField fieldPath="threshold" label="Minimální počet balení" type="number" control={control} fullWidth />
+            <TextField
+              fieldPath="threshold"
+              required
+              label="Minimální počet balení"
+              type="number"
+              control={control}
+              fullWidth
+            />
           </>
         )
       )}

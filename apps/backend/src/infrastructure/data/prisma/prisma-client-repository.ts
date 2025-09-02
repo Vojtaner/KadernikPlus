@@ -7,6 +7,7 @@ import {
   ClientWithVisitsAndServices,
 } from "../../../infrastructure/mappers/client-mapper";
 import { WithUserId } from "../../../entities/user";
+import { httpError } from "../../../adapters/express/httpError";
 
 const createClientRepositoryDb = (
   prismaRepository: PrismaClient
@@ -102,11 +103,21 @@ const createClientRepositoryDb = (
       });
 
       if (!userTeam) {
-        throw new Error("User is not assigned to any team.");
+        throw new Error("Uživatel není v žádném týmu.");
       }
 
       if (!clientData.firstName || !clientData.lastName) {
         throw new Error("Zadejte jméno klienta.");
+      }
+
+      if (clientData.phone) {
+        const alreadyExistingPhone = await prismaRepository.client.findUnique({
+          where: { phone: clientData.phone },
+        });
+
+        if (alreadyExistingPhone) {
+          throw httpError("Zadané telefonní číslo už má jiný klient.", 409);
+        }
       }
 
       const newClient = await prismaRepository.client.create({

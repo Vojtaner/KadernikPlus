@@ -19,6 +19,7 @@ const PriceList = () => {
   if (isError || !services) {
     return <ErrorBoundary />
   }
+
   const columns = createColumns()
 
   return (
@@ -51,12 +52,12 @@ export default PriceList
 // ]
 const createColumns = (): GridColDef<Service[][number]>[] => {
   return [
-    { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 90 },
+    { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 160 },
     {
       field: 'basePrice',
       headerName: 'Cena',
       disableColumnMenu: true,
-      minWidth: 100,
+      width: 120,
       renderCell: (params) => `${params.value},00 Kč`,
     },
     // {

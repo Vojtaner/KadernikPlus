@@ -6,6 +6,7 @@ import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-i
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { DEFAULT_USERS_TEAM } from "../../../entities/team-member";
 import StockItemAlreadyExistsError from "../../../domain/errors/stock-item-errors";
+import { httpError } from "../../../adapters/express/httpError";
 
 const createStockItemRepositoryDb = (
   prismaStockRepository: PrismaClient
@@ -24,7 +25,7 @@ const createStockItemRepositoryDb = (
           });
 
           if (!existing) {
-            throw new Error("Nepodařilo se najít položku na skladu.");
+            throw httpError("Nepodařilo se najít položku na skladu.", 404);
           }
 
           const newQuantityPerPiece = Number(quantity);
@@ -101,6 +102,19 @@ const createStockItemRepositoryDb = (
 
         const updatedQuantity = packageCount * quantity;
         const avgPrice = updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
+        const itemNameAlreadyExists = await prisma.stockItem.findUnique({
+          where: {
+            stockId_itemName_isActive: {
+              stockId: data.stockId,
+              itemName: data.itemName,
+              isActive: true,
+            },
+          },
+        });
+
+        if (itemNameAlreadyExists) {
+          throw httpError("Položka na vašem skladu už existuje.", 409);
+        }
 
         return await prismaStockRepository.stockItem.create({
           data: {

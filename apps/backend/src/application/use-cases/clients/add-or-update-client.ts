@@ -6,13 +6,6 @@ import { Client } from "@prisma/client";
 import logRepositoryDb from "../../../infrastructure/data/prisma/prisma-log-repository";
 import { LogRepositoryPort } from "../../../application/ports/log-repository";
 
-class ClientAlreadyExistsError extends Error {
-  constructor(phone: string) {
-    super(`Client with phone number '${phone}' already exists.`);
-    this.name = "ClientAlreadyExistsError";
-  }
-}
-
 const createAddOrUpdateClientUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
   logRepositoryDb: LogRepositoryPort;

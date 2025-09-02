@@ -13,7 +13,7 @@ const ensureUserExistsMiddleware = (
       const userId = req.auth?.payload.sub;
 
       if (!userId) {
-        res.status(401).json({ error: "Missing user id." });
+        res.status(401).json({ error: "Chybí uživatelské ID." });
         return;
       }
 

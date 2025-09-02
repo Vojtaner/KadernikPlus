@@ -15,7 +15,7 @@ import { firstNameValidationrule, phoneValidationRule } from '../entity'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)
-  const { control, resetField, handleSubmit } = useForm<CreateVisitType>()
+  const { control, resetField, handleSubmit } = useForm<CreateVisitType>({ defaultValues: { depositRequired: false } })
   const date = useWatch({ control, name: 'date' })
   const intl = useIntl()
   const depositRequired = useWatch({ control, name: 'depositRequired' })

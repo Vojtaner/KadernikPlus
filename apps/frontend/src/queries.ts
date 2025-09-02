@@ -305,7 +305,7 @@ export const useCreateVisitMutation = (options?: UseMutationOptions<CreateVisitT
       addSnackBarMessage({ text: 'Návštěva byla uložena.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Návštěvu se nepodařilo byla uložit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })
@@ -440,7 +440,7 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
       addSnackBarMessage({ text: 'Klienta se podařilo přidat/upravit.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Klienta se nepodařilo přidat/upravit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

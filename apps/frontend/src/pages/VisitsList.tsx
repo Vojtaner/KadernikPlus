@@ -1,7 +1,7 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material'
 import AppDataGrid from '../components/DataGrid'
 import { type GridColDef } from '@mui/x-data-grid'
-import { formatNameShort, type VisitViewKey } from '../entity'
+import { formatNameShort } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import Loader from './Loader'
@@ -12,10 +12,9 @@ import dayjs from 'dayjs'
 import { Paths } from '../routes/AppRoutes'
 import { getButtonStyle } from '../components/entity'
 import { useIntl } from 'react-intl'
-import { useCallback } from 'react'
 import { FilterTableButton } from './Consumption'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import { useAppNavigate, usePersistentFilters, type DatesFilter, type VisitListApplyFilter } from '../hooks'
+import { useAppNavigate, useVisitListFilters, type VisitListApplyFilter } from '../hooks'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
@@ -23,39 +22,6 @@ type VisitListProps = {
   onlyOpenVisits?: boolean
   visitListApplyFilter: VisitListApplyFilter
   enableFilters?: boolean
-}
-const useVisitListFilters = (
-  type: VisitListApplyFilter
-): [
-  {
-    dates: DatesFilter
-    view?: VisitViewKey
-  },
-  (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
-] => {
-  const [filters, updateFilter] = usePersistentFilters()
-
-  const scopedUpdater = useCallback(
-    (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => {
-      updateFilter((draft) => {
-        if (type === 'dashBoardVisitOverView') {
-          updater(draft.visits.dashBoardVisitOverView)
-        } else if (type === 'allVisitsPage') {
-          updater(draft.visits.allVisitsPage)
-        }
-      })
-    },
-    [type, updateFilter]
-  )
-
-  if (type === 'dashBoardVisitOverView') {
-    return [filters.visits.dashBoardVisitOverView, scopedUpdater]
-  }
-  if (type === 'allVisitsPage') {
-    return [filters.visits.allVisitsPage, scopedUpdater]
-  }
-
-  return [{ dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' }, () => {}]
 }
 
 const VisitsList = (props: VisitListProps) => {
@@ -267,7 +233,11 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
       const isVisitOpen = params.row.visitState
       return (
         !params.row.isHeader && (
-          <Typography color={isVisitOpen ? 'success' : 'error'}>{isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}</Typography>
+          <Typography
+            onClick={() => (params.row.clientId ? navigate(Paths.visitDetail(params.row.clientId, params.row.id)) : {})}
+            color={isVisitOpen ? 'success' : 'error'}>
+            {isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}
+          </Typography>
         )
       )
     },

@@ -57,7 +57,7 @@ export const makeExpressCallback = <T>(controller: ControllerFunction<T>) => {
       res.status(httpResponse.statusCode).send(httpResponse.body);
     } catch (e: any) {
       console.error("Error in makeExpressCallback:", e);
-      res.status(500).send({
+      res.status(e.status).send({
         message: e.message || "Neznámý error,chyba serveru.",
         status: e.status || 500,
       });
