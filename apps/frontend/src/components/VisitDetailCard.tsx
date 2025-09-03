@@ -18,7 +18,7 @@ const VisitDetailCard = (props: VisitDetailCardProps) => {
           {`${index}.`}
         </Typography>
         <DetailColumn label="Datum" input={date} />
-        <DetailColumn label="Section" input={paidPrice} />
+        <DetailColumn label="Cena" input={paidPrice} />
         <IconButton onClick={() => navigate(Paths.visitDetail(clientId, visitId))}>
           <PhotoCameraFrontOutlinedIcon fontSize="large" color="primary" />
         </IconButton>

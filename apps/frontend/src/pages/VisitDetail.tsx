@@ -88,9 +88,7 @@ const VisitDetail = () => {
                 Smazat
               </Button>
             }
-            onConfirm={function (): void {
-              throw new Error('Function not implemented.')
-            }}
+            onConfirm={() => deleteVisitMutation(visitId)}
           />
         )}
       </Stack>
