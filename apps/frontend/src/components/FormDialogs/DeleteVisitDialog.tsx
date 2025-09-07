@@ -4,6 +4,7 @@ import FormDialog from '../Dialog'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { addPropsToReactElement } from '../entity'
+import { useAppNavigate } from '../../hooks'
 
 type DeleteVisitDialogProps = {
   onConfirm: () => void
@@ -13,6 +14,7 @@ type DeleteVisitDialogProps = {
 const DeleteVisitDialog = (props: DeleteVisitDialogProps) => {
   const { openButton, onConfirm } = props
   const [open, setOpen] = useState(false)
+  const navigate = useAppNavigate()
 
   return (
     <FormDialog
@@ -23,7 +25,13 @@ const DeleteVisitDialog = (props: DeleteVisitDialogProps) => {
           <Button onClick={() => setOpen(false)}>
             <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
-          <Button type="submit" onClick={onConfirm}>
+          <Button
+            type="submit"
+            onClick={() => {
+              onConfirm()
+              setOpen(false)
+              navigate(-1)
+            }}>
             <FormattedMessage id="formDialog.confirm" defaultMessage="Potvrdit" />
           </Button>
         </>
