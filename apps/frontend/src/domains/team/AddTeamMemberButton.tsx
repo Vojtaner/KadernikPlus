@@ -4,8 +4,8 @@ import FormDialog from '../../app/components/Dialog'
 import TextField from '../../app/components/TextField'
 import { useAddTeamMemberMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
-import { useScrollToTheTop } from './AddProcedureButton'
 import { FormattedMessage } from 'react-intl'
+import { useScrollToTheTop } from '../procedure/AddProcedureButton'
 
 type TeamMemberForm = {
   email: string

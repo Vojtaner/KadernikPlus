@@ -1,5 +1,5 @@
 import { Button, type BoxProps, type SxProps } from '@mui/material'
-import FormDialog from '../../app/components/Dialog'
+import FormDialog from '../app/components/Dialog'
 import { useState } from 'react'
 import React from 'react'
 import {
@@ -8,15 +8,15 @@ import {
   formatVisitReviewRequestSms,
   groupVisits,
   SmsList,
-} from '../SmsTabs'
-import { useClientVisitsQuery } from '../../queries'
+} from './SmsTabs'
+import { useClientVisitsQuery } from '../queries'
 import QrCodeIcon from '@mui/icons-material/QrCode'
 import AddAlertIcon from '@mui/icons-material/AddAlert'
 import RateReviewIcon from '@mui/icons-material/RateReview'
 import SendIcon from '@mui/icons-material/Send'
-import AppTheme from '../../AppTheme'
+import AppTheme from '../AppTheme'
 
-const SendMessageDialog = (props: {
+const SmsSendDialog = (props: {
   openButton: React.ReactElement<{
     onClick: (e: React.MouseEvent) => void
     icon?: React.ReactNode
@@ -108,4 +108,4 @@ const SendMessageDialog = (props: {
   )
 }
 
-export default SendMessageDialog
+export default SmsSendDialog

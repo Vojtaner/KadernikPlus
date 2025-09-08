@@ -12,9 +12,9 @@ import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlin
 import { Paths } from '../routes/AppRoutes'
 import BoxIcon from '../app/components/BoxIcon'
 import { formatPhoneNumber } from '../domains/visits/VisitsList'
-import SendMessageDialog from '../components/FormDialogs/SendMessageDialog'
 import SendIcon from '@mui/icons-material/Send'
 import { useAppNavigate } from '../hooks'
+import SmsSendDialog from '../components/SmsSendDialog'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()
@@ -77,7 +77,7 @@ const createColumns = (navigate: (path: string) => void): GridColDef<Client[][nu
     disableColumnMenu: true,
     renderCell: (params) => (
       <Stack direction="row" spacing={2}>
-        <SendMessageDialog
+        <SmsSendDialog
           clientId={params.row.id}
           openButton={
             <BoxIcon

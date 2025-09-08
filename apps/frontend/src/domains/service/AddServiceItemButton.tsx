@@ -6,8 +6,8 @@ import { useCreateNewOrUpdateServiceMutation } from '../../queries'
 import { useForm } from 'react-hook-form'
 import type { ServiceCreateOrUpdateData } from '../../entities/service'
 import React from 'react'
-import { useScrollToTheTop } from './AddProcedureButton'
 import { FormattedMessage } from 'react-intl'
+import { useScrollToTheTop } from '../procedure/AddProcedureButton'
 
 type AddServiceItemButtonProps = {
   defaultValues?: Partial<ServiceCreateOrUpdateData>

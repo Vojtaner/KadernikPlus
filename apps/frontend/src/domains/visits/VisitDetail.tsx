@@ -7,7 +7,6 @@ import Note from '../../app/components/Note'
 import EditVisitDetailDialog from './formDialog/EditVisitDetailDialog'
 import { useClientVisitsQuery, useDeleteVisitMutation, useProceduresQuery, useVisitQuery } from '../../queries'
 import { useParams } from 'react-router-dom'
-import AddProcedureButton from '../../components/FormDialogs/AddProcedureButton'
 import Loader from '../../pages/Loader'
 import { useAppDispatch } from '../../store'
 import { setCurrentLocationAppendix } from '../../store/appUiSlice'
@@ -16,6 +15,7 @@ import { Paths } from '../../routes/AppRoutes'
 import { useAppNavigate } from '../../hooks'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import DeleteVisitDialogProps from './formDialog/DeleteVisitDialog'
+import AddProcedureButton from '../procedure/AddProcedureButton'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()

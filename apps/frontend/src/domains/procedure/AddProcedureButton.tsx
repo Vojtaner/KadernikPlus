@@ -21,8 +21,8 @@ import type { PostNewProcedure } from '../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import type { StockAllowance } from '../../domains/stock/entity'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { addPropsToReactElement } from '../entity'
 import { FormattedMessage } from 'react-intl'
+import { addPropsToReactElement } from '../../components/entity'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string

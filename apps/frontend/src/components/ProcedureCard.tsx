@@ -1,6 +1,5 @@
 import { Box, Typography, Stack, IconButton, Button } from '@mui/material'
 import AppTheme from '../AppTheme'
-import AddProcedureButton, { type AddProcedureStockAllowanceType } from './FormDialogs/AddProcedureButton'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
 import type { StockAllowance } from '../domains/stock/entity'
@@ -8,6 +7,7 @@ import { useProceduresMutation, useStocksQuery } from '../queries'
 import { queryClient } from '../reactQuery/reactTanstackQuerySetup'
 import { useParams } from 'react-router-dom'
 import type { PostNewProcedure } from '../entities/procedure'
+import AddProcedureButton, { type AddProcedureStockAllowanceType } from '../domains/procedure/AddProcedureButton'
 
 type ProcedureCardProps = {
   description: string

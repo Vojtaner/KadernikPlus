@@ -5,9 +5,8 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Stack } from '@mui/material'
-
 import type { FieldValues, UseFormHandleSubmit } from 'react-hook-form'
-import { useScrollToTheTop } from '../../components/FormDialogs/AddProcedureButton'
+import { useScrollToTheTop } from '../../domains/procedure/AddProcedureButton'
 
 type FormDialogProps<TFieldValues extends FieldValues = FieldValues> = {
   actions: React.ReactNode

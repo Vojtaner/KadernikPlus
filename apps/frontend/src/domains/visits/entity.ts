@@ -1,8 +1,8 @@
-import type { AddProcedureStockAllowanceType } from '../../components/FormDialogs/AddProcedureButton'
 import { type Client } from '../../entities/client'
 import type { Procedure } from '../../entities/procedure'
 import { type Service } from '../../entities/service'
 import { type User, type WithUserId } from '../../entities/user'
+import type { AddProcedureStockAllowanceType } from '../procedure/AddProcedureButton'
 
 export type Visit = {
   id?: string

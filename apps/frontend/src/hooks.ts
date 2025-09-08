@@ -1,12 +1,12 @@
 import { useNavigate, type NavigateOptions, type To } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { setCurrentLocationAppendix, type AppLanguage } from './store/appUiSlice'
-import { useScrollToTheTop } from './components/FormDialogs/AddProcedureButton'
 import type { StockViewKey, VisitViewKey } from './entity'
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs, { Dayjs } from 'dayjs'
 import { produce } from 'immer'
+import { useScrollToTheTop } from './domains/procedure/AddProcedureButton'
 
 export const useAppNavigate = () => {
   const navigate = useNavigate()
