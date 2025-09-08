@@ -10,11 +10,11 @@ import { formatNameShort } from '../../../entity'
 import { type VisitListApplyFilter, useAppNavigate, useVisitListFilters } from '../../../hooks'
 import { FilterTableButton } from '../../../pages/Consumption'
 import Loader from '../../../pages/Loader'
-import { useVisitsQuery } from '../../../queries'
 import { Paths } from '../../../routes/AppRoutes'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import { useVisitsQuery } from '../queries'
 
 type VisitListProps = {
   columnHeaderHeight?: 0

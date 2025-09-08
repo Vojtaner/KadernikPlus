@@ -1,11 +1,11 @@
 import { Stack } from '@mui/material'
 import dayjs from 'dayjs'
 import Loader from '../pages/Loader'
-import { useVisitsQuery } from '../queries'
 import { useAppForm } from '../reactHookForm/store'
 import AppBarChart from './BarChart'
 import { usePersistentFilters } from '../hooks'
 import { BasicDatePicker } from '../app/components/BasicDatePicker'
+import { useVisitsQuery } from '../domains/visits/queries'
 
 const RevenuChart = () => {
   const [filters, updateFilter] = usePersistentFilters()

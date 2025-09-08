@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
 import FormDialog from '../../../app/components/Dialog'
-import { useCreateNewOrUpdateServiceMutation } from '../../../queries'
 import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
 import TextField from '../../../app/components/TextField'
 import type { ServiceCreateOrUpdateData } from '../../../entities/service'
+import { useCreateNewOrUpdateServiceMutation } from '../queries'
 
 type AddServiceItemButtonProps = {
   defaultValues?: Partial<ServiceCreateOrUpdateData>

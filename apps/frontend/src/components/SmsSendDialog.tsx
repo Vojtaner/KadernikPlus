@@ -9,12 +9,12 @@ import {
   groupVisits,
   SmsList,
 } from './SmsTabs'
-import { useClientVisitsQuery } from '../queries'
 import QrCodeIcon from '@mui/icons-material/QrCode'
 import AddAlertIcon from '@mui/icons-material/AddAlert'
 import RateReviewIcon from '@mui/icons-material/RateReview'
 import SendIcon from '@mui/icons-material/Send'
 import AppTheme from '../AppTheme'
+import { useClientVisitsQuery } from '../domains/visits/queries'
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{

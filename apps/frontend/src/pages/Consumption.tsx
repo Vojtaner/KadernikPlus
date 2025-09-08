@@ -7,14 +7,13 @@ import {
   type ConsumptionTableByProductByUserType,
   type StockViewKey,
 } from '../entity'
-import { useStockAllowancesQuery } from '../queries'
 import { useForm } from 'react-hook-form'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
 import {
   createStockAllowancesTableAllRecords,
   createStockAllowancesTableByProductByUser,
-} from '../domains/stock/stock-allowance'
+} from '../domains/stock/components/stock-allowance'
 import { getDateShort } from '../domains/visits/components/VisitsList'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { Paths } from '../routes/AppRoutes'
@@ -26,6 +25,7 @@ import type { OverridableStringUnion } from '@mui/types'
 import { useAppNavigate, usePersistentFilters } from '../hooks'
 import dayjs from 'dayjs'
 import { BasicDatePicker } from '../app/components/BasicDatePicker'
+import { useStockAllowancesQuery } from '../domains/stock/queries'
 
 const Consumption = () => {
   const navigate = useAppNavigate()

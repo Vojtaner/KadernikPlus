@@ -4,10 +4,10 @@ import SearchIcon from '@mui/icons-material/Search'
 import SearchOffIcon from '@mui/icons-material/SearchOff'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useForm, type Control } from 'react-hook-form'
-import { useSearchClientsQuery } from '../../queries'
 import TextField from './TextField'
 import { useIntl } from 'react-intl'
 import { useDebounce } from '../../hooks'
+import { useSearchClientsQuery } from '../../domains/client/queries'
 
 type SearchBarProps = {
   isActive?: boolean

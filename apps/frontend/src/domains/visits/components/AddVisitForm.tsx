@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import type { CreateVisitType } from '../entity'
 import { getDateTimeFromUtcToLocal } from './VisitsList'
-import { useVisitsQuery, useCreateVisitMutation } from '../../../queries'
 import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
 import TextField from '../../../app/components/TextField'
 import Switch from '../../../app/components/Switch/SwitchButton'
@@ -12,6 +11,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { firstNameValidationrule, phoneValidationRule } from '../../../components/entity'
 import ClientAutoComplete from '../../client/components/ClientAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
+import { useCreateVisitMutation, useVisitsQuery } from '../queries'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)

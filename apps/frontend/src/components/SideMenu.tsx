@@ -4,10 +4,11 @@ import { toggleDrawer } from '../store/appUiSlice'
 import CloseIcon from '@mui/icons-material/Close'
 import { useIntl } from 'react-intl'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useStocksQuery, useTeamMemberQuery } from '../queries'
 import { useAppLocation } from '../routes/reactRouter'
 import { usePersistentFilters } from '../hooks'
 import { getMenuItems, SideMenuList } from '../app/components/SideMenuList'
+import { useStocksQuery } from '../domains/stock/queries'
+import { useTeamMemberQuery } from '../domains/team/queries'
 
 const SideMenu = () => {
   const isOpen = useAppSelector((state: RootState) => state.appUi.isDrawerOpen)

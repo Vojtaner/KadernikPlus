@@ -1,3 +1,4 @@
+import type { Dayjs } from 'dayjs'
 import { type Client } from '../../entities/client'
 import type { Procedure } from '../../entities/procedure'
 import { type Service } from '../../entities/service'
@@ -104,3 +105,25 @@ export type VisitDetailFormType = Pick<
   Visit,
   'date' | 'paidPrice' | 'deposit' | 'depositStatus' | 'hairdresserId' | 'note'
 > & { hairCutId?: string; visitServiceId: string }
+
+export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => {
+  const params = new URLSearchParams()
+
+  if (date && date.isValid()) {
+    params.append('date', date.toISOString())
+    return `/api/visits?${params.toString()}`
+  }
+
+  if (query) {
+    if (query.from) {
+      params.append('from', query.from.toISOString())
+    }
+    if (query.to) {
+      params.append('to', query.to.toISOString())
+    }
+
+    return `/api/visits?${params.toString()}`
+  }
+
+  return '/api/visits'
+}

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import FormDialog from '../../app/components/Dialog'
+import FormDialog from '../../../app/components/Dialog'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from '@mui/material'
-import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from './entity'
-import { addPropsToReactElement } from '../../components/entity'
+import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
+import { addPropsToReactElement } from '../../../components/entity'
 import StockItemForm, { useStockItemForm } from './StockItemForm'
 
 type StockItemDialogProps = {

@@ -1,7 +1,6 @@
 import { Button, Divider, Stack, Typography } from '@mui/material'
 import ClientProfileGrid from '../domains/client/components/ClientProfileGrid'
 import VisitDetailCard from '../domains/visits/components/VisitDetailCard'
-import { useClientQuery } from '../queries'
 import { useParams } from 'react-router-dom'
 import Loader from '../pages/Loader'
 import { formatToCZK } from '../domains/visits/components/VisitDetailGrid'
@@ -12,6 +11,7 @@ import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
 import AppTheme from '../AppTheme'
+import { useClientQuery } from '../domains/client/queries'
 
 const ClientProfile = () => {
   const { clientId } = useParams()

@@ -3,8 +3,8 @@ import DetailColumn from '../../../app/components/DetailColumn'
 import { formatToCZK } from '../../visits/components/VisitDetailGrid'
 import type { ClientWithVisits } from '../../../entities/client'
 import Note from '../../../app/components/Note'
-import { useCreateNewOrUpdateClientMutation } from '../../../queries'
 import RedSwitch from '../../../app/components/Switch/RedSwitch'
+import { useCreateNewOrUpdateClientMutation } from '../queries'
 type ClientProfileGridProps = {
   clientData: ClientWithVisits
 }

@@ -3,11 +3,11 @@ import { type GridColDef } from '@mui/x-data-grid'
 import BoxIcon from '../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../app/components/DataGrid'
-import { useServicesQuery } from '../queries'
 import type { Service } from '../entities/service'
 import Loader from './Loader'
 import ErrorBoundary from './ErrorBoundary'
 import AddServiceItemButton from '../domains/service/components/AddServiceItemButton'
+import { useServicesQuery } from '../domains/service/queries'
 
 const PriceList = () => {
   const { data: services, isLoading, isError } = useServicesQuery()
@@ -31,25 +31,6 @@ const PriceList = () => {
 
 export default PriceList
 
-// const rows: Service[] = [
-//   { id: '1', serviceName: 'Stříhání', basePrice: 900 },
-//   { id: '2', serviceName: 'Barvení', basePrice: 300 },
-//   { id: '3', serviceName: 'Trvalá', basePrice: 800 },
-//   { id: '4', serviceName: 'Barva-foukaná', basePrice: 430 },
-//   { id: '5', serviceName: 'Barvení', basePrice: 290 },
-//   { id: '6', serviceName: 'Barvení', basePrice: 820 },
-//   { id: '7', serviceName: 'Trvalá-barva', basePrice: 1100 },
-//   { id: '8', serviceName: 'Stříhání-foukání-barva', basePrice: 1900 },
-//   { id: '9', serviceName: 'Trvalá-stříhání', basePrice: 2500 },
-//   { id: '10', serviceName: 'Barvení', basePrice: 250 },
-//   { id: '11', serviceName: 'Trvalá-barevné', basePrice: 490 },
-//   { id: '12', serviceName: 'Trvalá-stříhání', basePrice: 300 },
-//   { id: '13', serviceName: 'Barber-střih', basePrice: 1230 },
-//   { id: '14', serviceName: 'Trvalá-stříhání', basePrice: 920 },
-//   { id: '15', serviceName: 'Trvalá', basePrice: 1290 },
-//   { id: '16', serviceName: 'Trvalá', basePrice: 490 },
-//   { id: '17', serviceName: 'Trvalá', basePrice: 890 },
-// ]
 const createColumns = (): GridColDef<Service[][number]>[] => {
   return [
     { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 160 },

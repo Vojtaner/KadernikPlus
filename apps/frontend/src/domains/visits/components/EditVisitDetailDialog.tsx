@@ -1,7 +1,6 @@
 import { Button, Stack, Typography } from '@mui/material'
 import FormDialog from '../../../app/components/Dialog'
 import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
-import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../../../queries'
 import SelectField from '../../../app/components/SelectField'
 import TextField from '../../../app/components/TextField'
 import { depositStatusOptions, type VisitDetailFormType } from '../entity'
@@ -17,6 +16,7 @@ import CloseVisitDialog from './CloseVisitDialog'
 import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
 import TeamMemberAutoComplete from '../../team/components/TeamMemberAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
+import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>

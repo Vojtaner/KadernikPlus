@@ -1,9 +1,9 @@
 import { type Control, type FieldPath, type FieldPathValue, type FieldValues, type Path } from 'react-hook-form'
-import { useStockItemsQuery, useStocksQuery } from '../../queries'
-import Loader from '../../pages/Loader'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import AutoComplete from '../../app/components/AutoComplete'
+import Loader from '../../../pages/Loader'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
+import AutoComplete from '../../../app/components/AutoComplete'
 import { FormattedMessage } from 'react-intl'
+import { useStocksQuery, useStockItemsQuery } from '../queries'
 
 type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: Path<TFieldValues>

@@ -4,7 +4,6 @@ import ProcedureCard from '../../../components/ProcedureCard'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../../../app/components/Note'
 import EditVisitDetailDialog from './EditVisitDetailDialog'
-import { useClientVisitsQuery, useDeleteVisitMutation, useProceduresQuery, useVisitQuery } from '../../../queries'
 import { useParams } from 'react-router-dom'
 import Loader from '../../../pages/Loader'
 import { useAppDispatch } from '../../../store'
@@ -16,6 +15,8 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import DeleteVisitDialogProps from './DeleteVisitDialog'
 import AddProcedureButton from '../../procedure/components/AddProcedureButton'
 import VisitDetailGrid, { hasAnyStockAllowance } from './VisitDetailGrid'
+import { useProceduresQuery } from '../../procedure/queries'
+import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../queries'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()

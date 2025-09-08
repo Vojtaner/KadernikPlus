@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import { type GridColDef } from '@mui/x-data-grid'
 import AppDataGrid from '../app/components/DataGrid'
-import { useClientsQuery } from '../queries'
 import ErrorBoundary from './ErrorBoundary'
 import Loader from './Loader'
 import Stack from '@mui/material/Stack'
@@ -15,6 +14,7 @@ import { formatPhoneNumber } from '../domains/visits/components/VisitsList'
 import SendIcon from '@mui/icons-material/Send'
 import { useAppNavigate } from '../hooks'
 import SmsSendDialog from '../components/SmsSendDialog'
+import { useClientsQuery } from '../domains/client/queries'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()

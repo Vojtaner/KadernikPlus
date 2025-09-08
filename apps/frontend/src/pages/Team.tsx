@@ -1,18 +1,18 @@
 import { Box, Checkbox, Typography } from '@mui/material'
 import AppDataGrid from '../app/components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
-import {
-  useDeleteTeamMemberMutation,
-  useTeamMembersQuery,
-  useUpdateTeamMemberSkill,
-  type SkillUpdateInput,
-} from '../queries'
 import { useParams } from 'react-router-dom'
 import Loader from './Loader'
 import type { TeamMember, TeamSettings } from '../entities/team-member'
 import BoxIcon from '../app/components/BoxIcon'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import AddTeamMemberButton from '../domains/team/components/AddTeamMemberButton'
+import {
+  useTeamMembersQuery,
+  useUpdateTeamMemberSkill,
+  useDeleteTeamMemberMutation,
+  type SkillUpdateInput,
+} from '../domains/team/queries'
 
 const Team = () => {
   const { teamId } = useParams()

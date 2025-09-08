@@ -4,7 +4,6 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { TabPanel } from '@mui/lab'
 import { useState, type ReactElement } from 'react'
-import { useVisitsQuery } from '../queries'
 import { getDateTimeFromUtcToLocal } from '../domains/visits/components/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
 import { DepositStatus, type VisitService, type VisitWithServices } from '../domains/visits/entity'
@@ -12,6 +11,7 @@ import Loader from '../pages/Loader'
 import dayjs from 'dayjs'
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
 import { FormattedMessage } from 'react-intl'
+import { useVisitsQuery } from '../domains/visits/queries'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')

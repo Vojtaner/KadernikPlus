@@ -1,15 +1,15 @@
 import { Stack, Button, Typography, Box } from '@mui/material'
-import TextField from '../../app/components/TextField'
-import SelectField from '../../app/components/SelectField'
-import { unitList } from '../../reactHookForm/entity'
+import TextField from '../../../app/components/TextField'
+import SelectField from '../../../app/components/SelectField'
+import { unitList } from '../../../reactHookForm/entity'
 import { useForm, useWatch } from 'react-hook-form'
-import { useCreateOrUpdateStockItemMutation, useStocksQuery } from '../../queries'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import { useState } from 'react'
-import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../../domains/stock/entity'
+import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { getButtonStyles } from '../../components/entity'
+import { getButtonStyles } from '../../../components/entity'
 import StockItemsAutoComplete from './StockItemsAutoComplete'
+import { useCreateOrUpdateStockItemMutation, useStocksQuery } from '../queries'
 
 type StockItemFormProps = Omit<
   ReturnType<typeof useStockItemForm>,
