@@ -7,7 +7,9 @@ import { useProceduresMutation, useStocksQuery } from '../queries'
 import { queryClient } from '../reactQuery/reactTanstackQuerySetup'
 import { useParams } from 'react-router-dom'
 import type { PostNewProcedure } from '../entities/procedure'
-import AddProcedureButton, { type AddProcedureStockAllowanceType } from '../domains/procedure/AddProcedureButton'
+import AddProcedureButton, {
+  type AddProcedureStockAllowanceType,
+} from '../domains/procedure/components/AddProcedureButton'
 
 type ProcedureCardProps = {
   description: string

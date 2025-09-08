@@ -11,18 +11,18 @@ import {
   useWatch,
 } from 'react-hook-form'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import TextField from '../../app/components/TextField'
+import TextField from '../../../app/components/TextField'
 import { useState, type ReactElement } from 'react'
-import FormDialog from '../../app/components/Dialog'
-import StockItemsAutoComplete from '../../domains/stock/StockItemsAutoComplete'
+import FormDialog from '../../../app/components/Dialog'
+import StockItemsAutoComplete from '../../stock/StockItemsAutoComplete'
 import React from 'react'
-import { useDeleteProcedureMutation, useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../queries'
-import type { PostNewProcedure } from '../../entities/procedure'
+import { useDeleteProcedureMutation, useProceduresMutation, useStockItemsQuery, useStocksQuery } from '../../../queries'
+import type { PostNewProcedure } from '../../../entities/procedure'
 import { useParams } from 'react-router-dom'
-import type { StockAllowance } from '../../domains/stock/entity'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
+import type { StockAllowance } from '../../stock/entity'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import { FormattedMessage } from 'react-intl'
-import { addPropsToReactElement } from '../../components/entity'
+import { addPropsToReactElement } from '../../../components/entity'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string

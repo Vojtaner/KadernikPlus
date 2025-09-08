@@ -15,7 +15,7 @@ import {
   createStockAllowancesTableAllRecords,
   createStockAllowancesTableByProductByUser,
 } from '../domains/stock/stock-allowance'
-import { getDateShort } from '../domains/visits/VisitsList'
+import { getDateShort } from '../domains/visits/components/VisitsList'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { Paths } from '../routes/AppRoutes'
 import { useParams } from 'react-router-dom'

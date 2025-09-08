@@ -1,10 +1,10 @@
-import { useServicesQuery } from '../../queries'
-import Loader from '../../pages/Loader'
-import { type Control, type FieldPath, type FieldValues } from 'react-hook-form'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { useParams } from 'react-router-dom'
-import AutoComplete from '../../app/components/AutoComplete'
+import type { Control, FieldPath, FieldValues } from 'react-hook-form'
+import { useServicesQuery } from '../../../queries'
 import { FormattedMessage } from 'react-intl'
+import { useParams } from 'react-router-dom'
+import AutoComplete from '../../../app/components/AutoComplete'
+import Loader from '../../../pages/Loader'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 
 type ServicesAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>

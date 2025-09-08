@@ -5,18 +5,18 @@ import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '.
 import SelectField from '../../../app/components/SelectField'
 import TextField from '../../../app/components/TextField'
 import { depositStatusOptions, type VisitDetailFormType } from '../entity'
-import TeamMemberAutoComplete from '../../team/TeamMemberAutoComplete'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import Loader from '../../../pages/Loader'
 import { useForm, useWatch } from 'react-hook-form'
 import React from 'react'
 import RedSwitch from '../../../app/components/Switch/RedSwitch'
-import { getMissingStockAllowanceError, getVisitFinishErrors } from '../VisitDetailGrid'
-import ServicesAutoComplete from '../../service/ServicesAutoComplete'
+import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid'
 import { FormattedMessage } from 'react-intl'
 import CloseVisitDialog from './CloseVisitDialog'
-import { useScrollToTheTop } from '../../procedure/AddProcedureButton'
+import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
+import TeamMemberAutoComplete from '../../team/components/TeamMemberAutoComplete'
+import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 
 const EditVisitDetailDialog = (props: {
   openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>

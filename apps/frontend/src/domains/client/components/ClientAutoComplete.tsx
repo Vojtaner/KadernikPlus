@@ -1,7 +1,7 @@
-import Loader from '../../pages/Loader'
+import Loader from '../../../pages/Loader'
 import { type Control, type FieldPath, type FieldValues } from 'react-hook-form'
-import { useClientsQuery } from '../../queries'
-import AutoComplete from '../../app/components/AutoComplete'
+import { useClientsQuery } from '../../../queries'
+import AutoComplete from '../../../app/components/AutoComplete'
 
 type ClientsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>

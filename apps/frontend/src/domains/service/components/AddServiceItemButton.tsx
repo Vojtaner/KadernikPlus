@@ -1,13 +1,12 @@
 import { Button } from '@mui/material'
-import { useState } from 'react'
-import FormDialog from '../../app/components/Dialog'
-import TextField from '../../app/components/TextField'
-import { useCreateNewOrUpdateServiceMutation } from '../../queries'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import type { ServiceCreateOrUpdateData } from '../../entities/service'
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { useScrollToTheTop } from '../procedure/AddProcedureButton'
+import FormDialog from '../../../app/components/Dialog'
+import { useCreateNewOrUpdateServiceMutation } from '../../../queries'
+import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
+import TextField from '../../../app/components/TextField'
+import type { ServiceCreateOrUpdateData } from '../../../entities/service'
 
 type AddServiceItemButtonProps = {
   defaultValues?: Partial<ServiceCreateOrUpdateData>

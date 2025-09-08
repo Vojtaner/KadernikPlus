@@ -1,9 +1,9 @@
 import { IconButton, Stack, Typography } from '@mui/material'
-import DetailColumn from '../../app/components/DetailColumn'
+import DetailColumn from '../../../app/components/DetailColumn'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import Paper from '../../app/components/Paper'
-import { Paths } from '../../routes/AppRoutes'
-import { useAppNavigate } from '../../hooks'
+import Paper from '../../../app/components/Paper'
+import { Paths } from '../../../routes/AppRoutes'
+import { useAppNavigate } from '../../../hooks'
 
 type VisitDetailCardProps = { date: string; paidPrice: string; index: number; visitId: string; clientId: string }
 

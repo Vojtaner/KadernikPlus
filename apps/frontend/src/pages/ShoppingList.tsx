@@ -6,7 +6,7 @@ import type { StockItem } from '../domains/stock/entity'
 import Loader from './Loader'
 import BoxIcon from '../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import { formatToCZK } from '../domains/visits/VisitDetailGrid'
+import { formatToCZK } from '../domains/visits/components/VisitDetailGrid'
 import { StockItemDialog } from '../domains/stock/StockItemDialog'
 
 type ShoppingListProps = {

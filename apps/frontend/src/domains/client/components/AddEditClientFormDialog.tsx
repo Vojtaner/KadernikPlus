@@ -1,10 +1,10 @@
 import { Button } from '@mui/material'
-import FormDialog from '../../app/components/Dialog'
+import FormDialog from '../../../app/components/Dialog'
 import { useState } from 'react'
-import type { EditClient, NewClient } from '../../entities/client'
+import type { EditClient, NewClient } from '../../../entities/client'
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { addPropsToReactElement } from '../../components/entity'
+import { addPropsToReactElement } from '../../../components/entity'
 import ClientForm, { useClientForm } from './ClientForm'
 
 type AddEditClientFormDialogProps = {
