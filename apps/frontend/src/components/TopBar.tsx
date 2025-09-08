@@ -1,19 +1,22 @@
 import { Box, Stack, Typography, type SxProps, type Theme } from '@mui/material'
-import MenuBox from './MenuBox'
-import SearchBar from './SearchBar'
+import MenuBox from '../app/components/MenuBox'
+import SearchBar from '../app/components/SearchBar'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import AppTheme from '../AppTheme'
 import { ROUTES } from '../routes/AppRoutes'
 import logo from '../../public/assets/logofornow.png'
 import { useAppNavigate } from '../hooks'
+import { useDispatch } from 'react-redux'
+import { toggleDrawer } from '../store/appUiSlice'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
   isSearchActive: boolean
 }
 
-function TopBar(props: TopBarProps) {
+const TopBar = (props: TopBarProps) => {
   const { onActiveSearch, isSearchActive } = props
+  const dispatch = useDispatch()
 
   return (
     <Stack
@@ -51,7 +54,7 @@ function TopBar(props: TopBarProps) {
               onActiveSearch(state)
             }}
           />
-          <MenuBox />
+          <MenuBox onClick={() => dispatch(toggleDrawer())} />
           <TopBarFilterButtonsStack
             sx={{
               transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,

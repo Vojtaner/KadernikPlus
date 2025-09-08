@@ -1,16 +1,17 @@
 import { Box, IconButton, Stack, Tab, Typography } from '@mui/material'
-import SmsCard from './SmsCard'
+import SmsCard from '../app/components/SmsCard'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { TabPanel } from '@mui/lab'
 import { useState, type ReactElement } from 'react'
 import { useVisitsQuery } from '../queries'
-import { getDateTimeFromUtcToLocal } from '../pages/VisitsList'
+import { getDateTimeFromUtcToLocal } from '../domains/visits/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
-import { DepositStatus, type VisitService, type VisitWithServices } from '../entities/visit'
+import { DepositStatus, type VisitService, type VisitWithServices } from '../domains/visits/entity'
 import Loader from '../pages/Loader'
 import dayjs from 'dayjs'
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
+import { FormattedMessage } from 'react-intl'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')
@@ -106,12 +107,17 @@ export const SmsList = <T extends VisitWithServices>({
       </Stack>
       {visits.map((visit) => (
         <SmsCard
+          dataColumnNames={{
+            name: <FormattedMessage defaultMessage="Jméno" id="firstNameLabel" />,
+            serviceType: <FormattedMessage defaultMessage="Účes" id="hairCut" />,
+            eventType: <FormattedMessage defaultMessage="Návštěva" id="visitLabel" />,
+          }}
           key={visit.id}
-          phone={visit.client.phone}
-          text={getText(visit)}
+          phoneContact={visit.client.phone}
+          message={getText(visit)}
           customerName={`${visit.client.firstName} ${visit.client.lastName}`}
-          haircut={visit.visitServices.map((s) => s.service.serviceName).join(', ')}
-          visitDistance={getVisitDistanceLabel(visit.date)}
+          service={visit.visitServices.map((s) => s.service.serviceName).join(', ')}
+          daysDelta={getVisitDistanceLabel(visit.date)}
         />
       ))}
     </Stack>

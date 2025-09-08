@@ -40,7 +40,7 @@ import type {
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
 } from './entities/client'
-import type { ExistingStockItem, StockItemCreateData } from './entities/stock-item'
+import type { ExistingStockItem, StockItemCreateData } from './domains/stock/entity'
 import type { Service, ServiceCreateOrUpdateData } from './entities/service'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import type {
@@ -48,7 +48,7 @@ import type {
   VisitDetailFormType,
   VisitWithServicesWithProceduresWithStockAllowances,
   VisitWithServicesHotFix,
-} from './entities/visit'
+} from './domains/visits/entity'
 import { DEFAULT_USERS_TEAM, type TeamMember } from './entities/team-member'
 import type { CreateProcedure, PostNewProcedure } from './entities/procedure'
 import type { Dayjs } from 'dayjs'

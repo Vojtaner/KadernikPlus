@@ -1,13 +1,12 @@
 import { BarChart } from '@mui/x-charts/BarChart'
 import AppTheme from '../AppTheme'
 import dayjs from 'dayjs'
-import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entities/visit'
+import type { VisitWithServicesWithProceduresWithStockAllowances } from '../domains/visits/entity'
+import type { DatesRange } from '../hooks'
 
 type AppBarChartProps = {
   visitData: VisitWithServicesWithProceduresWithStockAllowances[]
-  from: dayjs.Dayjs
-  to: dayjs.Dayjs
-}
+} & DatesRange
 
 const AppBarChart = (props: AppBarChartProps) => {
   const { visitData, from, to } = props
@@ -53,7 +52,7 @@ type DateRange = {
 type VisitMap = Map<string, { cost: number; revenue: number }>
 type Result = { costs: number[]; revenue: number[]; profit: number[]; labels: string[] }
 
-export const getCostsProfitRevenue = (
+const getCostsProfitRevenue = (
   visits: VisitWithServicesWithProceduresWithStockAllowances[],
   range?: DateRange
 ): Result => {
@@ -100,10 +99,10 @@ export const getCostsProfitRevenue = (
   return { labels: allLabels, costs, revenue, profit }
 }
 
-function aggregateVisitsByDate(
+const aggregateVisitsByDate = (
   visits: VisitWithServicesWithProceduresWithStockAllowances[],
   range?: DateRange
-): VisitMap {
+): VisitMap => {
   const map: VisitMap = new Map()
 
   for (const visit of visits) {
@@ -136,7 +135,7 @@ function aggregateVisitsByDate(
   return map
 }
 
-function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllowances): number {
+const calculateVisitCost = (visit: VisitWithServicesWithProceduresWithStockAllowances): number => {
   let total = 0
 
   for (const procedure of visit.procedures ?? []) {
@@ -152,7 +151,7 @@ function calculateVisitCost(visit: VisitWithServicesWithProceduresWithStockAllow
   return total
 }
 
-export function getDateLabelsInRange(map: VisitMap, range?: DateRange): string[] {
+const getDateLabelsInRange = (map: VisitMap, range?: DateRange): string[] => {
   const labels: string[] = []
 
   if (range?.from && range?.to) {

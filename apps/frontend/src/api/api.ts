@@ -8,7 +8,7 @@ import type {
   ClientWithVisits,
   ClientWithVisitsWithVisitServices,
 } from '../entities/client'
-import type { ExistingStockItem, StockItemCreateData } from '../entities/stock-item'
+import type { ExistingStockItem, StockItemCreateData } from '../domains/stock/entity'
 import type { CreateProcedure, PostNewProcedure } from '../entities/procedure'
 import type { LogData } from '../entities/logs'
 import type { Service, ServiceCreateOrUpdateData } from '../entities/service'
@@ -17,7 +17,7 @@ import type {
   VisitDetailFormType,
   VisitWithServicesHotFix,
   VisitWithServicesWithProceduresWithStockAllowances,
-} from '../entities/visit'
+} from '../domains/visits/entity'
 import type { TeamMember } from '../entities/team-member'
 import type { VisitDetailForm } from '../reactHookForm/entity'
 import type { User } from '@auth0/auth0-react'

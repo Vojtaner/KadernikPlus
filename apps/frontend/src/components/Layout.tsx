@@ -1,18 +1,34 @@
 import Stack from '@mui/material/Stack'
-import BottomBar from './BottomBar'
+import BottomBar from '../app/components/BottomBar'
 import TopBar from './TopBar'
 import { useState, type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
-import { SideMenu } from './SideMenu'
 import SearchResults from '../pages/SearchResults'
-import SectionHeader from './SectionHeader'
+import SectionHeader from '../app/components/SectionHeader'
+import AddVisitFormDialog from '../domains/visits/formDialog/AddVisitFormDialog'
+import AddEditClientFormDialog from '../domains/client/AddEditClientFormDialog'
+import AddServiceItemButton from './FormDialogs/AddServiceItemButton'
+import { StockItemDialog } from '../domains/stock/StockItemDialog'
+import MenuIconButton from '../app/components/MenuBoxIcon'
+import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
+import WarehouseIcon from '@mui/icons-material/Warehouse'
+import ContentCutIcon from '@mui/icons-material/ContentCut'
+import { useIntl } from 'react-intl'
+import { useCurrentRoute } from '../routes/AppRoutes'
+import { useAppNavigate } from '../hooks'
+import { useAppSelector } from '../store'
+import SideMenu from './SideMenu'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
+  const intl = useIntl()
+
+  const route = useCurrentRoute()
+  const navigate = useAppNavigate()
+  const routeAppendix = useAppSelector((state) => state.appUi.currentLocationAppendix)
 
   const onActiveSearch = (state: boolean) => {
-    console.log('ahoj')
     setIsSearchActive(state)
   }
 
@@ -31,7 +47,7 @@ const Layout = (props: PropsWithChildren) => {
           width: { md: '100%' },
         }}>
         <TopBar onActiveSearch={onActiveSearch} isSearchActive={isSearchActive} />
-        {!isSearchActive && <SectionHeader />}
+        {!isSearchActive && <SectionHeader onGoBack={() => navigate(-1)} route={route} routeAppendix={routeAppendix} />}
       </Stack>
       <Box
         paddingX="10px"
@@ -45,7 +61,34 @@ const Layout = (props: PropsWithChildren) => {
           {isSearchActive && <SearchResults isSearchActive={isSearchActive} onActiveSearch={onActiveSearch} />}
         </>
       </Box>
-      <BottomBar />
+      <BottomBar>
+        <AddServiceItemButton
+          openButton={
+            <MenuIconButton
+              icon={<ContentCutIcon fontSize="large" />}
+              title={intl.formatMessage({ defaultMessage: 'Přidat službu', id: 'serviceDialog.addService' })}
+            />
+          }
+        />
+        <AddEditClientFormDialog
+          openButton={
+            <MenuIconButton
+              icon={<PersonAddAlt1OutlinedIcon fontSize="large" />}
+              title={intl.formatMessage({ defaultMessage: 'Přidat klienta', id: 'clientDialog.addClient' })}
+            />
+          }
+        />
+        <AddVisitFormDialog />
+        <StockItemDialog
+          formUsagePurpose="purchaseAndNewStockItem"
+          openButton={
+            <MenuIconButton
+              icon={<WarehouseIcon fontSize="large" />}
+              title={intl.formatMessage({ defaultMessage: 'Přidat materiál', id: 'stock.addStockItem' })}
+            />
+          }
+        />
+      </BottomBar>
       <SideMenu />
     </Stack>
   )

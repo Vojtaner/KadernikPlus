@@ -1,5 +1,5 @@
 import { Grid, Button, Stack, Divider } from '@mui/material'
-import DetailColumn from '../components/DetailColumn'
+import DetailColumn from '../app/components/DetailColumn'
 import { useAuth0 } from '@auth0/auth0-react'
 import Loader from './Loader'
 

@@ -4,7 +4,7 @@ export type AppRoute = {
   path: string
   breadcrumb: string
 }
-export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path']
+export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path'] | string
 
 export const ROUTES = {
   clients: { path: '/clients', breadcrumb: 'Klienti' },
@@ -25,18 +25,19 @@ export const ROUTES = {
 } as const
 
 export const Paths = {
-  clientDetail: (clientId: string) => generatePath(ROUTES.clientDetail.path, { clientId }),
+  clientDetail: (clientId: string): AppRoutePath => generatePath(ROUTES.clientDetail.path, { clientId }),
 
-  visitDetail: (clientId: string, visitId: string) => generatePath(ROUTES.visitDetail.path, { clientId, visitId }),
+  visitDetail: (clientId: string, visitId: string): AppRoutePath =>
+    generatePath(ROUTES.visitDetail.path, { clientId, visitId }),
 
-  team: (teamId: string) => generatePath(ROUTES.team.path, { teamId }),
+  team: (teamId: string): AppRoutePath => generatePath(ROUTES.team.path, { teamId }),
 
-  stock: (stockId: string) => generatePath(ROUTES.stock.path, { stockId }),
+  stock: (stockId: string): AppRoutePath => generatePath(ROUTES.stock.path, { stockId }),
 
-  consumption: (teamId: string) => generatePath(ROUTES.consumption.path, { teamId }),
+  consumption: (teamId: string): AppRoutePath => generatePath(ROUTES.consumption.path, { teamId }),
 }
 
-type CurrentRoute = {
+export type CurrentRoute = {
   key: keyof typeof ROUTES
   path: string
   breadcrumb: string

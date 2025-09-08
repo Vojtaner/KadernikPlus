@@ -1,5 +1,5 @@
 import type { Dayjs } from 'dayjs'
-import type { Units } from '../entities/stock-item'
+import type { Unit } from '../domains/stock/entity'
 
 export type UserType = { userId: string; name: string; age: number; email: string }
 export type UserLog = { id: string; actionType: string; dateTime: Dayjs; description: string; userName: string }
@@ -8,7 +8,7 @@ export type Stock = {
   id: string
   stockName: string
   createdAt: Date
-  unit: Units
+  unit: Unit
   ownerId: string
   price: number
 }

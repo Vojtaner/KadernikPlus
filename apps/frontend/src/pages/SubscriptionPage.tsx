@@ -1,5 +1,5 @@
 import { Stack } from '@mui/material'
-import PricingCard from '../components/PricingCard'
+import PricingCard from '../app/components/PricingCard'
 import { useSubscriptionMutation } from '../queries'
 
 export const SubscriptionPage = () => {

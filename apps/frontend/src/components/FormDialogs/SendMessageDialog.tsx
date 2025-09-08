@@ -1,5 +1,5 @@
 import { Button, type BoxProps, type SxProps } from '@mui/material'
-import FormDialog from '../Dialog'
+import FormDialog from '../../app/components/Dialog'
 import { useState } from 'react'
 import React from 'react'
 import {

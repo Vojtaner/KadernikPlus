@@ -39,3 +39,9 @@ docker run -it --rm -p 8083:8083 \
   -e cd=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
   my-react-app sh
 ```
+
+##Exportování folder struktury
+
+```bash
+tree -I 'node_modules|.git' > directory-structure.txt
+```

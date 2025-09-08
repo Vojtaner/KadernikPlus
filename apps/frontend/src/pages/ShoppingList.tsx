@@ -1,13 +1,13 @@
 import { Box } from '@mui/material'
-import AppDataGrid from '../components/DataGrid'
+import AppDataGrid from '../app/components/DataGrid'
 import { type GridColDef } from '@mui/x-data-grid'
 import { useStockItemsQuery, useStocksQuery } from '../queries'
-import type { StockItem } from '../entities/stock-item'
+import type { StockItem } from '../domains/stock/entity'
 import Loader from './Loader'
-import BoxIcon from '../components/BoxIcon'
+import BoxIcon from '../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import { formatToCZK } from './VisitDetailGrid'
-import { StockItemDialog } from '../components/FormDialogs/StockItemDialog'
+import { formatToCZK } from '../domains/visits/VisitDetailGrid'
+import { StockItemDialog } from '../domains/stock/StockItemDialog'
 
 type ShoppingListProps = {
   columnHeaderHeight?: 0

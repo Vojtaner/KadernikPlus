@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 import { type LinkProps } from '@mui/material/Link'
-import { LinkBehavior } from './components/LinkBehaviour'
+import { LinkBehavior } from './app/components/LinkBehaviour'
 import { csCZ } from '@mui/x-date-pickers/locales'
 
 const AppTheme = createTheme(

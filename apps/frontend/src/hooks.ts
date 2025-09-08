@@ -29,9 +29,13 @@ export const useAppNavigate = () => {
   return appNavigate
 }
 
+export type DatesRange = {
+  to: Dayjs
+  from: Dayjs
+}
+
 export type DatesFilter = {
-  to: Dayjs | string | undefined
-  from: Dayjs | string | undefined
+  [K in keyof DatesRange]: DatesRange[K] | string | undefined
 }
 
 export type PersistentFiltersType = {
@@ -130,4 +134,13 @@ export const useVisitListFilters = (
   }
 
   return [{ dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' }, () => {}]
+}
+
+export function useDebounce<T>(value: T, delay: number) {
+  const [debounced, setDebounced] = useState(value)
+  useEffect(() => {
+    const handler = setTimeout(() => setDebounced(value), delay)
+    return () => clearTimeout(handler)
+  }, [value, delay])
+  return debounced
 }

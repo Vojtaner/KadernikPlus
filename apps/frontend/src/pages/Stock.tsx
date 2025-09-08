@@ -1,17 +1,17 @@
 import Box from '@mui/material/Box'
 import { type GridColDef } from '@mui/x-data-grid'
-import BoxIcon from '../components/BoxIcon'
+import BoxIcon from '../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import AppDataGrid from '../components/DataGrid'
+import AppDataGrid from '../app/components/DataGrid'
 import { useDeleteStockItemMutation, useStockItemsQuery } from '../queries'
 import ErrorBoundary from './ErrorBoundary'
-import { type ExistingStockItem } from '../entities/stock-item'
+import { type ExistingStockItem } from '../domains/stock/entity'
 import Loader from './Loader'
 import { useParams } from 'react-router-dom'
-import { formatToCZK } from './VisitDetailGrid'
+import { formatToCZK } from '../domains/visits/VisitDetailGrid'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
-import { StockItemDialog } from '../components/FormDialogs/StockItemDialog'
+import { StockItemDialog } from '../domains/stock/StockItemDialog'
 
 const Stock = () => {
   const { stockId } = useParams()

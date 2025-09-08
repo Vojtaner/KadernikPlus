@@ -7,7 +7,7 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form'
-import type { Identifiable } from '../../components/SelectField'
+import type { Identifiable } from './SelectField'
 import type { SyntheticEvent } from 'react'
 
 type AutoCompleteProps<TFieldValues extends FieldValues> = {

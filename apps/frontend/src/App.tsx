@@ -9,14 +9,20 @@ import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AxiosProvider } from './axios/axios'
 import ReactRouterRoutes from './routes/ReactRouterRoutes'
-import { SnackbarMessages } from './components/SnackBarMessages'
-import AuthGuard from './components/AuthGuard'
+import { SnackbarMessages } from './app/components/SnackBarMessages'
+import AuthGuard from './app/components/AuthGuard'
 import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './pages/SubscriptionPage'
 import SubscriptionGuard from './components/SubscriptionGuard'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSnackbarMessages } from './hooks/useAddSnackBar'
+import type { RootState } from './store'
+import { removedSnackbarMessage } from './store/snackBarReducer'
 
 function App() {
   const methods = useAppForm()
+  const dispatch = useDispatch()
+  const snackbarMessages = useSelector((state: RootState) => selectSnackbarMessages(state))
 
   return (
     <ThemeProvider theme={AppTheme}>
@@ -41,7 +47,12 @@ function App() {
                 </Routes>
               </AuthGuard>
 
-              <SnackbarMessages />
+              <SnackbarMessages
+                snackbarMessages={snackbarMessages}
+                onRemoveSnackMessage={(uniqueMessage) =>
+                  dispatch(removedSnackbarMessage({ messageUnique: uniqueMessage }))
+                }
+              />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </FormProvider>

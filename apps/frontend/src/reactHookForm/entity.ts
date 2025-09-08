@@ -1,8 +1,8 @@
 import type { FieldPath } from 'react-hook-form'
-import { UnitsObject, type StockItemCreateData } from '../entities/stock-item'
+import { UnitsObject, type StockItemCreateData } from '../domains/stock/entity'
 import type { Client } from '../entities/client'
 import type { ServiceCreateOrUpdateData } from '../entities/service'
-import type { CreateVisitType, VisitDetailFormType } from '../entities/visit'
+import type { CreateVisitType, VisitDetailFormType } from '../domains/visits/entity'
 import type { Dayjs } from 'dayjs'
 
 export type AppFormState = ClientForm &

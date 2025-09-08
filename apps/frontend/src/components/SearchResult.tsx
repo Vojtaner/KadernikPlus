@@ -1,7 +1,7 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
-import { getTimeFromUtcToLocal } from '../pages/VisitsList'
+import { getTimeFromUtcToLocal } from '../domains/visits/VisitsList'
 import { Paths } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
 
