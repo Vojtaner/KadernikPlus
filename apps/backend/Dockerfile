@@ -14,6 +14,7 @@ ENV SENTRY_AUTH_TOKEN="sntrys_eyJpYXQiOjE3NTc0MzU4MDQuNDAwMzE5LCJ1cmwiOiJodHRwcz
 ENV SENTRY_PROJECT = "backend"
 ENV SENTRY_ORG="kadernikplus"
 ENV SENTRY_RELEASE = "default_release_tag_refactor"
+
 RUN npm install
 
 COPY . .
