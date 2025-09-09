@@ -38,6 +38,10 @@ const app = express();
 
 const PORT = getEnvVar("PORT") || 3000;
 
+app.get("/debug", () => {
+  throw new Error("Test Sentry");
+});
+
 const jwtCheck = auth({
   audience: getEnvVar("AUDIENCE"),
   issuerBaseURL: getEnvVar("AUTH0_ISSUER_BASE_URL"),
