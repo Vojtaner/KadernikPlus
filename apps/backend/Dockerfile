@@ -13,6 +13,7 @@ ENV DATABASE_URL="mysql://root:BGMPtqVUNHimbWymuAHWiefwqSQELZQG@maglev.proxy.rlw
 ENV SENTRY_AUTH_TOKEN="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"
 ENV SENTRY_PROJECT = "backend"
 ENV SENTRY_ORG="kadernikplus"
+ENV SENTRY_RELEASE = "default_release_tag_refactor"
 RUN npm install
 
 COPY . .
