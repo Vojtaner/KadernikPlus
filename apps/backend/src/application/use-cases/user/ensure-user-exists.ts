@@ -1,8 +1,8 @@
 import { ManagementClient } from "auth0";
 import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
-import { auth0ManagementApi } from "../../services/auth0ManagementApi";
 import addUserUseCase, { AddUserUseCaseType } from "./add-user";
 import { UserRepositoryPort } from "@/application/ports/user-repository";
+import { auth0ManagementApi } from "../../../application/services/auth0/auth0ManagementApi";
 
 export const createEnsureUserExists = (dependencies: {
   addUserUseCase: AddUserUseCaseType;

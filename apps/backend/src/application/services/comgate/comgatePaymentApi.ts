@@ -1,4 +1,4 @@
-import { getEnvVar } from "../../utils/getEnvVar";
+import { getEnvVar } from "../../../utils/getEnvVar";
 import axios from "axios";
 
 export type ComgatePaymentApiType = {

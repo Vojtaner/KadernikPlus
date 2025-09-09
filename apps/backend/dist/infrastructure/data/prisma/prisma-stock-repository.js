@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="9ceabaf9-5095-5e82-b905-e0cc2d93c2e5")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -46,3 +48,5 @@ const createStockRepositoryDb = (prismaStockRepository) => {
 };
 const stockRepositoryDb = createStockRepositoryDb(prisma_1.default);
 exports.default = stockRepositoryDb;
+//# sourceMappingURL=prisma-stock-repository.js.map
+//# debugId=9ceabaf9-5095-5e82-b905-e0cc2d93c2e5

@@ -1,3 +1,4 @@
+import "./application/services/sentry/instrument.js";
 import express from "express";
 import dotenv from "dotenv";
 import {
@@ -23,6 +24,12 @@ import subscriptionRouter from "./routes/subscription-routes";
 import paymentRouter from "./routes/payment-routes";
 import { makeExpressCallback } from "./adapters/express/make-express-callback";
 import paymentController from "./infrastructure/controllers/payment-controller";
+import Sentry from "./application/services/sentry/sentry";
+import {
+  httpRequests,
+  metricsMiddleware,
+  register,
+} from "./application/services/prometheus/prometheus";
 
 dotenv.config();
 
@@ -35,13 +42,21 @@ const jwtCheck = auth({
   tokenSigningAlg: getEnvVar("AUTH0_TOKE_SIGNING_ALG"),
 });
 
+app.use(metricsMiddleware);
+register.registerMetric(httpRequests);
+
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    httpRequests.inc({ method: req.method, status: res.statusCode });
+  });
+  next();
+});
 app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
-
 app.options("/api/payment/callback", cors());
 app.post(
   "/api/payment/callback",
@@ -49,7 +64,6 @@ app.post(
 );
 app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
-
 app.use("/api/visits", visitRoutes);
 app.use("/api/logs", logRoutes);
 app.use("/api/team-members", teamMemberRoutes);
@@ -63,7 +77,13 @@ app.use("/api/stock-allowance", stockAllowanceRoutes);
 app.use("/api/subscription", subscriptionRouter);
 app.use("/api/payment", paymentRouter);
 
+Sentry.setupExpressErrorHandler(app);
 app.use(errorHandler);
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
 
 const startServer = async () => {
   try {

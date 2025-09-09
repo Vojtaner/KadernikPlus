@@ -1,4 +1,4 @@
-import { getEnvVar } from "../../utils/getEnvVar";
+import { getEnvVar } from "../../../utils/getEnvVar";
 import { ManagementClient } from "auth0";
 
 export const auth0ManagementApi = new ManagementClient({

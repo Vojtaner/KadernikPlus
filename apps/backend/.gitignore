@@ -4,3 +4,6 @@ node_modules
 .env.production
 
 /src/generated/prisma
+
+# Sentry Config File
+.sentryclirc

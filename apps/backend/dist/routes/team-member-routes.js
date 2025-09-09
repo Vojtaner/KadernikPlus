@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="d2dc6b12-a54d-534c-a882-dce28535f18c")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,3 +16,5 @@ teamMemberRoutes.post("/", (0, make_express_callback_1.makeExpressCallback)(team
 teamMemberRoutes.delete("/", (0, make_express_callback_1.makeExpressCallback)(team_member_controller_1.default.deleteTeamMemberController));
 teamMemberRoutes.post("/invitation", (0, make_express_callback_1.makeExpressCallback)(team_member_controller_1.default.inviteOrSwitchTeamController));
 exports.default = teamMemberRoutes;
+//# sourceMappingURL=team-member-routes.js.map
+//# debugId=d2dc6b12-a54d-534c-a882-dce28535f18c

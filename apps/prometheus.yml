@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 60s
+
+remote_write:
+  - url: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
+    basic_auth:
+      username: ${GRAFANA_PROM_USER}
+      password: ${GRAFANA_PROM_PASS}
+
+scrape_configs:
+  - job_name: node
+    static_configs:
+      - targets: ["backend:9090"]

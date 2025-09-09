@@ -59,7 +59,6 @@ const createClientController = (dependencies: {
         await dependencies.addOrUpdateClientUseCase.execute(
           clientDataWithUserId
         );
-
       return {
         statusCode: 201,
         body: newOrUpdatedClient,

@@ -1,4 +1,4 @@
-import { Prisma, Subscription } from ".prisma/client";
+import { Prisma } from ".prisma/client";
 import {
   SubscriptionCreateData,
   SubscriptionRepositoryPort,
@@ -11,11 +11,11 @@ import comgatePaymentApi, {
   ComgateCreatePaymentReturnType,
   ComgatePaymentApiType,
   generate8DigitNumber,
-} from "../../services/comgatePaymentApi";
+} from "../../services/comgate/comgatePaymentApi";
 import { UserRepositoryPort } from "../../../application/ports/user-repository";
 import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
 import { ManagementClient } from "auth0";
-import { auth0ManagementApi } from "../../../application/services/auth0ManagementApi";
+import { auth0ManagementApi } from "../../../application/services/auth0/auth0ManagementApi";
 import updatePaymentUseCase, {
   UpdatePaymentUseCaseType,
 } from "../payment/update-payment";

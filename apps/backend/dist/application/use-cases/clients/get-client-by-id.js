@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="5e7ae038-a4bc-5e42-8ec1-552cde546431")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -28,3 +30,5 @@ const getClientByIdUseCase = createGetClientByIdUseCase({
     visitRepositoryDb: prisma_visit_repository_1.default,
 });
 exports.default = getClientByIdUseCase;
+//# sourceMappingURL=get-client-by-id.js.map
+//# debugId=5e7ae038-a4bc-5e42-8ec1-552cde546431

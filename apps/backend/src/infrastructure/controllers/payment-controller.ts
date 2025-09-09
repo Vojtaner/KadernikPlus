@@ -2,10 +2,7 @@ import { ControllerFunction } from "@/adapters/express/make-express-callback";
 import createPaymentUseCase, {
   CreatePaymentUseCaseType,
 } from "../../application/use-cases/payment/create-payment";
-import updatePaymentStatusUseCase, {
-  UpdatePaymentUseCaseType,
-} from "../../application/use-cases/payment/update-payment";
-import { ComgateUpdatePaymentRequired } from "@/application/services/comgatePaymentApi";
+import { ComgateUpdatePaymentRequired } from "../../application/services/comgate/comgatePaymentApi";
 import { Payment } from "@prisma/client";
 import updatePushNotificationPaymentUseCase, {
   UpdatePushNotificationPaymentUseCaseType,

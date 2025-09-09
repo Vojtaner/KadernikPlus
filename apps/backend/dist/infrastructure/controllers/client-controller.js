@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="1461a869-60b2-54b5-81d1-5666d5b5680c")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -106,3 +108,5 @@ const clientController = createClientController({
     searchClientsUseCase: search_client_1.default,
 });
 exports.default = clientController;
+//# sourceMappingURL=client-controller.js.map
+//# debugId=1461a869-60b2-54b5-81d1-5666d5b5680c

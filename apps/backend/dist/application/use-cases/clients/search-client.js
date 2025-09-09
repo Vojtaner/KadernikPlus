@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="cfceeef6-d8c8-5edd-b55d-dcf7c00cc178")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -25,3 +27,5 @@ const searchClientsUseCase = createSearchClientsUseCase({
     teamMemberRepositoryDb: prisma_team_member_repository_1.default,
 });
 exports.default = searchClientsUseCase;
+//# sourceMappingURL=search-client.js.map
+//# debugId=cfceeef6-d8c8-5edd-b55d-dcf7c00cc178

@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="312d6f75-a7d6-5efe-9b6d-44d33b05b1a6")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -11,17 +13,16 @@ const delete_visit_1 = __importDefault(require("../../application/use-cases/visi
 const update_visit_1 = require("../../application/use-cases/visits/update-visit");
 const update_visit_status_1 = __importDefault(require("../../application/use-cases/visits/update-visit-status"));
 const add_or_update_client_1 = __importDefault(require("../../application/use-cases/clients/add-or-update-client"));
+const dayjs_1 = __importDefault(require("dayjs"));
 const createVisitController = (dependencies) => {
     const addVisitController = async (httpRequest) => {
-        function addHours(date, hours) {
-            return new Date(date.getTime() + hours * 60 * 60 * 1000);
-        }
         try {
             const visitData = httpRequest.body;
             const original = new Date(visitData.date);
-            const shiftedTime = addHours(original, 2);
+            const shiftedTime = original;
             const userId = httpRequest.userId;
             const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
+            console.log({ addVisitController: httpRequest.body });
             if (!visitData.clientId &&
                 visitData.firstName &&
                 visitData.lastName &&
@@ -31,9 +32,9 @@ const createVisitController = (dependencies) => {
                     firstName: visitData.firstName,
                     lastName: visitData.lastName,
                     phone: visitData.phone,
-                    note: visitData.note,
+                    note: visitData.clientNote,
                     userId,
-                    deposit: true,
+                    deposit: visitData.depositRequired,
                 };
                 const newClient = await dependencies.addOrUpdateClientUseCase.execute(clientData);
                 const newVisit = await dependencies.addVisitUseCase.execute({
@@ -72,19 +73,19 @@ const createVisitController = (dependencies) => {
         }
     };
     const getVisitsByDatesController = async (httpRequest) => {
-        const { to, from } = httpRequest.query;
-        const now = new Date();
-        const effectiveFrom = from ? from : now;
+        const { to, from, date } = httpRequest.query;
+        const effectiveFrom = (0, dayjs_1.default)(from).startOf("day").toDate();
         const effectiveTo = to
-            ? to
-            : new Date(now.getTime() + 10 * 24 * 60 * 60 * 1000); // 10 days ahead
+            ? (0, dayjs_1.default)(to).endOf("day").toDate()
+            : (0, dayjs_1.default)(from).endOf("day").add(10, "day").toDate();
         const userId = httpRequest.userId;
+        const queryData = to && from
+            ? { from: effectiveFrom, to: effectiveTo, userId }
+            : date
+                ? { date, userId }
+                : { userId };
         try {
-            const visits = await dependencies.getVisitsByDatesUseCase.execute({
-                from: effectiveFrom,
-                to: effectiveTo,
-                userId: userId,
-            });
+            const visits = await dependencies.getVisitsByDatesUseCase.execute(queryData);
             return {
                 statusCode: 200,
                 body: visits,
@@ -169,9 +170,10 @@ const createVisitController = (dependencies) => {
             const clientId = httpRequest.params.clientId;
             const userId = httpRequest.userId;
             const visits = await dependencies.getVisitsByClientIdUseCase.execute(clientId, userId);
+            const sortedVisits = [...visits].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
             return {
                 statusCode: 200,
-                body: visits,
+                body: sortedVisits,
             };
         }
         catch (error) {
@@ -187,7 +189,7 @@ const createVisitController = (dependencies) => {
     };
     const deleteVisitController = async (httpRequest) => {
         try {
-            const visitId = httpRequest.params.id;
+            const { visitId } = httpRequest.params;
             await dependencies.deleteVisitUseCase.execute(visitId);
             return {
                 statusCode: 204,
@@ -226,3 +228,5 @@ const visitController = createVisitController({
     addOrUpdateClientUseCase: add_or_update_client_1.default,
 });
 exports.default = visitController;
+//# sourceMappingURL=visit-controller.js.map
+//# debugId=312d6f75-a7d6-5efe-9b6d-44d33b05b1a6

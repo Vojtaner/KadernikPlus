@@ -1,0 +1,1 @@
+{"version":3,"file":"entity.js","sources":["domain/entity.ts"],"sourceRoot":"/","sourcesContent":["export type HasClientId = { clientId: string };\nexport type HasId = { id: string };\n"],"names":[],"mappings":"","debug_id":"cade565c-e6cd-57df-91d9-4d1e13614031"}

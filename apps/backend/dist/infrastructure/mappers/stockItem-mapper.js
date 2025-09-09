@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="abea8eb4-4fdf-57b9-ad3a-83f827bfa5f2")}catch(e){}}();
+
 // import { StockItem, type Units } from "@/entities/stock-item";
 // const mapToDomainStockItem = (prismaStockItem: {
 //   id: string;
@@ -24,3 +26,5 @@
 //   };
 // };
 // export default mapToDomainStockItem;
+//# sourceMappingURL=stockItem-mapper.js.map
+//# debugId=abea8eb4-4fdf-57b9-ad3a-83f827bfa5f2

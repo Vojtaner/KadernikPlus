@@ -1,9 +1,12 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4c5035ca-51e1-5942-a366-9a1d913fc092")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("./prisma"));
+const httpError_1 = require("../../../adapters/express/httpError");
 const createClientRepositoryDb = (prismaRepository) => {
     return {
         findAll: async (userId) => {
@@ -75,10 +78,18 @@ const createClientRepositoryDb = (prismaRepository) => {
                 where: { userId: clientData.userId },
             });
             if (!userTeam) {
-                throw new Error("User is not assigned to any team.");
+                throw new Error("Uživatel není v žádném týmu.");
             }
             if (!clientData.firstName || !clientData.lastName) {
                 throw new Error("Zadejte jméno klienta.");
+            }
+            if (clientData.phone) {
+                const alreadyExistingPhone = await prismaRepository.client.findUnique({
+                    where: { phone: clientData.phone },
+                });
+                if (alreadyExistingPhone) {
+                    throw (0, httpError_1.httpError)("Zadané telefonní číslo už má jiný klient.", 409);
+                }
             }
             const newClient = await prismaRepository.client.create({
                 data: {
@@ -87,6 +98,7 @@ const createClientRepositoryDb = (prismaRepository) => {
                     phone: clientData.phone,
                     note: clientData.note,
                     userId: clientData.userId,
+                    deposit: clientData.deposit,
                     teamId: userTeam.teamId,
                 },
             });
@@ -124,3 +136,5 @@ const createClientRepositoryDb = (prismaRepository) => {
 };
 const clientRepositoryDb = createClientRepositoryDb(prisma_1.default);
 exports.default = clientRepositoryDb;
+//# sourceMappingURL=prisma-client-repository.js.map
+//# debugId=4c5035ca-51e1-5942-a366-9a1d913fc092

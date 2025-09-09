@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="fdf2e8c3-8582-5295-b051-fa80073eb1a4")}catch(e){}}();
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const make_express_callback_1 = require("../adapters/express/make-express-callback");
@@ -10,5 +12,7 @@ visitRoutes.patch("/status", (0, make_express_callback_1.makeExpressCallback)(in
 visitRoutes.patch("/:visitId", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.updateVisitController));
 visitRoutes.get("/:visitId", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.getVisitByIdController));
 visitRoutes.get("/client/:clientId", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.getVisitsByClientIdController));
-visitRoutes.delete("/client/:clientId", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.deleteVisitController));
+visitRoutes.delete("/client/:visitId", (0, make_express_callback_1.makeExpressCallback)(index_1.VisitController.deleteVisitController));
 exports.default = visitRoutes;
+//# sourceMappingURL=visit-routes.js.map
+//# debugId=fdf2e8c3-8582-5295-b051-fa80073eb1a4

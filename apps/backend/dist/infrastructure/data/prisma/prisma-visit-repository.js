@@ -1,4 +1,6 @@
 "use strict";
+!function(){try{var e="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:{},n=(new e.Error).stack;n&&(e._sentryDebugIds=e._sentryDebugIds||{},e._sentryDebugIds[n]="4b532320-2eb4-529f-8392-2beca241b40b")}catch(e){}}();
+
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -13,6 +15,7 @@ const createVisitRepositoryDb = (prismaRepository) => ({
         if (!userTeam) {
             throw new Error("User is not assigned to any team.");
         }
+        const serviceIds = [visitData.serviceIds];
         const newVisit = await prismaRepository.visit.create({
             data: {
                 clientId: visitData.clientId,
@@ -20,8 +23,9 @@ const createVisitRepositoryDb = (prismaRepository) => ({
                 date: visitData.date,
                 paidPrice: Number(visitData.paidPrice),
                 teamId: userTeam.teamId,
+                deposit: Number(visitData.deposit) ?? 0,
                 visitServices: {
-                    create: visitData.serviceIds.map((serviceId) => ({
+                    create: serviceIds.map((serviceId) => ({
                         service: { connect: { id: serviceId } },
                     })),
                 },
@@ -47,6 +51,10 @@ const createVisitRepositoryDb = (prismaRepository) => ({
             where: whereClause,
             include: {
                 client: true,
+                user: true,
+                procedures: {
+                    include: { stockAllowances: { include: { stockItem: true } } },
+                },
                 visitServices: {
                     include: {
                         service: true,
@@ -76,35 +84,7 @@ const createVisitRepositoryDb = (prismaRepository) => ({
     },
     findByDate: async (filter) => {
         const { date, from, to, userId } = filter;
-        const where = {
-            userId,
-        };
-        if (date) {
-            const start = new Date(date);
-            start.setHours(0, 0, 0, 0);
-            const end = new Date(date);
-            end.setHours(23, 59, 59, 999);
-            where.date = {
-                gte: start,
-                lte: end,
-            };
-        }
-        else if (from && to) {
-            where.date = {
-                gte: new Date(from),
-                lte: new Date(to),
-            };
-        }
-        else if (from) {
-            where.date = {
-                gte: new Date(from),
-            };
-        }
-        else if (to) {
-            where.date = {
-                lte: new Date(to),
-            };
-        }
+        const where = getWhereFilter(userId, date, from, to);
         const visits = await prismaRepository.visit.findMany({
             where,
             include: {
@@ -122,19 +102,23 @@ const createVisitRepositoryDb = (prismaRepository) => ({
         });
         return visits;
     },
-    delete: async (id) => {
+    delete: async (visitId) => {
         await prismaRepository.$transaction([
             prismaRepository.visitService.deleteMany({
-                where: { visitId: id },
+                where: { visitId },
             }),
-            prismaRepository.photo.deleteMany({
-                where: { visitId: id },
+            prismaRepository.stockAllowance.deleteMany({
+                where: {
+                    procedure: {
+                        visitId,
+                    },
+                },
             }),
             prismaRepository.procedure.deleteMany({
-                where: { visitId: id },
+                where: { visitId },
             }),
             prismaRepository.visit.delete({
-                where: { id },
+                where: { id: visitId },
             }),
         ]);
     },
@@ -146,10 +130,17 @@ const createVisitRepositoryDb = (prismaRepository) => ({
                 date: visitData.date,
                 deposit: Number(visitData.deposit),
                 note: visitData.note,
-                depositStatus: { set: visitData.depositStatus }, //po restartu dockeru se srovná
-            },
-            include: {
-                visitServices: true,
+                depositStatus: { set: visitData.depositStatus },
+                visitServices: {
+                    update: {
+                        where: {
+                            id: visitData.visitServiceId,
+                        },
+                        data: {
+                            serviceId: visitData.hairCutId,
+                        },
+                    },
+                },
             },
         });
         return updatedVisit;
@@ -158,3 +149,40 @@ const createVisitRepositoryDb = (prismaRepository) => ({
 exports.createVisitRepositoryDb = createVisitRepositoryDb;
 const visitRepositoryDb = (0, exports.createVisitRepositoryDb)(prisma_1.default);
 exports.default = visitRepositoryDb;
+const getWhereFilter = (userId, date, from, to) => {
+    const where = {
+        userId,
+    };
+    if (date) {
+        const start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(date);
+        end.setHours(23, 59, 59, 999);
+        where.date = {
+            gte: start,
+            lte: end,
+        };
+    }
+    else if (from && to) {
+        where.date = {
+            gte: new Date(from),
+            lte: new Date(to),
+        };
+    }
+    else if (from) {
+        where.date = {
+            gte: new Date(from),
+        };
+    }
+    else if (to) {
+        where.date = {
+            lte: new Date(to),
+        };
+    }
+    else {
+        return where;
+    }
+    return where;
+};
+//# sourceMappingURL=prisma-visit-repository.js.map
+//# debugId=4b532320-2eb4-529f-8392-2beca241b40b
