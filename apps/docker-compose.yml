@@ -70,7 +70,7 @@ services:
     image: prom/prometheus
     container_name: prometheus
     env_file:
-      - .env
+      - ./backend/.env
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:

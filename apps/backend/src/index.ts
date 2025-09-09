@@ -1,4 +1,5 @@
-import "./application/services/sentry/instrument.js";
+import "./application/services/sentry/instrument";
+import initSentry from "./application/services/sentry/instrument";
 import express from "express";
 import dotenv from "dotenv";
 import {
@@ -24,7 +25,6 @@ import subscriptionRouter from "./routes/subscription-routes";
 import paymentRouter from "./routes/payment-routes";
 import { makeExpressCallback } from "./adapters/express/make-express-callback";
 import paymentController from "./infrastructure/controllers/payment-controller";
-import Sentry from "./application/services/sentry/sentry";
 import {
   httpRequests,
   metricsMiddleware,
@@ -33,7 +33,9 @@ import {
 
 dotenv.config();
 
+const Sentry = initSentry();
 const app = express();
+
 const PORT = getEnvVar("PORT") || 3000;
 
 const jwtCheck = auth({
