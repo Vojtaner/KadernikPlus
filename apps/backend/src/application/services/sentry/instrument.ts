@@ -5,7 +5,7 @@ const initSentry = () => {
   Sentry.init({
     sampleRate: 1,
     release: `KadeřníkPlus-release`,
-    environment: getEnvVar("IS_DEVELOPMENT") ? "DEV" : "PROD",
+    environment: getEnvVar("IS_DEVELOPMENT") === "true" ? "DEV" : "PROD",
     dsn: getEnvVar("SENTRY_DSN"),
     sendDefaultPii: true,
     tracesSampleRate: getEnvVar("IS_DEVELOPMENT") ? 1 : 0.4,
