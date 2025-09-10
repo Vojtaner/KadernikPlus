@@ -28,6 +28,7 @@ const VisitsList = (props: VisitListProps) => {
   const { columnHeaderHeight, hideFooter = false, visitListApplyFilter, enableFilters = true } = props
   const intl = useIntl()
   const navigate = useAppNavigate()
+
   const [visitListFilters, updateVisitFilters] = useVisitListFilters(visitListApplyFilter)
 
   const { control } = useForm({

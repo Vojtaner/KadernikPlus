@@ -13,7 +13,7 @@ import type { SyntheticEvent } from 'react'
 type AutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>
   control: Control<TFieldValues>
-  options: Identifiable[]
+  options: Identifiable[] | []
   label: string
   onChange?: (event: SyntheticEvent) => void
   defaultValue?: FieldPathValue<TFieldValues, Path<TFieldValues>> | undefined

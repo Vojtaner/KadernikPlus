@@ -42,9 +42,10 @@ export const useDeleteTeamMemberMutation = () => {
   const addSnackBarMessage = useAddSnackbarMessage()
 
   return useMutation({
-    mutationFn: (id: string) => deleteTeamMember(axios, id),
+    mutationFn: (deletedUserId: string) => deleteTeamMember(axios, deletedUserId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      queryClient.invalidateQueries({ queryKey: ['stockItems', undefined] })
       addSnackBarMessage({ text: 'Člen týmu byl odebrán.', type: 'success' })
     },
     onError: (error) => {

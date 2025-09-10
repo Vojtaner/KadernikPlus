@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, Procedure } from ".prisma/client";
+import { Prisma, PrismaClient } from ".prisma/client";
 import {
   ProcedureCreateData,
   ProcedureRepositoryPort,
@@ -32,19 +32,11 @@ const createProcedureRepositoryDb = (
 
   addOrUpdate: async (data: ProcedureCreateData) => {
     const { id, userId, visitId, description, stockAllowances = [] } = data;
-
-    const computeStepOrder = async () => {
-      const lastStep = await prisma.procedure.findFirst({
-        where: { visitId },
-        orderBy: { stepOrder: "desc" },
-      });
-      return lastStep ? lastStep.stepOrder + 1 : 1;
-    };
-
+    console.log({ data });
     const teamMember = await prisma.teamMember.findFirst({ where: { userId } });
 
     if (!teamMember) {
-      throw new Error("Nepodařilo se identifikovat váš team.");
+      throw new Error("Nepodařilo se identifikovat váš tým.");
     }
 
     if (id) {
@@ -68,7 +60,24 @@ const createProcedureRepositoryDb = (
       );
       const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
 
+      console.log(existingIds, incomingIds, toCreate, toUpdate);
+
       return prisma.$transaction(async (tx) => {
+        const stockItemIds = stockAllowances.map(
+          (stockAllowance) => stockAllowance.stockItemId
+        );
+        const stockItems = await tx.stockItem.findMany({
+          where: { id: { in: stockItemIds } },
+          select: { id: true, avgUnitPrice: true, itemName: true },
+        });
+
+        const stockItemPriceMap = new Map(
+          stockItems.map((si) => [si.id, si.avgUnitPrice])
+        );
+        const stockItemNameMap = new Map(
+          stockItems.map((si) => [si.id, si.itemName])
+        );
+
         const updated = await tx.procedure.update({
           where: { id },
           data: {
@@ -81,11 +90,15 @@ const createProcedureRepositoryDb = (
                 data: {
                   stockItemId: s.stockItemId,
                   quantity: s.quantity,
+                  avgUnitPrice: stockItemPriceMap.get(s.stockItemId) ?? 0,
+                  stockItemName: stockItemNameMap.get(s.stockItemId) ?? "",
                 },
               })),
               create: toCreate.map((s) => ({
                 stockItemId: s.stockItemId,
                 quantity: s.quantity,
+                avgUnitPrice: stockItemPriceMap.get(s.stockItemId) ?? 0,
+                stockItemName: stockItemNameMap.get(s.stockItemId) ?? "",
                 userId,
                 teamId: teamMember.teamId,
               })),
@@ -94,7 +107,6 @@ const createProcedureRepositoryDb = (
           include: { stockAllowances: { include: { stockItem: true } } },
         });
 
-        // Handle stock restore for deleted allowances
         if (toDelete.length > 0) {
           const deletedItems = existing.stockAllowances.filter((sa) =>
             toDelete.includes(sa.id)
@@ -111,7 +123,6 @@ const createProcedureRepositoryDb = (
           );
         }
 
-        // Handle stock adjust for updated allowances
         if (toUpdate.length > 0) {
           await Promise.all(
             toUpdate.map(async (item) => {
@@ -120,21 +131,16 @@ const createProcedureRepositoryDb = (
               );
               if (!prev) return;
 
-              // if stockItem changed
               if (prev.stockItemId !== item.stockItemId) {
-                // restore old stock
                 await adjustStockItem(
                   tx,
                   prev.stockItemId,
                   Number(prev.quantity)
                 );
-                // decrement new stock
                 await adjustStockItem(tx, item.stockItemId, -item.quantity);
               } else {
-                // same stockItem → adjust by delta
                 const diff = item.quantity - Number(prev.quantity);
                 if (diff !== 0) {
-                  // use adjustStockItem with quantity delta
                   await adjustStockItem(tx, item.stockItemId, diff);
                 }
               }
@@ -142,7 +148,6 @@ const createProcedureRepositoryDb = (
           );
         }
 
-        // Handle stock decrement for newly created allowances
         if (toCreate.length > 0) {
           await Promise.all(
             toCreate.map(async (item) => {
@@ -155,9 +160,24 @@ const createProcedureRepositoryDb = (
       });
     }
 
-    const stepOrder = await computeStepOrder();
+    const stepOrder = await computeStepOrder(visitId);
 
     return prisma.$transaction(async (tx) => {
+      const stockItemIds = stockAllowances.map(
+        (stockAllowance) => stockAllowance.stockItemId
+      );
+      const stockItems = await tx.stockItem.findMany({
+        where: { id: { in: stockItemIds } },
+        select: { id: true, avgUnitPrice: true, itemName: true },
+      });
+
+      const stockItemPriceMap = new Map(
+        stockItems.map((si) => [si.id, si.avgUnitPrice])
+      );
+      const stockItemNameMap = new Map(
+        stockItems.map((si) => [si.id, si.itemName])
+      );
+
       const created = await tx.procedure.create({
         data: {
           description,
@@ -167,6 +187,8 @@ const createProcedureRepositoryDb = (
             create: stockAllowances.map((s) => ({
               stockItemId: s.stockItemId,
               quantity: s.quantity,
+              avgUnitPrice: stockItemPriceMap.get(s.stockItemId) ?? 0,
+              stockItemName: stockItemNameMap.get(s.stockItemId) ?? "",
               userId,
               teamId: teamMember.teamId,
             })),
@@ -198,7 +220,6 @@ const createProcedureRepositoryDb = (
         throw new Error("Procedura nenalezena.");
       }
 
-      // Restore stock quantities and packageCount
       if (existing.stockAllowances.length > 0) {
         await Promise.all(
           existing.stockAllowances.map(async (item) => {
@@ -221,6 +242,7 @@ const createProcedureRepositoryDb = (
 });
 
 const procedureRepositoryDb = createProcedureRepositoryDb(prisma);
+
 export default procedureRepositoryDb;
 
 async function adjustStockItem(
@@ -265,3 +287,11 @@ async function adjustStockItem(
   if (!updated || Number(updated.quantity) < 0)
     throw new Error(`Stock item ${stockItemId} quantity negative!`);
 }
+
+const computeStepOrder = async (visitId: string) => {
+  const lastStep = await prisma.procedure.findFirst({
+    where: { visitId },
+    orderBy: { stepOrder: "desc" },
+  });
+  return lastStep ? lastStep.stepOrder + 1 : 1;
+};

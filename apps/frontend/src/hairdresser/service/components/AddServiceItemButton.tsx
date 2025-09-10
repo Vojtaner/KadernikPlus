@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
 import FormDialog from '../../../app/components/Dialog'
-import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
 import TextField from '../../../app/components/TextField'
 import type { ServiceCreateOrUpdateData } from '../../../entities/service'
 import { useCreateNewOrUpdateServiceMutation } from '../queries'
@@ -18,7 +17,6 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
   const [open, setOpen] = useState(false)
   const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues })
   const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation()
-  const scroll = useScrollToTheTop()
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
@@ -53,10 +51,10 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
       actions={
         <>
           <Button onClick={handleClose}>
-            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+            <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }

@@ -1,4 +1,4 @@
-import { sentryVitePlugin } from "@sentry/vite-plugin";
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -6,12 +6,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   build: {
     emptyOutDir: true,
-    sourcemap: true
+    sourcemap: true,
   },
-  plugins: [react(), sentryVitePlugin({
-    org: "kadernik",
-    project: "javascript-react"
-  })],
+  plugins: [
+    react(),
+    sentryVitePlugin({
+      org: 'kadernik',
+      project: 'frontend',
+    }),
+  ],
 
   server: {
     host: true,

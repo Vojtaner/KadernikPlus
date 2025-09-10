@@ -1,6 +1,6 @@
-import { User, UserCreateData } from "@/entities/user";
+import { UserCreateData } from "@/entities/user";
 import { UserRepositoryPort } from "../../../application/ports/user-repository";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, User } from "@prisma/client";
 import mapToDomainUser from "../../../infrastructure/mappers/user-mapper";
 import prisma from "./prisma";
 
@@ -18,7 +18,7 @@ const createUserRepositoryDb = (
       },
     });
 
-    return mapToDomainUser(newUser);
+    return newUser;
   },
 
   findById: async (id: string): Promise<User | null> => {
@@ -26,7 +26,7 @@ const createUserRepositoryDb = (
       where: { id },
     });
 
-    return user ? mapToDomainUser(user) : null;
+    return user;
   },
 
   findByEmail: async (email: string): Promise<User | null> => {
@@ -34,13 +34,13 @@ const createUserRepositoryDb = (
       where: { email },
     });
 
-    return user ? mapToDomainUser(user) : null;
+    return user;
   },
 
   findAll: async (): Promise<User[]> => {
     const users = await prismaUserRepository.user.findMany();
 
-    return users.map(mapToDomainUser);
+    return users;
   },
 });
 

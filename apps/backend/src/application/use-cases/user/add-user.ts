@@ -39,6 +39,7 @@ const createAddUserUseCase = (dependencies: {
 
       const newTeam = await dependencies.createTeamUseCase.execute({
         name: `Tým - ${newUser.name}`,
+        userId: newUser.id,
       });
 
       const newTeamMember = await dependencies.createTeamMemberUseCase.execute({

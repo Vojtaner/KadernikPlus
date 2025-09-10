@@ -17,14 +17,14 @@ const createStockAllowanceController = (dependencies: {
     StockAllowanceControllerType["GetAllStockAllowancesByTeamIdControllerType"]
   > = async (httpRequest) => {
     const { teamId } = httpRequest.params;
+    const userId = httpRequest.userId;
     const { fromDate, toDate } = httpRequest.query;
-
-    console.log({ httpRequest });
 
     try {
       const stockAllowances =
         await dependencies.getAllStockAllowancesByTeamIdUseCase.execute(
           teamId,
+          userId,
           fromDate,
           toDate
         );

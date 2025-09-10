@@ -6,10 +6,6 @@ const createCreateTeamMemberUseCase = (dependencies: {
 }) => {
   return {
     execute: async (data: { userId: string; teamId: string }) => {
-      //team zjisit na základe userID
-      //ověřit že není již v jiném týmu
-      //co se stane s bývalým týmem uživatele pozvaného do jiného týmu?
-      // najít shodu mezi emailem a 4posledníma znaky userID
       const newTeamMember = await dependencies.teamMemberRepositoryDb.create({
         userId: data.userId,
         teamId: data.teamId,

@@ -2,16 +2,14 @@ import { PrismaClient, Stock } from ".prisma/client";
 import { StockRepositoryPort } from "../../../application/ports/stock-repository";
 import prisma from "./prisma";
 
-const createStockRepositoryDb = (
-  prismaStockRepository: PrismaClient
-): StockRepositoryPort => {
+const createStockRepositoryDb = (prisma: PrismaClient): StockRepositoryPort => {
   return {
     createStock: async (userId: string, teamId: string): Promise<Stock> => {
-      const count = await prismaStockRepository.stock.count({
+      const count = await prisma.stock.count({
         where: { ownerId: userId },
       });
 
-      const stock = await prismaStockRepository.stock.create({
+      const stock = await prisma.stock.create({
         data: {
           ownerId: userId,
           stockName: `Sklad ${count + 1}`,
@@ -42,13 +40,30 @@ const createStockRepositoryDb = (
     },
 
     getStocks: async (userId: string): Promise<Stock[]> => {
-      const stocks = await prismaStockRepository.stock.findMany({
+      const teamIds = await prisma.teamMember.findMany({
+        where: { userId },
+        select: { teamId: true },
+      });
+
+      const stocks = await prisma.stock.findMany({
         where: {
-          ownerId: userId,
+          OR: [
+            {
+              ownerId: userId,
+            },
+            { teamId: { in: teamIds.map((t) => t.teamId) } },
+          ],
         },
       });
 
       return stocks;
+    },
+    getStocksByOwnerId: async (userId: string): Promise<Stock | null> => {
+      const stock = await prisma.stock.findFirst({
+        where: { ownerId: userId },
+      });
+
+      return stock;
     },
   };
 };

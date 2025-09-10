@@ -9,12 +9,13 @@ const createStockAllowanceRepositoryDb = (
   return {
     getAllByDatesAndTeamId: async (
       teamId: string,
+      userId: string,
       fromDate: Date,
       toDate: Date
     ): Promise<StockAllowanceWithProcedureAndItem[]> => {
       const stockAllowances = await prisma.stockAllowance.findMany({
         where: {
-          teamId,
+          OR: [{ teamId }, { userId }],
           createdAt: { gte: fromDate, lte: toDate },
         },
         include: {
@@ -22,13 +23,13 @@ const createStockAllowanceRepositoryDb = (
             select: { visitId: true, visit: { select: { clientId: true } } },
           },
           stockItem: {
-            select: { itemName: true, avgUnitPrice: true, unit: true },
+            select: { unit: true },
           },
           user: { select: { name: true } },
         },
       });
+      console.log({ stockAllowances, teamId, userId });
 
-      console.log({ stockAllowances });
       return stockAllowances;
     },
   };

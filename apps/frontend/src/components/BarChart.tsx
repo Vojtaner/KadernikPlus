@@ -10,7 +10,6 @@ type AppBarChartProps = {
 
 const AppBarChart = (props: AppBarChartProps) => {
   const { visitData, from, to } = props
-
   const { costs, profit, labels } = getCostsProfitRevenue(visitData, {
     from: from.toDate(),
     to: to.toDate(),
@@ -77,9 +76,9 @@ const getCostsProfitRevenue = (
     const key = labelToKey(label)
     if (key.length === 10) {
       const entry = visitMap.get(key) ?? { cost: 0, revenue: 0 }
-      costs.push(entry.cost)
-      revenue.push(entry.revenue)
-      profit.push(entry.revenue - entry.cost)
+      costs.push(Math.round(entry.cost))
+      revenue.push(Math.round(entry.revenue))
+      profit.push(Math.round(entry.revenue - entry.cost))
     } else if (key.length === 7) {
       let monthCost = 0
       let monthRevenue = 0
@@ -141,11 +140,8 @@ const calculateVisitCost = (visit: VisitWithServicesWithProceduresWithStockAllow
   for (const procedure of visit.procedures ?? []) {
     for (const allowance of procedure.stockAllowances ?? []) {
       const qty = parseFloat(`${allowance.quantity}`)
-      if (!allowance.stockItem) {
-        throw new Error(`Stock item not found for allowance: ${JSON.stringify(allowance)}`)
-      }
-      const pricePerUnit = allowance.stockItem.totalPrice / allowance.stockItem.quantity
-      total += qty * pricePerUnit
+      const avgUnitPriceAtTheTime = parseFloat(`${allowance.avgUnitPrice}`)
+      total += qty * avgUnitPriceAtTheTime
     }
   }
   return total

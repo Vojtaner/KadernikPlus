@@ -22,7 +22,7 @@ model User {
   name        String
   email       String  @unique
   bankAccount String?
-
+  teams Team[]  
   authProvider String?   @map("auth_provider")
   createdAt    DateTime  @default(now())
   lastLogin    DateTime? @map("last_login")
@@ -61,10 +61,13 @@ enum DepositStatus {
   BEZ_ZALOHY // deposit should not be paid
 }
 
-
 model Team {
   id   String @id @default(uuid())
   name String
+
+  userId String? //v budoucnu změni po migraci uživatelů
+  user   User?   @relation(fields: [userId], references: [id])
+  
 
   members  TeamMember[]
   clients  Client[]
@@ -166,6 +169,8 @@ model StockAllowance {
   teamId String @map("team_id")
 
   stockItemId String @map("stock_item_id")
+  avgUnitPrice Decimal  @db.Decimal(15, 5) @default("0.00000")
+  stockItemName String? 
 
   procedureId String    @map("procedure_id")
   procedure   Procedure @relation(fields: [procedureId], references: [id])

@@ -12,15 +12,6 @@ Quick look to last state of logs is by
 docker compose logs db
 ```
 
-When schema.prisma is changed
-
-```
-docker compose exec backend npx prisma migrate reset (vyprázdní schéma)
-docker compose exec backend npx prisma migrate dev (vyprázdní schéma)
-- smazat lokální node_modules/.prisma a dát lokálně v backend složce npx prisma generate
-- cmd+shift+p a restartovat typescript
-```
-
 Error Error: P3014 risma Migrate could not create the shadow database.
 
 ```
@@ -52,25 +43,6 @@ Select * from users;
 localhost:8080
 ```
 
-# Project overview
-
-```
-src/
-├─ application/
-│ ├─ ports/
-│ │ ├─ visit-repository.ts    # Interface for data access
-│ │ ├─ email-service.ts    # Interface for email sending
-│ ├─ use-cases/
-│ │ └─ add-visit.ts    # Business logic (use case)
-├─ infrastructure/
-│ ├─ data/
-│ │ ├─ prisma/
-│ │ │  └─ prisma-visit-repository.ts    # DB - Prisma implementation of order repo
-└─ controllers/
-│ │ └─ visit-controller.ts
-└─ routes/
-```
-
 ### How flow works
 
 1. REST API targets specific endpoint in routes
@@ -79,7 +51,11 @@ src/
 4. UseCase function handles business logic adds visit, sends email...
 5. Controller returns response to user
 
-## Změna v entities
+## Změna v prisma.schema
 
-Pokud v entities udělám změnu musím udělat build - npx tsx v adresáři entities
-Pokud změní prisma.schema musím udělat např. npx prisma migrate reset a pak npx prisma migrate dev (migrace + generování zároveň)
+```
+docker compose exec backend npx prisma migrate reset (vyprázdní schéma)
+docker compose exec backend npx prisma migrate dev (vyprázdní schéma)
+- smazat lokální node_modules/.prisma a dát lokálně v backend složce npx prisma generate
+- cmd+shift+p a restartovat typescript
+```

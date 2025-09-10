@@ -3,7 +3,8 @@ import Loader from '../../pages/Loader'
 import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import AutoComplete from '../../../app/components/AutoComplete'
 import { FormattedMessage } from 'react-intl'
-import { useStocksQuery, useStockItemsQuery } from '../queries'
+import { useStockItemsQuery } from '../queries'
+import { mapStocksStockItemsToFlatStockItems } from '../entity'
 
 type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: Path<TFieldValues>
@@ -13,8 +14,8 @@ type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
 
 const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockItemsAutoCompleteProps<TFieldValues>) => {
   const { control, fieldPath, defaultValue } = props
-  const { data: stocks } = useStocksQuery()
-  const { data: stockItems, isLoading, isError } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
+  const { data: stocksWithStockItems, isLoading, isError } = useStockItemsQuery(undefined)
+  const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
 
   if (isLoading) {
     return <Loader />

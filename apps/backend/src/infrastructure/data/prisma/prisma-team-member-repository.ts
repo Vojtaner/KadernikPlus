@@ -24,6 +24,12 @@ const createTeamMemberRepositoryDb = (
     });
     return newMember;
   },
+  findAll: async (userId: string) => {
+    const teamMemberShips = await prisma.teamMember.findMany({
+      where: { userId },
+    });
+    return teamMemberShips;
+  },
   delete: async (teamMemberRowId: string) => {
     await prisma.teamMember.delete({
       where: {
@@ -79,25 +85,13 @@ const createTeamMemberRepositoryDb = (
     });
     return teamMember;
   },
-  update: async (data) => {
-    const teamMember = await prisma.teamMember.upsert({
-      where: {
-        teamId_userId: {
-          teamId: data.teamId,
-          userId: data.userId,
-        },
-      },
-      update: {
-        canAccessClients: data.canAccessClients,
-        canAccessStocks: data.canAccessStocks,
-        canAccessVisits: data.canAccessVisits,
-      },
-      create: {
-        teamId: data.teamId,
-        userId: data.userId,
-        canAccessClients: data.canAccessClients,
-        canAccessStocks: data.canAccessStocks,
-        canAccessVisits: data.canAccessVisits,
+  update: async (teamMemberData) => {
+    const { userId, ...updateData } = teamMemberData;
+    console.log({ teamMemberData });
+    const teamMember = await prisma.teamMember.update({
+      where: { userId },
+      data: {
+        ...updateData,
       },
     });
 

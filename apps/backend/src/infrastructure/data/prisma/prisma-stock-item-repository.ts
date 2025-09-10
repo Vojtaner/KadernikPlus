@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient, StockItem } from ".prisma/client";
+import { Prisma, PrismaClient, Stock, StockItem } from ".prisma/client";
 import { StockItemCreateData } from "../../../entities/stock-item";
 import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
@@ -12,6 +12,13 @@ const createStockItemRepositoryDb = (
   prismaStockRepository: PrismaClient
 ): StockItemRepositoryPort => {
   return {
+    deleteAll: async (stockId: string): Promise<Prisma.BatchPayload> => {
+      console.log({ stockId });
+      return await prisma.stockItem.updateMany({
+        where: { stockId },
+        data: { isActive: false },
+      });
+    },
     createOrUpdateStockItem: async (
       data: StockItemCreateData
     ): Promise<StockItem | undefined> => {
@@ -225,8 +232,6 @@ const createStockItemRepositoryDb = (
         throw new Error("Nejste součástí žádného týmu.");
       }
 
-      console.log({ userId });
-
       if (teamMember?.canAccessStocks) {
         const stockIds = await prismaStockRepository.stock
           .findMany({
@@ -258,6 +263,26 @@ const createStockItemRepositoryDb = (
 
         return stockItems;
       }
+    },
+    getStockItemsByStocks: async (
+      stockIds: string[]
+    ): Promise<
+      (Stock & {
+        stockItems: StockItem[];
+      })[]
+    > => {
+      const stockItemsByStock = await prisma.stock.findMany({
+        where: { id: { in: stockIds } },
+        include: {
+          stockItems: {
+            where: {
+              isActive: true, // only active items
+            },
+          },
+        },
+      });
+
+      return stockItemsByStock;
     },
   };
 };

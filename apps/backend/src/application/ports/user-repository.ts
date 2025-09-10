@@ -1,4 +1,5 @@
-import { User, UserCreateData } from "@/entities/user";
+import { UserCreateData } from "@/entities/user";
+import { User } from "@prisma/client";
 
 export type UserRepositoryPort = {
   add(userData: UserCreateData): Promise<User>;

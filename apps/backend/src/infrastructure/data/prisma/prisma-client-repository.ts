@@ -149,7 +149,7 @@ const createClientRepositoryDb = (
       }
 
       const client = await prismaRepository.client.findFirst({
-        where: { AND: whereConditions },
+        where: { OR: whereConditions },
         include: { visits: true },
       });
 
@@ -157,7 +157,7 @@ const createClientRepositoryDb = (
         throw new Error("Klient nebyl nalezen.");
       }
 
-      const isOwnClient = !client.teamId;
+      const isOwnClient = client.userId === userId;
       const isTeamClient =
         client.teamId === teamMember?.teamId && teamMember?.canAccessClients;
 

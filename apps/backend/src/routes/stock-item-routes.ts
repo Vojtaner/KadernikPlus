@@ -15,8 +15,10 @@ stockItemRoutes.get(
 );
 
 stockItemRoutes.get(
-  "/:stockId/items",
-  makeExpressCallback(StockItemController.getStockItemsByStockIdController)
+  "/items",
+  makeExpressCallback(
+    StockItemController.getStockItemsByStockIdOrUserIdController
+  )
 );
 
 stockItemRoutes.get(

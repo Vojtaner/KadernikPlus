@@ -6,7 +6,7 @@ import type { GetStockAllowance } from '../../entity'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 import { getStocks, postCreateNewStockItem, deleteStockItem, getStockItems, getStockAllowances } from './api'
-import type { StockItemCreateData, ExistingStockItem } from './entity'
+import type { StockItemCreateData, StockWithStockItems } from './entity'
 
 export const useStocksQuery = () => {
   const axios = useAxios()
@@ -56,13 +56,10 @@ export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, un
 export const useStockItemsQuery = (stockId: string | undefined) => {
   const axios = useAxios()
 
-  return useQuery<ExistingStockItem[]>({
+  return useQuery<StockWithStockItems[]>({
     queryKey: ['stockItems', stockId],
     queryFn: () => {
-      if (!stockId) {
-        throw new Error('Stock ID is required to fetch stock items.')
-      }
-      return getStockItems(axios, stockId)
+      return getStockItems(axios, stockId ?? '')
     },
   })
 }

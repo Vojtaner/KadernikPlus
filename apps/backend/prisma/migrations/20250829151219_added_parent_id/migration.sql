@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Payment` ADD COLUMN `parentId` VARCHAR(191) NOT NULL DEFAULT '';

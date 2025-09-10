@@ -16,6 +16,7 @@ const MenuBox = (props: { sx?: SxProps; onClick: (event: React.MouseEvent<HTMLDi
         bgcolor: '#140f1124',
         borderRadius: '10px',
         justifyContent: 'center',
+        cursor: 'pointer',
         ...sx,
       }}>
       <MenuIcon fontSize="large" sx={{ color: '#f0f0f0' }} />

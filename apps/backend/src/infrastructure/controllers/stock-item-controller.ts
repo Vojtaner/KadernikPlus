@@ -12,12 +12,15 @@ import findStockItemByNameUseCase, {
 import getStockItemsByStockIdUseCase, {
   GetStockItemsByStockIdUseCaseType,
 } from "../../application/use-cases/stock/get-stock-items-by-stock-id";
-import getStocksByUserIdUseCase, {
-  GetStocksByUserIdUseCaseType,
-} from "../../application/use-cases/stock/get-stocks-by-user-id";
 import deleteStockItemByIdUseCase, {
   DeleteStockItemByIdUseCaseType,
 } from "../../application/use-cases/stock/delete-stock-item-by-id";
+import getStockItemsByStocksIdUseCase, {
+  GetStockItemsByStocksIdUseCaseType,
+} from "../../application/use-cases/stock/get-stock-items-by-user-id";
+import getStocksByUserIdUseCase, {
+  GetStocksByUserIdUseCaseType,
+} from "../../application/use-cases/stock/get-stocks-by-user-id";
 
 type CreateOrUpdateStockItemControllerType = {
   body: StockItemCreateData | StockItemBuyData;
@@ -25,7 +28,9 @@ type CreateOrUpdateStockItemControllerType = {
 type GetStockItemByIdControllerType = {};
 type DeleteStockItemByIdControllerType = { params: { stockItemId: string } };
 type FindStockItemByNameControllerType = {};
-type GetStockItemsByStockIdControllerType = {};
+type GetStockItemsByStockIdUserIdControllerType = {
+  query: { stockId: string };
+};
 type GetStocksByUserIdControllerType = {};
 
 export const isPurchaseStockItem = (
@@ -52,8 +57,9 @@ const createStockItemController = (dependencies: {
   getStockItemByIdUseCase: GetStockItemByIdUseCaseType;
   findStockItemByNameUseCase: FindStockItemByNameUseCaseType;
   getStockItemsByStockIdUseCase: GetStockItemsByStockIdUseCaseType;
-  getStocksByUserIdUseCase: GetStocksByUserIdUseCaseType;
+  getStockItemsByStocksIdUseCase: GetStockItemsByStocksIdUseCaseType;
   deleteStockItemByIdUseCase: DeleteStockItemByIdUseCaseType;
+  getStocksByUserIdUseCase: GetStocksByUserIdUseCaseType;
 }) => {
   const createOrUpdateStockItemController: ControllerFunction<
     CreateOrUpdateStockItemControllerType
@@ -138,24 +144,21 @@ const createStockItemController = (dependencies: {
       statusCode: 204,
     };
   };
-  const getStockItemsByStockIdController: ControllerFunction<
-    GetStockItemsByStockIdControllerType
+  const getStockItemsByStockIdOrUserIdController: ControllerFunction<
+    GetStockItemsByStockIdUserIdControllerType
   > = async (httpRequest) => {
-    const { stockId } = httpRequest.params;
+    const { stockId } = httpRequest.query;
     const userId = httpRequest.userId;
 
-    const stockItems = await dependencies.getStockItemsByStockIdUseCase.execute(
-      stockId,
-      userId
-    );
-
-    if (!stockItems) {
-      throw new Error(`Stock item with ID "${stockId}" not found.`);
-    }
+    const stockItemsByStocks =
+      await dependencies.getStockItemsByStocksIdUseCase.execute(
+        userId,
+        stockId
+      );
 
     return {
       statusCode: 200,
-      body: stockItems,
+      body: stockItemsByStocks,
     };
   };
 
@@ -163,7 +166,7 @@ const createStockItemController = (dependencies: {
     createOrUpdateStockItemController,
     findStockItemByNameController,
     getStockItemByIdController,
-    getStockItemsByStockIdController,
+    getStockItemsByStockIdOrUserIdController,
     getStocksByUserIdController,
     deleteStockItemByIdController,
   };
@@ -174,7 +177,8 @@ const stockItemController = createStockItemController({
   getStockItemByIdUseCase,
   findStockItemByNameUseCase,
   getStockItemsByStockIdUseCase,
-  getStocksByUserIdUseCase,
+  getStockItemsByStocksIdUseCase,
   deleteStockItemByIdUseCase,
+  getStocksByUserIdUseCase,
 });
 export default stockItemController;

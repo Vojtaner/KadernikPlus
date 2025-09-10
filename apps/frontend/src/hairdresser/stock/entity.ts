@@ -1,3 +1,5 @@
+import type { Stock } from '../../api/entity'
+
 export type StockItem = {
   id?: string
   itemName: string
@@ -79,3 +81,13 @@ export type StockAllowanceFieldArrayType = {
 }
 
 export type Unit = (typeof UnitsObject)[keyof typeof UnitsObject]
+export type StockWithStockItems = Stock & { stockItems: ExistingStockItem[] }
+
+export const mapStocksStockItemsToFlatStockItems = (
+  stockWithstockItems?: StockWithStockItems[]
+): ExistingStockItem[] | undefined => {
+  if (!stockWithstockItems) {
+    return
+  }
+  return stockWithstockItems.flatMap((stock) => stock.stockItems)
+}

@@ -18,6 +18,10 @@ import inviteOrSwitchTeamUseCase, {
 import deleteTeamMemberUseCase, {
   DeleteTeamMemberUseCaseType,
 } from "../../application/use-cases/team-member/delete-team-member";
+import { httpError } from "../../adapters/express/httpError";
+import getUserByEmailUseCase, {
+  GetUserByEmailUseCaseType,
+} from "../../application/use-cases/user/get-user-by-email";
 
 type CreateTeamMemberControllerType = {
   body: { userId: string; teamId: string };
@@ -45,6 +49,7 @@ const createTeamMemberController = (dependencies: {
   updateTeamMemberSkillUseCase: UpdateTeamMemberSkillUseCaseType;
   inviteOrSwitchTeamUseCase: InviteOrSwitchTeamUseCaseType;
   deleteTeamMemberUseCase: DeleteTeamMemberUseCaseType;
+  getUserByEmailUseCase: GetUserByEmailUseCaseType;
 }) => {
   const createTeamMemberController: ControllerFunction<
     CreateTeamMemberControllerType
@@ -74,20 +79,32 @@ const createTeamMemberController = (dependencies: {
     const { email, consentId } = httpRequest.body;
     const userId = httpRequest.userId;
 
+    const newTeamOwner = await dependencies.getUserByEmailUseCase.execute(
+      email
+    );
+
+    const newTeam = await dependencies.getTeamMemberByUserIdUseCase.execute({
+      userId: newTeamOwner.id,
+    });
+
+    if (!newTeam) {
+      throw httpError("Nenalezen cílový tým.", 404);
+    }
+
     try {
       const teamOwner = await dependencies.getTeamMemberByUserIdUseCase.execute(
         { userId }
       );
 
-      if (!teamOwner) {
-        throw Error("You do not have any team. You are not allowed to invite.");
+      if (newTeamOwner.id === userId) {
+        throw httpError("Nemůžete se pozvat do vlastního týmu.", 404);
       }
 
       const newTeamMember =
         await dependencies.inviteOrSwitchTeamUseCase.execute({
-          invitedEmail: email,
-          invitedUserIdLast4: consentId,
-          newTeamId: teamOwner?.teamId,
+          targetedUsersTeamEmail: email,
+          targetedUserIdLast4: consentId,
+          newTeamId: newTeam.teamId,
           userId,
         });
 
@@ -108,13 +125,11 @@ const createTeamMemberController = (dependencies: {
   > = async (httpRequest) => {
     try {
       let teamId = httpRequest.params.teamId;
+
       const userId = httpRequest.userId;
 
       if (!teamId) {
-        return {
-          statusCode: 400,
-          body: { error: "Team ID is required" },
-        };
+        throw httpError("Tým ID je povinné.", 400);
       }
 
       if (teamId === DEFAULT_USERS_TEAM) {
@@ -122,10 +137,7 @@ const createTeamMemberController = (dependencies: {
           await dependencies.getTeamMemberByUserIdUseCase.execute({ userId });
 
         if (!teamMember?.teamId) {
-          return {
-            statusCode: 404,
-            body: { error: "No team associated with this user" },
-          };
+          throw httpError("Žádný tým u tohoto uživatele.", 404);
         }
 
         teamId = teamMember.teamId;
@@ -141,10 +153,8 @@ const createTeamMemberController = (dependencies: {
         body: teamMembers,
       };
     } catch (error) {
-      return {
-        statusCode: 400,
-        body: { error },
-      };
+      console.error("getTeamMembersByTeamIdController", error);
+      throw httpError("Chyba v hledání členů týmu.", 400);
     }
   };
 
@@ -154,10 +164,7 @@ const createTeamMemberController = (dependencies: {
     const userId = httpRequest.userId;
 
     if (!userId) {
-      return {
-        statusCode: 400,
-        body: { error: "User ID is required" },
-      };
+      throw httpError("Uživatelské ID požadované.", 400);
     }
 
     try {
@@ -189,19 +196,17 @@ const createTeamMemberController = (dependencies: {
     UpdateTeamMemberSkillControllerType
   > = async (httpRequest) => {
     const teamId = httpRequest.params.teamId;
+    const { memberId, ...updateData } = httpRequest.body;
 
     const memberData = {
-      ...httpRequest.body,
+      ...updateData,
       userId: httpRequest.body.memberId,
       teamId: teamId,
     };
 
     try {
       if (!teamId) {
-        return {
-          statusCode: 400,
-          body: { error: "Member ID is required" },
-        };
+        throw httpError("ID týmu je povinné", 400);
       }
 
       const updatedMember =
@@ -212,36 +217,30 @@ const createTeamMemberController = (dependencies: {
         body: updatedMember,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Server error" },
-      };
+      console.error("updateTeamMemberSkillController", error);
+      throw httpError("Úprava práv člena týmu.", 500);
     }
   };
   const deleteTeamMemberController: ControllerFunction<
     DeleteTeamMemberControllerType
   > = async (httpRequest) => {
-    const id = httpRequest.body.id;
+    const deletedUserId = httpRequest.body.id;
 
     try {
-      if (!id) {
-        return {
-          statusCode: 400,
-          body: { error: "Team member does not exists." },
-        };
+      if (!deletedUserId) {
+        throw httpError("Nebylo předáno ID člena týmu.", 400);
       }
+
       const deletedTeamMember =
-        await dependencies.deleteTeamMemberUseCase.execute(id);
+        await dependencies.deleteTeamMemberUseCase.execute(deletedUserId);
 
       return {
         statusCode: 200,
         body: deletedTeamMember,
       };
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: { error: "Server error" },
-      };
+      console.error("deleteTeamMemberController", error);
+      throw httpError("Mazání člena týmu, neznámý error.", 500);
     }
   };
 
@@ -262,6 +261,7 @@ const teamMemberController = createTeamMemberController({
   updateTeamMemberSkillUseCase,
   inviteOrSwitchTeamUseCase,
   deleteTeamMemberUseCase,
+  getUserByEmailUseCase,
 });
 
 export default teamMemberController;

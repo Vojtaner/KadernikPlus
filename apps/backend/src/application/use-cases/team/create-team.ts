@@ -5,9 +5,10 @@ const createCreateTeamUseCase = (dependencies: {
   teamRepositoryDb: TeamRepositoryPort;
 }) => {
   return {
-    execute: async (teamData: { name: string }) => {
+    execute: async (teamData: { name: string; userId: string }) => {
       const newTeam = await dependencies.teamRepositoryDb.create({
         name: `${teamData.name}`,
+        userId: teamData.userId,
       });
 
       return newTeam;

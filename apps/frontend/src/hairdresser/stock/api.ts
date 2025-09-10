@@ -3,11 +3,11 @@ import type dayjs from 'dayjs'
 import type { Stock } from '../../api/entity'
 import { extractErrorMessage } from '../../api/errorHandler'
 import type { GetStockAllowance } from '../../entity'
-import type { ExistingStockItem, StockItemCreateData } from './entity'
+import type { StockItemCreateData, StockWithStockItems } from './entity'
 import type { Dayjs } from 'dayjs'
 
 export const stockApi = {
-  getItems: (stockId: string) => `/api/stock/${encodeURIComponent(stockId)}/items`,
+  getItems: (stockId: string) => `/api/stock/items?stockId=${encodeURIComponent(stockId)}`,
   getItemById: (stockItemId: string) => `/item/${encodeURIComponent(stockItemId)}`,
   deleteItemById: (stockItemId: string) => `api/stock/item/${encodeURIComponent(stockItemId)}`,
   createOrUpdateItem: () => `/api/stock`,
@@ -22,10 +22,12 @@ export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
   const response = await axios.get(stockApi.getAll())
   return response.data
 }
-export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<ExistingStockItem[]> => {
+
+export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<StockWithStockItems[]> => {
   const response = await axios.get(stockApi.getItems(stockId))
   return response.data
 }
+
 export const getStockAllowances = async (
   axios: AxiosInstance,
   params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }

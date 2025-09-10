@@ -3,6 +3,7 @@ import teamMemberController from "../infrastructure/controllers/team-member-cont
 import { Router } from "express";
 
 const teamMemberRoutes = Router();
+
 teamMemberRoutes.get(
   "/",
   makeExpressCallback(teamMemberController.getTeamMemberByUserIdController)

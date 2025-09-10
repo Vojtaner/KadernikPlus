@@ -13,7 +13,6 @@ import RedSwitch from '../../../app/components/Switch/RedSwitch'
 import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid'
 import { FormattedMessage } from 'react-intl'
 import CloseVisitDialog from './CloseVisitDialog'
-import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
 import TeamMemberAutoComplete from '../../team/components/TeamMemberAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries'
@@ -26,7 +25,6 @@ const EditVisitDetailDialog = (props: {
   const { visitId } = useParams()
   const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId)
   const { data: visit, isLoading, isError } = useVisitQuery(visitId)
-  const scroll = useScrollToTheTop()
   const { mutate: changeVisitStatus } = useVisitStatusMutation()
   const { control, handleSubmit } = useForm<VisitDetailFormType>({
     defaultValues: {
@@ -66,22 +64,12 @@ const EditVisitDetailDialog = (props: {
 
   const handleClose = () => {
     setOpen(false)
-    scroll()
   }
 
   const onSubmit = (data: VisitDetailFormType) => {
     updateVisitMutation({ ...data, visitServiceId: visit.visitServices[0].id })
     handleClose()
-    scroll()
   }
-
-  // clientDeposit: boolean,
-  // watchFormVisitData: {
-  //   paidPrice: number | undefined
-  //   deposit: number | undefined
-  //   depositStatus: 'NEZAPLACENO' | 'ZAPLACENO' | null | undefined
-  //   procedures: undefined | Procedure[]
-  // }
 
   return (
     <FormDialog

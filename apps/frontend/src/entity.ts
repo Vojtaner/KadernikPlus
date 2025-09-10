@@ -21,7 +21,9 @@ export type GetStockAllowance = {
   procedure: { visitId: string; visit: { clientId: string } }
   procedureId: string
   quantity: string
-  stockItem: { itemName: string; avgUnitPrice: string; unit: string }
+  stockItem: { unit: string }
+  stockItemName: string
+  avgUnitPrice: string
   stockItemId: string
   teamId: string
   user: { name: string }
@@ -58,3 +60,13 @@ export type UserStockItemAllowanceSummary = {
 }
 
 export type StockViewKey = 'byUser' | 'byProduct' | 'allRecords'
+
+export const useScrollToTheTop = () => {
+  const scroll = () =>
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
+
+  return scroll
+}

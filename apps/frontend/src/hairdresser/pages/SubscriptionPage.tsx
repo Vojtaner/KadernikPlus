@@ -8,7 +8,7 @@ export const SubscriptionPage = () => {
     <Stack height="100vh">
       <PricingCard
         title="Cena"
-        price="Kč 129"
+        price="Kč 139"
         period="/měsíc"
         description="Co všechno je v ceně:"
         features={[
@@ -19,7 +19,7 @@ export const SubscriptionPage = () => {
           'Přehled tržeb a nákladů',
         ]}
         ctaText="Zaplatit"
-        onClick={() => createPayment.mutate({ currency: 'CZK', plan: 'pro', price: 12900, status: 'PENDING' })}
+        onClick={() => createPayment.mutate({ currency: 'CZK', plan: 'pro', price: 13900, status: 'PENDING' })}
         active
       />
     </Stack>

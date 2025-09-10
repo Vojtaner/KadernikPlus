@@ -5,10 +5,16 @@ const createGetAllStockAllowancesByTeamIdUseCase = (dependencies: {
   stockAllowanceRepositoryDb: StockAllowanceRepositoryPort;
 }) => {
   return {
-    execute: async (teamId: string, fromDate: Date, toDate: Date) => {
+    execute: async (
+      teamId: string,
+      userId: string,
+      fromDate: Date,
+      toDate: Date
+    ) => {
       const stockAllowaces =
         await dependencies.stockAllowanceRepositoryDb.getAllByDatesAndTeamId(
           teamId,
+          userId,
           fromDate,
           toDate
         );

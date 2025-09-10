@@ -7,7 +7,7 @@ export type StockAllowanceWithProcedureAndItem =
         select: { visitId: true; visit: { select: { clientId: true } } };
       };
       stockItem: {
-        select: { itemName: true; avgUnitPrice: true; unit: true };
+        select: { unit: true };
       };
       user: { select: { name: true } };
     };

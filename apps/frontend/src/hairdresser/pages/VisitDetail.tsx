@@ -1,26 +1,25 @@
 import { Button, Divider, Stack, Typography } from '@mui/material'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
-import ProcedureCard from '../../../components/ProcedureCard'
+import ProcedureCard from '../../components/ProcedureCard'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import Note from '../../../app/components/Note'
-import EditVisitDetailDialog from './EditVisitDetailDialog'
+import Note from '../../app/components/Note'
+import EditVisitDetailDialog from '../visits/components/EditVisitDetailDialog'
 import { useParams } from 'react-router-dom'
-import Loader from '../../pages/Loader'
-import { useAppDispatch } from '../../../store/store'
-import { setCurrentLocationAppendix } from '../../../store/appUiSlice'
-import AppTheme from '../../../AppTheme'
-import { Paths } from '../../../routes/AppRoutes'
-import { useAppNavigate } from '../../../hooks'
+import Loader from './Loader'
+import { useAppDispatch } from '../../store/store'
+import { setCurrentLocationAppendix } from '../../store/appUiSlice'
+import AppTheme from '../../AppTheme'
+import { Paths } from '../../routes/AppRoutes'
+import { useAppNavigate } from '../../hooks'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import DeleteVisitDialogProps from './DeleteVisitDialog'
-import AddProcedureButton from '../../procedure/components/AddProcedureButton'
-import VisitDetailGrid, { hasAnyStockAllowance } from './VisitDetailGrid'
-import { useProceduresQuery } from '../../procedure/queries'
-import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../queries'
+import DeleteVisitDialogProps from '../visits/components/DeleteVisitDialog'
+import AddProcedureButton from '../procedure/components/AddProcedureButton'
+import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/VisitDetailGrid'
+import { useProceduresQuery } from '../procedure/queries'
+import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
-
   const { data: visitData, isLoading: isLoadingVisit, isSuccess: isSuccessVisitData } = useVisitQuery(visitId)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)

@@ -1,5 +1,0 @@
-{
-  "dependencies": {
-    "@sentry/node-native": "^10.11.0"
-  }
-}

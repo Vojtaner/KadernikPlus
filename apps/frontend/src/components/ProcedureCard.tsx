@@ -2,8 +2,6 @@ import { Box, Typography, Stack, IconButton, Button } from '@mui/material'
 import AppTheme from '../AppTheme'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
-import type { StockAllowance } from '../hairdresser/stock/entity'
-import { queryClient } from '../reactQuery/reactTanstackQuerySetup'
 import { useParams } from 'react-router-dom'
 import type { PostNewProcedure } from '../entities/procedure'
 import AddProcedureButton, {
@@ -11,6 +9,8 @@ import AddProcedureButton, {
 } from '../hairdresser/procedure/components/AddProcedureButton'
 import { useProceduresMutation } from '../hairdresser/procedure/queries'
 import { useStocksQuery } from '../hairdresser/stock/queries'
+import { getProcedureInvalidation } from '../hairdresser/procedure/entity'
+import StockAllowance from '../hairdresser/stock/components/StockAllowance'
 
 type ProcedureCardProps = {
   description: string
@@ -20,19 +20,14 @@ type ProcedureCardProps = {
   isDisabled?: boolean
 }
 
-//spojit proceduru s SMSkou
-
 const ProcedureCard = (props: ProcedureCardProps) => {
   const { visitId } = useParams()
   const { data: stocks } = useStocksQuery()
-
   const { description, orderNumber, isDisabled, stockAllowances: defaultStockAllowances, procedureId } = props
 
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
-      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+      getProcedureInvalidation(stocks, visitId)
     },
   })
 
@@ -67,7 +62,13 @@ const ProcedureCard = (props: ProcedureCardProps) => {
 
         <Stack direction="row" rowGap={2} columnGap={1} alignItems="center" flexWrap="wrap" justifyContent="flex-end">
           {defaultStockAllowances.map((stockAllowance) => (
-            <StockAllowance stockAllowance={stockAllowance} key={stockAllowance.id} />
+            <StockAllowance
+              id={stockAllowance.id}
+              //nechci default na nulu ale typy jsou rozhozený, oprava později
+              name={stockAllowance.stockItemName ?? ''}
+              quantity={stockAllowance.quantity}
+              key={stockAllowance.id}
+            />
           ))}
         </Stack>
       </Box>
@@ -107,19 +108,3 @@ const ProcedureCard = (props: ProcedureCardProps) => {
 }
 
 export default ProcedureCard
-
-type StockAllowanceProps = {
-  stockAllowance: Omit<StockAllowance, 'quantity'> & { quantity: number }
-}
-
-const StockAllowance = (props: StockAllowanceProps) => {
-  const { stockAllowance } = props
-
-  return (
-    <Box boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)" padding={1} key={stockAllowance.id} borderRadius={2}>
-      <Typography fontSize="11px" fontWeight={600} color="secondary">
-        {`${stockAllowance.stockItem && stockAllowance.stockItem.itemName} ${stockAllowance.quantity}`}
-      </Typography>
-    </Box>
-  )
-}

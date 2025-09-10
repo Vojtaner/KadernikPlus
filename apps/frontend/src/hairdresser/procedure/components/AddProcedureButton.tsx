@@ -1,36 +1,34 @@
-import { Stack, IconButton, Button, Typography, Box } from '@mui/material'
-import { Grid } from '@mui/material'
-import {
-  Controller,
-  useForm,
-  type Control,
-  type FieldPath,
-  type UseFieldArrayAppend,
-  type UseFieldArrayRemove,
-  useFieldArray,
-  useWatch,
-} from 'react-hook-form'
+import { Button } from '@mui/material'
+import { useForm, useFieldArray } from 'react-hook-form'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import TextField from '../../../app/components/TextField'
 import { useState, type ReactElement } from 'react'
 import FormDialog from '../../../app/components/Dialog'
-import StockItemsAutoComplete from '../../stock/components/StockItemsAutoComplete'
 import React from 'react'
 import type { PostNewProcedure } from '../../../entities/procedure'
 import { useParams } from 'react-router-dom'
-import type { StockAllowance } from '../../stock/entity'
-import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
+import { type StockAllowance } from '../../stock/entity'
 import { FormattedMessage } from 'react-intl'
 import { addPropsToReactElement } from '../../../components/entity'
-import { useStocksQuery, useStockItemsQuery } from '../../stock/queries'
+import { useStocksQuery } from '../../stock/queries'
 import { useDeleteProcedureMutation, useProceduresMutation } from '../queries'
+import AddStockAllowanceForm from './AddStockAllowanceForm'
+import { getProcedureInvalidation, mapDefaultStockAlowances } from '../entity'
+import { useEditableAndReadonlyStockAllowances } from '../store'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
   quantity: number
+  stockItemName?: string
+  avgUnitPrice?: string
 })[]
 
-type AddProcedureButtonProps = {
+export type StockAllowanceFormValues = {
+  description: string
+  stockAllowances: AddProcedureStockAllowanceType
+}
+
+export type AddProcedureButtonProps = {
   defaultValues?: {
     stockAllowances: AddProcedureStockAllowanceType
     description: string
@@ -39,30 +37,19 @@ type AddProcedureButtonProps = {
   procedureId?: string
 }
 
-type StockAllowanceFormValues = {
-  description: string
-  stockAllowances: AddProcedureStockAllowanceType
-}
-
-type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
-  control: Control<TForm>
-  name: FieldPath<TForm>
-  append: UseFieldArrayAppend<StockAllowanceFormValues, 'stockAllowances'>
-  remove: UseFieldArrayRemove
-  fields: AddProcedureStockAllowanceType
-}
-
 const AddProcedureButton = (props: AddProcedureButtonProps) => {
+  const { openButton, defaultValues, procedureId } = props
+  const { editableAllowances, readonlyAllowances } = useEditableAndReadonlyStockAllowances(
+    defaultValues?.stockAllowances
+  )
   const { visitId } = useParams()
   const { data: stocks } = useStocksQuery()
-  const { openButton, defaultValues, procedureId } = props
   const [open, setOpen] = useState(false)
-  const scroll = useScrollToTheTop()
 
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       description: defaultValues?.description ?? '',
-      stockAllowances: mapDefaultStockAlowances(defaultValues?.stockAllowances),
+      stockAllowances: mapDefaultStockAlowances(editableAllowances),
     },
   })
 
@@ -73,20 +60,13 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 
   const { mutation: deleteProcedure } = useDeleteProcedureMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
-      queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
-      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
+      getProcedureInvalidation(stocks, visitId)
     },
   })
 
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      queryClient.invalidateQueries({ queryKey: ['procedures', visitId] })
-      queryClient.invalidateQueries({ queryKey: ['stockItems', stocks && stocks[0].id] })
-      queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
-
+      getProcedureInvalidation(stocks, visitId)
       reset()
       setOpen(false)
     },
@@ -94,7 +74,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 
   const handleClickOpen = () => {
     if (defaultValues) {
-      const stockAllowancesDefault = mapDefaultStockAlowances(defaultValues.stockAllowances)
+      const stockAllowancesDefault = mapDefaultStockAlowances(editableAllowances)
       replace(stockAllowancesDefault)
       reset({ stockAllowances: stockAllowancesDefault, description: defaultValues.description })
     }
@@ -103,7 +83,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
   }
 
   const handleClose = () => {
-    scroll()
     setOpen(false)
   }
 
@@ -113,7 +92,12 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       onClose={handleClose}
       handleSubmit={() =>
         handleSubmit((formData) => {
-          createNewProcedure.mutate({ ...formData, visitId, id: procedureId } as unknown as PostNewProcedure)
+          createNewProcedure.mutate({
+            stockAllowances: [...formData.stockAllowances, ...readonlyAllowances],
+            description: formData.description,
+            visitId,
+            id: procedureId,
+          } as unknown as PostNewProcedure)
           handleClose()
           scroll()
         })
@@ -153,6 +137,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
             remove={remove}
             fields={fields}
             append={append}
+            readonlyAllowances={readonlyAllowances}
           />
         </>
       }
@@ -170,90 +155,3 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
 }
 
 export default AddProcedureButton
-
-const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceFormValues>) => {
-  const { control, append, remove, fields } = props
-  const { data: stocks } = useStocksQuery()
-  const { data: stockItems } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
-  const watchedStockAllowanecs = useWatch({ control })
-
-  return (
-    <Stack spacing={3}>
-      {fields.map((field, index) => {
-        const fielArrayStockItem =
-          watchedStockAllowanecs.stockAllowances && watchedStockAllowanecs.stockAllowances[index]
-        {
-          const stockItem =
-            fielArrayStockItem &&
-            stockItems &&
-            stockItems.find((stockItem) => stockItem.id === fielArrayStockItem.stockItemId)
-          // const updatedStockQuantity = stockItem && stockItem.quantity - (fielArrayStockItem?.quantity ?? 0)
-          const updatedStockQuantity = stockItem && stockItem.quantity
-          const stockItemQuantityCritical = updatedStockQuantity && updatedStockQuantity < stockItem.threshold
-
-          return (
-            <Stack key={field.id} spacing={0.5}>
-              <Grid container spacing={2} alignItems="center">
-                <Controller name={`stockAllowances.${index}.id`} control={control} render={() => <></>} />
-                <Grid size={7}>
-                  <StockItemsAutoComplete fieldPath={`stockAllowances.${index}.stockItemId`} control={control} />
-                </Grid>
-                <Grid size={3}>
-                  <TextField
-                    type="number"
-                    label={`Množství (${stockItem?.unit ? stockItem?.unit : ''})`}
-                    fieldPath={`stockAllowances.${index}.quantity`}
-                    control={control}
-                  />
-                </Grid>
-                <Grid size={2}>
-                  <IconButton onClick={() => remove(index)} color="error">
-                    <DeleteOutlineIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
-
-              {stockItem ? (
-                <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-                  Aktuálně ve skladu
-                  <Box
-                    component="span"
-                    color={stockItemQuantityCritical ? 'primary.main' : 'success.main'}
-                    fontWeight="bold">
-                    {` ${updatedStockQuantity} ${stockItem?.unit}`}
-                  </Box>
-                </Typography>
-              ) : null}
-            </Stack>
-          )
-        }
-      })}
-      <Button onClick={() => append({ stockItemId: '', quantity: 0, id: '' })} variant="outlined">
-        Přidat materiál
-      </Button>
-    </Stack>
-  )
-}
-
-const mapDefaultStockAlowances = (
-  defaultStockAllowances?: AddProcedureStockAllowanceType
-): { stockItemId: string; quantity: number; id: string }[] => {
-  if (!defaultStockAllowances) {
-    return []
-  }
-  return defaultStockAllowances.map((stockAllowance) => ({
-    stockItemId: stockAllowance.stockItemId,
-    quantity: Number(stockAllowance.quantity),
-    id: stockAllowance.id ?? '',
-  }))
-}
-
-export const useScrollToTheTop = () => {
-  const scroll = () =>
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    })
-
-  return scroll
-}

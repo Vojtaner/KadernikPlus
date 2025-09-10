@@ -30,6 +30,7 @@ CREATE TABLE `TeamMember` (
 CREATE TABLE `Team` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
+    `userId` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
@@ -88,9 +89,11 @@ CREATE TABLE `stock_items` (
     `id` VARCHAR(191) NOT NULL,
     `itemName` VARCHAR(191) NOT NULL,
     `unit` VARCHAR(191) NOT NULL,
-    `quantity` DECIMAL(10, 2) NOT NULL,
     `packageCount` DECIMAL(10, 2) NOT NULL,
-    `price` DECIMAL(15, 5) NOT NULL,
+    `quantity` DECIMAL(10, 2) NOT NULL,
+    `lastPackageQuantity` DECIMAL(15, 5) NOT NULL,
+    `totalPrice` DECIMAL(15, 5) NOT NULL,
+    `avgUnitPrice` DECIMAL(15, 5) NOT NULL,
     `threshold` DECIMAL(10, 2) NOT NULL,
     `is_active` BOOLEAN NOT NULL DEFAULT true,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -105,7 +108,10 @@ CREATE TABLE `stock_items` (
 CREATE TABLE `stock_allowances` (
     `id` VARCHAR(191) NOT NULL,
     `user_id` VARCHAR(191) NOT NULL,
+    `team_id` VARCHAR(191) NOT NULL,
     `stock_item_id` VARCHAR(191) NOT NULL,
+    `avgUnitPrice` DECIMAL(15, 5) NOT NULL DEFAULT 0.00000,
+    `stockItemName` VARCHAR(191) NULL,
     `procedure_id` VARCHAR(191) NOT NULL,
     `quantity` DECIMAL(10, 2) NOT NULL,
     `created_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
@@ -173,7 +179,7 @@ CREATE TABLE `Subscription` (
     `id` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
     `plan` VARCHAR(191) NOT NULL,
-    `status` ENUM('PENDING', 'ACTIVE', 'CANCELLED') NULL DEFAULT 'PENDING',
+    `status` ENUM('PENDING', 'ACTIVE', 'CANCELLED', 'EXPIRED') NULL DEFAULT 'PENDING',
     `startDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `endDate` DATETIME(3) NULL,
 
@@ -184,16 +190,18 @@ CREATE TABLE `Subscription` (
 CREATE TABLE `Payment` (
     `id` VARCHAR(191) NOT NULL,
     `subscriptionId` VARCHAR(191) NOT NULL,
+    `refId` INTEGER NOT NULL,
     `provider` VARCHAR(191) NOT NULL,
+    `parentId` VARCHAR(191) NOT NULL DEFAULT '',
     `transactionId` VARCHAR(191) NOT NULL,
     `amount` DECIMAL(15, 5) NOT NULL,
     `currency` VARCHAR(191) NOT NULL DEFAULT 'CZK',
     `status` VARCHAR(191) NOT NULL,
-    `externalId` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `Payment_externalId_key`(`externalId`),
+    UNIQUE INDEX `Payment_refId_key`(`refId`),
+    UNIQUE INDEX `Payment_transactionId_key`(`transactionId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -202,6 +210,9 @@ ALTER TABLE `TeamMember` ADD CONSTRAINT `TeamMember_userId_fkey` FOREIGN KEY (`u
 
 -- AddForeignKey
 ALTER TABLE `TeamMember` ADD CONSTRAINT `TeamMember_teamId_fkey` FOREIGN KEY (`teamId`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Team` ADD CONSTRAINT `Team_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `visit_services` ADD CONSTRAINT `visit_services_visit_id_fkey` FOREIGN KEY (`visit_id`) REFERENCES `visits`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -232,6 +243,9 @@ ALTER TABLE `stock_allowances` ADD CONSTRAINT `stock_allowances_user_id_fkey` FO
 
 -- AddForeignKey
 ALTER TABLE `stock_allowances` ADD CONSTRAINT `stock_allowances_stock_item_id_fkey` FOREIGN KEY (`stock_item_id`) REFERENCES `stock_items`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `stock_allowances` ADD CONSTRAINT `stock_allowances_team_id_fkey` FOREIGN KEY (`team_id`) REFERENCES `Team`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `clients` ADD CONSTRAINT `clients_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

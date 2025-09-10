@@ -3,9 +3,11 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FormattedMessage } from 'react-intl'
 import FormDialog from '../../../app/components/Dialog'
-import { useScrollToTheTop } from '../../procedure/components/AddProcedureButton'
 import TextField from '../../../app/components/TextField'
 import { useAddTeamMemberMutation } from '../queries'
+import { useAppNavigate } from '../../../hooks'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
+import { useParams } from 'react-router-dom'
 
 type TeamMemberForm = {
   email: string
@@ -14,9 +16,10 @@ type TeamMemberForm = {
 
 const AddTeamMemberButton = () => {
   const [open, setOpen] = useState(false)
+  const { teamId } = useParams()
   const { control, handleSubmit } = useForm<TeamMemberForm>()
   const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation()
-  const scroll = useScrollToTheTop()
+  const navigate = useAppNavigate()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -24,13 +27,14 @@ const AddTeamMemberButton = () => {
 
   const handleClose = () => {
     setOpen(false)
-    scroll()
   }
 
   const onSubmit = (data: TeamMemberForm) => {
     addTeamMemberMutation({ email: data.email, consentId: data.consentId })
     handleClose()
-    scroll()
+    navigate(-1)
+    queryClient.invalidateQueries({ queryKey: ['teamMember'] })
+    queryClient.invalidateQueries({ queryKey: ['teamMembers', teamId] })
   }
 
   return (

@@ -4,59 +4,72 @@ import teamMemberRepositoryDb from "../../../infrastructure/data/prisma/prisma-t
 import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-repository";
 import stockRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-repository";
 import { StockRepositoryPort } from "../../../application/ports/stock-repository";
+import { httpError } from "../../../adapters/express/httpError";
+import { StockItemRepositoryPort } from "@/application/ports/stock-item-repository";
+import stockItemRepositoryDb from "../../../infrastructure/data/prisma/prisma-stock-item-repository";
 
 const createInviteOrSwitchTeamUseCase = (dependencies: {
   teamMemberRepositoryDb: TeamMemberRepositoryPort;
   userRepositoryDb: UserRepositoryPort;
   stockRepositoryDb: StockRepositoryPort;
+  stockItemRepositoryDb: StockItemRepositoryPort;
 }) => {
   return {
     execute: async (data: {
-      invitedEmail: string;
-      invitedUserIdLast4: string;
+      targetedUsersTeamEmail: string;
+      targetedUserIdLast4: string;
       newTeamId: string;
       userId: string;
     }) => {
-      const { invitedEmail, invitedUserIdLast4, newTeamId } = data;
-      //najít invited user za email
-      //najit jeho teamId
-      //najít najit dle toho teamId
+      const { targetedUsersTeamEmail, targetedUserIdLast4, newTeamId, userId } =
+        data;
 
-      const invitedUser = await dependencies.userRepositoryDb.findByEmail(
-        invitedEmail
+      const targetedUsersTeam = await dependencies.userRepositoryDb.findByEmail(
+        targetedUsersTeamEmail
       );
+      const usersCurrentMemberShip =
+        await dependencies.teamMemberRepositoryDb.findUniqueMember(userId);
 
-      if (!invitedUser) {
-        throw new Error("User not found with this email.");
+      const usersCurrentStock =
+        await dependencies.stockRepositoryDb.getStocksByOwnerId(userId);
+
+      if (!usersCurrentStock) {
+        throw httpError("Chybí sklad k likvidaci.", 500);
       }
 
-      const last4 = invitedUser.id.slice(-4);
-
-      if (last4 !== invitedUserIdLast4) {
-        throw new Error("User ID mismatch.");
+      if (!targetedUsersTeam) {
+        throw httpError("Uživatel, ke kterému chcete do týmu nenalezen.", 404);
       }
 
-      const currentMembership =
-        await dependencies.teamMemberRepositoryDb.findUniqueMember(
-          invitedUser.id
+      const last4 = targetedUsersTeam.id.slice(-4);
+
+      if (last4 !== targetedUserIdLast4) {
+        throw httpError("Souhlasné ID není správné.", 403);
+      }
+
+      if (
+        usersCurrentMemberShip &&
+        usersCurrentMemberShip.teamId !== newTeamId
+      ) {
+        await dependencies.teamMemberRepositoryDb.delete(
+          usersCurrentMemberShip.id
         );
-
-      if (currentMembership && currentMembership.teamId !== newTeamId) {
-        await dependencies.teamMemberRepositoryDb.delete(currentMembership.id);
       }
 
       const stock = await dependencies.stockRepositoryDb.updateStock(
         newTeamId,
-        invitedUser.id
+        userId
       );
 
       const newMember = await dependencies.teamMemberRepositoryDb.create({
-        userId: invitedUser.id,
+        userId,
         teamId: newTeamId,
-        canAccessStocks: false,
+        canAccessStocks: true,
         canAccessClients: false,
         canAccessVisits: false,
       });
+
+      await dependencies.stockItemRepositoryDb.deleteAll(usersCurrentStock?.id);
 
       return newMember;
     },
@@ -71,6 +84,7 @@ const inviteOrSwitchTeamUseCase = createInviteOrSwitchTeamUseCase({
   userRepositoryDb,
   teamMemberRepositoryDb,
   stockRepositoryDb,
+  stockItemRepositoryDb,
 });
 
 export default inviteOrSwitchTeamUseCase;

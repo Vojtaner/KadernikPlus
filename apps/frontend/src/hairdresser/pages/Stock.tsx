@@ -5,30 +5,29 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../../app/components/DataGrid'
 import ErrorBoundary from './ErrorBoundary'
 import Loader from './Loader'
-import { useParams } from 'react-router-dom'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
-import type { ExistingStockItem } from '../stock/entity'
+import { mapStocksStockItemsToFlatStockItems, type ExistingStockItem } from '../stock/entity'
 import { useStockItemsQuery, useDeleteStockItemMutation } from '../stock/queries'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
 
 const Stock = () => {
-  const { stockId } = useParams()
-  const { data: stockItemData, isError, isLoading } = useStockItemsQuery(stockId)
+  const { data: stocksWithStockItems, isError, isLoading } = useStockItemsQuery(undefined)
   const { mutate: deleteStockItemMutation } = useDeleteStockItemMutation()
+  const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
 
   if (isLoading) {
     return <Loader />
   }
 
-  if (isError || !stockItemData) {
+  if (isError || !stockItems) {
     return <ErrorBoundary />
   }
 
   return (
     <Box sx={{ height: '100%' }}>
-      <AppDataGrid rows={stockItemData} columns={createColumns(deleteStockItemMutation)} />
+      <AppDataGrid rows={stockItems} columns={createColumns(deleteStockItemMutation)} />
     </Box>
   )
 }

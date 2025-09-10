@@ -45,6 +45,7 @@ export const getTeam = async (axios: AxiosInstance): Promise<User[]> => {
   const response = await axios.get(teamApi.get())
   return response.data
 }
+
 export const getTeamMembers = async (
   axios: AxiosInstance,
   teamId: string
@@ -52,6 +53,7 @@ export const getTeamMembers = async (
   const response = await axios.get(teamApi.getMembers(teamId))
   return response.data
 }
+
 export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promise<TeamMember> => {
   const response = await axios.delete(teamApi.getMember(), { data: { id } })
   return response.data

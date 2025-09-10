@@ -8,8 +8,8 @@ import { IntlProvider } from 'react-intl'
 import store from './store/store.ts'
 import { enableMocking } from './mswWorkerSetup/browser.ts'
 import { Auth0Provider } from '@auth0/auth0-react'
-import initializeSentry from './sentry/sentry.ts'
 import { usePersistentFilters } from './hooks.ts'
+import initializeSentry from './sentry/sentry.ts'
 
 const messages: { [key: string]: Record<string, string> } = {
   cs: csMessages,

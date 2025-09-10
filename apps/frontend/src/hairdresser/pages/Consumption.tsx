@@ -44,12 +44,12 @@ const Consumption = () => {
       to: dayjs(dates.to),
     },
   })
-
   const { data: stockAllowances, isLoading } = useStockAllowancesQuery({
     teamId,
     fromDate: dayjs(dates.from),
     toDate: dayjs(dates.to),
   })
+  debugger
 
   if (!stockAllowances && isLoading) {
     return <Loader />
@@ -62,7 +62,7 @@ const Consumption = () => {
   const stockAllowancesTableAllRecords = createStockAllowancesTableAllRecords(stockAllowances)
   const stockAllowancesTableByProduct = createStockAllowancesTableByProductByUser(
     stockAllowances,
-    (stockAllowance) => `${stockAllowance.user.name}-${stockAllowance.stockItem.itemName}`
+    (stockAllowance) => `${stockAllowance.user.name}-${stockAllowance.stockItemName}`
   )
   const stockAllowancesTableByUser = createStockAllowancesTableByProductByUser(
     stockAllowances,
@@ -122,11 +122,9 @@ const Consumption = () => {
           <AppDataGrid rows={stockAllowancesTableAllRecords} columns={createColumnsAllRecords(navigate)} />
         )}
         {tabelView === 'byProduct' && (
-          <AppDataGrid rows={stockAllowancesTableByProduct} columns={createColumnsByProductByUser()} />
+          <AppDataGrid rows={stockAllowancesTableByProduct} columns={createColumnsByProduct()} />
         )}
-        {tabelView === 'byUser' && (
-          <AppDataGrid rows={stockAllowancesTableByUser} columns={createColumnsByProductByUser()} />
-        )}
+        {tabelView === 'byUser' && <AppDataGrid rows={stockAllowancesTableByUser} columns={createColumnsByUser()} />}
       </Stack>
     </Stack>
   )
@@ -146,7 +144,7 @@ export const FilterTableButton = (props: {
   )
 }
 
-const createColumnsByProductByUser = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
+const createColumnsByProduct = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'totalQuantity',
@@ -157,7 +155,7 @@ const createColumnsByProductByUser = (): GridColDef<ConsumptionTableByProductByU
       <>
         {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
         {' / '}
-        {params.row.totalPrice}
+        {Math.round(params.row.totalPrice)}
         <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
       </>
     ),
@@ -170,6 +168,29 @@ const createColumnsByProductByUser = (): GridColDef<ConsumptionTableByProductByU
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
 ]
+
+const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
+  {
+    field: 'user',
+    headerName: 'Kdo',
+    disableColumnMenu: true,
+    display: 'flex',
+    renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
+  },
+  {
+    field: 'totalQuantity',
+    headerName: 'Celkem',
+    minWidth: 70,
+    disableColumnMenu: true,
+    renderCell: (params) => (
+      <>
+        {Math.round(params.row.totalPrice)}
+        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
+      </>
+    ),
+  },
+]
+
 const createColumnsAllRecords = (
   navigate: (path: string) => void
 ): GridColDef<ConsumptionTableAllRecordType[][number]>[] => [
@@ -197,7 +218,7 @@ const createColumnsAllRecords = (
       <>
         {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
         {' / '}
-        {params.row.totalPrice}
+        {Math.round(params.row.totalPrice)}
         <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
       </>
     ),

@@ -37,4 +37,5 @@ export type TeamMemberRepositoryPort = {
     teamId: string;
   }) => Promise<TeamMember | null>;
   delete: (teamMemberRowId: string) => Promise<void>;
+  findAll: (userId: string) => Promise<TeamMember[]>;
 };

@@ -13,9 +13,11 @@ import {
   useDeleteTeamMemberMutation,
   type SkillUpdateInput,
 } from '../team/queries'
+import { useAppNavigate } from '../../hooks'
 
 const Team = () => {
   const { teamId } = useParams()
+  const navigate = useAppNavigate()
   const { data: teamMembers, isLoading } = useTeamMembersQuery(teamId)
   const { mutate: updateTeamMemberSkill } = useUpdateTeamMemberSkill(teamId)
   const { mutate: deleteTeamMember } = useDeleteTeamMemberMutation()
@@ -33,7 +35,7 @@ const Team = () => {
   }
 
   const teamMembersRows = createTeamMemberSettingsRows(teamMembers)
-  const columns = createColumns(updateTeamMemberSkill, deleteTeamMember, teamMembersRows)
+  const columns = createColumns(updateTeamMemberSkill, deleteTeamMember, navigate, teamMembersRows)
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -61,6 +63,7 @@ export default Team
 const createColumns = (
   updateFn: (data: SkillUpdateInput) => void,
   deleteFn: (id: string) => void,
+  navigate: (path: string) => void,
   allRows: (TeamSettings & { userId: string })[]
 ): GridColDef<(TeamSettings & { userId: string })[][number]>[] => [
   { field: 'name', headerName: 'Uživatel', minWidth: 110, disableColumnMenu: true },
@@ -68,7 +71,7 @@ const createColumns = (
   {
     field: 'canAccessStocks',
     headerName: 'Sklad',
-    width: 65,
+    width: 85,
     disableColumnMenu: true,
     renderCell: (params) => (
       <Checkbox
@@ -91,57 +94,57 @@ const createColumns = (
     ),
   },
 
-  {
-    field: 'canAccessClients',
-    headerName: 'Klienti',
-    width: 65,
-    disableColumnMenu: true,
-    renderCell: (params) => (
-      <Checkbox
-        checked={params.value}
-        color={params.value ? 'success' : 'default'}
-        onChange={() => {
-          const row = allRows.find((r) => r.userId === params.row.userId)
+  // {
+  //   field: 'canAccessClients',
+  //   headerName: 'Klienti',
+  //   width: 65,
+  //   disableColumnMenu: true,
+  //   renderCell: (params) => (
+  //     <Checkbox
+  //       checked={params.value}
+  //       color={params.value ? 'success' : 'default'}
+  //       onChange={() => {
+  //         const row = allRows.find((r) => r.userId === params.row.userId)
 
-          if (!row) {
-            return
-          }
+  //         if (!row) {
+  //           return
+  //         }
 
-          updateFn({
-            memberId: row.userId.toString(),
-            canAccessStocks: row.canAccessStocks,
-            canAccessClients: !params.value,
-            canAccessVisits: row.canAccessVisits,
-          })
-        }}
-      />
-    ),
-  },
+  //         updateFn({
+  //           memberId: row.userId.toString(),
+  //           canAccessStocks: row.canAccessStocks,
+  //           canAccessClients: !params.value,
+  //           canAccessVisits: row.canAccessVisits,
+  //         })
+  //       }}
+  //     />
+  //   ),
+  // },
 
-  {
-    field: 'canAccessVisits',
-    headerName: 'Návštěvy',
-    width: 75,
-    disableColumnMenu: true,
-    renderCell: (params) => (
-      <Checkbox
-        checked={params.value}
-        color={params.value ? 'success' : 'default'}
-        onChange={() => {
-          const row = allRows.find((r) => r.id === params.row.id)
-          if (!row) {
-            return
-          }
-          updateFn({
-            memberId: row.userId.toString(),
-            canAccessStocks: row.canAccessStocks,
-            canAccessClients: row.canAccessClients,
-            canAccessVisits: !params.value,
-          })
-        }}
-      />
-    ),
-  },
+  // {
+  //   field: 'canAccessVisits',
+  //   headerName: 'Návštěvy',
+  //   width: 75,
+  //   disableColumnMenu: true,
+  //   renderCell: (params) => (
+  //     <Checkbox
+  //       checked={params.value}
+  //       color={params.value ? 'success' : 'default'}
+  //       onChange={() => {
+  //         const row = allRows.find((r) => r.id === params.row.id)
+  //         if (!row) {
+  //           return
+  //         }
+  //         updateFn({
+  //           memberId: row.userId.toString(),
+  //           canAccessStocks: row.canAccessStocks,
+  //           canAccessClients: row.canAccessClients,
+  //           canAccessVisits: !params.value,
+  //         })
+  //       }}
+  //     />
+  //   ),
+  // },
 
   {
     field: 'delete',
@@ -157,7 +160,8 @@ const createColumns = (
             return
           }
 
-          deleteFn(row.id.toString())
+          deleteFn(row.userId)
+          navigate('/')
         }}
         icon={<DeleteOutlineIcon />}
       />

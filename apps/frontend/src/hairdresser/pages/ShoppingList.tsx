@@ -5,8 +5,8 @@ import Loader from './Loader'
 import BoxIcon from '../../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
-import type { StockItem } from '../stock/entity'
-import { useStocksQuery, useStockItemsQuery } from '../stock/queries'
+import { mapStocksStockItemsToFlatStockItems, type StockItem } from '../stock/entity'
+import { useStockItemsQuery } from '../stock/queries'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
 
 type ShoppingListProps = {
@@ -16,8 +16,8 @@ type ShoppingListProps = {
 
 const ShoppingList = (props: ShoppingListProps) => {
   const { columnHeaderHeight, hideFooter = false } = props
-  const { data: stocks } = useStocksQuery()
-  const { data: stockItems } = useStockItemsQuery(stocks ? stocks[0].id : undefined)
+  const { data: stocksStockItems } = useStockItemsQuery(undefined)
+  const stockItems = mapStocksStockItemsToFlatStockItems(stocksStockItems)
 
   if (!stockItems) {
     return <Loader />

@@ -9,7 +9,7 @@ export function createStockAllowancesTableByProductByUser(
   stockAllowances.forEach((stockAllowance) => {
     const key = keyExtractor(stockAllowance)
     const quantity = Number(stockAllowance.quantity)
-    const price = quantity * Number(stockAllowance.stockItem.avgUnitPrice)
+    const price = quantity * Number(stockAllowance.avgUnitPrice)
 
     if (summaryMap[key]) {
       summaryMap[key].totalQuantity += quantity
@@ -18,7 +18,7 @@ export function createStockAllowancesTableByProductByUser(
       summaryMap[key] = {
         id: key,
         user: stockAllowance.user.name,
-        stockItemName: stockAllowance.stockItem.itemName,
+        stockItemName: stockAllowance.stockItemName,
         unit: stockAllowance.stockItem.unit,
         totalQuantity: quantity,
         totalPrice: price,
@@ -34,8 +34,8 @@ export const createStockAllowancesTableAllRecords = (
 ): ConsumptionTableAllRecordType[] =>
   stockAllowances.map((stockAllowance) => ({
     id: stockAllowance.id,
-    stockItemName: stockAllowance.stockItem.itemName,
-    totalPrice: Number(stockAllowance.quantity) * Number(stockAllowance.stockItem.avgUnitPrice),
+    stockItemName: stockAllowance.stockItemName,
+    totalPrice: Number(stockAllowance.quantity) * Number(stockAllowance.avgUnitPrice),
     stockAllowanceQuantity: Number(stockAllowance.quantity),
     unit: stockAllowance.stockItem.unit,
     user: stockAllowance.user.name,
