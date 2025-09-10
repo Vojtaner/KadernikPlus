@@ -2,15 +2,15 @@ import { Box, Typography, Stack, IconButton, Button } from '@mui/material'
 import AppTheme from '../AppTheme'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat'
-import type { StockAllowance } from '../domains/stock/entity'
+import type { StockAllowance } from '../hairdresser/stock/entity'
 import { queryClient } from '../reactQuery/reactTanstackQuerySetup'
 import { useParams } from 'react-router-dom'
 import type { PostNewProcedure } from '../entities/procedure'
 import AddProcedureButton, {
   type AddProcedureStockAllowanceType,
-} from '../domains/procedure/components/AddProcedureButton'
-import { useProceduresMutation } from '../domains/procedure/queries'
-import { useStocksQuery } from '../domains/stock/queries'
+} from '../hairdresser/procedure/components/AddProcedureButton'
+import { useProceduresMutation } from '../hairdresser/procedure/queries'
+import { useStocksQuery } from '../hairdresser/stock/queries'
 
 type ProcedureCardProps = {
   description: string

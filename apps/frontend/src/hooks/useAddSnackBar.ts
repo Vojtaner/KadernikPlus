@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { createSelector } from '@reduxjs/toolkit'
 import { addedSnackbarMessage, removedSnackbarMessage, type SnackbarMessage } from '../store/snackBarReducer'
-import type { RootState } from '../store'
+import type { RootState } from '../store/store'
 import { v4 as uuidv4 } from 'uuid'
 
 export const useAddSnackbarMessage = () => {

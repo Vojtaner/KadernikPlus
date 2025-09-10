@@ -1,4 +1,4 @@
-import type { AddProcedureStockAllowanceType } from '../domains/procedure/components/AddProcedureButton'
+import type { AddProcedureStockAllowanceType } from '../hairdresser/procedure/components/AddProcedureButton'
 
 export type Procedure = {
   id: string

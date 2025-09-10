@@ -1,7 +1,7 @@
 import { BarChart } from '@mui/x-charts/BarChart'
 import AppTheme from '../AppTheme'
 import dayjs from 'dayjs'
-import type { VisitWithServicesWithProceduresWithStockAllowances } from '../domains/visits/entity'
+import type { VisitWithServicesWithProceduresWithStockAllowances } from '../hairdresser/visits/entity'
 import type { DatesRange } from '../hooks'
 
 type AppBarChartProps = {

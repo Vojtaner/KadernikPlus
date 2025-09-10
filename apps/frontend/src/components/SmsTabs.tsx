@@ -4,14 +4,14 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { TabPanel } from '@mui/lab'
 import { useState, type ReactElement } from 'react'
-import { getDateTimeFromUtcToLocal } from '../domains/visits/components/VisitsList'
+import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
-import { DepositStatus, type VisitService, type VisitWithServices } from '../domains/visits/entity'
-import Loader from '../pages/Loader'
+import { DepositStatus, type VisitService, type VisitWithServices } from '../hairdresser/visits/entity'
+import Loader from '../hairdresser/pages/Loader'
 import dayjs from 'dayjs'
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
 import { FormattedMessage } from 'react-intl'
-import { useVisitsQuery } from '../domains/visits/queries'
+import { useVisitsQuery } from '../hairdresser/visits/queries'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')

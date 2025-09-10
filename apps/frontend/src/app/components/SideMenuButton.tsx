@@ -1,7 +1,7 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import type { AppRoutePath } from '../../routes/AppRoutes'
 import AppTheme from '../../AppTheme'
-import { useAppDispatch } from '../../store'
+import { useAppDispatch } from '../../store/store'
 import { setCurrentLocationAppendix } from '../../store/appUiSlice'
 import { useAppNavigate } from '../../hooks'
 import type { ReactNode } from 'react'

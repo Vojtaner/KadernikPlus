@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs, { Dayjs } from 'dayjs'
 import { produce } from 'immer'
-import { useScrollToTheTop } from './domains/procedure/components/AddProcedureButton'
+import { useScrollToTheTop } from './hairdresser/procedure/components/AddProcedureButton'
 
 export const useAppNavigate = () => {
   const navigate = useNavigate()

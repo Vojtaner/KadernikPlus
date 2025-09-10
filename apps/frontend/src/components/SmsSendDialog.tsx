@@ -14,7 +14,7 @@ import AddAlertIcon from '@mui/icons-material/AddAlert'
 import RateReviewIcon from '@mui/icons-material/RateReview'
 import SendIcon from '@mui/icons-material/Send'
 import AppTheme from '../AppTheme'
-import { useClientVisitsQuery } from '../domains/visits/queries'
+import { useClientVisitsQuery } from '../hairdresser/visits/queries'
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{

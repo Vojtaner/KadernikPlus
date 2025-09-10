@@ -7,7 +7,7 @@ import { useForm, type Control } from 'react-hook-form'
 import TextField from './TextField'
 import { useIntl } from 'react-intl'
 import { useDebounce } from '../../hooks'
-import { useSearchClientsQuery } from '../../domains/client/queries'
+import { useSearchClientsQuery } from '../../hairdresser/client/queries'
 
 type SearchBarProps = {
   isActive?: boolean

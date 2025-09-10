@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react'
 import { useSubscriptionQuery } from '../queries'
 import { Navigate } from 'react-router-dom'
 import { ROUTES } from '../routes/AppRoutes'
-import Loader from '../pages/Loader'
+import Loader from '../hairdresser/pages/Loader'
 
 const SubscriptionGuard = (props: PropsWithChildren) => {
   const { children } = props

@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, type PropsWithChildren } from 'react'
-import Loader from '../../pages/Loader'
+import Loader from '../../hairdresser/pages/Loader'
 
 const AuthGuard = (props: PropsWithChildren) => {
   const { children } = props
