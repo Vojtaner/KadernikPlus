@@ -165,8 +165,9 @@ const createClientRepositoryDb = (
         return client;
       }
 
-      throw new Error(
-        "Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění."
+      throw httpError(
+        "Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění.",
+        403
       );
     },
 
