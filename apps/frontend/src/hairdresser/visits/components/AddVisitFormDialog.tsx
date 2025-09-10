@@ -21,7 +21,6 @@ export const AddVisitFormDialog = () => {
   }
 
   const onSubmit = (data: CreateVisitType) => {
-    console.log({ data })
     createVisitMutation(data)
     handleClose()
   }

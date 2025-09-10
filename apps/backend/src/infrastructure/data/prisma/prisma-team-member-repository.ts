@@ -87,7 +87,6 @@ const createTeamMemberRepositoryDb = (
   },
   update: async (teamMemberData) => {
     const { userId, ...updateData } = teamMemberData;
-    console.log({ teamMemberData });
     const teamMember = await prisma.teamMember.update({
       where: { userId },
       data: {

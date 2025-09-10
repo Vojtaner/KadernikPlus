@@ -49,7 +49,6 @@ const Consumption = () => {
     fromDate: dayjs(dates.from),
     toDate: dayjs(dates.to),
   })
-  debugger
 
   if (!stockAllowances && isLoading) {
     return <Loader />

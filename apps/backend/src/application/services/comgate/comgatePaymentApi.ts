@@ -77,8 +77,6 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
       base64_encode(`${getEnvVar("MERCHANT")}:${getEnvVar("COMGATE_SECRET")}`)
     }`;
 
-    console.log({ autorizace });
-
     try {
       const response = await axios.post<ComgateCreatePaymentReturnType>(
         "https://payments.comgate.cz/v2.0/payment.json",
@@ -91,7 +89,6 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
           },
         }
       );
-      console.log({ response });
       return response.data;
     } catch (error: any) {
       console.error(

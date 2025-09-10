@@ -32,7 +32,6 @@ const createProcedureRepositoryDb = (
 
   addOrUpdate: async (data: ProcedureCreateData) => {
     const { id, userId, visitId, description, stockAllowances = [] } = data;
-    console.log({ data });
     const teamMember = await prisma.teamMember.findFirst({ where: { userId } });
 
     if (!teamMember) {
@@ -59,8 +58,6 @@ const createProcedureRepositoryDb = (
         (s) => s.stockAllowanceId && existingIds.has(s.stockAllowanceId)
       );
       const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
-
-      console.log(existingIds, incomingIds, toCreate, toUpdate);
 
       return prisma.$transaction(async (tx) => {
         const stockItemIds = stockAllowances.map(

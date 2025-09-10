@@ -35,7 +35,7 @@ const createPushNotificationPaymentUseCase = (dependencies: {
         return updatedSubscription;
       }
     } catch (error) {
-      console.log("createPushNotificationPaymentUseCase", error);
+      console.error("createPushNotificationPaymentUseCase", error);
       throw new Error("Platbu se nepovedlo zpracovat.");
     }
   },

@@ -65,7 +65,6 @@ const createVisitController = (dependencies: {
       const shiftedTime = original;
       const userId = httpRequest.userId;
       const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
-      console.log({ addVisitController: httpRequest.body });
 
       if (
         !visitData.clientId &&

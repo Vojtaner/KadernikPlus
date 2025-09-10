@@ -13,7 +13,6 @@ const createStockItemRepositoryDb = (
 ): StockItemRepositoryPort => {
   return {
     deleteAll: async (stockId: string): Promise<Prisma.BatchPayload> => {
-      console.log({ stockId });
       return await prisma.stockItem.updateMany({
         where: { stockId },
         data: { isActive: false },

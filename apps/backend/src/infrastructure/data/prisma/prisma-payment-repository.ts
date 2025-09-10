@@ -37,7 +37,7 @@ const createPaymentRepositoryDb = (
           return updatedPayment;
         }
       } catch (error) {
-        console.log("prismaPaymentRepositoryDb - updatePayment error", error);
+        console.error("prismaPaymentRepositoryDb - updatePayment error", error);
         throw new Error("Platbu nelze aktualizovat.");
       }
     },
