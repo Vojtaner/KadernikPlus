@@ -8,6 +8,8 @@ const initializeSentry = () => {
     tracesSampleRate: process.env.IS_DEVELOPMENT === 'true' ? 1 : 0.4,
     profilesSampleRate: process.env.IS_DEVELOPMENT === 'true' ? 1 : 0.4,
     enableLogs: true,
+    integrations: [Sentry.browserTracingIntegration()],
+    tracePropagationTargets: ['localhost', /^https:\/\/api\.kadernikplus\.cz/],
   })
 }
 
