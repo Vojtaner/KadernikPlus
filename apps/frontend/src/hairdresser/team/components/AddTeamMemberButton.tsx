@@ -63,15 +63,15 @@ const AddTeamMemberButton = () => {
             required
             fullWidth
             rules={{
-              minLength: { message: 'Zvaný uživatel uvidí ID na svém profilu', value: 4 },
-              maxLength: { message: 'Zvaný uživatel uvidí ID na svém profilu', value: 4 },
+              minLength: { message: 'Majitel týmu uvidí ID na svém profilu', value: 4 },
+              maxLength: { message: 'Majitel týmu uvidí ID na svém profilu', value: 4 },
             }}
           />
         </>
       }
-      onOpenButton={<Button onClick={handleClickOpen}>+ Přidat člena</Button>}
+      onOpenButton={<Button onClick={handleClickOpen}>Přidat se do cizího týmu</Button>}
       title="Zadejte email"
-      dialogHelperText="Kolega/kolegyně musí mít aktivní účet."
+      dialogHelperText="Takto se stanete součástí jiného týmu. Smaže se Vám Váš sklad a budete sklad sdílet s majitelem týmu. Veškeré spotřeby i náklady u návštěv Vám zůstanou."
     />
   )
 }
