@@ -16,6 +16,7 @@ COPY backend/ .
     # 1. grant priviledges to database 
     # 2. prisma migrate, 
     # 3. prisma generate
+RUN npx prisma generate
 
 RUN npm run build
 

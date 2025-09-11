@@ -26,6 +26,7 @@ COPY . .
 # RUN chmod +x ./init.sh
 
 # RUN ./init.sh
+RUN npx prisma generate
 
 RUN npm run build
 
