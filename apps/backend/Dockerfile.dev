@@ -11,7 +11,6 @@ COPY backend/ .
 # COPY backend/init.sh ./init.sh
 
 # RUN chmod +x ./init.sh
-
 # running init.sh file to make 
     # 1. grant priviledges to database 
     # 2. prisma migrate, 
