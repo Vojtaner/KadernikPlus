@@ -4,13 +4,13 @@ WORKDIR /backend
 
 COPY backend/package.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY backend/ .
 
-COPY backend/init.sh ./init.sh
+# COPY backend/init.sh ./init.sh
 
-RUN chmod +x ./init.sh
+# RUN chmod +x ./init.sh
 
 # running init.sh file to make 
     # 1. grant priviledges to database 

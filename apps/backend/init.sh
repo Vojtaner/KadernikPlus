@@ -1,18 +1,27 @@
-#!/bin/sh
-set -e
+# #!/bin/sh
+# set -e
 
-echo "🌍 Environment: $NODE_ENV"
+# # Load .env safely
+# if [ -f .env ]; then
+#   set -a           # export all variables
+#   . ./.env         # source .env
+#   set +a
+# fi
 
-if [ "$NODE_ENV" = "production" ]; then
-  echo "🧬 Running Prisma migrate deploy..."
-  npx prisma migrate deploy
-else
-  echo "🧬 Running Prisma migrate dev..."
-  npx prisma migrate dev --name init --skip-seed
-fi
+# echo "🌍 Environment: $IS_DEVELOPMENT"
 
-npx prisma generate
+# if [ "$IS_DEVELOPMENT" = "true" ]; then
+#     echo "🧬 Running Prisma migrate dev..."
+#     npx prisma migrate dev --name init --skip-seed
+# else
+#     echo "🧬 Running Prisma migrate deploy..."
+#     npx prisma migrate deploy
+# fi
 
-echo "🚀 Starting server..."
+# npx prisma generate
 
-exec "$@"
+# echo "🚀 Starting server..."
+# npm run dev
+# # npm run start
+
+# exec "$@"
