@@ -104,7 +104,7 @@ const SmsSendDialog = (props: {
               title="Recenze"
               icon={<RateReviewIcon />}
               visits={groupedVisits.reviews}
-              getText={(review) => formatVisitReviewRequestSms(review.client.lastName)}
+              getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
             />
           ) : null}
         </>

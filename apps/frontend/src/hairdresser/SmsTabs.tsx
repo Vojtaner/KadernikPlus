@@ -78,7 +78,7 @@ const SmsTabs = () => {
         <TabPanel value="3" sx={{ py: 2, px: 0 }}>
           <SmsList
             visits={groupedVisits.reviews}
-            getText={(review) => formatVisitReviewRequestSms(review.client.lastName)}
+            getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
           />
         </TabPanel>
       </TabContext>
@@ -143,14 +143,15 @@ export function formatVisitInvitationToSms(lastName: string, services: VisitServ
   return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${localDate}. Těšíme se na Vás!`
 }
 
-export function formatVisitReviewRequestSms(lastName: string): string {
-  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Děkujeme!`
+export function formatVisitReviewRequestSms(lastName: string, reviewUrl: string | undefined): string {
+  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: ${reviewUrl} Děkujeme!`
 }
 
 export function formatVisitPartialPaymentReminderSms(
   lastName: string,
   services: VisitService[],
   bankAccount: string | undefined,
+
   visit: {
     date: Date
     depositRequired?: boolean | undefined

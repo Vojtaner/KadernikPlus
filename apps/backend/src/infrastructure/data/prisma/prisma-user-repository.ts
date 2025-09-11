@@ -31,6 +31,7 @@ const createUserRepositoryDb = (
     userId: string,
     data: { bankAccount: string }
   ): Promise<User | null> => {
+    console.log({ userId, data });
     const user = await prismaUserRepository.user.update({
       where: { id: userId },
       data: { ...data },

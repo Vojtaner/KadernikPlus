@@ -60,6 +60,12 @@ const MyProfile = () => {
               input={userData.bankAccount}
             />
           </Grid>
+          <Grid size={6}>
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Odkaz na recenze', id: 'myProfile.reviewUrl' })}
+              input={userData.reviewUrl}
+            />
+          </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
 
