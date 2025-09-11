@@ -14,28 +14,6 @@ COPY . .
 RUN npm run build
 
 
-# FROM node:23-bullseye-slim
-# WORKDIR /app
-
-# RUN apt-get update && apt-get install -y dos2unix
-
-# COPY --from=build /app/dist ./dist
-# COPY env.sh /env.sh
-
-# RUN dos2unix /env.sh && chmod +x /env.sh
-
-# RUN npm install -g serve
-
-# ENV PORT=8083
-# ENV APP_PREFIX=PREFIX_
-# ENV ASSET_DIR=/app/dist
-
-# ENTRYPOINT ["/env.sh"]
-
-# CMD ["serve", "-s", "dist", "-l", "8083"]
-
-
-
 
 # ===== STAGE 2: Final image with Nginx & env.sh =====
 FROM nginx:alpine
