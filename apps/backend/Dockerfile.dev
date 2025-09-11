@@ -16,9 +16,12 @@ COPY backend/ .
     # 1. grant priviledges to database 
     # 2. prisma migrate, 
     # 3. prisma generate
-RUN npx prisma db pull
-RUN npx prisma migrate dev --name baseline --create-only
+# RUN npx prisma db pull
+# RUN npx prisma migrate dev --name baseline --create-only
 RUN npx prisma generate
+
+# Aplikovat migrace
+RUN npx prisma migrate deploy
 
 RUN npm run build
 
