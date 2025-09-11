@@ -17,7 +17,7 @@ ENV SENTRY_RELEASE = "default_release_tag_refactor"
 ENV SENTRY_LOG_LEVEL=debug
 
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
