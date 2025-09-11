@@ -6,4 +6,5 @@ export type UserRepositoryPort = {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
   findAll(): Promise<User[]>;
+  update(userId: string, data: { bankAccount: string }): Promise<User | null>;
 };

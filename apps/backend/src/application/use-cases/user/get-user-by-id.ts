@@ -18,7 +18,7 @@ const createGetUserByIdUseCase = (dependencies: {
       if (!user) {
         return UserNotFoundError(userId);
       }
-
+      console.log({ user });
       return user;
     },
   };

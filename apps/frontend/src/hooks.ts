@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux'
 import { setCurrentLocationAppendix, type AppLanguage } from './store/appUiSlice'
 import { useScrollToTheTop, type StockViewKey, type VisitViewKey } from './entity'
 import { useState, useEffect, useCallback } from 'react'
-import { useAuth0 } from '@auth0/auth0-react'
 import dayjs, { Dayjs } from 'dayjs'
 import { produce } from 'immer'
 import { useAppLocation } from './routes/reactRouter'
@@ -61,30 +60,29 @@ export type VisitListApplyFilter = keyof PersistentFiltersType['visits'] | 'only
 
 export const DEFAULT_PERSISTENT_FILTERS: PersistentFiltersType = {
   visits: {
-    dashBoardVisitOverView: { dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' },
+    dashBoardVisitOverView: {
+      dates: { from: dayjs().subtract(1, 'day').toISOString(), to: dayjs().add(1, 'day').toISOString() },
+      view: 'byAll',
+    },
     allVisitsPage: {
-      dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') },
+      dates: { from: dayjs().subtract(1, 'day').toISOString(), to: dayjs().add(1, 'day').toISOString() },
       view: 'byAll',
     },
   },
-  revenue: { dates: { from: dayjs().subtract(7, 'day'), to: dayjs() } },
+  revenue: { dates: { from: dayjs().subtract(7, 'day').toISOString(), to: dayjs().toISOString() } },
   consumption: {
-    dates: { from: dayjs().startOf('month'), to: dayjs().endOf('month') },
+    dates: { from: dayjs().startOf('month').toISOString(), to: dayjs().endOf('month').toISOString() },
     view: 'byUser',
   },
   language: 'cs',
 }
 
-export function usePersistentFilters() {
-  const { user } = useAuth0()
-  const storageKey = `filters:${user?.sub}`
+const STORAGE_KEY = 'persistentFilters'
 
+export function usePersistentFilters() {
   const [filters, setFilters] = useState<PersistentFiltersType>(() => {
-    if (!user?.sub) {
-      return DEFAULT_PERSISTENT_FILTERS
-    }
     try {
-      const stored = localStorage.getItem(storageKey)
+      const stored = localStorage.getItem(STORAGE_KEY)
       return stored ? JSON.parse(stored) : DEFAULT_PERSISTENT_FILTERS
     } catch {
       return DEFAULT_PERSISTENT_FILTERS
@@ -92,14 +90,11 @@ export function usePersistentFilters() {
   })
 
   useEffect(() => {
-    if (!user?.sub) {
-      return
-    }
-    localStorage.setItem(storageKey, JSON.stringify(filters))
-  }, [user?.sub, filters])
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filters))
+  }, [filters])
 
   const updateFilters = (updater: (draft: typeof filters) => void) => {
-    setFilters((prev: typeof filters) => produce(prev, updater))
+    setFilters((prev) => produce(prev, updater))
   }
 
   return [filters, updateFilters] as const
@@ -136,7 +131,13 @@ export const useVisitListFilters = (
     return [filters.visits.allVisitsPage, scopedUpdater]
   }
 
-  return [{ dates: { from: dayjs().subtract(1, 'day'), to: dayjs().add(1, 'day') }, view: 'byAll' }, () => {}]
+  return [
+    {
+      dates: { from: dayjs().subtract(1, 'day').toISOString(), to: dayjs().add(1, 'day').toISOString() },
+      view: 'byAll',
+    },
+    () => {},
+  ]
 }
 
 export function useDebounce<T>(value: T, delay: number) {

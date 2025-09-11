@@ -1,13 +1,22 @@
-import { Grid, Button, Stack, Divider } from '@mui/material'
+import { Grid, Button, Stack, Divider, Typography } from '@mui/material'
 import DetailColumn from '../../app/components/DetailColumn'
 import { useAuth0 } from '@auth0/auth0-react'
 import Loader from './Loader'
+import { UserProfilDialog } from '../UserFormDialog'
+import { useIntl } from 'react-intl'
+import { useUserDataQuery } from '../../queries'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
+  const intl = useIntl()
+  const { data: userData } = useUserDataQuery()
 
   if (isLoading) {
     return <Loader />
+  }
+
+  if (!userData) {
+    return <Typography>Žádná data nenalezeny.</Typography>
   }
 
   return (
@@ -16,30 +25,54 @@ const MyProfile = () => {
       <>
         <Grid container rowSpacing={2}>
           <Grid size={6} padding={0}>
-            <DetailColumn label={'Jméno'} input={user.given_name} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Jméno', id: 'myProfile.firstName' })}
+              input={user.given_name}
+            />
           </Grid>
           <Grid size={6}>
-            <DetailColumn label={'Příjmení'} input={user.family_name} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Příjmení', id: 'myProfile.lastName' })}
+              input={user.family_name}
+            />
           </Grid>
           <Grid size={6}>
-            <DetailColumn label={'Telefon'} input={'+420 732 358 754'} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Telefon', id: 'myProfile.phone' })}
+              input={'+420 732 358 754'}
+            />
           </Grid>
           <Grid size={6}>
-            <DetailColumn label={'E-mail'} input={user.email} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'E-mail', id: 'myProfile.email' })}
+              input={user.email}
+            />
           </Grid>
           <Grid size={6}>
-            <DetailColumn label={'Souhlasné ID'} input={user.sub?.slice(-4)} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Souhlasné ID', id: 'myProfile.confirmId' })}
+              input={user.sub?.slice(-4)}
+            />
           </Grid>
           <Grid size={6}>
-            <DetailColumn label={'Číslo bankovního účtu'} input={'111111111/2020'} />
+            <DetailColumn
+              label={intl.formatMessage({ defaultMessage: 'Číslo bankovního účtu', id: 'myProfile.bankAccount' })}
+              input={userData.bankAccount}
+            />
           </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
 
         <Grid container rowSpacing={2}>
           <Stack direction={'row'} spacing={2}>
-            <Button>Smazat profil</Button>
-            <Button>Upravit profil</Button>
+            <Button>{intl.formatMessage({ defaultMessage: 'Smazat profil', id: 'myProfile.deleteProfile' })}</Button>
+            <UserProfilDialog
+              openButton={
+                <Button>
+                  {intl.formatMessage({ defaultMessage: 'Upravit bankovní účet', id: 'myProfile.editProfile' })}
+                </Button>
+              }
+            />
           </Stack>
         </Grid>
       </>

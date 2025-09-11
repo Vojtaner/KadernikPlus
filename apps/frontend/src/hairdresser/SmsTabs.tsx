@@ -12,11 +12,13 @@ import dayjs from 'dayjs'
 import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
 import { FormattedMessage } from 'react-intl'
 import { useVisitsQuery } from '../hairdresser/visits/queries'
+import { useUserDataQuery } from '../queries'
 
 const SmsTabs = () => {
   const [value, setValue] = useState('1')
   const from = dayjs().subtract(4, 'day')
   const to = dayjs().add(8, 'day')
+  const { data: userData } = useUserDataQuery()
 
   const { data: visitData, isLoading } = useVisitsQuery({ query: { from, to } })
 
@@ -58,12 +60,17 @@ const SmsTabs = () => {
           <SmsList
             visits={groupedVisits.payments}
             getText={(payment) =>
-              formatVisitPartialPaymentReminderSms(payment.client.lastName, payment.visitServices, {
-                date: payment.date,
-                depositRequired: payment.client.deposit,
-                depositAmount: payment.deposit,
-                depositStatus: payment.depositStatus,
-              })
+              formatVisitPartialPaymentReminderSms(
+                payment.client.lastName,
+                payment.visitServices,
+                userData?.bankAccount,
+                {
+                  date: payment.date,
+                  depositRequired: payment.client.deposit,
+                  depositAmount: payment.deposit,
+                  depositStatus: payment.depositStatus,
+                }
+              )
             }
           />
         </TabPanel>
@@ -143,6 +150,7 @@ export function formatVisitReviewRequestSms(lastName: string): string {
 export function formatVisitPartialPaymentReminderSms(
   lastName: string,
   services: VisitService[],
+  bankAccount: string | undefined,
   visit: {
     date: Date
     depositRequired?: boolean | undefined
@@ -162,7 +170,7 @@ export function formatVisitPartialPaymentReminderSms(
   const shouldPay = depositStatus === DepositStatus.NEZAPLACENO || depositRequired === false
 
   if (shouldPay) {
-    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`
+    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} na číslo účtu ${bankAccount} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`
   }
   return ''
 }

@@ -15,6 +15,7 @@ import RateReviewIcon from '@mui/icons-material/RateReview'
 import SendIcon from '@mui/icons-material/Send'
 import AppTheme from '../AppTheme'
 import { useClientVisitsQuery } from '../hairdresser/visits/queries'
+import { useUserDataQuery } from '../queries'
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{
@@ -27,6 +28,7 @@ const SmsSendDialog = (props: {
   const { openButton, clientId } = props
   const [open, setOpen] = useState(false)
   const { data: clientData } = useClientVisitsQuery(clientId)
+  const { data: userData } = useUserDataQuery()
 
   if (!clientData?.length) {
     const disabledOpenDialogButton = React.cloneElement(openButton, {
@@ -83,12 +85,17 @@ const SmsSendDialog = (props: {
               title="Záloha"
               icon={<QrCodeIcon />}
               getText={(payment) =>
-                formatVisitPartialPaymentReminderSms(payment.client.lastName, payment.visitServices, {
-                  date: payment.date,
-                  depositAmount: payment.deposit,
-                  depositStatus: payment.depositStatus,
-                  depositRequired: payment.client.deposit,
-                })
+                formatVisitPartialPaymentReminderSms(
+                  payment.client.lastName,
+                  payment.visitServices,
+                  userData?.bankAccount,
+                  {
+                    date: payment.date,
+                    depositAmount: payment.deposit,
+                    depositStatus: payment.depositStatus,
+                    depositRequired: payment.client.deposit,
+                  }
+                )
               }
             />
           ) : null}

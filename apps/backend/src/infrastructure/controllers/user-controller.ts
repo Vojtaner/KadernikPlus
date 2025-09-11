@@ -7,10 +7,15 @@ import getUserByIdUseCase, {
 import { UserCreateData } from "@/entities/user";
 import { HasId } from "@/domain/entity";
 import { ControllerFunction } from "@/adapters/express/make-express-callback";
+import { httpError } from "../../adapters/express/httpError";
+import updateUserUseCase, {
+  UpdateUserUseCaseType,
+} from "../../application/use-cases/user/update-user";
 
 type CreateUserControllerType = {
   addUserController: ControllerFunction<AddUserControllerType>;
   getUserByIdController: ControllerFunction<GetUserByIdControllerType>;
+  updateUserController: ControllerFunction<UpdateUserControllerType>;
 };
 
 type AddUserControllerType = {
@@ -18,10 +23,12 @@ type AddUserControllerType = {
 };
 
 type GetUserByIdControllerType = { params: HasId };
+type UpdateUserControllerType = { body: { bankAccount: string } };
 
 const createUserController = (dependencies: {
   getUserByIdUseCase: GetUserByIdUseCaseType;
   addUserUseCase: AddUserUseCaseType;
+  updateUserUseCase: UpdateUserUseCaseType;
 }): CreateUserControllerType => {
   const addUserController: ControllerFunction<AddUserControllerType> = async (
     httpRequest
@@ -59,20 +66,40 @@ const createUserController = (dependencies: {
       throw error; // Let makeExpressCallback handle the generic 500 error
     }
   };
+  const updateUserController: ControllerFunction<
+    UpdateUserControllerType
+  > = async (httpRequest) => {
+    try {
+      const userData = httpRequest.body;
+      const userId = httpRequest.userId;
+
+      const newUser = await dependencies.updateUserUseCase.execute(
+        userId,
+        userData
+      );
+
+      return {
+        statusCode: 201,
+        body: newUser,
+      };
+    } catch (error: any) {
+      console.error("Error in addUserController:", error);
+      throw httpError("Uživatele se nepovedlo upravit.", 409);
+    }
+  };
   const getUserByIdController: ControllerFunction<
     GetUserByIdControllerType
   > = async (httpRequest) => {
+    const userId = httpRequest.userId;
     try {
-      const { id } = httpRequest.params;
-
-      if (!id) {
+      if (!userId) {
         return {
           statusCode: 400,
           body: { error: "Missing user ID in parameters." },
         };
       }
 
-      const user = await dependencies.getUserByIdUseCase.execute(id);
+      const user = await dependencies.getUserByIdUseCase.execute(userId);
 
       return {
         statusCode: 200,
@@ -90,12 +117,13 @@ const createUserController = (dependencies: {
     }
   };
 
-  return { addUserController, getUserByIdController };
+  return { addUserController, getUserByIdController, updateUserController };
 };
 
 const userController = createUserController({
   getUserByIdUseCase,
   addUserUseCase,
+  updateUserUseCase,
 });
 
 export default userController;

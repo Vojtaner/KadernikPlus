@@ -1,7 +1,6 @@
 import { UserCreateData } from "@/entities/user";
 import { UserRepositoryPort } from "../../../application/ports/user-repository";
 import { PrismaClient, User } from "@prisma/client";
-import mapToDomainUser from "../../../infrastructure/mappers/user-mapper";
 import prisma from "./prisma";
 
 const createUserRepositoryDb = (
@@ -24,6 +23,17 @@ const createUserRepositoryDb = (
   findById: async (id: string): Promise<User | null> => {
     const user = await prismaUserRepository.user.findUnique({
       where: { id },
+    });
+
+    return user;
+  },
+  update: async (
+    userId: string,
+    data: { bankAccount: string }
+  ): Promise<User | null> => {
+    const user = await prismaUserRepository.user.update({
+      where: { id: userId },
+      data: { ...data },
     });
 
     return user;

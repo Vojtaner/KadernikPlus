@@ -5,9 +5,7 @@ import { UserController } from "../infrastructure/controllers/index";
 const userRoutes = Router();
 
 userRoutes.post("/", makeExpressCallback(UserController.addUserController));
-userRoutes.get(
-  "/:id",
-  makeExpressCallback(UserController.getUserByIdController)
-);
+userRoutes.put("/", makeExpressCallback(UserController.updateUserController));
+userRoutes.get("/", makeExpressCallback(UserController.getUserByIdController));
 
 export default userRoutes;

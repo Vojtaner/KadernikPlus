@@ -1,14 +1,11 @@
-import { Button } from '@mui/material'
 import Stack from '@mui/material/Stack'
 
 import type { PropsWithChildren } from 'react'
-import { useScrollToTheTop } from '../../entity'
 
 const BottomBar = (props: PropsWithChildren) => {
   const { children } = props
   const paddingX = '10px'
   const paddingY = '12px'
-  const scroll = useScrollToTheTop()
 
   return (
     <Stack
@@ -27,7 +24,6 @@ const BottomBar = (props: PropsWithChildren) => {
         position: 'sticky',
         bottom: 'env(safe-area-inset-bottom)',
       }}>
-      <Button onClick={() => scroll()}>Nahoru</Button>
       {children}
     </Stack>
   )

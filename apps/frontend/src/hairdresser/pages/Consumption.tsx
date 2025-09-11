@@ -23,7 +23,7 @@ import { BasicDatePicker } from '../../app/components/BasicDatePicker'
 import {
   createStockAllowancesTableAllRecords,
   createStockAllowancesTableByProductByUser,
-} from '../stock/components/stock-allowance'
+} from '../stock/components/store'
 import { useStockAllowancesQuery } from '../stock/queries'
 import { getDateShort } from '../visits/components/VisitsList'
 import { getButtonStyle } from '../entity'

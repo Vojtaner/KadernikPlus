@@ -4,7 +4,9 @@ import { useAxios } from './axios/axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
-import { getLogs, getSubscription, postCreateSubscription } from './api/api'
+import { getLogs, getSubscription, getUser, postCreateSubscription, updateUserData } from './api/api'
+import type { User } from './entities/user'
+import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 
 export const useSubscriptionQuery = () => {
   const axios = useAxios()
@@ -12,6 +14,14 @@ export const useSubscriptionQuery = () => {
   return useQuery<Subscription | ''>({
     queryKey: ['subscription'],
     queryFn: () => getSubscription(axios),
+  })
+}
+export const useUserDataQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<User>({
+    queryKey: ['user'],
+    queryFn: () => getUser(axios),
   })
 }
 
@@ -36,6 +46,25 @@ export const useSubscriptionMutation = () => {
     },
     onError: (error) => {
       addSnackBarMessage({ text: 'Platbu se nepovedlo založit.', type: 'error' })
+      console.error(error)
+    },
+  })
+
+  return { mutation }
+}
+
+export const useUpdateUserMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  const mutation = useMutation<null, Error, User>({
+    mutationFn: async (data) => updateUserData(axios, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      addSnackBarMessage({ text: 'Uživatel upraven', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

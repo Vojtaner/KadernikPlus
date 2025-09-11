@@ -48,13 +48,11 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
 
   const handleClose = () => {
     setOpen(false)
-    scroll()
   }
 
   const onSubmit = (data: StockItemDefaultValuesType) => {
     createOrUpdateStockItemMutation({ ...data, stockId: stocks![0].id })
     handleClose()
-    scroll()
   }
 
   return (
