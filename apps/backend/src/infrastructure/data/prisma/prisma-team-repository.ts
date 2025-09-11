@@ -1,5 +1,5 @@
 import { TeamRepositoryPort } from "@/application/ports/team-repository";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from ".prisma/client";
 import prisma from "./prisma";
 
 const createTeamRepositoryDb = (prisma: PrismaClient): TeamRepositoryPort => ({

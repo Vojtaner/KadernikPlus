@@ -59,3 +59,13 @@ docker compose exec backend npx prisma migrate dev (vyprázdní schéma)
 - smazat lokální node_modules/.prisma a dát lokálně v backend složce npx prisma generate
 - cmd+shift+p a restartovat typescript
 ```
+
+#Smazání migrací a obnova
+
+Z remote connection na railway je možné získat přes
+
+```
+npx prisma db pull --url="databáze-url"
+```
+
+prisma schéma na kterým se vygeneruje migrace, pak se vrátí schéma staré původně shiftnuté a udělá se nová migrace. Při deploy je třeba vymazat z DB migrace staré ne jen ze souboru, ty které by to narušovaly případně.
