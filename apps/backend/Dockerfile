@@ -28,7 +28,7 @@ COPY . .
 # Generování Prisma klienta
 RUN npx prisma generate
 # Pouze deploy migrací (bez resetu DB)
-RUN npx prisma migrate deploy
+# RUN npx prisma migrate deploy
 
 RUN npm run build
 
