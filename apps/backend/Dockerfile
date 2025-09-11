@@ -21,11 +21,11 @@ RUN npm install
 
 COPY . .
 
-COPY ./init.sh .
+# COPY ./init.sh .
 
-RUN chmod +x ./init.sh
+# RUN chmod +x ./init.sh
 
-RUN ./init.sh
+# RUN ./init.sh
 
 RUN npm run build
 
