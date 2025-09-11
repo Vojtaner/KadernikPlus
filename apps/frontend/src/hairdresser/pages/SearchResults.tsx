@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
-import SearchResult from '../../components/SearchResult'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { useAppCurrentWatch } from '../../reactHookForm/store'
 import Loader from './Loader'
 import { useSearchClientsQuery } from '../client/queries'
+import SearchResult from '../SearchResult'
 
 const SearchResults = (props: { isSearchActive: boolean; onActiveSearch: (state: boolean) => void }) => {
   const { isSearchActive, onActiveSearch } = props

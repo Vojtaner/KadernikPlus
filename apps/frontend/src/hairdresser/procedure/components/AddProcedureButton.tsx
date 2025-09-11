@@ -9,12 +9,12 @@ import type { PostNewProcedure } from '../../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import { type StockAllowance } from '../../stock/entity'
 import { FormattedMessage } from 'react-intl'
-import { addPropsToReactElement } from '../../../components/entity'
 import { useStocksQuery } from '../../stock/queries'
 import { useDeleteProcedureMutation, useProceduresMutation } from '../queries'
 import AddStockAllowanceForm from './AddStockAllowanceForm'
 import { getProcedureInvalidation, mapDefaultStockAlowances } from '../entity'
 import { useEditableAndReadonlyStockAllowances } from '../store'
+import { addPropsToReactElement } from '../../entity'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string

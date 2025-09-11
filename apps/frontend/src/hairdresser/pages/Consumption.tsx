@@ -16,7 +16,6 @@ import { Paths } from '../../routes/AppRoutes'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
 import { useIntl } from 'react-intl'
-import { getButtonStyle } from '../../components/entity'
 import type { OverridableStringUnion } from '@mui/types'
 import { useAppNavigate, usePersistentFilters } from '../../hooks'
 import dayjs from 'dayjs'
@@ -27,6 +26,7 @@ import {
 } from '../stock/components/stock-allowance'
 import { useStockAllowancesQuery } from '../stock/queries'
 import { getDateShort } from '../visits/components/VisitsList'
+import { getButtonStyle } from '../entity'
 
 const Consumption = () => {
   const navigate = useAppNavigate()

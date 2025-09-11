@@ -62,11 +62,12 @@ export type UserStockItemAllowanceSummary = {
 export type StockViewKey = 'byUser' | 'byProduct' | 'allRecords'
 
 export const useScrollToTheTop = () => {
-  const scroll = () =>
-    window.scrollTo({
+  function scrollToTop() {
+    document.documentElement.scrollTo({
       top: 0,
       behavior: 'smooth',
     })
+  }
 
-  return scroll
+  return scrollToTop
 }

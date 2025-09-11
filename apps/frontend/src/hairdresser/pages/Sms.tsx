@@ -1,4 +1,4 @@
-import SmsTabs from '../../components/SmsTabs'
+import SmsTabs from '../SmsTabs'
 
 const SmsPage = () => {
   return <SmsTabs />

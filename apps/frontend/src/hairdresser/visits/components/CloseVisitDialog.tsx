@@ -3,10 +3,10 @@ import { useState } from 'react'
 import FormDialog from '../../../app/components/Dialog'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { addPropsToReactElement } from '../../../components/entity'
 import CloseIcon from '@mui/icons-material/Close'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { IconListItem } from '../../../app/components/IconListItem'
+import { addPropsToReactElement } from '../../entity'
 
 type CloseVisitDialogProps = {
   canSkipDialog: boolean

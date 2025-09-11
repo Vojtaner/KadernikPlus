@@ -8,10 +8,10 @@ import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
 import TextField from '../../../app/components/TextField'
 import Switch from '../../../app/components/Switch/SwitchButton'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { firstNameValidationrule, phoneValidationRule } from '../../../components/entity'
 import ClientAutoComplete from '../../client/components/ClientAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 import { useCreateVisitMutation, useVisitsQuery } from '../queries'
+import { firstNameValidationrule, phoneValidationRule } from '../../entity'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)

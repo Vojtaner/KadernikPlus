@@ -4,8 +4,8 @@ import { useState } from 'react'
 import type { EditClient, NewClient } from '../../../entities/client'
 import React from 'react'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { addPropsToReactElement } from '../../../components/entity'
 import ClientForm, { useClientForm } from './ClientForm'
+import { addPropsToReactElement } from '../../entity'
 
 type AddEditClientFormDialogProps = {
   defaultValues?: NewClient | EditClient

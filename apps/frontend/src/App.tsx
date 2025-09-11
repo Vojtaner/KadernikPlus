@@ -1,5 +1,4 @@
 import { ThemeProvider } from '@mui/material/styles'
-import Layout from './components/Layout'
 import AppTheme from './AppTheme'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { useAppForm } from './reactHookForm/store'
@@ -13,11 +12,12 @@ import { SnackbarMessages } from './app/components/SnackBarMessages'
 import AuthGuard from './app/components/AuthGuard'
 import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './hairdresser/pages/SubscriptionPage'
-import SubscriptionGuard from './components/SubscriptionGuard'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectSnackbarMessages } from './hooks/useAddSnackBar'
 import type { RootState } from './store/store'
 import { removedSnackbarMessage } from './store/snackBarReducer'
+import SubscriptionGuard from './hairdresser/SubscriptionGuard'
+import Layout from './hairdresser/Layout'
 
 function App() {
   const methods = useAppForm()

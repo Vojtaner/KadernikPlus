@@ -64,10 +64,12 @@ app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
 app.options("/api/payment/callback", cors());
+
 app.post(
   "/api/payment/callback",
   makeExpressCallback(paymentController.updatePushNotificationPaymentController)
 );
+
 app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
 app.use("/api/visits", visitRoutes);

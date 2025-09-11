@@ -3,10 +3,10 @@ import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOu
 import AddShoppingCartOutlinedIcon from '@mui/icons-material/AddShoppingCartOutlined'
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined'
 import DashBoardCard from '../../app/components/DashBoardCard'
-import RevenuChart from '../../components/RevenueChart'
 import ShoppingList from './ShoppingList'
 import NewReleasesIcon from '@mui/icons-material/NewReleases'
 import VisitsList from '../visits/components/VisitsList'
+import RevenuChart from '../RevenueChart'
 
 export const Dashboard = () => {
   return (

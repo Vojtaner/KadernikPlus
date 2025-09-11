@@ -12,9 +12,9 @@ import { Paths } from '../../routes/AppRoutes'
 import BoxIcon from '../../app/components/BoxIcon'
 import SendIcon from '@mui/icons-material/Send'
 import { useAppNavigate } from '../../hooks'
-import SmsSendDialog from '../../components/SmsSendDialog'
 import { useClientsQuery } from '../client/queries'
 import { formatPhoneNumber } from '../visits/components/VisitsList'
+import SmsSendDialog from '../SmsSendDialog'
 
 const ClientsList = () => {
   const { data: clientList, isLoading, isError } = useClientsQuery()

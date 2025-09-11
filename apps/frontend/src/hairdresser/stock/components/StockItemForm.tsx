@@ -7,9 +7,9 @@ import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import { useState } from 'react'
 import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { getButtonStyles } from '../../../components/entity'
 import StockItemsAutoComplete from './StockItemsAutoComplete'
 import { useCreateOrUpdateStockItemMutation, useStocksQuery } from '../queries'
+import { getButtonStyles } from '../../entity'
 
 type StockItemFormProps = Omit<
   ReturnType<typeof useStockItemForm>,

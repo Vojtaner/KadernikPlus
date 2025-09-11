@@ -6,23 +6,27 @@ import { useState, useEffect, useCallback } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import dayjs, { Dayjs } from 'dayjs'
 import { produce } from 'immer'
+import { useAppLocation } from './routes/reactRouter'
 
 export const useAppNavigate = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const location = useAppLocation()
   const scroll = useScrollToTheTop()
+
+  useEffect(() => {
+    scroll()
+  }, [location])
 
   function appNavigate(to: To, options?: NavigateOptions): void
   function appNavigate(delta: number): void
   function appNavigate(toOrDelta: To | number, options?: NavigateOptions): void {
     dispatch(setCurrentLocationAppendix(''))
-
     if (typeof toOrDelta === 'number') {
       navigate(toOrDelta)
     } else {
       navigate(toOrDelta, options)
     }
-    scroll()
   }
 
   return appNavigate

@@ -21,7 +21,6 @@ const SectionHeader = (props: {
       <Stack
         direction="row"
         bgcolor="#f6f6f6"
-        padding={1}
         borderRadius="15px 15px 0 0"
         alignItems="center"
         justifyContent="space-between">

@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form'
 import { useIntl } from 'react-intl'
 import { BasicDatePicker } from '../../../app/components/BasicDatePicker'
 import AppDataGrid from '../../../app/components/DataGrid'
-import { getButtonStyle } from '../../../components/entity'
 import { formatNameShort } from '../../../entity'
 import { type VisitListApplyFilter, useAppNavigate, useVisitListFilters } from '../../../hooks'
 import { FilterTableButton } from '../../pages/Consumption'
@@ -15,6 +14,7 @@ import { getMissingStockAllowanceError } from './VisitDetailGrid'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
+import { getButtonStyle } from '../../entity'
 
 type VisitListProps = {
   columnHeaderHeight?: 0

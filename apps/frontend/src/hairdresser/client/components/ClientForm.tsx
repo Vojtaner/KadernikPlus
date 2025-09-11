@@ -1,10 +1,10 @@
 import { Stack } from '@mui/material'
 import TextField from '../../../app/components/TextField'
-import { firstNameValidationrule, phoneValidationRule } from '../../../components/entity'
 import { useIntl } from 'react-intl'
 import { useForm, type Control } from 'react-hook-form'
 import type { EditClient, NewClient } from '../../../entities/client'
 import { useCreateNewOrUpdateClientMutation } from '../queries'
+import { firstNameValidationrule, phoneValidationRule } from '../../entity'
 
 type ClientFormProps = { control: Control<NewClient | EditClient> }
 

@@ -1,6 +1,5 @@
 import { Button, Divider, Stack, Typography } from '@mui/material'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
-import ProcedureCard from '../../components/ProcedureCard'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../../app/components/Note'
 import EditVisitDetailDialog from '../visits/components/EditVisitDetailDialog'
@@ -17,6 +16,7 @@ import AddProcedureButton from '../procedure/components/AddProcedureButton'
 import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/VisitDetailGrid'
 import { useProceduresQuery } from '../procedure/queries'
 import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
+import ProcedureCard from '../ProcedureCard'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()

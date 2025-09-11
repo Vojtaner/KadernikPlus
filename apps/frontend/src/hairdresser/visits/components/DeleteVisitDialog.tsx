@@ -3,8 +3,8 @@ import { useState } from 'react'
 import FormDialog from '../../../app/components/Dialog'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
-import { addPropsToReactElement } from '../../../components/entity'
 import { useAppNavigate } from '../../../hooks'
+import { addPropsToReactElement } from '../../entity'
 
 type DeleteVisitDialogProps = {
   onConfirm: () => void
