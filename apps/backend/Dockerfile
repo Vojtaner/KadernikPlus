@@ -27,10 +27,11 @@ COPY . .
 # RUN chmod +x ./init.sh
 
 # RUN ./init.sh
-RUN npx prisma db pull 
-RUN npx prisma migrate dev --name baseline --create-only 
-RUN npx prisma migrate deploy
+# Generování Prisma klienta
 RUN npx prisma generate
+
+# Pouze deploy migrací (bez resetu DB)
+RUN npx prisma migrate deploy
 
 RUN npm run build
 

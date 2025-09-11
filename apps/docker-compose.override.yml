@@ -27,7 +27,7 @@ services:
     volumes:
       - ./backend:/backend # mount everything (src, prisma, env, etc.)
       - /backend/node_modules
-    command: sh ./init.sh
+    command: npm run dev
     restart: always
     ports:
       - "3021:3021"
