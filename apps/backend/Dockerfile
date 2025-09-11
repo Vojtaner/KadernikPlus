@@ -27,6 +27,7 @@ COPY . .
 
 # RUN ./init.sh
 RUN npx prisma generate
+RUN npx prisma migrate deploy
 
 RUN npm run build
 
