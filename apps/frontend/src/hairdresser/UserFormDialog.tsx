@@ -52,18 +52,30 @@ export const UserProfilDialog = (props: {
         </>
       }
       formFields={
-        <TextField
-          control={control}
-          fieldPath="bankAccount"
-          type="text"
-          label={intl.formatMessage({ defaultMessage: 'Bankovní účet', id: 'userProfile.bankAccount' })}
-        />
+        <>
+          <TextField
+            control={control}
+            fieldPath="bankAccount"
+            type="text"
+            label={intl.formatMessage({ defaultMessage: 'Bankovní účet', id: 'userProfile.bankAccount' })}
+          />
+          <TextField
+            control={control}
+            fieldPath="reviewUrl"
+            type="text"
+            label={intl.formatMessage({ defaultMessage: 'Odkaz na recenze.', id: 'userProfile.reviewUrl' })}
+          />
+        </>
       }
       onOpenButton={addPropsToReactElement(openButton, {
         onClick: (e: React.MouseEvent) => {
           openButton.props.onClick?.(e)
           handleClickOpen()
         },
+      })}
+      dialogHelperText={intl.formatMessage({
+        defaultMessage: 'Upravit lze pouze tato data, ostatní nevlastníme.',
+        id: 'userProfile.helperText',
       })}
       title={intl.formatMessage({ defaultMessage: 'Upravit vaše údaje', id: 'userProfile.editFormTitle' })}
     />

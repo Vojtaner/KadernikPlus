@@ -23,7 +23,9 @@ type AddUserControllerType = {
 };
 
 type GetUserByIdControllerType = { params: HasId };
-type UpdateUserControllerType = { body: { bankAccount: string } };
+type UpdateUserControllerType = {
+  body: { bankAccount: string; reviewUrl: string };
+};
 
 const createUserController = (dependencies: {
   getUserByIdUseCase: GetUserByIdUseCaseType;

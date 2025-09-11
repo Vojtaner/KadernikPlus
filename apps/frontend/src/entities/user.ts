@@ -7,6 +7,7 @@
 
 export type User = {
   bankAccount: string
+  reviewUrl: string
 }
 
 /**

@@ -68,9 +68,7 @@ const MyProfile = () => {
             <Button>{intl.formatMessage({ defaultMessage: 'Smazat profil', id: 'myProfile.deleteProfile' })}</Button>
             <UserProfilDialog
               openButton={
-                <Button>
-                  {intl.formatMessage({ defaultMessage: 'Upravit bankovní účet', id: 'myProfile.editProfile' })}
-                </Button>
+                <Button>{intl.formatMessage({ defaultMessage: 'Upravit profil', id: 'myProfile.editProfile' })}</Button>
               }
             />
           </Stack>

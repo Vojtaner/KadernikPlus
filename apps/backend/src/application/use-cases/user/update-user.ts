@@ -4,7 +4,10 @@ import { UserRepositoryPort } from "../../../application/ports/user-repository";
 const createUpdateUserUseCase = (dependencies: {
   userRepositoryDb: UserRepositoryPort;
 }) => ({
-  execute: async (userId: string, data: { bankAccount: string }) => {
+  execute: async (
+    userId: string,
+    data: { bankAccount: string; reviewUrl: string }
+  ) => {
     const updatedUser = await dependencies.userRepositoryDb.update(
       userId,
       data

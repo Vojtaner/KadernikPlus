@@ -1,187 +1,162 @@
-// prisma/schema.prisma
-
-// Datasource definition: Specifies the database type and connection URL.
-datasource db {
-  provider          = "mysql" // Or "postgresql", "sqlite" depending on your actual DB
-  url               = env("DATABASE_URL")
-  // Explicitly define the shadow database URL for migrations
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
-}
-
-// Generator definition: Tells Prisma to generate the Prisma Client for Node.js.
 generator client {
   provider = "prisma-client-js"
-  // CORRECTED OUTPUT PATH:
-  // This path is relative from the 'prisma' directory (where schema.prisma is).
-  // It goes up one level (..) to 'KadernikPlus/', then down into 'apps/backend/node_modules/@prisma/client'.
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 /// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
-  id          String  @id @default(uuid())
-  name        String
-  email       String  @unique
-  bankAccount String?
-  teams Team[]  
-  authProvider String?   @map("auth_provider")
-  createdAt    DateTime  @default(now())
-  lastLogin    DateTime? @map("last_login")
-
-  services        Service[]
-  visits          Visit[]
-  ownedStocks     Stock[]          @relation("OwnedStocks")
-  stockAllowances StockAllowance[]
-  clients         Client[]
-
-  teamMemberships TeamMember[]
+  id              String           @id @default(uuid())
+  name            String
+  email           String           @unique
+  bankAccount     String?
+  authProvider    String?          @map("auth_provider")
+  createdAt       DateTime         @default(now())
+  lastLogin       DateTime?        @map("last_login")
   LogEntry        LogEntry[]
   Subscription    Subscription[]
+  teams           Team[]
+  teamMemberships TeamMember?
+  clients         Client[]
+  services        Service[]
+  stockAllowances StockAllowance[]
+  ownedStocks     Stock[]          @relation("OwnedStocks")
+  visits          Visit[]
 
   @@map("users")
 }
 
 model TeamMember {
-  id     String @id @default(uuid())
-  teamId String
-  userId String @unique
-
+  id               String  @id @default(uuid())
+  teamId           String
+  userId           String  @unique
   canAccessStocks  Boolean @default(false)
   canAccessClients Boolean @default(false)
   canAccessVisits  Boolean @default(false)
-
-  user User @relation(fields: [userId], references: [id])
-  team Team @relation(fields: [teamId], references: [id])
+  team             Team    @relation(fields: [teamId], references: [id])
+  user             User    @relation(fields: [userId], references: [id])
 
   @@unique([teamId, userId])
 }
 
-enum DepositStatus {
-  ZAPLACENO // deposit paid
-  NEZAPLACENO // deposit not paid
-  BEZ_ZALOHY // deposit should not be paid
-}
-
 model Team {
-  id   String @id @default(uuid())
-  name String
-
-  userId String? //v budoucnu změni po migraci uživatelů
-  user   User?   @relation(fields: [userId], references: [id])
-  
-
-  members  TeamMember[]
-  clients  Client[]
-  visits   Visit[]
-  stocks   Stock[]
-  services Service[]
-
+  id             String           @id @default(uuid())
+  name           String
+  userId         String?
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
   LogEntry       LogEntry[]
+  user           User?            @relation(fields: [userId], references: [id])
+  members        TeamMember[]
+  clients        Client[]
+  services       Service[]
   StockAllowance StockAllowance[]
+  stocks         Stock[]
+  visits         Visit[]
+
+  @@index([userId], map: "Team_userId_fkey")
 }
 
 /// Junction table for the many-to-many relationship between Visit and Service
 model VisitService {
-  id        String @id @default(uuid()) // Unique identifier for this entry (UUID)
-  visitId   String @map("visit_id") // Foreign key to Visit
-  serviceId String @map("service_id") // Foreign key to Service
-
-  visit   Visit   @relation(fields: [visitId], references: [id])
-  service Service @relation(fields: [serviceId], references: [id])
+  id        String  @id @default(uuid())
+  visitId   String  @map("visit_id")
+  serviceId String  @map("service_id")
+  service   Service @relation(fields: [serviceId], references: [id])
+  visit     Visit   @relation(fields: [visitId], references: [id])
 
   @@unique([visitId, serviceId])
+  @@index([serviceId], map: "visit_services_service_id_fkey")
   @@map("visit_services")
 }
 
 /// Photos related to a specific visit
 model Photo {
-  id          String   @id @default(uuid()) // Unique identifier for the photo (UUID)
-  visitId     String   @map("visit_id") // Foreign key to Visit
+  id          String   @id @default(uuid())
+  visitId     String   @map("visit_id")
   url         String
   uploadedAt  DateTime @default(now()) @map("uploaded_at")
   description String?
+  visit       Visit    @relation(fields: [visitId], references: [id])
 
-  visit Visit @relation(fields: [visitId], references: [id])
-
+  @@index([visitId], map: "photos_visit_id_fkey")
   @@map("photos")
 }
 
 model Procedure {
-  id          String  @id @default(uuid())
-  visitId     String  @map("visit_id")
-  stepOrder   Int     @map("step_order")
-  description String? @db.Text
+  id              String           @id @default(uuid())
+  visitId         String           @map("visit_id")
+  stepOrder       Int              @map("step_order")
+  description     String?          @db.Text
+  createdAt       DateTime         @default(now()) @map("created_at")
+  visit           Visit            @relation(fields: [visitId], references: [id])
+  stockAllowances StockAllowance[]
 
-  stockAllowances StockAllowance[] // <--- více spotřeb na jednu proceduru
-
-  createdAt DateTime @default(now()) @map("created_at")
-
-  visit Visit @relation(fields: [visitId], references: [id])
-
+  @@index([visitId], map: "procedures_visit_id_fkey")
   @@map("procedures")
 }
 
 model LogEntry {
   id         String   @id @default(uuid())
-  userId     String // Who did the action
-  teamId     String // (Optional if multi-team)
-  action     String // e.g. "CREATE_CLIENT", "DELETE_STOCK_ITEM"
-  entityType String // e.g. "client", "stockItem", etc.
-  entityId   String? // e.g. "abc-123" if available
-  message    String // Human-readable e.g. "Added client John Doe"
-  metadata   Json? // Optional, for before/after values or extras
+  userId     String
+  teamId     String
+  action     String
+  entityType String
+  entityId   String?
+  message    String
+  metadata   Json?
   createdAt  DateTime @default(now())
+  team       Team     @relation(fields: [teamId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 
-  user User @relation(fields: [userId], references: [id])
-  team Team @relation(fields: [teamId], references: [id])
+  @@index([teamId], map: "LogEntry_teamId_fkey")
+  @@index([userId], map: "LogEntry_userId_fkey")
 }
 
 model StockItem {
-  id           String  @id @default(uuid())
-  itemName     String
-  unit         String
-  packageCount Decimal @db.Decimal(10, 2)
-
-  quantity            Decimal @db.Decimal(10, 2)
-  lastPackageQuantity Decimal @db.Decimal(15, 5)
-
-  totalPrice   Decimal @db.Decimal(15, 5)
-  avgUnitPrice Decimal @db.Decimal(15, 5)
-
-  threshold Decimal  @db.Decimal(10, 2)
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  stockId String
-  stock   Stock  @relation(fields: [stockId], references: [id])
-
-  stockAllowances StockAllowance[]
+  id                  String           @id @default(uuid())
+  itemName            String
+  unit                String
+  packageCount        Decimal          @db.Decimal(10, 2)
+  quantity            Decimal          @db.Decimal(10, 2)
+  lastPackageQuantity Decimal          @db.Decimal(15, 5)
+  totalPrice          Decimal          @db.Decimal(15, 5)
+  avgUnitPrice        Decimal          @db.Decimal(15, 5)
+  threshold           Decimal          @db.Decimal(10, 2)
+  isActive            Boolean          @default(true) @map("is_active")
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  stockId             String
+  stockAllowances     StockAllowance[]
+  stock               Stock            @relation(fields: [stockId], references: [id])
 
   @@unique([stockId, itemName, isActive])
   @@map("stock_items")
 }
 
 model StockAllowance {
-  id     String @id @default(uuid())
-  userId String @map("user_id")
-  teamId String @map("team_id")
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  teamId        String    @map("team_id")
+  stockItemId   String    @map("stock_item_id")
+  avgUnitPrice  Decimal   @default(0.00000) @db.Decimal(15, 5)
+  stockItemName String?
+  procedureId   String    @map("procedure_id")
+  quantity      Decimal   @db.Decimal(10, 2)
+  createdAt     DateTime  @default(now()) @map("created_at")
+  procedure     Procedure @relation(fields: [procedureId], references: [id])
+  stockItem     StockItem @relation(fields: [stockItemId], references: [id])
+  team          Team      @relation(fields: [teamId], references: [id])
+  user          User      @relation(fields: [userId], references: [id])
 
-  stockItemId String @map("stock_item_id")
-  avgUnitPrice Decimal  @db.Decimal(15, 5) @default("0.00000")
-  stockItemName String? 
-
-  procedureId String    @map("procedure_id")
-  procedure   Procedure @relation(fields: [procedureId], references: [id])
-
-  quantity  Decimal  @db.Decimal(10, 2)
-  createdAt DateTime @default(now()) @map("created_at")
-
-  user      User      @relation(fields: [userId], references: [id])
-  stockItem StockItem @relation(fields: [stockItemId], references: [id])
-  team      Team      @relation(fields: [teamId], references: [id])
-
+  @@index([procedureId], map: "stock_allowances_procedure_id_fkey")
+  @@index([stockItemId], map: "stock_allowances_stock_item_id_fkey")
+  @@index([teamId], map: "stock_allowances_team_id_fkey")
+  @@index([userId], map: "stock_allowances_user_id_fkey")
   @@map("stock_allowances")
 }
 
@@ -192,13 +167,14 @@ model Client {
   phone     String? @unique
   deposit   Boolean @default(true)
   note      String? @db.Text
-  visits    Visit[]
   userId    String
+  teamId    String
+  team      Team    @relation(fields: [teamId], references: [id])
   user      User    @relation(fields: [userId], references: [id])
+  visits    Visit[]
 
-  teamId String
-  team   Team   @relation(fields: [teamId], references: [id])
-
+  @@index([teamId], map: "clients_teamId_fkey")
+  @@index([userId], map: "clients_userId_fkey")
   @@fulltext([firstName, lastName, phone])
   @@map("clients")
 }
@@ -213,82 +189,89 @@ model Visit {
   depositStatus DepositStatus? @default(NEZAPLACENO)
   visitStatus   Boolean?
   paidPrice     Decimal?       @db.Decimal(10, 2)
-
-  client Client @relation(fields: [clientId], references: [id])
-  user   User   @relation(fields: [userId], references: [id])
-
-  teamId String
-  team   Team   @relation(fields: [teamId], references: [id])
-
-  visitServices VisitService[]
+  teamId        String
   photos        Photo[]
   procedures    Procedure[]
+  visitServices VisitService[]
+  client        Client         @relation(fields: [clientId], references: [id])
+  team          Team           @relation(fields: [teamId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
 
+  @@index([clientId], map: "visits_clientId_fkey")
+  @@index([teamId], map: "visits_teamId_fkey")
+  @@index([userId], map: "visits_userId_fkey")
   @@map("visits")
 }
 
 model Stock {
-  id        String   @id @default(uuid())
-  stockName String
-  createdAt DateTime @default(now())
-  ownerId   String
-  teamId    String? // optional if stock belongs to team
-
-  owner User  @relation("OwnedStocks", fields: [ownerId], references: [id])
-  team  Team? @relation(fields: [teamId], references: [id])
-
+  id         String      @id @default(uuid())
+  stockName  String
+  createdAt  DateTime    @default(now())
+  ownerId    String
+  teamId     String?
   stockItems StockItem[]
+  owner      User        @relation("OwnedStocks", fields: [ownerId], references: [id])
+  team       Team?       @relation(fields: [teamId], references: [id])
 
+  @@index([ownerId], map: "stocks_ownerId_fkey")
+  @@index([teamId], map: "stocks_teamId_fkey")
   @@map("stocks")
 }
 
 model Service {
-  id          String  @id @default(uuid())
-  serviceName String
-  basePrice   Decimal @db.Decimal(10, 2)
-  userId      String
-  teamId      String? // optional team-wide access
-
-  user User  @relation(fields: [userId], references: [id])
-  team Team? @relation(fields: [teamId], references: [id])
-
+  id            String         @id @default(uuid())
+  serviceName   String
+  basePrice     Decimal        @db.Decimal(10, 2)
+  userId        String
+  teamId        String?
+  team          Team?          @relation(fields: [teamId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
   visitServices VisitService[]
 
   @@unique([userId, serviceName])
+  @@index([teamId], map: "services_teamId_fkey")
   @@map("services")
 }
 
-enum SubscriptionStatus {
-  PENDING 
-  ACTIVE
-  CANCELLED
-  EXPIRED
-}
-
 model Subscription {
-  id        String    @id @default(uuid())
+  id        String              @id @default(uuid())
   userId    String
   plan      String
   status    SubscriptionStatus? @default(PENDING)
-  startDate DateTime  @default(now())
+  startDate DateTime            @default(now())
   endDate   DateTime?
+  Payment   Payment[]
+  user      User                @relation(fields: [userId], references: [id])
 
-
-  user    User      @relation(fields: [userId], references: [id])
-  Payment Payment[]
+  @@index([userId], map: "Subscription_userId_fkey")
 }
 
 model Payment {
   id             String       @id @default(uuid())
   subscriptionId String
+  refId          Int          @unique
+  provider       String
+  parentId       String       @default("")
+  transactionId  String       @unique
+  amount         Decimal      @db.Decimal(15, 5)
+  currency       String       @default("CZK")
+  status         String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-  refId     Int  @unique
-  provider      String // "comgate"
-  parentId      String    @default("")
-  transactionId String   @unique
-  amount        Decimal @db.Decimal(15,5)
-  currency      String   @default("CZK")
-  status        String  // INITIATED | SUCCESS | FAILED
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([subscriptionId], map: "Payment_subscriptionId_fkey")
+}
+
+enum DepositStatus {
+  ZAPLACENO
+  NEZAPLACENO
+  BEZ_ZALOHY
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  CANCELLED
+  EXPIRED
 }
