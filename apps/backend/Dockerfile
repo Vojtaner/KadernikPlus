@@ -21,15 +21,12 @@ ENV SENTRY_LOG_LEVEL=debug
 RUN npm install
 
 COPY . .
-
 # COPY ./init.sh .
 
 # RUN chmod +x ./init.sh
-
 # RUN ./init.sh
 # Generování Prisma klienta
 RUN npx prisma generate
-
 # Pouze deploy migrací (bez resetu DB)
 RUN npx prisma migrate deploy
 
