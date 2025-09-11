@@ -5,7 +5,7 @@ import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
 import { getLogs, getSubscription, getUser, postCreateSubscription, updateUserData } from './api/api'
-import type { User } from './entities/user'
+import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 
 export const useSubscriptionQuery = () => {
@@ -19,7 +19,7 @@ export const useSubscriptionQuery = () => {
 export const useUserDataQuery = () => {
   const axios = useAxios()
 
-  return useQuery<User>({
+  return useQuery<UserForm>({
     queryKey: ['user'],
     queryFn: () => getUser(axios),
   })
@@ -57,7 +57,7 @@ export const useUpdateUserMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
 
-  const mutation = useMutation<null, Error, User>({
+  const mutation = useMutation<null, Error, UserForm>({
     mutationFn: async (data) => updateUserData(axios, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user'] })

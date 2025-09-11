@@ -4,8 +4,16 @@
  * Represents a User entity in the domain.
  * This interface defines the core properties of a user, independent of the database.
  */
+export interface User {
+  id: string
+  name: string
+  email: string
+  authProvider?: string | null
+  createdAt: Date
+  lastLogin?: Date | null
+}
 
-export type User = {
+export type UserForm = {
   bankAccount: string
   reviewUrl: string
 }

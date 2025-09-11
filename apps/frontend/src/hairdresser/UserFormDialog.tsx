@@ -3,16 +3,16 @@ import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from '@mui/material'
 import TextField from '../app/components/TextField'
 import { useUpdateUserMutation } from '../queries'
-import type { User } from '../entities/user'
+import type { UserForm } from '../entities/user'
 import { useForm } from 'react-hook-form'
 import FormDialog from '../app/components/Dialog'
 import { addPropsToReactElement } from './entity'
 
 const useUserProfileForm = () => {
   const { mutation: updateUser } = useUpdateUserMutation()
-  const { control, handleSubmit } = useForm<User>()
+  const { control, handleSubmit } = useForm<UserForm>()
 
-  return { control, handleSubmit, updateUser: (data: User) => updateUser.mutate(data) }
+  return { control, handleSubmit, updateUser: (data: UserForm) => updateUser.mutate(data) }
 }
 
 export const UserProfilDialog = (props: {
@@ -31,13 +31,13 @@ export const UserProfilDialog = (props: {
     setOpen(false)
   }
 
-  const onSubmit = (data: User) => {
+  const onSubmit = (data: UserForm) => {
     updateUser(data)
     handleClose()
   }
 
   return (
-    <FormDialog<User>
+    <FormDialog<UserForm>
       isOpen={open}
       onClose={handleClose}
       handleSubmit={() => handleSubmit(onSubmit)}

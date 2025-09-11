@@ -2,7 +2,7 @@ import type { AxiosInstance } from 'axios'
 import type { LogData } from '../entities/logs'
 import { extractErrorMessage } from './errorHandler'
 import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
-import type { User } from '../entities/user'
+import type { UserForm } from '../entities/user'
 
 export const userApi = {
   get: () => `/api/users`,
@@ -15,7 +15,7 @@ export const subscriptionApi = {
   create: () => `/api/subscription/`,
 }
 
-export const updateUserData = async (axios: AxiosInstance, userData: User): Promise<null> => {
+export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> => {
   try {
     const response = await axios.put(userApi.get(), userData)
     return response.data
@@ -59,7 +59,7 @@ export const getSubscription = async (axios: AxiosInstance): Promise<Subscriptio
   }
 }
 
-export const getUser = async (axios: AxiosInstance): Promise<User> => {
+export const getUser = async (axios: AxiosInstance): Promise<UserForm> => {
   try {
     const response = await axios.get(userApi.get())
     return response.data
