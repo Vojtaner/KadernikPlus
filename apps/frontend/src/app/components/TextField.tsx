@@ -60,6 +60,12 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
             const raw = e.target.value
 
             if (rest.type === 'number') {
+              if (raw === '') {
+                // user cleared input -> keep it empty instead of 0
+                onChange('')
+                return
+              }
+
               const num = Number(raw)
               onChange(!isNaN(num) && num >= 0 ? num : 0)
             } else {

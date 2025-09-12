@@ -18,7 +18,7 @@ import { addPropsToReactElement } from '../../entity'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
-  quantity: number
+  quantity: number | null
   stockItemName?: string
   avgUnitPrice?: string
 })[]

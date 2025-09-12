@@ -22,7 +22,7 @@ type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
   fields: AddProcedureStockAllowanceType
   readonlyAllowances: (Omit<StockAllowance, 'id' | 'quantity'> & {
     id: string
-    quantity: number
+    quantity: number | null
     stockItemName?: string
     avgUnitPrice?: string
   })[]
@@ -106,7 +106,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           </Typography>
         </Stack>
       ))}
-      <Button onClick={() => append({ stockItemId: '', quantity: 0, id: '' })} variant="outlined">
+      <Button onClick={() => append({ stockItemId: '', quantity: null, id: '' })} variant="outlined">
         Přidat materiál
       </Button>
     </Stack>

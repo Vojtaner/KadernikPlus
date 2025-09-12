@@ -149,7 +149,7 @@ const createClientRepositoryDb = (
       }
 
       const client = await prismaRepository.client.findFirst({
-        where: { OR: whereConditions },
+        where: { AND: whereConditions },
         include: { visits: true },
       });
 

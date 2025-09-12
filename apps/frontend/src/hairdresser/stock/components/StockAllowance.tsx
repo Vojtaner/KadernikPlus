@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 
 type StockAllowanceProps = {
-  quantity: number
+  quantity: number | null
   name: string
   id: string
 }

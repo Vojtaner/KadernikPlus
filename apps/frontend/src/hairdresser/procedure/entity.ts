@@ -4,7 +4,7 @@ import type { AddProcedureStockAllowanceType } from './components/AddProcedureBu
 
 export const mapDefaultStockAlowances = (
   defaultStockAllowances?: AddProcedureStockAllowanceType
-): { stockItemId: string; quantity: number; id: string }[] => {
+): { stockItemId: string; quantity: number | null; id: string }[] => {
   if (!defaultStockAllowances) {
     return []
   }

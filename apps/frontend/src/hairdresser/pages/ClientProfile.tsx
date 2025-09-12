@@ -17,7 +17,7 @@ const ClientProfile = () => {
   const { clientId } = useParams()
   const { data: clientData, isLoading, error } = useClientQuery(clientId)
   const addSnackbarMessage = useAddSnackbarMessage()
-
+  console.log({ clientId, clientData })
   if (isLoading) {
     return <Loader />
   }
