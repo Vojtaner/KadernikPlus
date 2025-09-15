@@ -7,11 +7,6 @@ type Contact = {
   lastName?: string
   phone?: string
 }
-type ContactPicker = {
-  name?: string
-  tel?: string
-}
-
 type ContactList = {
   contacts: Contact[]
 }
@@ -44,8 +39,8 @@ export const ContactPicker: React.FC = () => {
     (selectedContacts: ContactPicker[]) => {
       {
         selectedContacts.map((contact, index) => {
-          const name = contact.name?.split(' ')
-          const phone = contact.tel
+          const name = contact.name?.[0].split(' ')
+          const phone = contact.tel?.[0]
           const firstName = name?.[0]
           const lastName = name?.[1]
 
