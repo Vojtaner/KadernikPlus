@@ -5,6 +5,7 @@ import Loader from './Loader'
 import { UserProfilDialog } from '../UserFormDialog'
 import { useIntl } from 'react-intl'
 import { useUserDataQuery } from '../../queries'
+import { ContactPicker } from '../ContactPicker'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
@@ -65,6 +66,9 @@ const MyProfile = () => {
               label={intl.formatMessage({ defaultMessage: 'Odkaz na recenze', id: 'myProfile.reviewUrl' })}
               input={userData.reviewUrl}
             />
+          </Grid>
+          <Grid size={6}>
+            <ContactPicker />
           </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />

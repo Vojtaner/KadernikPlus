@@ -31,7 +31,7 @@ const Team = () => {
   }
 
   if (!teamMembers) {
-    return <Typography>No team members found</Typography>
+    return <Typography>Žádní členové týmu nenalezeni.</Typography>
   }
 
   const teamMembersRows = createTeamMemberSettingsRows(teamMembers)
