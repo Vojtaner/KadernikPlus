@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import TextField from '../app/components/TextField'
-import { Button, Stack } from '@mui/material'
+import { Button, Stack, Typography } from '@mui/material'
 
 type Contact = {
   firstName?: string
@@ -54,9 +54,9 @@ export const ContactPicker: React.FC = () => {
 
   return (
     <Stack style={{ padding: '1rem' }} direction="row">
-      <button onClick={pickContacts}>📱 Vybrat kontakty</button>
+      <Button onClick={pickContacts}>Vybrat kontakty</Button>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
 
       {fields.map((field, index) => {
         return (
