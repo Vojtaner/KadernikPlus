@@ -58,7 +58,15 @@ export const ContactPicker: React.FC = () => {
   return (
     <div style={{ padding: '1rem' }}>
       <button onClick={pickContacts}>📱 Vybrat kontakty</button>
-      {contacts && <button onClick={() => setContactsToForm(contacts)}>📱 nastavit</button>}
+      {contacts && (
+        <button
+          onClick={() => {
+            setContactsToForm(contacts)
+            alert(fields)
+          }}>
+          📱 nastavit
+        </button>
+      )}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
