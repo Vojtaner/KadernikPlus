@@ -67,9 +67,6 @@ const MyProfile = () => {
               input={userData.reviewUrl}
             />
           </Grid>
-          <Grid size={6}>
-            <ContactPicker />
-          </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
 
@@ -82,6 +79,9 @@ const MyProfile = () => {
               }
             />
           </Stack>
+        </Grid>
+        <Grid container rowSpacing={2}>
+          <ContactPicker />
         </Grid>
       </>
     )

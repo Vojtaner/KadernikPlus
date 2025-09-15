@@ -1,33 +1,62 @@
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import TextField from '../app/components/TextField'
 
 type Contact = {
-  name?: string[]
-  tel?: string[]
-  email?: string[]
+  firstName?: string
+  lastName?: string
+  phone?: string
+}
+type ContactPicker = {
+  name?: string
+  tel?: string
+}
+
+type ContactList = {
+  contacts: Contact[]
 }
 
 export const ContactPicker: React.FC = () => {
-  const [contacts, setContacts] = useState<Contact[]>([])
   const [error, setError] = useState<string | null>(null)
+  const isSupported = 'contacts' in navigator && 'ContactsManager' in window
+  const { control, setValue } = useForm<ContactList>({ defaultValues: { contacts: [] } })
+  const { fields } = useFieldArray({ control, name: 'contacts' })
 
   const pickContacts = async () => {
     setError(null)
 
-    if ('contacts' in navigator && 'select' in (navigator as any).contacts) {
+    if (isSupported) {
       try {
-        const selectedContacts: Contact[] = await (navigator as any).contacts.select(
-          ['name', 'tel', 'email'], // jaká pole chceš
-          { multiple: true } // možnost vybrat více
-        )
-        setContacts(selectedContacts)
-      } catch (err: unknown) {
+        const selectedContacts: ContactPicker[] = await navigator.contacts.select(['name', 'tel'], {
+          multiple: true,
+        })
+        setContactsToForm(selectedContacts)
+      } catch (error) {
         setError('Výběr kontaktů byl zrušen nebo selhal.')
-        console.error(err)
+        console.error(error)
       }
     } else {
       setError('Tento prohlížeč nepodporuje Contacts Picker API.')
     }
   }
+
+  const setContactsToForm = useCallback(
+    (selectedContacts: ContactPicker[]) => {
+      {
+        selectedContacts.map((contact, index) => {
+          const name = contact.name?.split(' ')
+          const phone = contact.tel
+          const firstName = name?.[0]
+          const lastName = name?.[1]
+
+          setValue(`contacts.${index}.firstName`, firstName)
+          setValue(`contacts.${index}.lastName`, lastName)
+          setValue(`contacts.${index}.phone`, phone)
+        })
+      }
+    },
+    [setValue]
+  )
 
   return (
     <div style={{ padding: '1rem' }}>
@@ -35,17 +64,15 @@ export const ContactPicker: React.FC = () => {
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
-      {contacts.length > 0 && (
-        <ul>
-          {contacts.map((c, i) => (
-            <li key={i}>
-              <strong>{c.name?.join(', ')}</strong>
-              {c.tel && <div>Tel: {c.tel.join(', ')}</div>}
-              {c.email && <div>Email: {c.email.join(', ')}</div>}
-            </li>
-          ))}
-        </ul>
-      )}
+      {fields.map((_, index) => {
+        return (
+          <>
+            <TextField fieldPath={`contacts.${index}.firstName`} />
+            <TextField fieldPath={`contacts.${index}.lastName`} />
+            <TextField fieldPath={`contacts.${index}.phone`} />
+          </>
+        )
+      })}
     </div>
   )
 }
