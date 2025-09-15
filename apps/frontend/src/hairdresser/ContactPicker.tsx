@@ -62,9 +62,9 @@ export const ContactPicker: React.FC = () => {
       {fields.map((_, index) => {
         return (
           <>
-            <TextField fieldPath={`contacts.${index}.firstName`} />
-            <TextField fieldPath={`contacts.${index}.lastName`} />
-            <TextField fieldPath={`contacts.${index}.phone`} />
+            <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
+            <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
+            <TextField fieldPath={`contacts.${index}.phone`} control={control} />
           </>
         )
       })}
