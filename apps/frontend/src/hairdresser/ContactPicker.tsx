@@ -14,9 +14,10 @@ type ContactList = {
 
 export const ContactPicker: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
-  const isSupported = 'contacts' in navigator && 'ContactsManager' in window
   const { control, setValue } = useForm<ContactList>({ defaultValues: { contacts: [] } })
   const { fields, insert, remove } = useFieldArray({ control, name: 'contacts' })
+
+  const isSupported = 'contacts' in navigator && 'ContactsManager' in window
 
   const pickContacts = async () => {
     setError(null)
@@ -32,7 +33,7 @@ export const ContactPicker: React.FC = () => {
         console.error(error)
       }
     } else {
-      setError('Tento prohlížeč nepodporuje Contacts Picker API.')
+      setError('Tento prohlížeč nepodporuje Contacts Picker API použijte Google Chrome v mobilu.')
     }
   }
 
