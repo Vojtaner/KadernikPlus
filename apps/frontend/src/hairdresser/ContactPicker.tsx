@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import TextField from '../app/components/TextField'
-import { Button, Stack, Typography } from '@mui/material'
+import { Button, Grid, IconButton, Stack, Typography } from '@mui/material'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 
 type Contact = {
   firstName?: string
@@ -60,15 +61,28 @@ export const ContactPicker: React.FC = () => {
 
       {fields.map((field, index) => {
         return (
-          <Stack direction="row" key={field.id}>
-            <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
-            <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
-            <TextField fieldPath={`contacts.${index}.phone`} control={control} />
+          <Stack key={field.id} spacing={0.5}>
             <Button onClick={() => remove(index)}>Smazat</Button>
+            <Grid container spacing={2} alignItems="center">
+              <Grid size={3}>
+                <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
+              </Grid>
+              <Grid size={3}>
+                <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
+              </Grid>
+              <Grid size={4}>
+                <TextField fieldPath={`contacts.${index}.phone`} control={control} />
+              </Grid>
+              <Grid size={2}>
+                <IconButton onClick={() => remove(index)} color="error">
+                  <DeleteOutlineIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
           </Stack>
         )
       })}
-      <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
     </Stack>
   )
 }
