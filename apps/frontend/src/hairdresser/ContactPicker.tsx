@@ -54,7 +54,7 @@ export const ContactPicker: React.FC = () => {
   )
 
   return (
-    <Stack style={{ padding: '1rem' }} direction="row">
+    <Stack style={{ padding: '1rem' }} direction="column">
       <Button onClick={pickContacts}>Vybrat kontakty</Button>
 
       {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
