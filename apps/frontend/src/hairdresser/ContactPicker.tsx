@@ -60,7 +60,7 @@ export const ContactPicker: React.FC = () => {
 
       {fields.map((field, index) => {
         return (
-          <Stack direction="column" key={field.id}>
+          <Stack direction="row" key={field.id}>
             <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
             <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
             <TextField fieldPath={`contacts.${index}.phone`} control={control} />
@@ -68,6 +68,7 @@ export const ContactPicker: React.FC = () => {
           </Stack>
         )
       })}
+      <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
     </Stack>
   )
 }
