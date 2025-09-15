@@ -13,7 +13,6 @@ import RedSwitch from '../../../app/components/Switch/RedSwitch'
 import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid'
 import { FormattedMessage } from 'react-intl'
 import CloseVisitDialog from './CloseVisitDialog'
-import TeamMemberAutoComplete from '../../team/components/TeamMemberAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries'
 
@@ -100,7 +99,8 @@ const EditVisitDetailDialog = (props: {
               <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
             </>
           )}
-          <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} />
+          {/* funkcionalita na přeobjednávání zatím aus
+          <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} /> */}
           <BasicDateTimePicker fieldPath="date" control={control} />
           <ServicesAutoComplete fieldPath="hairCutId" control={control} />
           <TextField
