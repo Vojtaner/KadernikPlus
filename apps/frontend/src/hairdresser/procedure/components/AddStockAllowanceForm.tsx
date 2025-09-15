@@ -102,7 +102,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           </Grid>
 
           <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-            Položka je ze skladu, ke kterému již nemáte oprávnění.
+            Položka je ze skladu, ke kterému již nemáte oprávnění nebo je smazána.
           </Typography>
         </Stack>
       ))}

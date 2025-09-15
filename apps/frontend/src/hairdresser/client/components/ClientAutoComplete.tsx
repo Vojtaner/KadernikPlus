@@ -18,7 +18,15 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAuto
 
   const options = clients.map((client) => ({ id: client.id, name: `${client.firstName} ${client.lastName}` }))
 
-  return <AutoComplete options={options} control={control} fieldPath={fieldPath} label="Vyberte klienta" />
+  return (
+    <AutoComplete
+      options={options}
+      control={control}
+      fieldPath={fieldPath}
+      label="Vyberte klienta"
+      placeholder="Hledejte..."
+    />
+  )
 }
 
 export default ClientAutoComplete

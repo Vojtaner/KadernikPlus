@@ -188,7 +188,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'date',
     headerName: 'Čas',
     disableColumnMenu: true,
-    width: 80,
+    width: 45,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) =>
@@ -226,7 +226,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
   {
     field: 'visitState',
     headerName: 'Stav',
-    width: 90,
+    width: 70,
     display: 'flex',
     editable: false,
     disableColumnMenu: true,
@@ -235,6 +235,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
       return (
         !params.row.isHeader && (
           <Typography
+            fontSize="0.9rem"
             onClick={() => (params.row.clientId ? navigate(Paths.visitDetail(params.row.clientId, params.row.id)) : {})}
             color={isVisitOpen ? 'success' : 'error'}>
             {isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}

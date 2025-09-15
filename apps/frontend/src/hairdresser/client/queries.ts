@@ -24,6 +24,7 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
     mutationFn: (clientData: ClientOrUpdateCreateData) => postCreateNewClient(axios, clientData),
     onSuccess: (client) => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
       queryClient.invalidateQueries({ queryKey: ['logs'] })
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
       addSnackBarMessage({ text: 'Klienta se podařilo přidat/upravit.', type: 'success' })

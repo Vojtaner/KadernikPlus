@@ -32,5 +32,13 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
     name: member.user.name,
   }))
 
-  return <AutoComplete options={teamMemberOptions} control={control} fieldPath={fieldPath} label="Vyberte člena týmu" />
+  return (
+    <AutoComplete
+      placeholder="Hledejte..."
+      options={teamMemberOptions}
+      control={control}
+      fieldPath={fieldPath}
+      label="Vyberte člena týmu"
+    />
+  )
 }

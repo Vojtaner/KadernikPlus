@@ -17,6 +17,7 @@ type AutoCompleteProps<TFieldValues extends FieldValues> = {
   label: string
   onChange?: (event: SyntheticEvent) => void
   defaultValue?: FieldPathValue<TFieldValues, Path<TFieldValues>> | undefined
+  placeholder?: string
 }
 
 function AutoComplete<TFieldValues extends FieldValues>({
@@ -26,6 +27,7 @@ function AutoComplete<TFieldValues extends FieldValues>({
   label,
   onChange,
   defaultValue,
+  placeholder,
 }: AutoCompleteProps<TFieldValues>) {
   return (
     <Controller
@@ -43,7 +45,7 @@ function AutoComplete<TFieldValues extends FieldValues>({
               onChange?.(e)
               field.onChange(selectedClient?.id ?? null)
             }}
-            renderInput={(params) => <TextField {...params} label={label} />}
+            renderInput={(params) => <TextField {...params} label={label} placeholder={placeholder} />}
             isOptionEqualToValue={(option, value) => option.id === value.id}
           />
         )

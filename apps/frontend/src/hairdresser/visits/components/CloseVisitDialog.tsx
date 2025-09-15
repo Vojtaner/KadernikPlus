@@ -76,7 +76,9 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
         </>
       }
       onOpenButton={addPropsToReactElement(openButton, {
-        onClick: handleClick,
+        onClick: () => {
+          handleClick()
+        },
         color: 'error',
       })}
       title="Nelze uzavřít návštěvu"

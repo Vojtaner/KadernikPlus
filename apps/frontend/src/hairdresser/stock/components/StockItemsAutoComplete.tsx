@@ -37,6 +37,7 @@ const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockIt
       control={control}
       fieldPath={fieldPath}
       label="Vyberte položku"
+      placeholder="Hledejte..."
       onChange={() => {
         queryClient.invalidateQueries({ queryKey: ['procedures'] })
       }}

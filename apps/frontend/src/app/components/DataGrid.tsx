@@ -30,7 +30,6 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         {...props}
         rows={rows}
         columns={gridColumns}
-        autosizeOnMount
         localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
         sx={{
           ...props.sx,

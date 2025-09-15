@@ -17,6 +17,7 @@ import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/Visi
 import { useProceduresQuery } from '../procedure/queries'
 import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
 import ProcedureCard from '../ProcedureCard'
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
@@ -84,6 +85,7 @@ const VisitDetail = () => {
                 onClick={() => {
                   deleteVisitMutation(visitId)
                   navigate(Paths.clientDetail(visitData.clientId))
+                  queryClient.invalidateQueries({ queryKey: ['visits'] })
                 }}>
                 Smazat
               </Button>

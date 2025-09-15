@@ -131,7 +131,6 @@ const EditVisitDetailDialog = (props: {
             <Typography fontWeight={600} color="secondary.main">
               Uzavřít návštěvu
             </Typography>
-
             <CloseVisitDialog
               checked={visit.visitStatus}
               errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })}
@@ -140,7 +139,9 @@ const EditVisitDetailDialog = (props: {
                 getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }).length === 0 &&
                 !getMissingStockAllowanceError(procedures)
               }
-              onConfirm={() => changeVisitStatus({ status: !visit.visitStatus, visitId })}
+              onConfirm={() => {
+                changeVisitStatus({ status: !visit.visitStatus, visitId })
+              }}
               openButton={<RedSwitch checked={visit.visitStatus} />}
             />
           </Stack>

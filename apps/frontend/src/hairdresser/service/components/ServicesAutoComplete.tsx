@@ -31,6 +31,7 @@ const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesA
       control={control}
       fieldPath={fieldPath}
       label="Vyberte službu"
+      placeholder="Hledejte..."
       onChange={() => {
         queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
       }}

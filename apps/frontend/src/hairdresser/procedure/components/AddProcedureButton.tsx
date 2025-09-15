@@ -15,6 +15,7 @@ import AddStockAllowanceForm from './AddStockAllowanceForm'
 import { getProcedureInvalidation, mapDefaultStockAlowances } from '../entity'
 import { useEditableAndReadonlyStockAllowances } from '../store'
 import { addPropsToReactElement } from '../../entity'
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
   id: string
@@ -69,6 +70,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
       getProcedureInvalidation(stocks, visitId)
       reset()
       setOpen(false)
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
     },
   })
 

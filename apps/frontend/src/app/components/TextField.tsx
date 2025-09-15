@@ -54,7 +54,7 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
           disabled={disabled}
           helperText={error}
           error={!!error}
-          value={value}
+          value={value || undefined}
           onBlur={onBlur}
           onChange={(e) => {
             const raw = e.target.value
