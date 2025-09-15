@@ -12,6 +12,7 @@ type ContactList = {
 }
 
 export const ContactPicker: React.FC = () => {
+  const [contacts, setContacts] = useState<ContactPicker[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const isSupported = 'contacts' in navigator && 'ContactsManager' in window
   const { control, setValue } = useForm<ContactList>({ defaultValues: { contacts: [] } })
@@ -25,6 +26,7 @@ export const ContactPicker: React.FC = () => {
         const selectedContacts: ContactPicker[] = await navigator.contacts.select(['name', 'tel'], {
           multiple: true,
         })
+        setContacts(selectedContacts)
         setContactsToForm(selectedContacts)
       } catch (error) {
         setError('Výběr kontaktů byl zrušen nebo selhal.')
@@ -56,6 +58,7 @@ export const ContactPicker: React.FC = () => {
   return (
     <div style={{ padding: '1rem' }}>
       <button onClick={pickContacts}>📱 Vybrat kontakty</button>
+      {contacts && <button onClick={() => setContactsToForm(contacts)}>📱 nastavit</button>}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
