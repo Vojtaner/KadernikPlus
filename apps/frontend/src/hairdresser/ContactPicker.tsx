@@ -67,6 +67,14 @@ export const ContactPicker: React.FC = () => {
           📱 nastavit
         </button>
       )}
+      {contacts && (
+        <button
+          onClick={() => {
+            alert(contacts)
+          }}>
+          📱 nastavit
+        </button>
+      )}
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
 
