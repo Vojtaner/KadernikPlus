@@ -54,35 +54,35 @@ export const ContactPicker: React.FC = () => {
   )
 
   return (
-    <Stack style={{ padding: '1rem' }} direction="column">
+    <>
       <Button onClick={pickContacts}>Vybrat kontakty</Button>
+      <Stack spacing={2}>
+        {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
 
-      {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
-
-      {fields.map((field, index) => {
-        return (
-          <Stack key={field.id} spacing={0.5}>
-            <Button onClick={() => remove(index)}>Smazat</Button>
-            <Grid container spacing={2} alignItems="center">
-              <Grid size={3}>
-                <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
+        {fields.map((field, index) => {
+          return (
+            <Stack key={field.id} spacing={0.5}>
+              <Grid container spacing={2} alignItems="center">
+                <Grid size={3}>
+                  <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
+                </Grid>
+                <Grid size={3}>
+                  <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
+                </Grid>
+                <Grid size={4}>
+                  <TextField fieldPath={`contacts.${index}.phone`} control={control} />
+                </Grid>
+                <Grid size={2}>
+                  <IconButton onClick={() => remove(index)} color="error">
+                    <DeleteOutlineIcon />
+                  </IconButton>
+                </Grid>
               </Grid>
-              <Grid size={3}>
-                <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
-              </Grid>
-              <Grid size={4}>
-                <TextField fieldPath={`contacts.${index}.phone`} control={control} />
-              </Grid>
-              <Grid size={2}>
-                <IconButton onClick={() => remove(index)} color="error">
-                  <DeleteOutlineIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-            <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
-          </Stack>
-        )
-      })}
-    </Stack>
+            </Stack>
+          )
+        })}
+      </Stack>
+      <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
+    </>
   )
 }
