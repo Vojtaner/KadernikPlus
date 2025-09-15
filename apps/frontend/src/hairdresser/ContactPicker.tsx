@@ -3,20 +3,31 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import TextField from '../app/components/TextField'
 import { Button, Grid, IconButton, Stack, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { useImportClientMutation } from './client/queries'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import PersonSearchIcon from '@mui/icons-material/PersonSearch'
 
-type Contact = {
+export type Contact = {
   firstName?: string
   lastName?: string
   phone?: string
 }
-type ContactList = {
-  contacts: Contact[]
-}
 
 export const ContactPicker: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
-  const { control, setValue } = useForm<ContactList>({ defaultValues: { contacts: [] } })
+  const { control, setValue } = useForm<{
+    contacts: Contact[]
+  }>({
+    defaultValues: {
+      contacts: [],
+    },
+  })
   const { fields, insert, remove } = useFieldArray({ control, name: 'contacts' })
+  const { mutate: importClients } = useImportClientMutation({
+    onSuccess: () => {
+      setValue('contacts', [])
+    },
+  })
 
   const isSupported = 'contacts' in navigator && 'ContactsManager' in window
 
@@ -55,24 +66,25 @@ export const ContactPicker: React.FC = () => {
 
   return (
     <>
-      <Button onClick={pickContacts}>Vybrat kontakty</Button>
+      {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
+      <Button onClick={pickContacts} startIcon={<PersonSearchIcon />}>
+        Vybrat kontakty
+      </Button>
       <Stack spacing={2}>
-        {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
-
         {fields.map((field, index) => {
           return (
-            <Stack key={field.id} spacing={0.5}>
-              <Grid container spacing={2} alignItems="center">
+            <Stack key={field.id} spacing={0.1} padding={1}>
+              <Grid container spacing={1} alignItems="center">
                 <Grid size={3}>
                   <TextField fieldPath={`contacts.${index}.firstName`} control={control} />
                 </Grid>
                 <Grid size={3}>
                   <TextField fieldPath={`contacts.${index}.lastName`} control={control} />
                 </Grid>
-                <Grid size={4}>
+                <Grid size={5}>
                   <TextField fieldPath={`contacts.${index}.phone`} control={control} />
                 </Grid>
-                <Grid size={2}>
+                <Grid size={1}>
                   <IconButton onClick={() => remove(index)} color="error">
                     <DeleteOutlineIcon />
                   </IconButton>
@@ -82,7 +94,15 @@ export const ContactPicker: React.FC = () => {
           )
         })}
       </Stack>
-      <Button onClick={() => alert('Kontakty uloženy')}>Uložit kontakty</Button>
+      {fields.length ? (
+        <Button
+          startIcon={<CloudUploadIcon />}
+          onClick={() => {
+            importClients(fields)
+          }}>
+          Uložit kontakty
+        </Button>
+      ) : null}
     </>
   )
 }

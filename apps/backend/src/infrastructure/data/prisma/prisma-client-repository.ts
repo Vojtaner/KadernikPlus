@@ -8,6 +8,7 @@ import {
 } from "../../../infrastructure/mappers/client-mapper";
 import { WithUserId } from "../../../entities/user";
 import { httpError } from "../../../adapters/express/httpError";
+import { Contact } from "../../../application/use-cases/clients/import-clients";
 
 const createClientRepositoryDb = (
   prismaRepository: PrismaClient
@@ -134,6 +135,58 @@ const createClientRepositoryDb = (
 
       return newClient;
     },
+
+    importAll: async (userId: string, contacts: Contact[]) => {
+      // find user's team
+      const userTeam = await prismaRepository.teamMember.findFirst({
+        where: { userId },
+      });
+
+      if (!userTeam) {
+        throw new Error("Uživatel není v žádném týmu.");
+      }
+
+      // collect all phone numbers from input
+      const phones = contacts
+        .map((c) => c.phone)
+        .filter((p): p is string => Boolean(p));
+
+      // find existing clients by phone in one query
+      const existingClients = await prismaRepository.client.findMany({
+        where: { phone: { in: phones } },
+        select: { phone: true },
+      });
+
+      const existingPhones = new Set(existingClients.map((c) => c.phone));
+
+      // filter out those that already exist
+      const newContacts = contacts.filter(
+        (c) =>
+          c.phone && !existingPhones.has(c.phone) && c.firstName && c.lastName
+      );
+
+      if (newContacts.length === 0) {
+        return { created: [], skipped: contacts.length };
+      }
+
+      // insert all new contacts
+      const createdClients = await prismaRepository.client.createMany({
+        data: newContacts.map((c) => ({
+          firstName: c.firstName,
+          lastName: c.lastName,
+          phone: c.phone,
+          teamId: userTeam.teamId,
+          userId,
+        })),
+        skipDuplicates: true, // safety: won't crash if duplicates sneak in
+      });
+
+      return {
+        created: createdClients.count,
+        skipped: contacts.length - createdClients.count,
+      };
+    },
+
     findById: async (
       id: string,
       userId: string

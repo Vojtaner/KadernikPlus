@@ -12,11 +12,18 @@ import getAllClientsByUserIdUseCase, {
 import searchClientsUseCase, {
   SearchClientsUseCaseType,
 } from "../../application/use-cases/clients/search-client";
+import importClientsUseCase, {
+  CreateImportClientsUseCaseType,
+} from "../../application/use-cases/clients/import-clients";
 
 type GetClientByIdControllerType = { params: { clientId: string } };
+type ImportClientsControllerType = {
+  body: { firstName: string; lastName: string; phone: string }[];
+};
 type AddClientControllerType = {};
 const createClientController = (dependencies: {
   addOrUpdateClientUseCase: CreateAddOrUpdateClientUseCaseType;
+  importClientsUseCase: CreateImportClientsUseCaseType;
   getClientByIdUseCase: CreateGetClientByIdUseCaseType;
   getAllClientsByUserIdUseCase: GetAllClientsByUserIdUseCaseType;
   searchClientsUseCase: SearchClientsUseCaseType;
@@ -75,6 +82,37 @@ const createClientController = (dependencies: {
       }
 
       console.error("Error in addClientController:", error);
+      throw error;
+    }
+  };
+  const importClientsController: ControllerFunction<
+    ImportClientsControllerType
+  > = async (httpRequest) => {
+    try {
+      const clientData = httpRequest.body;
+      const userId = httpRequest.userId;
+
+      const newOrUpdatedClient =
+        await dependencies.importClientsUseCase.execute({
+          clientImport: clientData,
+          userId,
+        });
+      return {
+        statusCode: 201,
+        body: newOrUpdatedClient,
+      };
+    } catch (error: any) {
+      if (
+        error.name === "UserNotFoundError" ||
+        error.name === "ClientNotFoundError"
+      ) {
+        return {
+          statusCode: 400,
+          body: { error: error.message },
+        };
+      }
+
+      console.error("Error in importClients:", error);
       throw error;
     }
   };
@@ -142,6 +180,7 @@ const createClientController = (dependencies: {
 
   return {
     addOrUpdateClientController,
+    importClientsController,
     getClientByIdController,
     getAllClientsByUserIdController,
     findClientsController,
@@ -153,6 +192,7 @@ const clientController = createClientController({
   getClientByIdUseCase,
   getAllClientsByUserIdUseCase,
   searchClientsUseCase,
+  importClientsUseCase,
 });
 
 export default clientController;

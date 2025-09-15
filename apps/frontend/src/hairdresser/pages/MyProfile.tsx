@@ -80,9 +80,13 @@ const MyProfile = () => {
             />
           </Stack>
         </Grid>
-        <Grid container rowSpacing={2}>
-          <ContactPicker />
-        </Grid>
+        <Divider sx={{ marginY: '30px' }} />
+        <Stack spacing={2}>
+          <Typography variant="body2">Zde můžete provést hromadný import kontaktů.</Typography>
+          <Grid container rowSpacing={2}>
+            <ContactPicker />
+          </Grid>
+        </Stack>
       </>
     )
   )

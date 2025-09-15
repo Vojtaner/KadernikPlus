@@ -1,4 +1,4 @@
-import { type UseMutationResult, useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, type UseMutationOptions } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
 import { useAxios } from '../../axios/axios'
 import type {
@@ -10,13 +10,10 @@ import type {
 } from '../../entities/client'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { postCreateNewClient, patchSearchClients, getClients, getClientById } from './api'
+import { postCreateNewClient, patchSearchClients, getClients, getClientById, postImportContacts } from './api'
+import type { Contact } from '../ContactPicker'
 
-export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
-  ClientOrUpdateCreateData,
-  Error,
-  ClientOrUpdateCreateData
-> => {
+export const useCreateNewOrUpdateClientMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
 
@@ -28,6 +25,25 @@ export const useCreateNewOrUpdateClientMutation = (): UseMutationResult<
       queryClient.invalidateQueries({ queryKey: ['logs'] })
       queryClient.invalidateQueries({ queryKey: ['client', client.id] })
       addSnackBarMessage({ text: 'Klienta se podařilo přidat/upravit.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
+}
+export const useImportClientMutation = (options?: UseMutationOptions<boolean, unknown, Contact[]>) => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  return useMutation<boolean, Error, Contact[]>({
+    mutationFn: (clientData: Contact[]) => postImportContacts(axios, clientData),
+    onSuccess: (data: boolean, variables, context) => {
+      options?.onSuccess?.(data, variables, context)
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['visits'] })
+      queryClient.invalidateQueries({ queryKey: ['logs'] })
+      addSnackBarMessage({ text: 'Import kontaktů byl úspěšný.', type: 'success' })
     },
     onError: (error) => {
       addSnackBarMessage({ text: error.message, type: 'error' })

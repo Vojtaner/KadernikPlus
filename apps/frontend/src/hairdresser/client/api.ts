@@ -8,11 +8,13 @@ import type {
   ClientWithVisitsWithVisitServices,
 } from '../../entities/client'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../visits/entity'
+import type { Contact } from '../ContactPicker'
 
 export const clientApi = {
   getById: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
   getAll: () => `/api/clients/`,
   create: () => `/api/clients`,
+  import: () => `/api/clients/import`,
   getVisits: (clientId: string) => `/api/visits/client/${encodeURIComponent(clientId)}`,
   search: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
 }
@@ -44,6 +46,15 @@ export const postCreateNewClient = async (
     return response.data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Klineta se nepodařilo vytvořit.'))
+  }
+}
+export const postImportContacts = async (axios: AxiosInstance, clientData: Contact[]): Promise<boolean> => {
+  try {
+    const response = await axios.post(clientApi.import(), clientData)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Klienty se nepodařilo importovat.'))
   }
 }
 

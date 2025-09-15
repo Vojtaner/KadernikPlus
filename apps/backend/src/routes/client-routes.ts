@@ -8,6 +8,10 @@ clientRoutes.post(
   "/",
   makeExpressCallback(clientController.addOrUpdateClientController)
 );
+clientRoutes.post(
+  "/import",
+  makeExpressCallback(clientController.importClientsController)
+);
 
 clientRoutes.patch(
   "/search",
