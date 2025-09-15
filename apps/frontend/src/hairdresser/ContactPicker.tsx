@@ -70,7 +70,7 @@ export const ContactPicker: React.FC = () => {
       {contacts && (
         <button
           onClick={() => {
-            alert(contacts.map((contact) => JSON.stringify(contact)))
+            alert(JSON.stringify(contacts))
           }}>
           📱 nastavit
         </button>
