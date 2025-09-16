@@ -32,12 +32,12 @@ export const useCreateNewOrUpdateClientMutation = () => {
     },
   })
 }
-export const useImportClientMutation = (options?: UseMutationOptions<boolean, unknown, Contact[]>) => {
+export const useImportClientMutation = (options?: UseMutationOptions<boolean, unknown, { contacts: Contact[] }>) => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
 
-  return useMutation<boolean, Error, Contact[]>({
-    mutationFn: (clientData: Contact[]) => postImportContacts(axios, clientData),
+  return useMutation<boolean, Error, { contacts: Contact[] }>({
+    mutationFn: ({ contacts }) => postImportContacts(axios, { contacts }),
     onSuccess: (data: boolean, variables, context) => {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['clients'] })

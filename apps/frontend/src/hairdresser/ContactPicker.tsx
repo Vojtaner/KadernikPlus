@@ -98,7 +98,7 @@ export const ContactPicker: React.FC = () => {
         <Button
           startIcon={<CloudUploadIcon />}
           onClick={() => {
-            importClients(fields)
+            importClients({ contacts: fields })
           }}>
           Uložit kontakty
         </Button>

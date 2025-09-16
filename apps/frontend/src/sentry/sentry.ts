@@ -8,7 +8,15 @@ const initializeSentry = () => {
     tracesSampleRate: import.meta.env.VITE_IS_DEVELOPMENT === 'true' ? 1 : 0.4,
     profilesSampleRate: import.meta.env.VITE_IS_DEVELOPMENT === 'true' ? 1 : 0.4,
     enableLogs: true,
-    integrations: [Sentry.browserTracingIntegration()],
+    integrations: [
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
+        maskAllText: false,
+        blockAllMedia: false,
+      }),
+    ],
+    replaysSessionSampleRate: import.meta.env.VITE_IS_DEVELOPMENT === 'true' ? 1 : 0.1,
+    replaysOnErrorSampleRate: 1.0,
     tracePropagationTargets: ['localhost', /^https:\/\/api\.kadernikplus\.cz/],
   })
 

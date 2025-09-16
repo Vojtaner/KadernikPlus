@@ -48,9 +48,9 @@ export const postCreateNewClient = async (
     throw new Error(extractErrorMessage(error, 'Klineta se nepodařilo vytvořit.'))
   }
 }
-export const postImportContacts = async (axios: AxiosInstance, clientData: Contact[]): Promise<boolean> => {
+export const postImportContacts = async (axios: AxiosInstance, data: { contacts: Contact[] }): Promise<boolean> => {
   try {
-    const response = await axios.post(clientApi.import(), clientData)
+    const response = await axios.post(clientApi.import(), data)
 
     return response.data
   } catch (error) {
