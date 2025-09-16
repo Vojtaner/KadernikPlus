@@ -6,6 +6,7 @@ import { UserProfilDialog } from '../UserFormDialog'
 import { useIntl } from 'react-intl'
 import { useUserDataQuery } from '../../queries'
 import { ContactPicker } from '../ContactPicker'
+import { ImportAppleContacts } from '../ImportAppleContacts'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
@@ -85,6 +86,9 @@ const MyProfile = () => {
           <Typography variant="body2">Zde můžete provést hromadný import kontaktů.</Typography>
           <Grid container rowSpacing={2}>
             <ContactPicker />
+          </Grid>
+          <Grid container rowSpacing={2} gap={2}>
+            <ImportAppleContacts />
           </Grid>
         </Stack>
       </>

@@ -83,9 +83,9 @@ const EditVisitDetailDialog = (props: {
   }
 
   const validateVisit = useCallback(() => {
-    const visitStatus = getValues('visitClosed')
+    const { deposit, visitClosed, paidPrice, depositStatus } = getValues()
 
-    if (!visitStatus) {
+    if (!visitClosed) {
       const errors = getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })
       const missingStockAllowanceError = procedures && getMissingStockAllowanceError(procedures)
       const canSkipDialog =
