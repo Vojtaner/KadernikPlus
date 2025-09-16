@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material'
+import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material'
 import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../../app/components/Note'
@@ -60,7 +60,7 @@ const VisitDetail = () => {
             <Button
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
-              startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
+              startIcon={<EditOutlinedIcon fontSize="small" color="primary" />}>
               Dokončit
             </Button>
           }
@@ -77,18 +77,20 @@ const VisitDetail = () => {
         {visitData && (
           <DeleteVisitDialogProps
             openButton={
-              <Button
-                disabled={!isVisitDeletable}
-                size="medium"
-                startIcon={<DeleteOutlineIcon fontSize="small" color={!isVisitDeletable ? 'disabled' : 'primary'} />}
-                sx={{ background: `${AppTheme.palette.primary.light}` }}
-                onClick={() => {
-                  deleteVisitMutation(visitId)
-                  navigate(Paths.clientDetail(visitData.clientId))
-                  queryClient.invalidateQueries({ queryKey: ['visits'] })
-                }}>
-                Smazat
-              </Button>
+              <Tooltip title="Nelze smazat návštěva, pokud máte vytvořenou spotřebu.">
+                <Button
+                  disabled={!isVisitDeletable}
+                  size="medium"
+                  startIcon={<DeleteOutlineIcon fontSize="small" color={!isVisitDeletable ? 'disabled' : 'primary'} />}
+                  sx={{ background: `${AppTheme.palette.primary.light}` }}
+                  onClick={() => {
+                    deleteVisitMutation(visitId)
+                    navigate(Paths.clientDetail(visitData.clientId))
+                    queryClient.invalidateQueries({ queryKey: ['visits'] })
+                  }}>
+                  Smazat
+                </Button>
+              </Tooltip>
             }
             onConfirm={() => deleteVisitMutation(visitId)}
           />
@@ -135,8 +137,8 @@ const VisitDetail = () => {
         )}
         {visitData.visitStatus && (
           <Typography color="info" fontWeight="600" align="center">
-            Návštěva je uzavřená z bezpečnostních důvodů ji nelze editovat. Můžete ji znovu otevřít v dokončení
-            návštěvy.
+            Návštěva je uzavřená z bezpečnostních důvodů ji nelze editovat ani smazat. Můžete ji znovu otevřít v
+            dokončení návštěvy.
           </Typography>
         )}
         {previusVisitProcedure &&

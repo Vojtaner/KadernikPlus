@@ -18,13 +18,29 @@ const AppTheme = createTheme(
             borderRadius: '10px',
             color: '#D02964',
             textTransform: 'none',
+            // default hover for non-contained buttons
             '&:hover': {
               backgroundColor: '#D02964',
-              color: 'white',
+              color: '#ffffff',
+              // change icon color for start/end icons on hover
+              '& .MuiButton-startIcon, & .MuiButton-endIcon': {
+                // the icon itself can be an <svg> or .MuiSvgIcon-root
+                '& .MuiSvgIcon-root, & svg': {
+                  color: '#ffffff',
+                },
+              },
+            },
+            // ensure icon default color (when not hovered)
+            '& .MuiButton-startIcon, & .MuiButton-endIcon': {
+              '& .MuiSvgIcon-root, & svg': {
+                color: 'inherit',
+              },
             },
           },
+
           contained: {
-            backgroundColor: `linear-gradient(
+            // gradient background
+            background: `linear-gradient(
         270deg,
         rgba(227, 63, 92, 1) 0%,
         rgba(195, 54, 79, 1) 25%,
@@ -32,9 +48,22 @@ const AppTheme = createTheme(
         rgba(125, 35, 51, 1) 100%
       )`,
             color: '#fff',
+            boxShadow: '0px 2px 6px rgba(0,0,0,0.2)',
             '&:hover': {
-              backgroundColor: '#D02964',
+              // on hover we switch to a solid color — or you can tweak to a modified gradient
+              background: '#D02964',
               color: '#ffffff',
+              '& .MuiButton-startIcon, & .MuiButton-endIcon': {
+                '& .MuiSvgIcon-root, & svg': {
+                  color: '#ffffff',
+                },
+              },
+            },
+            // ensure icon inherits white color by default in contained
+            '& .MuiButton-startIcon, & .MuiButton-endIcon': {
+              '& .MuiSvgIcon-root, & svg': {
+                color: '#ffffff',
+              },
             },
           },
         },
@@ -59,6 +88,7 @@ const AppTheme = createTheme(
         fontWeight: 600,
       },
     },
+
     palette: {
       success: {
         main: '#42D029',
