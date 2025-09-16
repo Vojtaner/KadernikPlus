@@ -18,7 +18,7 @@ import importClientsUseCase, {
 
 type GetClientByIdControllerType = { params: { clientId: string } };
 type ImportClientsControllerType = {
-  body: { firstName: string; lastName: string; phone: string }[];
+  body: { contacts: { firstName: string; lastName: string; phone: string }[] };
 };
 type AddClientControllerType = {};
 const createClientController = (dependencies: {
@@ -89,12 +89,12 @@ const createClientController = (dependencies: {
     ImportClientsControllerType
   > = async (httpRequest) => {
     try {
-      const clientData = httpRequest.body;
+      const { contacts } = httpRequest.body;
       const userId = httpRequest.userId;
 
       const newOrUpdatedClient =
         await dependencies.importClientsUseCase.execute({
-          clientImport: clientData,
+          clientImport: contacts,
           userId,
         });
       return {
