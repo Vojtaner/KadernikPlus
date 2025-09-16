@@ -15,6 +15,7 @@ export type DatePickerProps<TFieldValues extends FieldValues> = {
   defaultValue?: Dayjs
   minDate?: Dayjs
   maxDate?: Dayjs
+  disabled?: boolean
   rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>
   onChange?: ((value: PickerValue, context: PickerChangeHandlerContext<DateValidationError>) => void) | undefined
 }
@@ -24,6 +25,7 @@ export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
   control,
   label,
   rules,
+  disabled,
 }: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
@@ -34,6 +36,7 @@ export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
         render={({ field, fieldState: { error } }) => (
           <DateTimePicker
             {...field}
+            disabled={disabled}
             label={label ?? 'Datum'}
             ampm={false}
             value={dayjs(field.value)}

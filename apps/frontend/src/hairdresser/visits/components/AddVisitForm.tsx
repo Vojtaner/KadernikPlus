@@ -140,14 +140,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             <Switch control={control} fieldPath="depositRequired" />
           </Stack>
           {depositRequired && (
-            <TextField
-              fieldPath="depositAmount"
-              label="Výše zálohy"
-              type="number"
-              fullWidth
-              control={control}
-              required
-            />
+            <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
           )}
         </Stack>
       )}

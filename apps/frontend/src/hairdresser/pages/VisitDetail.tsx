@@ -110,7 +110,7 @@ const VisitDetail = () => {
         Postup
       </Divider>
 
-      <Stack spacing={2}>
+      <Stack spacing={4}>
         {proceduresData.map((procedure) => (
           <ProcedureCard
             procedureId={procedure.id}
@@ -124,11 +124,20 @@ const VisitDetail = () => {
         {hasZeroProcedures && (
           <AddProcedureButton
             openButton={
-              <Button variant="outlined" sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
+              <Button
+                variant="outlined"
+                disabled={visitData.visitStatus}
+                sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
                 + Přidat proceduru
               </Button>
             }
           />
+        )}
+        {visitData.visitStatus && (
+          <Typography color="info" fontWeight="600" align="center">
+            Návštěva je uzavřená z bezpečnostních důvodů ji nelze editovat. Můžete ji znovu otevřít v dokončení
+            návštěvy.
+          </Typography>
         )}
         {previusVisitProcedure &&
           hasZeroProcedures &&

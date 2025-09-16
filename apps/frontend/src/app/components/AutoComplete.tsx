@@ -18,6 +18,7 @@ type AutoCompleteProps<TFieldValues extends FieldValues> = {
   onChange?: (event: SyntheticEvent) => void
   defaultValue?: FieldPathValue<TFieldValues, Path<TFieldValues>> | undefined
   placeholder?: string
+  disabled?: boolean
 }
 
 function AutoComplete<TFieldValues extends FieldValues>({
@@ -28,6 +29,7 @@ function AutoComplete<TFieldValues extends FieldValues>({
   onChange,
   defaultValue,
   placeholder,
+  disabled,
 }: AutoCompleteProps<TFieldValues>) {
   return (
     <Controller
@@ -39,6 +41,7 @@ function AutoComplete<TFieldValues extends FieldValues>({
           <Autocomplete
             noOptionsText="Žádné možnosti"
             options={options}
+            disabled={disabled}
             getOptionLabel={(option) => option.name}
             value={options.find((option) => option.id === field.value) || null}
             onChange={(e, selectedClient) => {

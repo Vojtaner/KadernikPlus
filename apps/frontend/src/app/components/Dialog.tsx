@@ -13,7 +13,7 @@ type FormDialogProps<TFieldValues extends FieldValues = FieldValues> = {
   formFields: React.ReactNode
   title: string
   dialogHelperText?: string
-  onOpenButton: React.ReactNode
+  onOpenButton?: React.ReactNode
   isOpen: boolean
   onClose: () => void
   handleSubmit?: UseFormHandleSubmit<TFieldValues>

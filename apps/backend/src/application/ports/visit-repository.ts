@@ -5,7 +5,7 @@ import {
   VisitWithServices,
   VisitWithServicesWithProceduresWithStockAllowances,
 } from "../../infrastructure/mappers/visit-mapper";
-import { Service, Visit } from "@prisma/client";
+import { Visit } from "@prisma/client";
 
 export type VisitRepositoryPort = {
   add(visitData: WithUserId<VisitCreateData>): Promise<CreatedVisit>;

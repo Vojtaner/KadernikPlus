@@ -1,41 +1,28 @@
 import { Button, List } from '@mui/material'
-import { useState } from 'react'
 import FormDialog from '../../../app/components/Dialog'
-import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import CloseIcon from '@mui/icons-material/Close'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { IconListItem } from '../../../app/components/IconListItem'
-import { addPropsToReactElement } from '../../entity'
 
 type CloseVisitDialogProps = {
-  canSkipDialog: boolean
   onConfirm: () => void
-  openButton: React.ReactElement
   errors?: string[]
   missingStockAllowanceError: string | undefined
-  checked: boolean
+  openDialog: boolean
+  onClose: () => void
 }
 
 const CloseVisitDialog = (props: CloseVisitDialogProps) => {
-  const { openButton, canSkipDialog, onConfirm, errors, missingStockAllowanceError, checked } = props
-  const [open, setOpen] = useState(false)
-
-  const handleClick = () => {
-    if (canSkipDialog || checked) {
-      onConfirm()
-    } else {
-      setOpen(true)
-    }
-  }
+  const { errors, missingStockAllowanceError, onConfirm, onClose, openDialog = false } = props
 
   const handleClose = () => {
-    setOpen(false)
+    onClose()
   }
 
   return (
     <FormDialog
-      isOpen={open}
+      isOpen={openDialog}
       onClose={handleClose}
       actions={
         <>
@@ -51,9 +38,7 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
             }}>
             {errors?.length === 0 && missingStockAllowanceError ? (
               <FormattedMessage id="formDialog.confirmWithoutStockAllowances" defaultMessage="Potvrdit bez procedury" />
-            ) : (
-              <FormattedMessage id="formDialog.confirm" defaultMessage="Potvrdit" />
-            )}
+            ) : null}
           </Button>
         </>
       }
@@ -75,12 +60,6 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
           )}
         </>
       }
-      onOpenButton={addPropsToReactElement(openButton, {
-        onClick: () => {
-          handleClick()
-        },
-        color: 'error',
-      })}
       title="Nelze uzavřít návštěvu"
       dialogHelperText="Ve formuláři nemáte vyplněné následující údaje."
     />

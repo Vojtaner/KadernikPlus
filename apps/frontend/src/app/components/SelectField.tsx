@@ -15,6 +15,7 @@ type SelectFieldProps<T extends Identifiable, TFieldValues extends FieldValues> 
   labelExtractor: (item: T) => string
   defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
   label: string
+  disabled?: boolean
 }
 
 const SelectField = <T extends Identifiable, TFieldValues extends FieldValues>(
@@ -26,7 +27,7 @@ const SelectField = <T extends Identifiable, TFieldValues extends FieldValues>(
       control={props.control}
       defaultValue={props.defaultValue}
       render={({ field }) => (
-        <FormControl fullWidth sx={props.sx}>
+        <FormControl fullWidth sx={props.sx} disabled={props.disabled}>
           <InputLabel id={props.label}>{props.label}</InputLabel>
           <Select {...field} label={props.label}>
             {props.items.map((item) => (

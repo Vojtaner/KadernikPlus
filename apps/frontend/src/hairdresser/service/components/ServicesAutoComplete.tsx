@@ -9,10 +9,11 @@ import { useServicesQuery } from '../queries'
 type ServicesAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>
   control: Control<TFieldValues>
+  disabled?: boolean
 }
 
 const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesAutoCompleteProps<TFieldValues>) => {
-  const { control, fieldPath } = props
+  const { control, fieldPath, disabled } = props
   const { data: services, isLoading } = useServicesQuery()
   const { visitId } = useParams()
 
@@ -30,6 +31,7 @@ const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesA
       options={options}
       control={control}
       fieldPath={fieldPath}
+      disabled={disabled}
       label="Vyberte službu"
       placeholder="Hledejte..."
       onChange={() => {
