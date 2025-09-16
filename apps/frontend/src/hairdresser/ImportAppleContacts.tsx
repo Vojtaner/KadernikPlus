@@ -76,7 +76,7 @@ export const ImportAppleContacts = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <InputFileUpload onChange={handleFileUpload} label="Nahrát soubor s kontakty" />
+      <InputFileUpload onChange={handleFileUpload} label="Nahrát soubor s kontakty (.vcf)" />
       {fields.map((field, index) => (
         <Stack key={field.id} spacing={0.1} padding={1}>
           <Grid container spacing={1} alignItems="center">

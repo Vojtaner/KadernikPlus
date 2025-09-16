@@ -23,13 +23,13 @@ const AppBarChart = (props: AppBarChartProps) => {
         {
           data: costs,
           label: 'Náklady',
-          valueFormatter: (value) => `${value ? Math.round(value) : null} Kč`,
+          valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
           color: AppTheme.palette.error.main,
           stack: 'finance',
         },
         {
           data: profit,
-          valueFormatter: (value) => `${value ? Math.round(value) : null} Kč`,
+          valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
           label: 'Zisk',
           color: AppTheme.palette.success.main,
           stack: 'finance',

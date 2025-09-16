@@ -20,7 +20,7 @@ export default function InputFileUpload(props: {
   label: string
 }) {
   return (
-    <Button component="label" role={undefined} variant="contained" tabIndex={-1} startIcon={<CloudUploadIcon />}>
+    <Button component="label" role={undefined} tabIndex={-1} startIcon={<CloudUploadIcon />}>
       {props.label}
       <VisuallyHiddenInput type="file" onChange={(event) => props.onChange(event)} multiple />
     </Button>

@@ -48,7 +48,6 @@ const RevenuChart = () => {
           label="Datum do"
           control={control}
           fieldPath="to"
-          maxDate={dayjsTo}
           onChange={(date) => {
             updateFilter((draft) => {
               draft.revenue.dates.to = date?.toISOString()
