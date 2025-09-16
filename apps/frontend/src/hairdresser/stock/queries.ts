@@ -14,6 +14,10 @@ export const useStocksQuery = () => {
   return useQuery<Stock[]>({
     queryKey: ['stocks'],
     queryFn: () => getStocks(axios),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
   })
 }
 

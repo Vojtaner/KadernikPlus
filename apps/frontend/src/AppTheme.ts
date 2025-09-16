@@ -40,13 +40,7 @@ const AppTheme = createTheme(
 
           contained: {
             // gradient background
-            background: `linear-gradient(
-        270deg,
-        rgba(227, 63, 92, 1) 0%,
-        rgba(195, 54, 79, 1) 25%,
-        rgba(154, 43, 63, 1) 86%,
-        rgba(125, 35, 51, 1) 100%
-      )`,
+            background: '#c81f5b',
             color: '#fff',
             boxShadow: '0px 2px 6px rgba(0,0,0,0.2)',
             '&:hover': {

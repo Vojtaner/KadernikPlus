@@ -9,12 +9,12 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
 import { mapStocksStockItemsToFlatStockItems, type ExistingStockItem } from '../stock/entity'
-import { useStockItemsQuery, useDeleteStockItemMutation } from '../stock/queries'
+import { useStockItemsQuery } from '../stock/queries'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
+import DeleteStockItemDialog from '../stock/components/DeleteStockItemDialog'
 
 const Stock = () => {
   const { data: stocksWithStockItems, isError, isLoading } = useStockItemsQuery(undefined)
-  const { mutate: deleteStockItemMutation } = useDeleteStockItemMutation()
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
 
   if (isLoading) {
@@ -27,20 +27,20 @@ const Stock = () => {
 
   return (
     <Box sx={{ height: '100%' }}>
-      <AppDataGrid rows={stockItems} columns={createColumns(deleteStockItemMutation)} />
+      <AppDataGrid rows={stockItems} columns={createColumns()} />
     </Box>
   )
 }
 
 export default Stock
 
-const createColumns = (deleteStockItem: (id: string) => void): GridColDef<ExistingStockItem[][number]>[] => [
+const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   { field: 'itemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'price',
     headerName: 'Cena',
     disableColumnMenu: true,
-    minWidth: 75,
+    width: 70,
     renderCell: (params) => {
       return formatToCZK(params.row.totalPrice, 0, 0)
     },
@@ -62,7 +62,7 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<Existi
   {
     field: 'quantity',
     headerName: 'Množ.',
-    minWidth: 65,
+    width: 75,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
@@ -101,11 +101,15 @@ const createColumns = (deleteStockItem: (id: string) => void): GridColDef<Existi
             />
           }
         />
-        <BoxIcon
-          size="medium"
-          onClick={() => params.row.id && deleteStockItem(params.row.id)}
-          icon={<DeleteOutlineIcon fontSize="small" color="secondary" />}
-          boxColor="primary.light"
+        <DeleteStockItemDialog
+          stockItemId={params.row.id}
+          openButton={
+            <BoxIcon
+              size="medium"
+              icon={<DeleteOutlineIcon fontSize="small" color="secondary" />}
+              boxColor="primary.light"
+            />
+          }
         />
       </Stack>
     ),

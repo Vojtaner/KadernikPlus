@@ -115,6 +115,7 @@ const VisitDetail = () => {
       <Stack spacing={4}>
         {proceduresData.map((procedure) => (
           <ProcedureCard
+            disabled={visitData.visitStatus}
             procedureId={procedure.id}
             orderNumber={procedure.stepOrder}
             description={procedure.description ?? ''}
@@ -145,7 +146,7 @@ const VisitDetail = () => {
           hasZeroProcedures &&
           previusVisitProcedure.procedures.map((procedure) => (
             <ProcedureCard
-              isDisabled={true}
+              isPreviousCopy={true}
               procedureId={procedure.id}
               orderNumber={procedure.stepOrder}
               description={procedure.description ?? ''}

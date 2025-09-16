@@ -17,13 +17,21 @@ type ProcedureCardProps = {
   stockAllowances: AddProcedureStockAllowanceType
   orderNumber: number
   procedureId: string | undefined
-  isDisabled?: boolean
+  disabled?: boolean
+  isPreviousCopy?: boolean
 }
 
 const ProcedureCard = (props: ProcedureCardProps) => {
   const { visitId } = useParams()
   const { data: stocks } = useStocksQuery()
-  const { description, orderNumber, isDisabled, stockAllowances: defaultStockAllowances, procedureId } = props
+  const {
+    description,
+    orderNumber,
+    isPreviousCopy,
+    disabled,
+    stockAllowances: defaultStockAllowances,
+    procedureId,
+  } = props
 
   const { mutation: createNewProcedure } = useProceduresMutation({
     onSuccess: () => {
@@ -36,7 +44,7 @@ const ProcedureCard = (props: ProcedureCardProps) => {
       direction="row"
       justifyContent="space-between"
       alignItems="center"
-      bgcolor={isDisabled ? AppTheme.palette.success.light : ''}
+      bgcolor={isPreviousCopy ? AppTheme.palette.success.light : ''}
       boxShadow="0px 1px 7px 0px rgba(0,0,0,0.22)"
       borderRadius="10px">
       <Stack sx={{ borderRadius: 0, padding: '1rem' }} spacing={1}>
@@ -45,7 +53,7 @@ const ProcedureCard = (props: ProcedureCardProps) => {
             borderRight: `2px dotted ${AppTheme.palette.primary.light}`,
             textWrap: 'wrap',
           }}>
-          {isDisabled ? (
+          {isPreviousCopy ? (
             <Typography>Poslední spotřeba</Typography>
           ) : (
             <Typography variant="h6" sx={{ padding: 1 }} color="primary">
@@ -75,12 +83,12 @@ const ProcedureCard = (props: ProcedureCardProps) => {
 
       <IconButton
         sx={{
-          bgcolor: `${isDisabled ? 'success.light' : 'secondary.light'}`,
+          bgcolor: `${isPreviousCopy ? 'success.light' : 'secondary.light'}`,
           alignSelf: 'stretch',
           borderRadius: '0 10px 10px 0',
           borderLeft: `1px dotted ${AppTheme.palette.secondary.main}`,
         }}>
-        {isDisabled ? (
+        {isPreviousCopy ? (
           <Button
             variant="contained"
             color="success"
@@ -99,7 +107,11 @@ const ProcedureCard = (props: ProcedureCardProps) => {
           <AddProcedureButton
             defaultValues={{ stockAllowances: defaultStockAllowances, description }}
             procedureId={procedureId}
-            openButton={<EditOutlinedIcon />}
+            openButton={
+              <IconButton disabled={disabled}>
+                <EditOutlinedIcon />
+              </IconButton>
+            }
           />
         )}
       </IconButton>
