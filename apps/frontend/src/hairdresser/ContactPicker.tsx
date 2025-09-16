@@ -45,7 +45,7 @@ export const ContactPicker: React.FC = () => {
         console.error(error)
       }
     } else {
-      setError('Tento prohlížeč nepodporuje Contacts Picker API použijte Google Chrome v mobilu.')
+      setError('Tento prohlížeč nebo Apple iOS nepodporují Contacts Picker API použijte Google Chrome v androidu.')
     }
   }
 
