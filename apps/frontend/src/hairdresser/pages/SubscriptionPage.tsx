@@ -20,12 +20,12 @@ export const SubscriptionPage = () => {
         <strong> automaticky obnovuje</strong>. Předplatné můžeš kdykoli zrušit v záložce <strong>můj profil</strong>.
         Peníze za započatý měsíc jsou však nevratné.
       </Typography>
-      {!!subscription && (
+      {subscription && (
         <>
           <Typography variant="body1" color="info" textAlign="center" maxWidth={500}>
-            Vaše předplatné <strong>{getSubscriptionText(subscription && subscription.status)}</strong>
+            Vaše předplatné <strong>{getSubscriptionText(new Date(subscription.endDate), subscription.status)}</strong>
           </Typography>
-          <Button href={window.location.origin}>Přejít do aplikace</Button> : null
+          {subscription.status === 'ACTIVE' && <Button href={window.location.origin}>Přejít do aplikace</Button>}
         </>
       )}
       <PricingCard

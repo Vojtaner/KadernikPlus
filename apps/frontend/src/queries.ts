@@ -4,7 +4,14 @@ import { useAxios } from './axios/axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
-import { getLogs, getSubscription, getUser, postCreateSubscription, updateUserData } from './api/api'
+import {
+  getLogs,
+  getSubscription,
+  getUser,
+  postCancelSubscription,
+  postCreateSubscription,
+  updateUserData,
+} from './api/api'
 import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 
@@ -51,6 +58,21 @@ export const useSubscriptionMutation = () => {
   })
 
   return { mutation }
+}
+export const useCancelSubscriptionMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  return useMutation<boolean, Error, string>({
+    mutationFn: async (subscriptionId: string) => postCancelSubscription(axios, subscriptionId),
+    onSuccess: () => {
+      addSnackBarMessage({ text: 'Předplatné ukončeno.', type: 'success' })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
 }
 
 export const useUpdateUserMutation = () => {

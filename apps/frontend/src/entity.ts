@@ -1,4 +1,5 @@
 import AppTheme from './AppTheme'
+import { getDate } from './hairdresser/visits/components/VisitsList'
 
 export type AppPalette = typeof AppTheme.palette
 export type AppPaletteColor = keyof AppPalette
@@ -72,12 +73,12 @@ export const useScrollToTheTop = () => {
   return scrollToTop
 }
 
-export const getSubscriptionText = (status?: string): string => {
+export const getSubscriptionText = (endDate: Date, status?: string): string => {
   switch (status) {
     case 'EXPIRED':
       return 'vypršelo'
     case 'CANCELLED':
-      return 'bylo zrušeno'
+      return `bylo zrušeno, konec přístupu dne ${getDate(endDate)}`
     case 'PENDING':
       return 'není zaplacené'
     default:

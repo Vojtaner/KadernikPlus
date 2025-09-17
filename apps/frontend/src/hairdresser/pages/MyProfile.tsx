@@ -4,7 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import Loader from './Loader'
 import { UserProfilDialog } from '../UserFormDialog'
 import { useIntl } from 'react-intl'
-import { useUserDataQuery } from '../../queries'
+import { useCancelSubscriptionMutation, useSubscriptionQuery, useUserDataQuery } from '../../queries'
 import { ContactPicker } from '../ContactPicker'
 import { ImportAppleContacts } from '../ImportAppleContacts'
 
@@ -12,6 +12,9 @@ const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
   const intl = useIntl()
   const { data: userData } = useUserDataQuery()
+  const { data: subscription } = useSubscriptionQuery()
+  const { mutate: cancelSubscription } = useCancelSubscriptionMutation()
+  const subscriptionId = subscription ? subscription.id : undefined
 
   if (isLoading) {
     return <Loader />
@@ -72,8 +75,13 @@ const MyProfile = () => {
         <Divider sx={{ marginY: '30px' }} />
 
         <Grid container rowSpacing={2}>
-          <Stack direction={'row'} spacing={2}>
+          <Stack direction="row" spacing={2}>
             <Button>{intl.formatMessage({ defaultMessage: 'Smazat profil', id: 'myProfile.deleteProfile' })}</Button>
+            {subscriptionId && (
+              <Button onClick={() => cancelSubscription(subscriptionId)}>
+                {intl.formatMessage({ defaultMessage: 'Ukončit předplatné', id: 'myProfile.cancelSubscription' })}
+              </Button>
+            )}
             <UserProfilDialog
               openButton={
                 <Button>{intl.formatMessage({ defaultMessage: 'Upravit profil', id: 'myProfile.editProfile' })}</Button>

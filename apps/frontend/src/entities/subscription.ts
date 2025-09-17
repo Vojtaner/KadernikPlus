@@ -9,6 +9,7 @@ export type SubscriptionCreateData = {
 }
 
 export type Subscription = {
+  id: string
   plan: SubscriptionPlans
   status: SubscriptionStates
   currency: 'CZK'

@@ -9,10 +9,10 @@ subscriptionRouter.post(
   makeExpressCallback(subscriptionController.addSubscriptionController)
 );
 
-subscriptionRouter.delete(
-  "/:id",
-  makeExpressCallback(subscriptionController.cancelSubscriptionController)
-);
+// subscriptionRouter.delete(
+//   "/:id",
+//   makeExpressCallback(subscriptionController.cancelSubscriptionController)
+// );
 
 subscriptionRouter.get(
   "/",
@@ -22,6 +22,10 @@ subscriptionRouter.get(
 subscriptionRouter.post(
   "/extend/:userId",
   makeExpressCallback(subscriptionController.extendSubscriptionController)
+);
+subscriptionRouter.post(
+  "/:subscriptionId",
+  makeExpressCallback(subscriptionController.cancelSubscriptionController)
 );
 
 export default subscriptionRouter;

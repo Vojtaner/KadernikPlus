@@ -7,6 +7,9 @@ import Loader from '../hairdresser/pages/Loader'
 const SubscriptionGuard = (props: PropsWithChildren) => {
   const { children } = props
   const { data: subscription, isLoading } = useSubscriptionQuery()
+  const today = new Date()
+  const endDate = subscription && subscription?.endDate ? new Date(subscription.endDate) : null
+  const isExpired = endDate ? today > endDate : false
 
   if (isLoading && !subscription) {
     return <Loader title="Ověřování předplatného..." />
@@ -18,7 +21,9 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
 
   if (
     subscription &&
-    (subscription.status === 'EXPIRED' || subscription.status === 'CANCELLED' || subscription.status === 'PENDING')
+    (subscription.status === 'EXPIRED' ||
+      (subscription.status === 'CANCELLED' && isExpired) ||
+      subscription.status === 'PENDING')
   ) {
     return <Navigate to={ROUTES.subscription.path} replace />
   }

@@ -5,8 +5,10 @@ const createCancelSubscriptionUseCase = (dependencies: {
   subscriptionRepositoryDb: SubscriptionRepositoryPort;
 }) => {
   return {
-    execute: async (id: string) => {
-      return dependencies.subscriptionRepositoryDb.cancel(id);
+    execute: async (subscriptionId: string) => {
+      const cancelledSubscription =
+        await dependencies.subscriptionRepositoryDb.cancel(subscriptionId);
+      return cancelledSubscription;
     },
   };
 };

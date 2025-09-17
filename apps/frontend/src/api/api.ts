@@ -13,6 +13,7 @@ export const userApi = {
 export const subscriptionApi = {
   get: () => `api/subscription`,
   create: () => `/api/subscription/`,
+  cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
 }
 
 export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> => {
@@ -47,6 +48,15 @@ export const postCreateSubscription = async (
     return response.data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Platbu se nepovedlo vytvořit.'))
+  }
+}
+
+export const postCancelSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<boolean> => {
+  try {
+    const response = await axios.post(subscriptionApi.cancel(subscriptionId))
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Předplatné se nepovedlo ukončit.'))
   }
 }
 

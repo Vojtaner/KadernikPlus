@@ -17,7 +17,9 @@ type SubscriptionControllerType = {
   addSubscriptionController: ControllerFunction<{
     body: SubscriptionCreateData;
   }>;
-  cancelSubscriptionController: ControllerFunction<{ params: { id: string } }>;
+  cancelSubscriptionController: ControllerFunction<{
+    params: { subscriptionId: string };
+  }>;
   getActiveSubscriptionController: ControllerFunction<{
     params: { userId: string };
   }>;
@@ -64,9 +66,11 @@ const createSubscriptionController = (dependencies: {
   const cancelSubscriptionController: ControllerFunction<
     SubscriptionControllerType["cancelSubscriptionController"]
   > = async (httpRequest) => {
-    const { id } = httpRequest.params;
-    const sub = await dependencies.cancelSubscriptionUseCase.execute(id);
-    return { statusCode: 200, body: sub };
+    const { subscriptionId } = httpRequest.params;
+    const subscription = await dependencies.cancelSubscriptionUseCase.execute(
+      subscriptionId
+    );
+    return { statusCode: 200, body: !!subscription };
   };
 
   const getSubscriptionController: ControllerFunction<
