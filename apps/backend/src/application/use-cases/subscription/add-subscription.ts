@@ -41,6 +41,10 @@ const createAddSubscriptionUseCase = (dependencies: {
       throw new Error("Uživatel už má platné členství.");
     }
 
+    if (existingSubscription && existingSubscription.status === "PENDING") {
+      throw new Error("Uživatel už má nezaplacené členství.");
+    }
+
     const user = await dependencies.userRepositoryDb.findById(data.userId);
 
     if (!user) {
@@ -48,7 +52,7 @@ const createAddSubscriptionUseCase = (dependencies: {
     }
 
     const managementApiData = await dependencies.auth0ManagementApi.users.get({
-      id: data.userId,
+      id: user.id,
     });
 
     if (!managementApiData) {

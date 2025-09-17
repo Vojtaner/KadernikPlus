@@ -44,6 +44,7 @@ const createSubscriptionRepositoryDb = (
     await prismaClient.subscription.findFirst({
       where: { userId, status: "ACTIVE" },
     }),
+
   cancel: async (subscriptionId: string) =>
     await prismaClient.subscription.update({
       where: { id: subscriptionId },
