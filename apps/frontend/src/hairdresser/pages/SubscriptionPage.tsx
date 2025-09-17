@@ -8,14 +8,14 @@ export const SubscriptionPage = () => {
   const { data: subscription } = useSubscriptionQuery()
 
   return (
-    <Stack height="100vh" spacing={4} alignItems="center" justifyContent="center">
+    <Stack height="100vh" spacing={2} alignItems="center" justifyContent="center">
       <Typography variant="h3" fontWeight="bold">
         Vítejte v aplikaci!
       </Typography>
       <Typography variant="h4" fontWeight="bold" color="primary">
         Kadeřník+
       </Typography>
-      <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500}>
+      <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
         Děkujeme za Váš zájem – naše služba funguje na bázi <strong>měsíčního předplatného</strong>, které se
         <strong> automaticky obnovuje</strong>. Předplatné můžeš kdykoli zrušit v záložce <strong>můj profil</strong>.
         Peníze za započatý měsíc jsou však nevratné.
@@ -40,7 +40,7 @@ export const SubscriptionPage = () => {
           'Automatický nákupní seznam',
           'Hlídací pes zásob',
           'Přehled tržeb a nákladů',
-          'Možnost sdílení sklad v týmu a jeho vyúčtování',
+          'Sdílený skladu a vyúčtování',
           'a další...',
         ]}
         ctaText="Zaplatit"

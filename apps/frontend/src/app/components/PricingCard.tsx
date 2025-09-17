@@ -35,6 +35,7 @@ const PricingCard = ({
         },
       }}>
       <CardHeader
+        sx={{ paddingBottom: '0' }}
         title={
           <Typography variant="h6" fontWeight="bold" textAlign="center">
             {title}
@@ -42,8 +43,8 @@ const PricingCard = ({
         }
       />
       <CardContent>
-        <Box textAlign="center" mb={2}>
-          <Typography variant="h3" fontWeight="bold">
+        <Box textAlign="center">
+          <Typography variant="h4" fontWeight="bold">
             {price}
           </Typography>
           <Typography variant="subtitle1" color="text.secondary">
@@ -65,7 +66,7 @@ const PricingCard = ({
           ))}
         </List>
 
-        <Box mt={4} textAlign="center">
+        <Box mt={2} textAlign="center">
           <Button variant={active ? 'contained' : 'outlined'} color="primary" onClick={onClick} fullWidth>
             {ctaText}
           </Button>
