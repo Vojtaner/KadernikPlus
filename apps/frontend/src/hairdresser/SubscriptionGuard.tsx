@@ -9,14 +9,17 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   const { data: subscription, isLoading } = useSubscriptionQuery()
 
   if (isLoading && !subscription) {
-    return <Loader />
+    return <Loader title="Ověřování předplatného..." />
   }
 
   if (subscription !== undefined && typeof subscription === 'string' && subscription.length === 0) {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 
-  if (subscription && (subscription.status === 'EXPIRED' || subscription.status === 'CANCELLED')) {
+  if (
+    subscription &&
+    (subscription.status === 'EXPIRED' || subscription.status === 'CANCELLED' || subscription.status === 'PENDING')
+  ) {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 

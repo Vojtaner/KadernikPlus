@@ -13,7 +13,7 @@ const AuthGuard = (props: PropsWithChildren) => {
   }, [isLoading, isAuthenticated, loginWithRedirect])
 
   if (isLoading) {
-    return <Loader />
+    return <Loader title="Ověřování uživatele..." />
   }
 
   if (!isAuthenticated) {

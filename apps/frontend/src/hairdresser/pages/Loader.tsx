@@ -1,9 +1,9 @@
-import { Box } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 
-const Loader = () => {
+const Loader = (props: { title?: string }) => {
   return (
-    <Box
+    <Stack
       sx={{
         height: '50vh',
         display: 'flex',
@@ -11,7 +11,8 @@ const Loader = () => {
         alignItems: 'center',
       }}>
       <CircularProgress color="secondary" />
-    </Box>
+      <Typography color="grey">{props.title}</Typography>
+    </Stack>
   )
 }
 

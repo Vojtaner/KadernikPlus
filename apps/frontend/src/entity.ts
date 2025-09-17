@@ -71,3 +71,16 @@ export const useScrollToTheTop = () => {
 
   return scrollToTop
 }
+
+export const getSubscriptionText = (status?: string): string => {
+  switch (status) {
+    case 'EXPIRED':
+      return 'vypršelo'
+    case 'CANCELLED':
+      return 'bylo zrušeno'
+    case 'PENDING':
+      return 'není zaplacené'
+    default:
+      return 'je platné'
+  }
+}
