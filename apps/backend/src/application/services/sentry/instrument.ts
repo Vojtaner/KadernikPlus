@@ -8,8 +8,8 @@ const initSentry = () => {
     environment: getEnvVar("IS_DEVELOPMENT") === "true" ? "DEV" : "PROD",
     dsn: getEnvVar("SENTRY_DSN"),
     sendDefaultPii: true,
-    tracesSampleRate: getEnvVar("IS_DEVELOPMENT") ? 1 : 0.4,
-    profilesSampleRate: getEnvVar("IS_DEVELOPMENT") ? 1 : 0.4,
+    tracesSampleRate: getEnvVar("IS_DEVELOPMENT") === "true" ? 1 : 1, //později produkce 0.4
+    profilesSampleRate: getEnvVar("IS_DEVELOPMENT") === "true" ? 1 : 1, //později produkce 0.4
     enableLogs: true,
     integrations: [
       Sentry.expressIntegration(),

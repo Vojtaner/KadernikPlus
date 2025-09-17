@@ -57,7 +57,6 @@ const createAddSubscriptionUseCase = (dependencies: {
 
     const newSubscription = await dependencies.subscriptionRepositoryDb.add({
       ...data,
-      status: "PENDING",
     });
 
     const newPayment = await dependencies.createPaymentUseCase.execute({
@@ -65,8 +64,8 @@ const createAddSubscriptionUseCase = (dependencies: {
       subscriptionId: newSubscription.id,
       amount: new Prisma.Decimal(data.price),
       currency: data.currency || "CZK",
-      provider: "comgate",
-      status: "PENDING",
+      provider: "COMGATE",
+      status: data.status,
       refId: generate8DigitNumber(),
       transactionId: generate8DigitNumber().toString(),
     });
