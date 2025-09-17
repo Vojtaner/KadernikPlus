@@ -1,4 +1,4 @@
-import { PrismaClient, Subscription } from ".prisma/client";
+import { PrismaClient, Subscription, SubscriptionStatus } from ".prisma/client";
 import {
   SubscriptionCreateData,
   SubscriptionRepositoryPort,
@@ -42,13 +42,13 @@ const createSubscriptionRepositoryDb = (
   },
   findActiveByUserId: async (userId: string) =>
     await prismaClient.subscription.findFirst({
-      where: { userId, status: "ACTIVE" },
+      where: { userId, status: SubscriptionStatus.ACTIVE },
     }),
 
   cancel: async (subscriptionId: string) =>
     await prismaClient.subscription.update({
       where: { id: subscriptionId },
-      data: { status: "CANCELLED" },
+      data: { status: SubscriptionStatus.CANCELLED },
     }),
 });
 

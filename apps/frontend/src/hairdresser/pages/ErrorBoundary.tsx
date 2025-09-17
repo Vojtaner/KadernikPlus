@@ -1,5 +1,5 @@
 const ErrorBoundary = () => {
-  return <div>Objevil se error</div>
+  return <div>Něco se pokazilo...</div>
 }
 
 export default ErrorBoundary
