@@ -28,6 +28,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
 
   if (error) {
     addSnackBarMessage({ text: error.message, type: 'error' })
+    return <ErrorBoundary />
   }
 
   if (subscription !== undefined && typeof subscription === 'string' && subscription.length === 0) {
