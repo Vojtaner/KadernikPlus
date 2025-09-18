@@ -61,6 +61,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
                     label={`Množství (${stockItem?.unit ? stockItem?.unit : ''})`}
                     fieldPath={`stockAllowances.${index}.quantity`}
                     control={control}
+                    required
                   />
                 </Grid>
                 <Grid size={2}>
