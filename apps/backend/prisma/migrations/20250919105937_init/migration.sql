@@ -4,6 +4,7 @@ CREATE TABLE `users` (
     `name` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
     `bankAccount` VARCHAR(191) NULL,
+    `reviewUrl` VARCHAR(191) NULL,
     `auth_provider` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `last_login` DATETIME(3) NULL,
@@ -105,8 +106,9 @@ CREATE TABLE `stock_items` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `stockId` VARCHAR(191) NOT NULL,
+    `active_itemName` VARCHAR(255) NULL,
 
-    UNIQUE INDEX `stock_items_stockId_itemName_is_active_key`(`stockId`, `itemName`, `is_active`),
+    INDEX `stock_items_stockId_active_itemName_idx`(`stockId`, `active_itemName`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -202,6 +204,7 @@ CREATE TABLE `Subscription` (
     `endDate` DATETIME(3) NULL,
 
     INDEX `Subscription_userId_fkey`(`userId`),
+    UNIQUE INDEX `Subscription_userId_status_key`(`userId`, `status`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

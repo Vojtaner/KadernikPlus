@@ -15,7 +15,7 @@ export const useAppNavigate = () => {
 
   useEffect(() => {
     scroll()
-  }, [location])
+  }, [location.pathname])
 
   function appNavigate(to: To, options?: NavigateOptions): void
   function appNavigate(delta: number): void
@@ -142,9 +142,11 @@ export const useVisitListFilters = (
 
 export function useDebounce<T>(value: T, delay: number) {
   const [debounced, setDebounced] = useState(value)
+
   useEffect(() => {
     const handler = setTimeout(() => setDebounced(value), delay)
     return () => clearTimeout(handler)
   }, [value, delay])
+
   return debounced
 }

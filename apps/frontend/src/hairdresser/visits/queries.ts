@@ -165,6 +165,6 @@ export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; t
     },
     staleTime: 24 * 60 * 60 * 1000,
     refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    refetchOnMount: false,
   })
 }

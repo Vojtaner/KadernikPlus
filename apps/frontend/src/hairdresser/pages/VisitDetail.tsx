@@ -24,6 +24,7 @@ const VisitDetail = () => {
   const { data: visitData, isLoading: isLoadingVisit, isSuccess: isSuccessVisitData } = useVisitQuery(visitId)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
+  console.log('render')
   const dispatch = useAppDispatch()
   const navigate = useAppNavigate()
   const { mutate: deleteVisitMutation } = useDeleteVisitMutation()
