@@ -20,20 +20,35 @@ export const clientApi = {
 }
 
 export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<ClientWithVisits> => {
-  const response = await axios.get(clientApi.getById(clientId))
-  return response.data
+  try {
+    const response = await axios.get(clientApi.getById(clientId))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Zákazníka se nepovedlo najít.'))
+  }
 }
 export const getClients = async (axios: AxiosInstance): Promise<Client[]> => {
-  const response = await axios.get(clientApi.getAll())
-  return response.data
+  try {
+    const response = await axios.get(clientApi.getAll())
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Zákazníky se nepovedlo najít.'))
+  }
 }
 
 export const getClientVisits = async (
   axios: AxiosInstance,
   clientId: string
 ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
-  const response = await axios.get(clientApi.getVisits(clientId))
-  return response.data
+  try {
+    const response = await axios.get(clientApi.getVisits(clientId))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Návštěvy se nepovedlo najít.'))
+  }
 }
 
 export const postCreateNewClient = async (
@@ -62,6 +77,11 @@ export const patchSearchClients = async (
   axios: AxiosInstance,
   payload: ClientSearchPayload
 ): Promise<ClientWithVisitsWithVisitServices[]> => {
-  const response = await axios.patch(clientApi.search(payload.nameOrPhone), payload)
-  return response.data
+  try {
+    const response = await axios.patch(clientApi.search(payload.nameOrPhone), payload)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Klienty se nepovedlo najít.'))
+  }
 }

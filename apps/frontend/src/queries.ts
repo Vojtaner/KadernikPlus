@@ -52,7 +52,7 @@ export const useSubscriptionMutation = () => {
       window.location.assign(data.redirect)
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Platbu se nepovedlo založit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

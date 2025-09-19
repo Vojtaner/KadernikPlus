@@ -26,7 +26,7 @@ export const useCreateNewOrUpdateServiceMutation = () => {
     },
 
     onError: (error) => {
-      addSnackBarMessage({ text: 'Službu se nepovedlo upravit či přidat.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

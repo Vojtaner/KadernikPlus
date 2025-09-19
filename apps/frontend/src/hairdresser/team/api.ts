@@ -12,8 +12,13 @@ export const teamApi = {
 }
 
 export const getTeamMember = async (axios: AxiosInstance): Promise<TeamMember> => {
-  const response = await axios.get(teamApi.getMember())
-  return response.data
+  try {
+    const response = await axios.get(teamApi.getMember())
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Člen týmu nenalezen.'))
+  }
 }
 
 export const postInviteTeamMember = async (
@@ -42,19 +47,34 @@ export const patchTeamMemberSkill = async (
 }
 
 export const getTeam = async (axios: AxiosInstance): Promise<User[]> => {
-  const response = await axios.get(teamApi.get())
-  return response.data
+  try {
+    const response = await axios.get(teamApi.get())
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Tým nenalezen.'))
+  }
 }
 
 export const getTeamMembers = async (
   axios: AxiosInstance,
   teamId: string
 ): Promise<(TeamMember & { user: { name: string } })[]> => {
-  const response = await axios.get(teamApi.getMembers(teamId))
-  return response.data
+  try {
+    const response = await axios.get(teamApi.getMembers(teamId))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Členové týmu nenalezeni.'))
+  }
 }
 
 export const deleteTeamMember = async (axios: AxiosInstance, id: string): Promise<TeamMember> => {
-  const response = await axios.delete(teamApi.getMember(), { data: { id } })
-  return response.data
+  try {
+    const response = await axios.delete(teamApi.getMember(), { data: { id } })
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Člen týmu smazán.'))
+  }
 }

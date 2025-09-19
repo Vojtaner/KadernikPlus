@@ -35,7 +35,7 @@ export const useProceduresMutation = (options?: UseMutationOptions<CreateProcedu
       addSnackBarMessage({ text: 'Procedura byla upravena.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Proceduru se nepovedlo upravit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })
@@ -57,7 +57,7 @@ export const useDeleteProcedureMutation = (options?: UseMutationOptions<string, 
       addSnackBarMessage({ text: 'Procedura byla smazána.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Proceduru se nepovedlo smazat.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

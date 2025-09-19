@@ -51,7 +51,7 @@ export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, un
       addSnackBarMessage({ text: 'Materiál úspěšně smazán.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Materiál se nepodařilo smazat.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

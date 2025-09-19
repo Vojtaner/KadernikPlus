@@ -49,7 +49,7 @@ export const useDeleteTeamMemberMutation = () => {
       addSnackBarMessage({ text: 'Člen týmu byl odebrán.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Nepovedlo se odebrat člena týmu.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })
@@ -72,7 +72,7 @@ export const useUpdateTeamMemberSkill = (teamId?: string) => {
     },
     onError: (error) => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
-      addSnackBarMessage({ text: 'Oprávnění v týmu se nepodařilo upravit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

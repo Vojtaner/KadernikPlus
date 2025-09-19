@@ -120,7 +120,7 @@ export const useVisitStatusMutation = () => {
       addSnackBarMessage({ text: 'Stav návštěvy byl upraven.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Stav návštěvy nebyl upraven.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })
@@ -145,7 +145,7 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
       addSnackBarMessage({ text: 'Návštěva byla upravena.', type: 'success' })
     },
     onError: (error) => {
-      addSnackBarMessage({ text: 'Návštěvu se nepodařilo upravit.', type: 'error' })
+      addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
   })

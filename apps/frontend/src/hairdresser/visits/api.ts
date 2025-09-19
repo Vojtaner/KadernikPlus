@@ -18,8 +18,13 @@ export const visitApi = {
 }
 
 export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServicesHotFix> => {
-  const response = await axios.get(visitApi.getById(visitId))
-  return response.data
+  try {
+    const response = await axios.get(visitApi.getById(visitId))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Návštěva nenalezena.'))
+  }
 }
 export const postCreateVisit = async (axios: AxiosInstance, visitData: CreateVisitType): Promise<CreateVisitType> => {
   try {
@@ -36,8 +41,13 @@ export const patchUpdateVisit = async (
   visitId: string,
   visitData: VisitDetailFormType
 ): Promise<VisitDetailForm> => {
-  const response = await axios.patch(visitApi.getById(visitId), visitData)
-  return response.data
+  try {
+    const response = await axios.patch(visitApi.getById(visitId), visitData)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Úprava návštěvy neproběhla úspěšně.'))
+  }
 }
 
 export const deleteVisit = async (axios: AxiosInstance, visitId: string): Promise<string> => {
@@ -50,14 +60,24 @@ export const deleteVisit = async (axios: AxiosInstance, visitId: string): Promis
 }
 
 export const patchUpdateVisitStatus = async (axios: AxiosInstance, data: { visitId?: string; status: boolean }) => {
-  const response = await axios.patch(visitApi.updateStatus(), data)
-  return response.data
+  try {
+    const response = await axios.patch(visitApi.updateStatus(), data)
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Úprava stavu návštěvy neúspěšná.'))
+  }
 }
 export const getVisits = async (
   axios: AxiosInstance,
   query?: { from?: Dayjs; to?: Dayjs },
   date?: Dayjs
 ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> => {
-  const response = await axios.get(visitApi.get(date, query))
-  return response.data
+  try {
+    const response = await axios.get(visitApi.get(date, query))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Návštěvy nenalezeny.'))
+  }
 }

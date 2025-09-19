@@ -19,28 +19,43 @@ export const stockApi = {
 }
 
 export const getStocks = async (axios: AxiosInstance): Promise<Stock[]> => {
-  const response = await axios.get(stockApi.getAll())
-  return response.data
+  try {
+    const response = await axios.get(stockApi.getAll())
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Sklad se nepovedlo najít.'))
+  }
 }
 
 export const getStockItems = async (axios: AxiosInstance, stockId: string): Promise<StockWithStockItems[]> => {
-  const response = await axios.get(stockApi.getItems(stockId))
-  return response.data
+  try {
+    const response = await axios.get(stockApi.getItems(stockId))
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Skladové položky se nepovedlo najít.'))
+  }
 }
 
 export const getStockAllowances = async (
   axios: AxiosInstance,
   params: { teamId: string; fromDate: dayjs.Dayjs; toDate: dayjs.Dayjs }
 ): Promise<GetStockAllowance[]> => {
-  const response = await axios.get(stockApi.getAllowances(params))
-  return response.data
+  try {
+    const response = await axios.get(stockApi.getAllowances(params))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Spotřebu se nepovedlo najít.'))
+  }
 }
+
 export const postCreateNewStockItem = async (
   axios: AxiosInstance,
   stockItem: StockItemCreateData
 ): Promise<StockItemCreateData> => {
   try {
     const response = await axios.post(stockApi.createOrUpdateItem(), stockItem)
+
     return response.data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Materiál se nepodařilo přidat/upravit.'))
@@ -48,6 +63,11 @@ export const postCreateNewStockItem = async (
 }
 
 export const deleteStockItem = async (axios: AxiosInstance, stockItemId: string): Promise<void> => {
-  const response = await axios.delete(stockApi.deleteItemById(stockItemId))
-  return response.data
+  try {
+    const response = await axios.delete(stockApi.deleteItemById(stockItemId))
+
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Skladovou položku se nepovedlo smazat.'))
+  }
 }
