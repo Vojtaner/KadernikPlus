@@ -12,17 +12,11 @@ import { SnackbarMessages } from './app/components/SnackBarMessages'
 import AuthGuard from './app/components/AuthGuard'
 import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './hairdresser/pages/SubscriptionPage'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectSnackbarMessages } from './hooks/useAddSnackBar'
-import type { RootState } from './store/store'
-import { removedSnackbarMessage } from './store/snackBarReducer'
 import SubscriptionGuard from './hairdresser/SubscriptionGuard'
 import Layout from './hairdresser/Layout'
 
 function App() {
   const methods = useAppForm()
-  const dispatch = useDispatch()
-  const snackbarMessages = useSelector((state: RootState) => selectSnackbarMessages(state))
 
   return (
     <ThemeProvider theme={AppTheme}>
@@ -46,13 +40,7 @@ function App() {
                   />
                 </Routes>
               </AuthGuard>
-
-              <SnackbarMessages
-                snackbarMessages={snackbarMessages}
-                onRemoveSnackMessage={(uniqueMessage) =>
-                  dispatch(removedSnackbarMessage({ messageUnique: uniqueMessage }))
-                }
-              />
+              <SnackbarMessages />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </FormProvider>

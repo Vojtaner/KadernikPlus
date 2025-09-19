@@ -1,13 +1,14 @@
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import { type SnackbarMessage } from '../../store/snackBarReducer'
+import { removedSnackbarMessage } from '../../store/snackBarReducer'
 import MultipleSnackbars from './MultipleSnackbars'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectSnackbarMessages } from '../../hooks/useAddSnackBar'
+import type { RootState } from '../../store/store'
 
-export const SnackbarMessages = (props: {
-  snackbarMessages: SnackbarMessage[]
-  onRemoveSnackMessage: (uniqueMessage: string) => void
-}) => {
-  const { snackbarMessages, onRemoveSnackMessage } = props
+export const SnackbarMessages = () => {
+  const snackbarMessages = useSelector((state: RootState) => selectSnackbarMessages(state))
+  const dispatch = useDispatch()
 
   return (
     <MultipleSnackbars>
@@ -15,7 +16,7 @@ export const SnackbarMessages = (props: {
         <Snackbar
           open
           key={message.unique}
-          onClick={() => onRemoveSnackMessage(message.unique)}
+          onClick={() => dispatch(removedSnackbarMessage({ messageUnique: message.unique }))}
           sx={{ cursor: 'pointer' }}>
           <Alert severity={message.type}>{message.text}</Alert>
         </Snackbar>
