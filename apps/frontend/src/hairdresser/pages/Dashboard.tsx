@@ -7,12 +7,14 @@ import ShoppingList from './ShoppingList'
 import NewReleasesIcon from '@mui/icons-material/NewReleases'
 import VisitsList from '../visits/components/VisitsList'
 import RevenuChart from '../RevenueChart'
+import { useIntl } from 'react-intl'
 
 export const Dashboard = () => {
+  const intl = useIntl()
   return (
     <Stack direction="column" rowGap={5}>
       <DashBoardCard
-        title="Přehled návštěv"
+        title={intl.formatMessage({ id: 'dashboard.visitsOverview', defaultMessage: 'Přehled návštěv' })}
         icon={<PhotoCameraFrontOutlinedIcon fontSize="medium" color="secondary" />}>
         <VisitsList
           columnHeaderHeight={0}
@@ -21,11 +23,14 @@ export const Dashboard = () => {
           visitListApplyFilter="dashBoardVisitOverView"
         />
       </DashBoardCard>
-
-      <DashBoardCard title="Nákupní seznam" icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
+      <DashBoardCard
+        title={intl.formatMessage({ id: 'dashboard.shoppingList', defaultMessage: 'Nákupní seznam' })}
+        icon={<AddShoppingCartOutlinedIcon fontSize="medium" color="secondary" />}>
         <ShoppingList columnHeaderHeight={0} hideFooter={true} />
       </DashBoardCard>
-      <DashBoardCard title="Neuzavřené návštěvy" icon={<NewReleasesIcon fontSize="medium" color="secondary" />}>
+      <DashBoardCard
+        title={intl.formatMessage({ id: 'dashboard.unclosedVisits', defaultMessage: 'Neuzavřené návštěvy' })}
+        icon={<NewReleasesIcon fontSize="medium" color="secondary" />}>
         <VisitsList
           columnHeaderHeight={0}
           hideFooter={true}
@@ -35,7 +40,7 @@ export const Dashboard = () => {
       </DashBoardCard>
       <DashBoardCard
         sx={{ height: 'auto' }}
-        title="Tržby"
+        title={intl.formatMessage({ id: 'dashboard.revenue', defaultMessage: 'Tržby' })}
         icon={<BarChartOutlinedIcon fontSize="medium" color="secondary" />}>
         <RevenuChart />
       </DashBoardCard>

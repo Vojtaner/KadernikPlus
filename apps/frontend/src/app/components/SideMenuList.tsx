@@ -2,7 +2,7 @@ import { Paths, ROUTES, type AppRoutePath } from '../../routes/AppRoutes'
 import LanguageIcon from '@mui/icons-material/Language'
 import { type IntlShape } from 'react-intl'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
-import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
+// import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
@@ -112,12 +112,12 @@ export const getMenuItems = (
     path: ROUTES.services.path,
     icon: <LocalOfferIcon />,
   },
-  {
-    key: 'logs',
-    title: intl.formatMessage({ id: 'logs', defaultMessage: 'Záznamy o aktivitě' }),
-    path: ROUTES.logs.path,
-    icon: <LightbulbOutlineIcon />,
-  },
+  // {
+  //   key: 'logs',
+  //   title: intl.formatMessage({ id: 'logs', defaultMessage: 'Záznamy o aktivitě' }),
+  //   path: ROUTES.logs.path,
+  //   icon: <LightbulbOutlineIcon />,
+  // },
   {
     key: 'stock',
     title: intl.formatMessage({ id: 'stock', defaultMessage: 'Sklad' }),

@@ -1,7 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { AuthenticationGuard } from '../app/components/AuthenticationGuard'
 import Consumption from '../hairdresser/pages/Consumption'
-import Logs from '../hairdresser/pages/Logs'
 import MyProfile from '../hairdresser/pages/MyProfile'
 import PriceList from '../hairdresser/pages/PriceList'
 import ShoppingList from '../hairdresser/pages/ShoppingList'
@@ -25,7 +24,7 @@ const ReactRouterRoutes = () => {
       <Route path={ROUTES.shoppingList.path} element={<AuthenticationGuard component={ShoppingList} />} />
       <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />
       <Route path={ROUTES.services.path} element={<AuthenticationGuard component={PriceList} />} />
-      <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} />
+      {/* <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} /> */}
       <Route
         path={ROUTES.visits.path}
         element={<AuthenticationGuard component={() => <VisitsList visitListApplyFilter="allVisitsPage" />} />}

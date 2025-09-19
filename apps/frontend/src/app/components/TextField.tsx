@@ -15,6 +15,7 @@ export type TextFieldProps<TFieldValues extends FieldValues = FieldValues> =
       readonly: true
       defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
       disabled?: boolean
+
       control?: never
       rules?: never
     } & Omit<MuiTextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'>)
@@ -37,20 +38,21 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
     return <MuiTextField {...rest} value={defaultValue ?? ''} disabled />
   }
 
-  const { errors } = useFormState({ control, name: props.fieldPath })
-  const error: string = get(errors, props.fieldPath)?.message
+  const { fieldPath, ...restUnControlledInput } = props
+  const { errors } = useFormState({ control, name: fieldPath })
+  const error: string = get(errors, fieldPath)?.message
 
   return (
     <Controller
       control={control!}
-      name={props.fieldPath}
+      name={fieldPath}
       rules={rules}
       defaultValue={defaultValue}
       render={({ field: { onChange, onBlur, value, ref } }) => (
         <MuiTextField
-          {...rest}
+          {...restUnControlledInput}
           inputRef={ref}
-          name={props.fieldPath}
+          name={fieldPath}
           disabled={disabled}
           helperText={error}
           error={!!error}
@@ -61,7 +63,6 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
 
             if (rest.type === 'number') {
               if (raw === '') {
-                // user cleared input -> keep it empty instead of 0
                 onChange('')
                 return
               }

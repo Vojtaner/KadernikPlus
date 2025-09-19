@@ -2,6 +2,7 @@ import Loader from '../../pages/Loader'
 import { type Control, type FieldPath, type FieldValues } from 'react-hook-form'
 import AutoComplete from '../../../app/components/AutoComplete'
 import { useClientsQuery } from '../queries'
+import { useIntl } from 'react-intl'
 
 type ClientsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>
@@ -11,6 +12,7 @@ type ClientsAutoCompleteProps<TFieldValues extends FieldValues> = {
 const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAutoCompleteProps<TFieldValues>) => {
   const { control, fieldPath } = props
   const { data: clients } = useClientsQuery()
+  const intl = useIntl()
 
   if (!clients) {
     return <Loader />
@@ -23,8 +25,8 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAuto
       options={options}
       control={control}
       fieldPath={fieldPath}
-      label="Vyberte klienta"
-      placeholder="Hledejte..."
+      label={intl.formatMessage({ id: 'clientAutoComplete.selectClient', defaultMessage: 'Vyberte klienta' })}
+      placeholder={intl.formatMessage({ id: 'clientAutoComplete.searchPlaceholder', defaultMessage: 'Hledejte...' })}
     />
   )
 }

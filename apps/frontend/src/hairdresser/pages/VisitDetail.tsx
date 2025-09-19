@@ -18,13 +18,14 @@ import { useProceduresQuery } from '../procedure/queries'
 import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
 import ProcedureCard from '../ProcedureCard'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
+import { useEffect } from 'react'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
-  const { data: visitData, isLoading: isLoadingVisit, isSuccess: isSuccessVisitData } = useVisitQuery(visitId)
+  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
-  console.log('render')
+
   const dispatch = useAppDispatch()
   const navigate = useAppNavigate()
   const { mutate: deleteVisitMutation } = useDeleteVisitMutation()
@@ -34,14 +35,16 @@ const VisitDetail = () => {
 
   const previusVisitProcedure = lastVisitWithProcedure && lastVisitWithProcedure[0]
 
+  useEffect(() => {
+    if (visitData) {
+      const name = `${visitData.client.firstName} ${visitData.client.lastName}`.toUpperCase()
+      const serviceName = visitData.visitServices[0].service.serviceName
+      dispatch(setCurrentLocationAppendix(`${name} - ${serviceName}`))
+    }
+  }, [visitData, dispatch])
+
   if (isLoadingVisit || isLoadingProcedure) {
     return <Loader />
-  }
-
-  if (isSuccessVisitData) {
-    const name = `${visitData.client.firstName} ${visitData.client.lastName}`.toUpperCase()
-    const serviceName = visitData.visitServices[0].service.serviceName
-    dispatch(setCurrentLocationAppendix(`${name} - ${serviceName}`))
   }
 
   if (!proceduresData || !visitData) {

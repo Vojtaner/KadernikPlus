@@ -25,7 +25,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
   )
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100px' }}>
       <DataGrid
         {...props}
         rows={rows}
