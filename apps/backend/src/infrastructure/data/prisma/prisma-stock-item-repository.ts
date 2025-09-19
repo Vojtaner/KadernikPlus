@@ -108,7 +108,8 @@ const createStockItemRepositoryDb = (
 
         const updatedQuantity = packageCount * quantity;
         const avgPrice = updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
-        const itemNameAlreadyExists = await prisma.stockItem.findUnique({
+        //
+        const activeItemNameAlreadyExists = await prisma.stockItem.findUnique({
           where: {
             stockId_itemName_isActive: {
               stockId: data.stockId,
@@ -118,7 +119,7 @@ const createStockItemRepositoryDb = (
           },
         });
 
-        if (itemNameAlreadyExists) {
+        if (activeItemNameAlreadyExists) {
           throw httpError("Položka na vašem skladu už existuje.", 409);
         }
 
@@ -148,67 +149,80 @@ const createStockItemRepositoryDb = (
       }
     },
     deleteStockItem: async (id: string, userId: string): Promise<void> => {
-      const teamMember = await prismaStockRepository.teamMember.findFirst({
-        where: { userId },
-      });
+      try {
+        const teamMember = await prismaStockRepository.teamMember.findFirst({
+          where: { userId },
+        });
 
-      const stockItem = await prismaStockRepository.stockItem.findUnique({
-        where: { id },
-        include: { stock: true },
-      });
+        const stockItem = await prismaStockRepository.stockItem.findUnique({
+          where: { id },
+          include: { stock: true },
+        });
 
-      if (!stockItem) {
-        throw new Error("Položka skladu nebyla nalezena.");
+        if (!stockItem) {
+          throw new Error("Položka skladu nebyla nalezena.");
+        }
+
+        const isOwnStock =
+          stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
+          stockItem.stock.ownerId === userId;
+
+        const isTeamStock =
+          stockItem.stock.teamId === teamMember?.teamId &&
+          teamMember?.canAccessStocks;
+
+        if (!isOwnStock && !isTeamStock) {
+          throw new Error("Nemáte oprávnění k odstranění této položky skladu.");
+        }
+        //
+        await prismaStockRepository.stockItem.update({
+          where: { id },
+          data: { isActive: false },
+        });
+      } catch (error) {
+        console.error("deleteStockItem error:", error);
+        throw error;
       }
-
-      const isOwnStock =
-        stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
-        stockItem.stock.ownerId === userId;
-
-      const isTeamStock =
-        stockItem.stock.teamId === teamMember?.teamId &&
-        teamMember?.canAccessStocks;
-
-      if (!isOwnStock && !isTeamStock) {
-        throw new Error("Nemáte oprávnění k odstranění této položky skladu.");
-      }
-
-      await prismaStockRepository.stockItem.update({
-        where: { id },
-        data: { isActive: false },
-      });
     },
 
     getStockItemById: async (
       stockItemId: string,
       userId: string
-    ): Promise<StockItem | null> => {
-      const teamMember = await prismaStockRepository.teamMember.findFirst({
-        where: { userId },
-      });
+    ): Promise<StockItem> => {
+      try {
+        const teamMember = await prismaStockRepository.teamMember.findFirst({
+          where: { userId },
+        });
 
-      const stockItem = await prismaStockRepository.stockItem.findUnique({
-        where: { id: stockItemId, isActive: true },
-        include: { stock: true },
-      });
+        const stockItem = await prismaStockRepository.stockItem.findUnique({
+          where: { id: stockItemId, isActive: true },
+          include: { stock: true },
+        });
 
-      if (!stockItem) {
-        throw new Error("Položka skladu nebyla nalezena.");
-      }
+        if (!stockItem) {
+          throw httpError("Položka skladu nebyla nalezena.", 404);
+        }
 
-      const isOwnStock =
-        stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
-        stockItem.stock.ownerId === userId;
+        const isOwnStock =
+          stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
+          stockItem.stock.ownerId === userId;
 
-      const isTeamStock =
-        stockItem.stock.teamId === teamMember?.teamId &&
-        teamMember?.canAccessStocks;
+        const isTeamStock =
+          stockItem.stock.teamId === teamMember?.teamId &&
+          teamMember?.canAccessStocks;
 
-      if (isOwnStock || isTeamStock) {
+        if (!isOwnStock && !isTeamStock) {
+          throw httpError(
+            "Nemáte oprávnění k přístupu k této položce skladu.",
+            403
+          );
+        }
+
         return stockItem;
+      } catch (error) {
+        console.error("getStockItemById error:", error);
+        throw error;
       }
-
-      throw new Error("Nemáte oprávnění k přístupu k této položce skladu.");
     },
 
     findStockItemByName: async (
@@ -219,10 +233,7 @@ const createStockItemRepositoryDb = (
       });
       return stockItem ?? null;
     },
-    getStockItemsByStockId: async (
-      stockId: string,
-      userId: string
-    ): Promise<StockItem[]> => {
+    getStockItemsByStockId: async (userId: string): Promise<StockItem[]> => {
       const teamMember = await prisma.teamMember.findUnique({
         where: { userId },
       });

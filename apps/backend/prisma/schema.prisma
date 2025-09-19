@@ -134,8 +134,9 @@ model StockItem {
   stockId             String
   stockAllowances     StockAllowance[]
   stock               Stock            @relation(fields: [stockId], references: [id])
+  activeName String? @db.VarChar(255) @map("active_name")
 
-  @@unique([stockId, itemName, isActive])
+  @@index([stockId, itemName])
   @@map("stock_items")
 }
 
