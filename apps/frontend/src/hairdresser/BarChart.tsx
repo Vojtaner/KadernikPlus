@@ -3,6 +3,8 @@ import AppTheme from '../AppTheme'
 import dayjs from 'dayjs'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../hairdresser/visits/entity'
 import type { DatesRange } from '../hooks'
+import { useState } from 'react'
+import RevenuCard, { type RevenueStatistic } from './RevenuCard'
 
 type AppBarChartProps = {
   visitData: VisitWithServicesWithProceduresWithStockAllowances[]
@@ -14,30 +16,47 @@ const AppBarChart = (props: AppBarChartProps) => {
     from: from.toDate(),
     to: to.toDate(),
   })
+  const [selectedDay, setSelectedDay] = useState<RevenueStatistic | null>(null)
 
   return (
-    <BarChart
-      height={260}
-      xAxis={[{ scaleType: 'band', data: labels }]}
-      series={[
-        {
-          data: costs,
-          label: 'Náklady',
-          valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
-          color: AppTheme.palette.error.main,
-          stack: 'finance',
-        },
-        {
-          data: profit,
-          valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
-          label: 'Zisk',
-          color: AppTheme.palette.success.main,
-          stack: 'finance',
-        },
-      ]}
-      margin={{ top: 20, bottom: 20, left: 0, right: 20 }}
-      barLabel={(item, context) => (context.bar.height > 30 ? `${item.value} Kč` : null)}
-    />
+    <>
+      {selectedDay && <RevenuCard selectedDay={selectedDay} />}
+      <BarChart
+        height={260}
+        xAxis={[{ scaleType: 'band', data: labels }]}
+        series={[
+          {
+            data: costs,
+            label: 'Náklady',
+            valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
+            color: AppTheme.palette.error.main,
+            stack: 'finance',
+          },
+          {
+            data: profit,
+            valueFormatter: (value) => `${value ? Math.round(value) : 0} Kč`,
+            label: 'Zisk',
+            color: AppTheme.palette.success.main,
+            stack: 'finance',
+          },
+        ]}
+        margin={{ top: 20, bottom: 20, left: 0, right: 20 }}
+        onItemClick={(_, item) => {
+          const profitAmount = profit[item.dataIndex]
+          const costsAmount = costs[item.dataIndex]
+          const revenue = costsAmount + profitAmount
+          const label = labels[item.dataIndex]
+
+          setSelectedDay({
+            profit: profitAmount,
+            costs: costsAmount,
+            revenue,
+            label,
+          })
+        }}
+        barLabel={(item, context) => (context.bar.height > 30 ? `${item.value} Kč` : null)}
+      />
+    </>
   )
 }
 
