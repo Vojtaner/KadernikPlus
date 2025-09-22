@@ -169,16 +169,16 @@ const createClientRepositoryDb = (
         return { created: [], skipped: contacts.length };
       }
 
-      // insert all new contacts
       const createdClients = await prismaRepository.client.createMany({
         data: newContacts.map((c) => ({
           firstName: c.firstName,
           lastName: c.lastName,
           phone: c.phone,
+          deposit: false,
           teamId: userTeam.teamId,
           userId,
         })),
-        skipDuplicates: true, // safety: won't crash if duplicates sneak in
+        skipDuplicates: true,
       });
 
       return {
