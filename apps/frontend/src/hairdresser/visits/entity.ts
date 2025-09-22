@@ -4,6 +4,7 @@ import type { Procedure } from '../../entities/procedure'
 import { type Service } from '../../entities/service'
 import { type User, type WithUserId } from '../../entities/user'
 import type { AddProcedureStockAllowanceType } from '../procedure/components/AddProcedureButton'
+import dayjs from 'dayjs'
 
 export type Visit = {
   id?: string
@@ -116,10 +117,10 @@ export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: D
 
   if (query) {
     if (query.from) {
-      params.append('from', query.from.toISOString())
+      params.append('from', dayjs(query.from).format('YYYY-MM-DD'))
     }
     if (query.to) {
-      params.append('to', query.to.toISOString())
+      params.append('to', dayjs(query.to).format('YYYY-MM-DD'))
     }
 
     return `/api/visits?${params.toString()}`

@@ -156,15 +156,16 @@ export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; t
 
   return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
     queryKey: params?.query
-      ? ['visits', params.query?.from?.format('YYYY-MM-DD') ?? null, params.query?.to?.format('YYYY-MM-DD') ?? null]
+      ? [
+          'visits',
+          dayjs(params.query?.from).format('YYYY-MM-DD') ?? null,
+          dayjs(params.query?.to).format('YYYY-MM-DD') ?? null,
+        ]
       : params?.date
         ? ['visits', dayjs(params.date).format('YYYY-MM-DD')]
         : ['visits'],
     queryFn: () => {
       return getVisits(axios, params.query, params.date)
     },
-    staleTime: 24 * 60 * 60 * 1000,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
   })
 }

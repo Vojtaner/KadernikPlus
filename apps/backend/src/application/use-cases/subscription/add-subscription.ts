@@ -64,7 +64,7 @@ const createAddSubscriptionUseCase = (dependencies: {
     });
 
     const newPayment = await dependencies.createPaymentUseCase.execute({
-      parentId: "",
+      initRecurringId: "",
       subscriptionId: newSubscription.id,
       amount: new Prisma.Decimal(data.price),
       currency: data.currency || "CZK",

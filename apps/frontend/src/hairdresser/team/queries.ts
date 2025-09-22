@@ -29,6 +29,7 @@ export const useAddTeamMemberMutation = () => {
     mutationFn: (data: { email: string; consentId: string }) => postInviteTeamMember(axios, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      //
       addSnackBarMessage({ text: 'Člen týmu byl přidán.', type: 'success' })
     },
     onError: (error) => {
@@ -84,7 +85,7 @@ export const useTeamMembersQuery = (teamId?: string) => {
   const resolvedTeamId = teamId || DEFAULT_USERS_TEAM
 
   return useQuery<(TeamMember & { user: { name: string } })[]>({
-    queryKey: ['teamMembers', resolvedTeamId],
+    queryKey: ['teamMembers'],
     queryFn: () => getTeamMembers(axios, resolvedTeamId),
   })
 }

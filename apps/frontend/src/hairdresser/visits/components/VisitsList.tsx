@@ -11,9 +11,11 @@ import { FilterTableButton } from '../../pages/Consumption'
 import Loader from '../../pages/Loader'
 import { Paths } from '../../../routes/AppRoutes'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import type { VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
+import { DepositStatus, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
+import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
+import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import { getButtonStyle } from '../../entity'
 
 type VisitListProps = {
@@ -171,6 +173,8 @@ type VisitRow =
       serviceName?: never
       visitState?: never
       clientId?: never
+      visitDepositPayed?: never
+      clientDeposit?: never
     }
   | {
       id: string
@@ -178,6 +182,8 @@ type VisitRow =
       client: string
       serviceName: string
       visitState: boolean
+      visitDepositPayed: boolean
+      clientDeposit: boolean
       clientId: string
       isHeader?: false
       label?: never
@@ -215,7 +221,18 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     disableColumnMenu: true,
     minWidth: 55,
     renderCell: (params) =>
-      !params.row.isHeader && <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
+      !params.row.isHeader && (
+        <Stack direction="row" spacing={0.5} alignItems="center">
+          <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>
+          {params.row.clientDeposit ? (
+            !params.row.visitDepositPayed ? (
+              <CreditCardOffIcon sx={{ fontSize: '15px' }} color="error" />
+            ) : (
+              <CreditScoreIcon sx={{ fontSize: '15px' }} color="success" />
+            )
+          ) : null}
+        </Stack>
+      ),
   },
   {
     field: 'serviceName',
@@ -286,6 +303,7 @@ const createVisitsTable = (
         client: undefined,
         serviceName: undefined,
         visitState: undefined,
+        visitDepositPayed: undefined,
         clientId: undefined,
       } satisfies VisitRow
     }
@@ -298,6 +316,8 @@ const createVisitsTable = (
       serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
       visitState: visit.visitStatus,
       clientId: visit.client.id,
+      visitDepositPayed: visit.depositStatus === DepositStatus.ZAPLACENO,
+      clientDeposit: visit.client.deposit,
     } satisfies VisitRow
   })
 

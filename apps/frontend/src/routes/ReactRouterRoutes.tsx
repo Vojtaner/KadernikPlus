@@ -4,7 +4,6 @@ import Consumption from '../hairdresser/pages/Consumption'
 import MyProfile from '../hairdresser/pages/MyProfile'
 import PriceList from '../hairdresser/pages/PriceList'
 import ShoppingList from '../hairdresser/pages/ShoppingList'
-import SmsPage from '../hairdresser/pages/Sms'
 import Stock from '../hairdresser/pages/Stock'
 import Team from '../hairdresser/pages/Team'
 import VisitDetail from '../hairdresser/pages/VisitDetail'
@@ -20,7 +19,7 @@ const ReactRouterRoutes = () => {
       <Route path={ROUTES.profile.path} element={<AuthenticationGuard component={MyProfile} />} />
       <Route path={ROUTES.home.path} element={<AuthenticationGuard component={Dashboard} />} />
       <Route path={ROUTES.clients.path} element={<AuthenticationGuard component={ClientsList} />} />
-      <Route path={ROUTES.sms.path} element={<AuthenticationGuard component={SmsPage} />} />
+      {/* <Route path={ROUTES.sms.path} element={<AuthenticationGuard component={SmsPage} />} /> */}
       <Route path={ROUTES.shoppingList.path} element={<AuthenticationGuard component={ShoppingList} />} />
       <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />
       <Route path={ROUTES.services.path} element={<AuthenticationGuard component={PriceList} />} />

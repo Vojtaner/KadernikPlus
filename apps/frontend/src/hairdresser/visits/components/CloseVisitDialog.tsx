@@ -29,17 +29,17 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
           <Button onClick={handleClose}>
             <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
-          <Button
-            disabled={errors?.length !== 0}
-            type="button"
-            onClick={() => {
-              onConfirm()
-              handleClose()
-            }}>
-            {errors?.length === 0 && missingStockAllowanceError ? (
+          {errors?.length === 0 && missingStockAllowanceError ? (
+            <Button
+              disabled={errors?.length !== 0}
+              type="button"
+              onClick={() => {
+                onConfirm()
+                handleClose()
+              }}>
               <FormattedMessage id="formDialog.confirmWithoutStockAllowances" defaultMessage="Potvrdit bez procedury" />
-            ) : null}
-          </Button>
+            </Button>
+          ) : null}
         </>
       }
       formFields={

@@ -91,7 +91,9 @@ const MyProfile = () => {
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
         <Stack spacing={2}>
-          <Typography variant="body2">Zde můžete provést hromadný import kontaktů.</Typography>
+          <Typography variant="body2">
+            Zde můžete provést hromadný import kontaktů pouze česká tel. kontakty.
+          </Typography>
           <Grid container rowSpacing={2}>
             <ContactPicker />
           </Grid>
