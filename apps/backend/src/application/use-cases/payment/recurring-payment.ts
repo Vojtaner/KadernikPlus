@@ -31,7 +31,6 @@ const createRecurringPaymentUseCase = (dependencies: {
     const subscription = await dependencies.subscriptionRepositoryDb.findById(
       subscriptionId
     );
-    console.log({ subscription, lastPayment });
 
     if (!lastPayment || !subscription) {
       throw httpError(
@@ -55,7 +54,6 @@ const createRecurringPaymentUseCase = (dependencies: {
       throw httpError("Nepodařilo se vytvořit novou platbu.", 500);
     }
 
-    console.log("newPayment", newPayment);
     const newComgateRecurringPayment =
       await dependencies.comgatePaymentApi.recurringPayment({
         curr: newPayment.currency,

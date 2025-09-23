@@ -66,7 +66,6 @@ export const getSubscription = async (axios: AxiosInstance): Promise<Subscriptio
     const response = await axios.get(subscriptionApi.get())
     return response.data
   } catch (error) {
-    console.log(error)
     throw new Error(extractErrorMessage(error, 'Nepovedlo se načíst předplatné.'))
   }
 }

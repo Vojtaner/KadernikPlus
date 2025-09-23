@@ -15,7 +15,6 @@ import {
 } from './api/api'
 import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
-import { redirect } from 'react-router-dom'
 
 export const useSubscriptionQuery = () => {
   const axios = useAxios()

@@ -58,7 +58,6 @@ const createSubscriptionController = (dependencies: {
       subscriptionId
     );
 
-    console.log({ sub });
     return { statusCode: 200, body: sub };
   };
 

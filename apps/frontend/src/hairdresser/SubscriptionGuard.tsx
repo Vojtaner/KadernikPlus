@@ -1,6 +1,6 @@
 import { useEffect, useRef, type PropsWithChildren } from 'react'
 import { useExtendSubscriptionMutation, useSubscriptionQuery } from '../queries'
-import { Navigate, redirect } from 'react-router-dom'
+import { Navigate } from 'react-router-dom'
 import { ROUTES } from '../routes/AppRoutes'
 import Loader from '../hairdresser/pages/Loader'
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
@@ -16,7 +16,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   const isExpired = endDate ? today > endDate : false
   const addSnackBarMessage = useAddSnackbarMessage()
   const alreadyExtended = useRef<Set<string>>(new Set())
-  debugger
+
   useEffect(() => {
     if (subscription && subscription?.status === 'EXPIRED' && subscription.id) {
       if (!alreadyExtended.current.has(subscription.id)) {
