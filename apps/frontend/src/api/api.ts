@@ -13,6 +13,7 @@ export const userApi = {
 export const subscriptionApi = {
   get: () => `api/subscription`,
   create: () => `/api/subscription/`,
+  extend: (subscriptionId: string) => `/api/subscription/extend/${encodeURIComponent(subscriptionId)}`,
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
 }
 
@@ -65,7 +66,17 @@ export const getSubscription = async (axios: AxiosInstance): Promise<Subscriptio
     const response = await axios.get(subscriptionApi.get())
     return response.data
   } catch (error) {
+    console.log(error)
     throw new Error(extractErrorMessage(error, 'Nepovedlo se načíst předplatné.'))
+  }
+}
+
+export const postExtendSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<Subscription> => {
+  try {
+    const response = await axios.post(subscriptionApi.extend(subscriptionId))
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Nepovedlo se prodloužit předplatné.'))
   }
 }
 

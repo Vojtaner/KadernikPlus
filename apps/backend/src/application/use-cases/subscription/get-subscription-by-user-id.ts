@@ -12,32 +12,28 @@ const createGetSubscriptionUseCase = (dependencies: {
 }) => {
   return {
     execute: async (userId: string): Promise<Subscription | null> => {
-      const validSubscription =
-        await dependencies.subscriptionRepositoryDb.findActiveByUserId(userId);
+      const userSubscription =
+        await dependencies.subscriptionRepositoryDb.findByUserId(userId);
 
-      const today = new Date();
-      const endDate = validSubscription?.endDate
-        ? new Date(validSubscription.endDate)
-        : null;
-      const isExpired = endDate ? endDate < today : false;
+      const isExpired = getIsSubscriptionExpired(userSubscription?.endDate);
 
-      if (!validSubscription) {
+      if (!userSubscription) {
         throw httpError("Předplatné se nepodařilo najít", 404);
       }
 
       if (
         isExpired &&
-        validSubscription.status !== SubscriptionStatus.CANCELLED
+        userSubscription.status !== SubscriptionStatus.CANCELLED
       ) {
         const expiredSubscription =
           await dependencies.updateSubscriptionUseCase.execute(
-            validSubscription?.id,
+            userSubscription?.id,
             { status: SubscriptionStatus.EXPIRED }
           );
 
         return expiredSubscription;
       } else {
-        return validSubscription;
+        return userSubscription;
       }
     },
   };
@@ -52,3 +48,9 @@ const getSubscriptionUseCase = createGetSubscriptionUseCase({
 });
 
 export default getSubscriptionUseCase;
+
+const getIsSubscriptionExpired = (endDate: Date | null | undefined) => {
+  const today = new Date();
+  const isExpired = endDate ? endDate < today : false;
+  return isExpired;
+};

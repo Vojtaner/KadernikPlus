@@ -24,8 +24,7 @@ type SubscriptionControllerType = {
     params: { userId: string };
   }>;
   extendSubscriptionController: ControllerFunction<{
-    params: { userId: string };
-    body: { extraDays: number };
+    params: { subscrioptionId: string };
   }>;
 };
 
@@ -53,13 +52,13 @@ const createSubscriptionController = (dependencies: {
   const extendSubscriptionController: ControllerFunction<
     SubscriptionControllerType["extendSubscriptionController"]
   > = async (httpRequest) => {
-    const { userId } = httpRequest.params;
-    const { extraDays } = httpRequest.body;
+    const { subscriptionId } = httpRequest.params;
 
     const sub = await dependencies.extendSubscriptionUseCase.execute(
-      userId,
-      extraDays
+      subscriptionId
     );
+
+    console.log({ sub });
     return { statusCode: 200, body: sub };
   };
 

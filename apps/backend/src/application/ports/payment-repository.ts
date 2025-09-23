@@ -10,4 +10,5 @@ export interface PaymentRepositoryPort {
   ) => Promise<Payment | undefined>;
 
   findByExternalId(externalId: string): Promise<Payment | null>;
+  findBySubscriptionId(subscriptionId: string): Promise<Payment | null>;
 }

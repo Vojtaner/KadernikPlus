@@ -15,7 +15,7 @@ subscriptionRouter.get(
 );
 
 subscriptionRouter.post(
-  "/extend/:userId",
+  "/extend/:subscriptionId",
   makeExpressCallback(subscriptionController.extendSubscriptionController)
 );
 

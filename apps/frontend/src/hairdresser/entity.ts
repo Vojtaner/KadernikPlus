@@ -2,6 +2,7 @@ import type { ButtonProps } from '@mui/material'
 import type { CommonProps } from '@mui/material/OverridableComponent'
 import { cloneElement, type ReactElement } from 'react'
 import type { AppPaletteColor } from '../entity'
+import type { AxiosError } from 'axios'
 
 export const addPropsToReactElement = (
   element: ReactElement,
@@ -39,4 +40,8 @@ export const getButtonStyles = (active: boolean) => ({
 
 export const getButtonStyle = <T>(tabelView: T, key: T) => {
   return tabelView === key ? 'contained' : 'text'
+}
+
+export const getQueryErrorMessage = (error: unknown) => {
+  return (error as AxiosError<{ message: string }>).response?.data.message
 }

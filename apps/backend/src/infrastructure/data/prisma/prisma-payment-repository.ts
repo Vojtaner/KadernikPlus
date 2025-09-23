@@ -1,6 +1,7 @@
 import { PaymentRepositoryPort } from "../../../application/ports/payment-repository";
 import { Payment, PrismaClient } from ".prisma/client";
 import prisma from "./prisma";
+import { httpError } from "../../../adapters/express/httpError";
 
 const createPaymentRepositoryDb = (
   prismaClient: PrismaClient
@@ -47,6 +48,24 @@ const createPaymentRepositoryDb = (
       });
 
       return payment;
+    },
+    findBySubscriptionId: async (subscriptionId: string) => {
+      const alreadyPendingPayment = await prismaClient.payment.findFirst({
+        where: { subscriptionId, status: "PENDING" },
+      });
+
+      if (alreadyPendingPayment) {
+        throw httpError(
+          "Pro toto předplatné již existuje čekající platba.",
+          400
+        );
+      }
+
+      const lastPaidPayment = await prismaClient.payment.findFirst({
+        where: { subscriptionId, status: "PAID" },
+      });
+
+      return lastPaidPayment;
     },
   };
 };

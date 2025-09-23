@@ -246,7 +246,7 @@ model Subscription {
   user      User                @relation(fields: [userId], references: [id])
 
   @@index([userId], map: "Subscription_userId_fkey")
-  @@unique([userId, status])
+  @@unique([userId])
 }
 
 model Payment {

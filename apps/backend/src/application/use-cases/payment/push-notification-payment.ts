@@ -14,13 +14,13 @@ const createPushNotificationPaymentUseCase = (dependencies: {
         await dependencies.paymentRepositoryDb.updatePayment({
           transactionId: data.transactionId,
           status: data.status,
+          initRecurringId: data.initRecurringId,
           refId: Number(data.refId),
         });
 
       const now = new Date();
       const plus30DaysDate = new Date(now);
       plus30DaysDate.setDate(now.getDate() + 30);
-
       if (updatedPayment && updatedPayment.status === "PAID") {
         const updatedSubscription =
           await dependencies.subscriptionRepositoryDb.update(

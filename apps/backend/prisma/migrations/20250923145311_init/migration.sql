@@ -204,7 +204,7 @@ CREATE TABLE `Subscription` (
     `endDate` DATETIME(3) NULL,
 
     INDEX `Subscription_userId_fkey`(`userId`),
-    UNIQUE INDEX `Subscription_userId_status_key`(`userId`, `status`),
+    UNIQUE INDEX `Subscription_userId_key`(`userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -214,7 +214,7 @@ CREATE TABLE `Payment` (
     `subscriptionId` VARCHAR(191) NOT NULL,
     `refId` INTEGER NOT NULL,
     `provider` VARCHAR(191) NOT NULL,
-    `parentId` VARCHAR(191) NOT NULL DEFAULT '',
+    `initRecurringId` VARCHAR(191) NOT NULL DEFAULT '',
     `transactionId` VARCHAR(191) NOT NULL,
     `amount` DECIMAL(15, 5) NOT NULL,
     `currency` VARCHAR(191) NOT NULL DEFAULT 'CZK',

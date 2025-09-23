@@ -20,6 +20,7 @@ import updatePaymentUseCase, {
   UpdatePaymentUseCaseType,
 } from "../payment/update-payment";
 import { WithUserId } from "@/entities/user";
+import { httpError } from "../../../adapters/express/httpError";
 
 export type PaymentStatus = "PENDING" | "AUTHORIZED" | "PAID" | "CANCELLED";
 
@@ -42,7 +43,7 @@ const createAddSubscriptionUseCase = (dependencies: {
     }
 
     if (existingSubscription && existingSubscription.status === "PENDING") {
-      throw new Error("Uživatel už má nezaplacené členství.");
+      throw httpError("Uživatel už má nezaplacené členství.", 403);
     }
 
     const user = await dependencies.userRepositoryDb.findById(data.userId);

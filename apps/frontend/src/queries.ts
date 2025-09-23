@@ -10,10 +10,12 @@ import {
   getUser,
   postCancelSubscription,
   postCreateSubscription,
+  postExtendSubscription,
   updateUserData,
 } from './api/api'
 import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
+import { redirect } from 'react-router-dom'
 
 export const useSubscriptionQuery = () => {
   const axios = useAxios()
@@ -23,6 +25,7 @@ export const useSubscriptionQuery = () => {
     queryFn: () => getSubscription(axios),
   })
 }
+
 export const useUserDataQuery = () => {
   const axios = useAxios()
 
@@ -32,6 +35,24 @@ export const useUserDataQuery = () => {
   })
 }
 
+export const useExtendSubscriptionMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  const mutation = useMutation<Subscription, Error, string>({
+    mutationFn: async (subscriptionId: string) => postExtendSubscription(axios, subscriptionId),
+    onSuccess: () => {
+      addSnackBarMessage({ text: 'Předplatné prodlouženo', type: 'success' })
+      queryClient.invalidateQueries({ queryKey: ['subscription'] })
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
+
+  return { mutation }
+}
 export const useSubscriptionMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
@@ -59,6 +80,7 @@ export const useSubscriptionMutation = () => {
 
   return { mutation }
 }
+
 export const useCancelSubscriptionMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()

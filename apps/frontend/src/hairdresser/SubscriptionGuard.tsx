@@ -1,18 +1,30 @@
-import type { PropsWithChildren } from 'react'
-import { useSubscriptionQuery } from '../queries'
-import { Navigate } from 'react-router-dom'
+import { useEffect, useRef, type PropsWithChildren } from 'react'
+import { useExtendSubscriptionMutation, useSubscriptionQuery } from '../queries'
+import { Navigate, redirect } from 'react-router-dom'
 import { ROUTES } from '../routes/AppRoutes'
 import Loader from '../hairdresser/pages/Loader'
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
 import ErrorBoundary from './pages/ErrorBoundary'
+import { getQueryErrorMessage } from './entity'
 
 const SubscriptionGuard = (props: PropsWithChildren) => {
   const { children } = props
   const { data: subscription, isLoading, error } = useSubscriptionQuery()
+  const { mutation: extendedSubscription } = useExtendSubscriptionMutation()
   const today = new Date()
   const endDate = subscription && subscription?.endDate ? new Date(subscription.endDate) : null
   const isExpired = endDate ? today > endDate : false
   const addSnackBarMessage = useAddSnackbarMessage()
+  const alreadyExtended = useRef<Set<string>>(new Set())
+  debugger
+  useEffect(() => {
+    if (subscription && subscription?.status === 'EXPIRED' && subscription.id) {
+      if (!alreadyExtended.current.has(subscription.id)) {
+        alreadyExtended.current.add(subscription.id)
+        extendedSubscription.mutate(subscription.id)
+      }
+    }
+  }, [subscription, extendedSubscription])
 
   if (subscription && subscription.status === 'ACTIVE') {
     return children
@@ -27,7 +39,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   }
 
   if (error) {
-    addSnackBarMessage({ text: error.message, type: 'error' })
+    addSnackBarMessage({ text: getQueryErrorMessage(error), type: 'error' })
     return <ErrorBoundary />
   }
 
@@ -35,16 +47,11 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 
-  if (
-    subscription &&
-    (subscription.status === 'EXPIRED' ||
-      (subscription.status === 'CANCELLED' && isExpired) ||
-      subscription.status === 'PENDING')
-  ) {
+  if (subscription && ((subscription.status === 'CANCELLED' && isExpired) || subscription.status === 'PENDING')) {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 
-  return <ErrorBoundary />
+  return <Navigate to={ROUTES.home.path} replace />
 }
 
 export default SubscriptionGuard
