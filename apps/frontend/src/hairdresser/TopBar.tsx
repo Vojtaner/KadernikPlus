@@ -40,7 +40,7 @@ const TopBar = (props: TopBarProps) => {
             }}
           />
           <Button
-            href="https://www.kadernikplus.cz/video-navody"
+            href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
             sx={{ bgcolor: AppTheme.palette.info.main }}
             variant="contained">
             Video návody
