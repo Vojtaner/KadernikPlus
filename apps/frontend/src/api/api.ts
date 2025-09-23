@@ -8,6 +8,7 @@ export const userApi = {
   get: () => `/api/users`,
   getLogs: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
   getAllLogs: () => `/api/logs/`,
+  deleteUser: () => `/api/users`,
 }
 
 export const subscriptionApi = {
@@ -23,6 +24,15 @@ export const updateUserData = async (axios: AxiosInstance, userData: UserForm): 
     return response.data
   } catch (error) {
     throw new Error(extractErrorMessage(error, 'Uživatele se nepovedlo upravit.'))
+  }
+}
+
+export const deleteUser = async (axios: AxiosInstance): Promise<{ deletionScheduledAt: string }> => {
+  try {
+    const response = await axios.delete(userApi.deleteUser())
+    return response.data
+  } catch (error) {
+    throw new Error(extractErrorMessage(error, 'Uživatele se nepovedlo smazat.'))
   }
 }
 

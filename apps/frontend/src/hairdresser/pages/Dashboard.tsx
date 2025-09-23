@@ -11,6 +11,7 @@ import { useIntl } from 'react-intl'
 
 export const Dashboard = () => {
   const intl = useIntl()
+
   return (
     <Stack direction="column" rowGap={5}>
       <DashBoardCard

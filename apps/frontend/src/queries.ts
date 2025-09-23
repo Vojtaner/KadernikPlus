@@ -5,6 +5,7 @@ import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
 import {
+  deleteUser,
   getLogs,
   getSubscription,
   getUser,
@@ -15,6 +16,7 @@ import {
 } from './api/api'
 import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
+import dayjs from 'dayjs'
 
 export const useSubscriptionQuery = () => {
   const axios = useAxios()
@@ -113,6 +115,24 @@ export const useUpdateUserMutation = () => {
   })
 
   return { mutation }
+}
+
+export const useDeleteUserMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  return useMutation<{ deletionScheduledAt: string }, Error>({
+    mutationFn: async () => deleteUser(axios),
+    onSuccess: (data: { deletionScheduledAt: string }) => {
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      const formattedDate = dayjs(data.deletionScheduledAt).format('DD.MM.YYYY')
+      addSnackBarMessage({ text: `Uživatel smazán (naplánováno na ${formattedDate})`, type: 'success' }, 10000)
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
 }
 
 export const useLogsQuery = () => {

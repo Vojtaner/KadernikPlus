@@ -7,5 +7,9 @@ const userRoutes = Router();
 userRoutes.post("/", makeExpressCallback(UserController.addUserController));
 userRoutes.put("/", makeExpressCallback(UserController.updateUserController));
 userRoutes.get("/", makeExpressCallback(UserController.getUserByIdController));
+userRoutes.delete(
+  "/",
+  makeExpressCallback(UserController.deleteUserController)
+);
 
 export default userRoutes;

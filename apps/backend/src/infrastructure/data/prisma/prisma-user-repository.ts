@@ -19,7 +19,18 @@ const createUserRepositoryDb = (
 
     return newUser;
   },
+  async findPendingDeletionUsers(now: Date): Promise<User[]> {
+    const anonymizedUsers = await prismaUserRepository.user.findMany({
+      where: {
+        isDeleted: true,
+        deletionScheduledAt: {
+          lte: now,
+        },
+      },
+    });
 
+    return anonymizedUsers;
+  },
   findById: async (id: string): Promise<User | null> => {
     const user = await prismaUserRepository.user.findUnique({
       where: { id },

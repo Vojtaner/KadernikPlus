@@ -51,7 +51,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
     return <Navigate to={ROUTES.subscription.path} replace />
   }
 
-  return <Navigate to={ROUTES.home.path} replace />
+  return children
 }
 
 export default SubscriptionGuard

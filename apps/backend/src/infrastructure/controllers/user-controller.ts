@@ -11,16 +11,21 @@ import { httpError } from "../../adapters/express/httpError";
 import updateUserUseCase, {
   UpdateUserUseCaseType,
 } from "../../application/use-cases/user/update-user";
+import deleteUserUseCase, {
+  DeleteUserUseCaseType,
+} from "../../application/use-cases/user/delete-user";
 
 type CreateUserControllerType = {
   addUserController: ControllerFunction<AddUserControllerType>;
   getUserByIdController: ControllerFunction<GetUserByIdControllerType>;
   updateUserController: ControllerFunction<UpdateUserControllerType>;
+  deleteUserController: ControllerFunction<DeleteUserControllerType>;
 };
 
 type AddUserControllerType = {
   body: UserCreateData;
 };
+type DeleteUserControllerType = {};
 
 type GetUserByIdControllerType = { params: HasId };
 type UpdateUserControllerType = {
@@ -31,6 +36,7 @@ const createUserController = (dependencies: {
   getUserByIdUseCase: GetUserByIdUseCaseType;
   addUserUseCase: AddUserUseCaseType;
   updateUserUseCase: UpdateUserUseCaseType;
+  deleteUserUseCase: DeleteUserUseCaseType;
 }): CreateUserControllerType => {
   const addUserController: ControllerFunction<AddUserControllerType> = async (
     httpRequest
@@ -89,6 +95,23 @@ const createUserController = (dependencies: {
       throw httpError("Uživatele se nepovedlo upravit.", 409);
     }
   };
+  const deleteUserController: ControllerFunction<
+    DeleteUserControllerType
+  > = async (httpRequest) => {
+    try {
+      const userId = httpRequest.userId;
+
+      const newUser = await dependencies.deleteUserUseCase.execute(userId);
+
+      return {
+        statusCode: 201,
+        body: newUser,
+      };
+    } catch (error: any) {
+      console.error("Error in addUserController:", error);
+      throw httpError("Uživatele se nepovedlo smazat.", 409);
+    }
+  };
   const getUserByIdController: ControllerFunction<
     GetUserByIdControllerType
   > = async (httpRequest) => {
@@ -119,13 +142,19 @@ const createUserController = (dependencies: {
     }
   };
 
-  return { addUserController, getUserByIdController, updateUserController };
+  return {
+    addUserController,
+    getUserByIdController,
+    updateUserController,
+    deleteUserController,
+  };
 };
 
 const userController = createUserController({
   getUserByIdUseCase,
   addUserUseCase,
   updateUserUseCase,
+  deleteUserUseCase,
 });
 
 export default userController;

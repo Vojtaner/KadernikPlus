@@ -8,7 +8,6 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-/// User who performs visits and manages stock allowances (e.g., a hairdresser)
 model User {
   id              String           @id @default(uuid())
   name            String
@@ -24,6 +23,8 @@ model User {
   teamMemberships TeamMember?
   clients         Client[]
   services        Service[]
+  isDeleted       Boolean @default(false)
+  deletionScheduledAt DateTime? 
   stockAllowances StockAllowance[]
   ownedStocks     Stock[]          @relation("OwnedStocks")
   visits          Visit[]
@@ -62,7 +63,6 @@ model Team {
   @@index([userId], map: "Team_userId_fkey")
 }
 
-/// Junction table for the many-to-many relationship between Visit and Service
 model VisitService {
   id        String  @id @default(uuid())
   visitId   String  @map("visit_id")
@@ -75,7 +75,6 @@ model VisitService {
   @@map("visit_services")
 }
 
-/// Photos related to a specific visit
 model Photo {
   id          String   @id @default(uuid())
   visitId     String   @map("visit_id")

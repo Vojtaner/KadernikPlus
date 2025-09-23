@@ -49,7 +49,7 @@ const getSubscriptionUseCase = createGetSubscriptionUseCase({
 
 export default getSubscriptionUseCase;
 
-const getIsSubscriptionExpired = (endDate: Date | null | undefined) => {
+export const getIsSubscriptionExpired = (endDate: Date | null | undefined) => {
   const today = new Date();
   const isExpired = endDate ? endDate < today : false;
   return isExpired;
