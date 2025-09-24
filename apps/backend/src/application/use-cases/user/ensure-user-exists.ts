@@ -31,17 +31,17 @@ export const createEnsureUserExists = (dependencies: {
         daj: dayjs(user?.deletionScheduledAt).isBefore(dayjs()),
       });
 
-      // if (
-      //   user &&
-      //   user.isDeleted &&
-      //   user.deletionScheduledAt !== null &&
-      //   dayjs(user.deletionScheduledAt).isBefore(dayjs())
-      // ) {
-      //   throw httpError(
-      //     "Uživatel byl smazán a pod tímto účtem už se nelze přihlásit.",
-      //     410
-      //   );
-      // }
+      if (
+        user &&
+        user.isDeleted &&
+        user.deletionScheduledAt !== null &&
+        dayjs(user.deletionScheduledAt).isBefore(dayjs())
+      ) {
+        throw httpError(
+          "Uživatel byl smazán a pod tímto účtem už se nelze přihlásit.",
+          410
+        );
+      }
 
       if (!user) {
         try {
