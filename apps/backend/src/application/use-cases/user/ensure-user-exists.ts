@@ -4,6 +4,7 @@ import addUserUseCase, { AddUserUseCaseType } from "./add-user";
 import { UserRepositoryPort } from "@/application/ports/user-repository";
 import { auth0ManagementApi } from "../../../application/services/auth0/auth0ManagementApi";
 import { httpError } from "../../../adapters/express/httpError";
+import dayjs from "dayjs";
 
 export const createEnsureUserExists = (dependencies: {
   addUserUseCase: AddUserUseCaseType;
@@ -17,12 +18,20 @@ export const createEnsureUserExists = (dependencies: {
       }
 
       const user = await dependencies.userRepositoryDb.findById(userId);
-
+      console.log({
+        user,
+        isDeleted: Number(user?.isDeleted) === 1,
+        nul: user?.deletionScheduledAt === null,
+        date:
+          user?.deletionScheduledAt === null ||
+          dayjs(user?.deletionScheduledAt) < dayjs(),
+      });
       if (
         user &&
         Number(user.isDeleted) === 1 &&
         (user.deletionScheduledAt === null ||
-          user.deletionScheduledAt < new Date())
+          (user.deletionScheduledAt !== null &&
+            dayjs(user?.deletionScheduledAt) < dayjs()))
       ) {
         throw httpError(
           "Uživatel byl smazán a pod tímto účtem už se nelze přihlásit.",
