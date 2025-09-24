@@ -6,6 +6,13 @@ const createInvoiceRepositoryDb = (
   prisma: PrismaClient
 ): InvoiceRepositoryPort => {
   return {
+    findAll: async (userId: string) => {
+      const invoices = await prisma.invoice.findMany({
+        where: { payment: { subscription: { userId } } },
+      });
+
+      return invoices;
+    },
     create: async (invoiceData) => {
       return prisma.invoice.create({
         data: invoiceData,

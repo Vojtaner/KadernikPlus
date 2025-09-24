@@ -37,6 +37,7 @@ export const createCreateInvoiceUseCase = (dependencies: {
       currency: payment.currency,
       status: InvoiceStatus.PAID,
       issuedAt: new Date(),
+      paymentId: payment.id,
       notes: `Faktura za předplatné typu ${
         subscription.plan
       }, platného do ${dayjs(subscription.endDate).format(

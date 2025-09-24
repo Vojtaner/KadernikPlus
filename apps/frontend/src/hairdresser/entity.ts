@@ -78,3 +78,14 @@ export const getGreeting = (user?: User) => {
 
   return `${title} ${name}`
 }
+
+export type Invoice = {
+  invoiceNumber: string
+  customerName: string
+  customerEmail: string
+  notes: string
+  issuedAt: string
+  status: 'PAID' | 'CANCELLED' | 'PENDING'
+  amount: number
+  currency: string
+}

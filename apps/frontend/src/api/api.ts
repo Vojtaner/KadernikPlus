@@ -2,7 +2,7 @@ import { type AxiosInstance } from 'axios'
 import type { LogData } from '../entities/logs'
 import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
 import type { UserForm } from '../entities/user'
-import { apiCall } from '../hairdresser/entity'
+import { apiCall, type Invoice } from '../hairdresser/entity'
 
 export const userApi = {
   get: () => `/api/users`,
@@ -16,6 +16,9 @@ export const subscriptionApi = {
   create: () => `/api/subscription/`,
   extend: (subscriptionId: string) => `/api/subscription/extend/${encodeURIComponent(subscriptionId)}`,
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
+}
+export const invoiceApi = {
+  getAll: () => `api/invoices`,
 }
 
 export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> =>
@@ -48,3 +51,6 @@ export const postExtendSubscription = async (axios: AxiosInstance, subscriptionI
 
 export const getUser = async (axios: AxiosInstance): Promise<UserForm> =>
   apiCall(async () => await axios.get(userApi.get()), 'Nepovedlo se načíst uživatele.')
+
+export const getInvoices = async (axios: AxiosInstance): Promise<Invoice[]> =>
+  apiCall(async () => await axios.get(invoiceApi.getAll()), 'Nepovedlo se načíst faktury.')

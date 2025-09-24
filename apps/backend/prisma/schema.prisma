@@ -261,7 +261,8 @@ model Payment {
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
   subscription   Subscription @relation(fields: [subscriptionId], references: [id])
-
+  invoices  Invoice[]
+  
   @@index([subscriptionId], map: "Payment_subscriptionId_fkey")
 }
 
@@ -299,6 +300,9 @@ model Invoice {
   notes         String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  paymentId     String
+  payment       Payment  @relation(fields: [paymentId], references: [id])
 
   @@unique([year, sequence]) // ensures unique sequence per year
 }

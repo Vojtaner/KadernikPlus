@@ -31,6 +31,7 @@ import {
   metricsMiddleware,
   register,
 } from "./application/services/prometheus/prometheus";
+import invoiceRouter from "./routes/invoice-routes";
 
 dotenv.config();
 
@@ -85,6 +86,7 @@ app.use("/api/services", serviceRoutes);
 app.use("/api/stock-allowance", stockAllowanceRoutes);
 app.use("/api/subscription", subscriptionRouter);
 app.use("/api/payment", paymentRouter);
+app.use("/api/invoices", invoiceRouter);
 
 Sentry.setupExpressErrorHandler(app);
 app.use(errorHandler);

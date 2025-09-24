@@ -10,6 +10,7 @@ export interface InvoiceRepositoryPort {
   create: (
     invoiceData: Omit<Invoice, "id" | "createdAt" | "updatedAt">
   ) => Promise<Invoice>;
-  findByNumber?: (invoiceNumber: string) => Promise<Invoice | null>;
+  findByNumber: (invoiceNumber: string) => Promise<Invoice | null>;
   findLastByYear: (year: number) => Promise<Invoice | null>;
+  findAll: (userId: string) => Promise<Invoice[] | null>;
 }

@@ -7,11 +7,14 @@ import { useIntl } from 'react-intl'
 import {
   useCancelSubscriptionMutation,
   useDeleteUserMutation,
+  useInvoicesQuery,
   useSubscriptionQuery,
   useUserDataQuery,
 } from '../../queries'
 import { ContactPicker } from '../ContactPicker'
 import { ImportAppleContacts } from '../ImportAppleContacts'
+import { downloadInvoice } from './InvoicePdf'
+import { getDate } from '../visits/components/VisitsList'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
@@ -20,6 +23,7 @@ const MyProfile = () => {
   const { data: subscription } = useSubscriptionQuery()
   const { mutate: cancelSubscription } = useCancelSubscriptionMutation()
   const { mutate: deleteUser } = useDeleteUserMutation()
+  const { data: invoices } = useInvoicesQuery()
   const subscriptionId = subscription ? subscription.id : undefined
 
   if (isLoading) {
@@ -78,6 +82,32 @@ const MyProfile = () => {
             />
           </Grid>
         </Grid>
+        <Divider sx={{ marginY: '30px' }} />
+        <Stack spacing={1}>
+          <Stack direction="row" spacing={2} sx={{ fontWeight: 'bold' }} borderBottom="1px solid grey">
+            <Typography fontWeight="bold" sx={{ width: 150 }}>
+              Datum
+            </Typography>
+            <Typography fontWeight="bold" sx={{ width: 150 }}>
+              Číslo faktury
+            </Typography>
+            <Typography sx={{ width: 150 }} />
+          </Stack>
+
+          {invoices?.map((invoice) => (
+            <Stack direction="row" spacing={2} key={invoice.invoiceNumber} alignItems="center">
+              <Typography color="info" sx={{ width: 150 }}>
+                {getDate(new Date(invoice.issuedAt))}
+              </Typography>
+              <Typography color="info" sx={{ width: 150 }}>
+                {invoice.invoiceNumber}
+              </Typography>
+              <Button variant="outlined" onClick={() => downloadInvoice(invoice)}>
+                Stáhnout fakturu
+              </Button>
+            </Stack>
+          ))}
+        </Stack>
         <Divider sx={{ marginY: '30px' }} />
 
         <Grid container rowSpacing={2}>

@@ -6,6 +6,7 @@ import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
 import type { Subscription, SubscriptionCreateData } from './entities/subscription'
 import {
   deleteUser,
+  getInvoices,
   getLogs,
   getSubscription,
   getUser,
@@ -17,6 +18,7 @@ import {
 import type { UserForm } from './entities/user'
 import { queryClient } from './reactQuery/reactTanstackQuerySetup'
 import dayjs from 'dayjs'
+import type { Invoice } from './hairdresser/entity'
 
 export const useSubscriptionQuery = () => {
   const axios = useAxios()
@@ -33,6 +35,14 @@ export const useUserDataQuery = () => {
   return useQuery<UserForm>({
     queryKey: ['user'],
     queryFn: () => getUser(axios),
+  })
+}
+export const useInvoicesQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Invoice[]>({
+    queryKey: ['invoices'],
+    queryFn: () => getInvoices(axios),
   })
 }
 
