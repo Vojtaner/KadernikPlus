@@ -77,7 +77,7 @@ const createAddSubscriptionUseCase = (dependencies: {
       amount: new Prisma.Decimal(data.price),
       currency: data.currency || "CZK",
       provider: "COMGATE",
-      status: data.status,
+      status: PaymentStatus.PENDING,
       refId: generate8DigitNumber(),
       transactionId: generate8DigitNumber().toString(),
     });
