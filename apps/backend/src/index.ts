@@ -2,7 +2,7 @@ import "./application/services/sentry/instrument";
 import initSentry from "./application/services/sentry/instrument";
 import express from "express";
 import dotenv from "dotenv";
-import anonymizeScheduledUsers from "./application/crons/anonymize-users";
+import "./application/crons/anonymize-users";
 import {
   clientRoutes,
   userRoutes,
