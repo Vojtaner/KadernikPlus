@@ -1,3 +1,4 @@
+import { PaymentStatus } from "../../../application/use-cases/payment/create-payment";
 import { httpError } from "../../../adapters/express/httpError";
 import { getEnvVar } from "../../../utils/getEnvVar";
 import axios from "axios";
@@ -28,7 +29,7 @@ export type ComgatePayment = {
 
 export type ComgateUpdatePaymentRequired = {
   transId: string;
-  status: string;
+  status: PaymentStatus;
   fullName: string;
   test: boolean;
 } & ComgatePaymentRequired;
