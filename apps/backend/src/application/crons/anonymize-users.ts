@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { UserRepositoryPort } from "../ports/user-repository";
 import cron from "node-cron";
-import userRepositoryDb from "@/infrastructure/data/prisma/prisma-user-repository";
+import userRepositoryDb from "../../infrastructure/data/prisma/prisma-user-repository";
 import { ManagementClient } from "auth0";
 import { auth0ManagementApi } from "../services/auth0/auth0ManagementApi";
 
@@ -38,7 +38,7 @@ const anonymizeScheduledUsers = async (dependencies: {
 };
 
 export default cron.schedule(
-  "0 10 * * *",
+  "30 10 * * *",
   async () => {
     console.log("Running scheduled user anonymization:", new Date());
 
