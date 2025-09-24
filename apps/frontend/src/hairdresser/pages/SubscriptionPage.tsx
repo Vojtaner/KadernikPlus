@@ -25,7 +25,7 @@ export const SubscriptionPage = () => {
 
       <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
         <strong style={{ color: AppTheme.palette.primary.main }}>
-          {user ? `Dobrý den, ${getGreeting(user)}` : ''}
+          {user ? `Dobrý den, ${getGreeting(user)} ` : ''}
         </strong>
         děkujeme za Váš zájem – naše služba funguje na bázi <strong>měsíčního předplatného</strong>, které se
         <strong> automaticky obnovuje</strong>. Předplatné můžete kdykoliv zrušit v záložce <strong>MŮJ PROFIL</strong>.

@@ -19,7 +19,8 @@ export const createEnsureUserExists = (dependencies: {
       const user = await dependencies.userRepositoryDb.findById(userId);
 
       if (
-        user?.isDeleted &&
+        user &&
+        Number(user.isDeleted) === 1 &&
         (user.deletionScheduledAt === null ||
           user.deletionScheduledAt < new Date())
       ) {
