@@ -8,6 +8,8 @@ CREATE TABLE `users` (
     `auth_provider` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `last_login` DATETIME(3) NULL,
+    `isDeleted` BOOLEAN NOT NULL DEFAULT false,
+    `deletionScheduledAt` DATETIME(3) NULL,
 
     UNIQUE INDEX `users_email_key`(`email`),
     PRIMARY KEY (`id`)
@@ -218,13 +220,32 @@ CREATE TABLE `Payment` (
     `transactionId` VARCHAR(191) NOT NULL,
     `amount` DECIMAL(15, 5) NOT NULL,
     `currency` VARCHAR(191) NOT NULL DEFAULT 'CZK',
-    `status` VARCHAR(191) NOT NULL,
+    `status` ENUM('PENDING', 'PAID', 'CANCELLED', 'AUTHORIZED') NOT NULL DEFAULT 'PENDING',
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `Payment_refId_key`(`refId`),
     UNIQUE INDEX `Payment_transactionId_key`(`transactionId`),
     INDEX `Payment_subscriptionId_fkey`(`subscriptionId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `Invoice` (
+    `id` VARCHAR(191) NOT NULL,
+    `invoiceNumber` VARCHAR(191) NOT NULL,
+    `customerName` VARCHAR(191) NULL,
+    `customerEmail` VARCHAR(191) NULL,
+    `amount` DECIMAL(15, 5) NOT NULL,
+    `currency` VARCHAR(191) NOT NULL DEFAULT 'CZK',
+    `status` ENUM('PENDING', 'PAID', 'CANCELED') NOT NULL DEFAULT 'PENDING',
+    `issuedAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `notes` VARCHAR(191) NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
+    UNIQUE INDEX `Invoice_invoiceNumber_key`(`invoiceNumber`),
+    INDEX `Invoice_invoiceNumber_idx`(`invoiceNumber`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
