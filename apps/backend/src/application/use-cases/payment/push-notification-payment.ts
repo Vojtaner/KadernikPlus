@@ -11,7 +11,7 @@ import getUserByIdUseCase, {
   GetUserByIdUseCaseType,
 } from "../user/get-user-by-id";
 import { InvoiceRepositoryPort } from "@/application/ports/invoice-repository";
-import invoiceRepositoryDb from "@/infrastructure/data/prisma/prisma-invoice-repository";
+import invoiceRepositoryDb from "../../../infrastructure/data/prisma/prisma-invoice-repository";
 
 const createPushNotificationPaymentUseCase = (dependencies: {
   paymentRepositoryDb: PaymentRepositoryPort;
