@@ -286,19 +286,21 @@ enum PaymentStatus {
 }
 
 model Invoice {
-  id            String    @id @default(cuid())
-  invoiceNumber String    @unique
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  sequence      Int
+  year          Int
   customerName  String?
   customerEmail String?   
-  amount        Decimal   @db.Decimal(15, 5)
-  currency      String    @default("CZK")
+  amount        Decimal  @db.Decimal(15, 5)
+  currency      String   @default("CZK")
   status        InvoiceStatus @default(PENDING)
-  issuedAt      DateTime  @default(now())
+  issuedAt      DateTime @default(now())
   notes         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@index([invoiceNumber])
+  @@unique([year, sequence]) // ensures unique sequence per year
 }
 
 enum InvoiceStatus {

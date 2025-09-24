@@ -5,7 +5,7 @@ import comgatePaymentApi, {
   ComgatePaymentApiType,
   generate8DigitNumber,
 } from "../../../application/services/comgate/comgatePaymentApi";
-import { Prisma } from "@prisma/client";
+import { Prisma, SubscriptionStatus } from "@prisma/client";
 import { SubscriptionRepositoryPort } from "../../../application/ports/subscription-repository";
 import createPaymentUseCase, {
   CreatePaymentUseCaseType,
@@ -15,6 +15,10 @@ import subscriptionRepositoryDb from "../../../infrastructure/data/prisma/prisma
 import updatePaymentUseCase, {
   UpdatePaymentUseCaseType,
 } from "./update-payment";
+import dayjs from "dayjs";
+import createInvoiceUseCase, {
+  CreateInvoiceUseCaseType,
+} from "../invoice/create-invoice";
 
 const createRecurringPaymentUseCase = (dependencies: {
   paymentRepositoryDb: PaymentRepositoryPort;
@@ -22,6 +26,7 @@ const createRecurringPaymentUseCase = (dependencies: {
   subscriptionRepositoryDb: SubscriptionRepositoryPort;
   createPaymentUseCase: CreatePaymentUseCaseType;
   updatePaymentUseCase: UpdatePaymentUseCaseType;
+  createInvoiceUseCase: CreateInvoiceUseCaseType;
 }) => ({
   execute: async (subscriptionId: string) => {
     const lastPayment =
@@ -69,13 +74,38 @@ const createRecurringPaymentUseCase = (dependencies: {
       newComgateRecurringPayment.code === 0;
 
     if (isSuccessfullyPaid) {
-      await dependencies.updatePaymentUseCase.execute(
+      const updatedPayment = await dependencies.updatePaymentUseCase.execute(
         {
           transactionId: newComgateRecurringPayment.transId,
           status: PaymentStatus.PAID,
         },
         newPayment.id
       );
+
+      const plus30DaysDate = dayjs(subscription.endDate || new Date())
+        .add(30, "day")
+        .toDate();
+
+      if (!updatedPayment) {
+        throw httpError(
+          "Nepovedlo se aktualizovat platbu, ale máte zaplaceno.",
+          500
+        );
+      }
+
+      const updatedSubscription =
+        await dependencies.subscriptionRepositoryDb.update(
+          updatedPayment.subscriptionId,
+          {
+            status: SubscriptionStatus.ACTIVE,
+            endDate: plus30DaysDate,
+          }
+        );
+
+      const newInvoice = await dependencies.createInvoiceUseCase.execute({
+        payment: updatedPayment,
+        subscription: updatedSubscription,
+      });
     }
 
     return isSuccessfullyPaid;
@@ -92,6 +122,7 @@ const recurringPaymentUseCase = createRecurringPaymentUseCase({
   subscriptionRepositoryDb,
   createPaymentUseCase,
   updatePaymentUseCase,
+  createInvoiceUseCase,
 });
 
 export default recurringPaymentUseCase;
