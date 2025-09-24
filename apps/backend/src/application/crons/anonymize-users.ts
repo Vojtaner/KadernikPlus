@@ -16,6 +16,10 @@ const anonymizeScheduledUsers = async (dependencies: {
 
   await Promise.all(
     usersToAnonymize.map(async (user) => {
+      await dependencies.auth0ManagementApi.users.delete({
+        id: user.id,
+      });
+
       await dependencies.userRepositoryDb.update(user.id, {
         email: `deleted${dayjs().format("YYYYMMDDHHmmss")}@deleted.com`,
         name: `user_deleted${dayjs().format("YYYY.MM.DD-HH:mm")}`,
@@ -23,10 +27,6 @@ const anonymizeScheduledUsers = async (dependencies: {
         bankAccount: null,
         reviewUrl: null,
         authProvider: null,
-      });
-
-      await dependencies.auth0ManagementApi.clients.delete({
-        client_id: user.id,
       });
     })
   );
@@ -38,7 +38,7 @@ const anonymizeScheduledUsers = async (dependencies: {
 };
 
 export default cron.schedule(
-  "30 10 * * *",
+  "10 11 * * *",
   async () => {
     console.log("Running scheduled user anonymization:", new Date());
 
