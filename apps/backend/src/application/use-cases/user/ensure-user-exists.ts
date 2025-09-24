@@ -22,9 +22,8 @@ export const createEnsureUserExists = (dependencies: {
       if (
         user &&
         user.isDeleted &&
-        (user.deletionScheduledAt === null ||
-          (user.deletionScheduledAt !== null &&
-            dayjs(user?.deletionScheduledAt) < dayjs()))
+        user.deletionScheduledAt !== null &&
+        dayjs(user.deletionScheduledAt).isBefore(dayjs())
       ) {
         throw httpError(
           "Uživatel byl smazán a pod tímto účtem už se nelze přihlásit.",
