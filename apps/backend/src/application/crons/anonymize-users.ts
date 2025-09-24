@@ -19,6 +19,12 @@ const anonymizeScheduledUsers = async (dependencies: {
       await dependencies.auth0ManagementApi.users.delete({
         id: user.id,
       });
+      await dependencies.auth0ManagementApi.users.deleteRefreshTokens({
+        user_id: user.id,
+      });
+      await dependencies.auth0ManagementApi.users.deleteSessions({
+        user_id: user.id,
+      });
 
       await dependencies.userRepositoryDb.update(user.id, {
         email: `deleted${dayjs().format("YYYYMMDDHHmmss")}@deleted.com`,
