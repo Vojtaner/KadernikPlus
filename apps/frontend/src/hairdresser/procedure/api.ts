@@ -1,6 +1,6 @@
 import type { AxiosInstance } from 'axios'
 import type { CreateProcedure, PostNewProcedure } from '../../entities/procedure'
-import { extractErrorMessage } from '../../api/errorHandler'
+import { apiCall } from '../entity'
 
 export const procedureApi = {
   getByVisit: (visitId: string) => `/api/procedures/visit/${encodeURIComponent(visitId)}`,
@@ -15,22 +15,8 @@ export const postNewProcedure = async (
   axios: AxiosInstance,
   visitId: string,
   data: PostNewProcedure
-): Promise<CreateProcedure> => {
-  try {
-    const response = await axios.post(procedureApi.getByVisit(visitId), data)
+): Promise<CreateProcedure> =>
+  apiCall(async () => await axios.post(procedureApi.getByVisit(visitId), data), 'Proceduru se nepovedlo vytvořit.')
 
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Proceduru se nepovedlo vytvořit.'))
-  }
-}
-
-export const deleteProcedure = async (axios: AxiosInstance, procedureId: string): Promise<string> => {
-  try {
-    const response = await axios.delete(procedureApi.getById(procedureId))
-
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Proceduru se nepovedlo smazat.'))
-  }
-}
+export const deleteProcedure = async (axios: AxiosInstance, procedureId: string): Promise<string> =>
+  apiCall(async () => await axios.delete(procedureApi.getById(procedureId)), 'Proceduru se nepovedlo smazat.')

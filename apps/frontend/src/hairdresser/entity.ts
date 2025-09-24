@@ -3,6 +3,7 @@ import type { CommonProps } from '@mui/material/OverridableComponent'
 import { cloneElement, type ReactElement } from 'react'
 import type { AppPaletteColor } from '../entity'
 import type { AxiosError } from 'axios'
+import { extractErrorMessage } from '../api/errorHandler'
 
 export const addPropsToReactElement = (
   element: ReactElement,
@@ -44,4 +45,21 @@ export const getButtonStyle = <T>(tabelView: T, key: T) => {
 
 export const getQueryErrorMessage = (error: unknown) => {
   return (error as AxiosError<{ message: string }>).response?.data.message
+}
+
+export const ApiError = (error: { message: string; statusCode: number }) => ({
+  message: error.message,
+  code: error.statusCode,
+})
+
+type ApiCall<T> = () => Promise<T>
+
+export const apiCall = async <T>(fn: ApiCall<T>, defaultErrorMessage: string): Promise<T> => {
+  try {
+    return await fn()
+  } catch (e: unknown) {
+    const error = e as AxiosError<{ message?: string; error?: string }>
+    const errorObject = extractErrorMessage(error, defaultErrorMessage)
+    throw ApiError(errorObject)
+  }
 }

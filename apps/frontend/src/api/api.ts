@@ -1,8 +1,8 @@
-import type { AxiosInstance } from 'axios'
+import { type AxiosInstance } from 'axios'
 import type { LogData } from '../entities/logs'
-import { extractErrorMessage } from './errorHandler'
 import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
 import type { UserForm } from '../entities/user'
+import { apiCall } from '../hairdresser/entity'
 
 export const userApi = {
   get: () => `/api/users`,
@@ -18,32 +18,14 @@ export const subscriptionApi = {
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
 }
 
-export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> => {
-  try {
-    const response = await axios.put(userApi.get(), userData)
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Uživatele se nepovedlo upravit.'))
-  }
-}
+export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> =>
+  apiCall(async () => await axios.put(userApi.get(), userData), 'Uživatele se nepovedlo upravit.')
 
-export const deleteUser = async (axios: AxiosInstance): Promise<{ deletionScheduledAt: string }> => {
-  try {
-    const response = await axios.delete(userApi.deleteUser())
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Uživatele se nepovedlo smazat.'))
-  }
-}
+export const deleteUser = async (axios: AxiosInstance): Promise<{ deletionScheduledAt: string }> =>
+  apiCall(async () => await axios.delete(userApi.deleteUser()), 'Uživatele se nepovedlo smazat.')
 
-export const getLogs = async (axios: AxiosInstance): Promise<LogData[]> => {
-  try {
-    const response = await axios.get(userApi.getAllLogs())
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Logy se nepovedlo načíst.'))
-  }
-}
+export const getLogs = async (axios: AxiosInstance): Promise<LogData[]> =>
+  apiCall(async () => await axios.get(userApi.getAllLogs()), 'Logy se nepovedlo načíst.')
 
 export const postCreateSubscription = async (
   axios: AxiosInstance,
@@ -53,47 +35,16 @@ export const postCreateSubscription = async (
   message: string
   transId: string
   redirect: string
-}> => {
-  try {
-    const response = await axios.post(subscriptionApi.create(), params)
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Platbu se nepovedlo vytvořit.'))
-  }
-}
+}> => apiCall(async () => await axios.post(subscriptionApi.create(), params), 'Platbu se nepovedlo vytvořit.')
 
-export const postCancelSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<boolean> => {
-  try {
-    const response = await axios.post(subscriptionApi.cancel(subscriptionId))
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Předplatné se nepovedlo ukončit.'))
-  }
-}
+export const postCancelSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<boolean> =>
+  apiCall(async () => await axios.post(subscriptionApi.cancel(subscriptionId)), 'Předplatné se nepovedlo ukončit.')
 
-export const getSubscription = async (axios: AxiosInstance): Promise<Subscription> => {
-  try {
-    const response = await axios.get(subscriptionApi.get())
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Nepovedlo se načíst předplatné.'))
-  }
-}
+export const getSubscription = async (axios: AxiosInstance): Promise<Subscription> =>
+  apiCall(async () => await axios.get(subscriptionApi.get()), 'Nepovedlo se načíst předplatné.')
 
-export const postExtendSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<Subscription> => {
-  try {
-    const response = await axios.post(subscriptionApi.extend(subscriptionId))
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Nepovedlo se prodloužit předplatné.'))
-  }
-}
+export const postExtendSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<Subscription> =>
+  apiCall(async () => await axios.post(subscriptionApi.extend(subscriptionId)), 'Nepovedlo se prodloužit předplatné.')
 
-export const getUser = async (axios: AxiosInstance): Promise<UserForm> => {
-  try {
-    const response = await axios.get(userApi.get())
-    return response.data
-  } catch (error) {
-    throw new Error(extractErrorMessage(error, 'Nepovedlo se načíst uživatele.'))
-  }
-}
+export const getUser = async (axios: AxiosInstance): Promise<UserForm> =>
+  apiCall(async () => await axios.get(userApi.get()), 'Nepovedlo se načíst uživatele.')

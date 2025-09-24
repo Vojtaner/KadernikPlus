@@ -9,21 +9,16 @@ const ensureUserExistsMiddleware = (
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    try {
-      const userId = req.auth?.payload.sub;
+    const userId = req.auth?.payload.sub;
 
-      if (!userId) {
-        res.status(401).json({ error: "Chybí uživatelské ID." });
-        return;
-      }
-
-      await ensureUserExistsUseCase.execute(userId);
-
-      next();
-    } catch (err) {
-      console.error("ensureUserExists error:", err);
-      res.status(500).json({ error: "Failed to ensure user exists" });
+    if (!userId) {
+      res.status(401).json({ error: "Chybí uživatelské ID." });
+      return;
     }
+
+    await ensureUserExistsUseCase.execute(userId);
+
+    next();
   };
 };
 

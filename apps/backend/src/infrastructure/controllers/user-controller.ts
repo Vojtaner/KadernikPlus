@@ -118,10 +118,7 @@ const createUserController = (dependencies: {
     const userId = httpRequest.userId;
     try {
       if (!userId) {
-        return {
-          statusCode: 400,
-          body: { error: "Missing user ID in parameters." },
-        };
+        throw httpError("Chybí uživatelské ID.", 400);
       }
 
       const user = await dependencies.getUserByIdUseCase.execute(userId);

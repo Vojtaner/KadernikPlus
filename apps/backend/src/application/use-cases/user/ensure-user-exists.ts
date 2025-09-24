@@ -3,6 +3,7 @@ import userRepositoryDb from "../../../infrastructure/data/prisma/prisma-user-re
 import addUserUseCase, { AddUserUseCaseType } from "./add-user";
 import { UserRepositoryPort } from "@/application/ports/user-repository";
 import { auth0ManagementApi } from "../../../application/services/auth0/auth0ManagementApi";
+import { httpError } from "../../../adapters/express/httpError";
 
 export const createEnsureUserExists = (dependencies: {
   addUserUseCase: AddUserUseCaseType;
@@ -16,6 +17,17 @@ export const createEnsureUserExists = (dependencies: {
       }
 
       const user = await dependencies.userRepositoryDb.findById(userId);
+
+      if (
+        user?.isDeleted &&
+        (user.deletionScheduledAt === null ||
+          user.deletionScheduledAt < new Date())
+      ) {
+        throw httpError(
+          "Uživatel byl smazán a pod tímto účtem už se nelze přihlásit.",
+          410
+        );
+      }
 
       if (!user) {
         try {
