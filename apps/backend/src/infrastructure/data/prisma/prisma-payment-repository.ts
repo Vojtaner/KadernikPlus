@@ -2,6 +2,7 @@ import { PaymentRepositoryPort } from "../../../application/ports/payment-reposi
 import { Payment, PrismaClient } from ".prisma/client";
 import prisma from "./prisma";
 import { httpError } from "../../../adapters/express/httpError";
+import { PaymentStatus } from "../../../application/use-cases/payment/create-payment";
 
 const createPaymentRepositoryDb = (
   prismaClient: PrismaClient
@@ -51,7 +52,7 @@ const createPaymentRepositoryDb = (
     },
     findBySubscriptionId: async (subscriptionId: string) => {
       const alreadyPendingPayment = await prismaClient.payment.findFirst({
-        where: { subscriptionId, status: "PENDING" },
+        where: { subscriptionId, status: PaymentStatus.PENDING },
       });
 
       if (alreadyPendingPayment) {
@@ -62,7 +63,7 @@ const createPaymentRepositoryDb = (
       }
 
       const lastPaidPayment = await prismaClient.payment.findFirst({
-        where: { subscriptionId, status: "PAID" },
+        where: { subscriptionId, status: PaymentStatus.PAID },
       });
 
       return lastPaidPayment;

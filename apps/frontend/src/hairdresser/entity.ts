@@ -2,8 +2,11 @@ import type { ButtonProps } from '@mui/material'
 import type { CommonProps } from '@mui/material/OverridableComponent'
 import { cloneElement, type ReactElement } from 'react'
 import type { AppPaletteColor } from '../entity'
-import type { AxiosError } from 'axios'
+import type { AxiosError, AxiosResponse } from 'axios'
 import { extractErrorMessage } from '../api/errorHandler'
+import type { User } from '@auth0/auth0-react'
+import { isWoman, vocative } from 'czech-vocative'
+import { capitalizeFirstLetter } from './SmsTabs'
 
 export const addPropsToReactElement = (
   element: ReactElement,
@@ -52,14 +55,26 @@ export const ApiError = (error: { message: string; statusCode: number }) => ({
   code: error.statusCode,
 })
 
-type ApiCall<T> = () => Promise<T>
+type ApiCall<T> = () => Promise<AxiosResponse<T>>
 
 export const apiCall = async <T>(fn: ApiCall<T>, defaultErrorMessage: string): Promise<T> => {
   try {
-    return await fn()
+    const response = await fn()
+    return response.data
   } catch (e: unknown) {
     const error = e as AxiosError<{ message?: string; error?: string }>
     const errorObject = extractErrorMessage(error, defaultErrorMessage)
     throw ApiError(errorObject)
   }
+}
+
+export const getGreeting = (user?: User) => {
+  if (!user?.family_name) {
+    return ''
+  }
+
+  const title = isWoman(user.family_name) ? 'paní' : 'pane'
+  const name = capitalizeFirstLetter(vocative(user.family_name))
+
+  return `${title} ${name}`
 }

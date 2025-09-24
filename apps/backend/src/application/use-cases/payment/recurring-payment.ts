@@ -9,6 +9,7 @@ import { Prisma } from "@prisma/client";
 import { SubscriptionRepositoryPort } from "../../../application/ports/subscription-repository";
 import createPaymentUseCase, {
   CreatePaymentUseCaseType,
+  PaymentStatus,
 } from "./create-payment";
 import subscriptionRepositoryDb from "../../../infrastructure/data/prisma/prisma-subscription-repository";
 import updatePaymentUseCase, {
@@ -45,7 +46,7 @@ const createRecurringPaymentUseCase = (dependencies: {
       amount: new Prisma.Decimal(lastPayment.amount),
       currency: lastPayment.currency,
       provider: "COMGATE",
-      status: "PENDING",
+      status: PaymentStatus.PENDING,
       refId: generate8DigitNumber(),
       transactionId: generate8DigitNumber().toString(),
     });
@@ -71,7 +72,7 @@ const createRecurringPaymentUseCase = (dependencies: {
       await dependencies.updatePaymentUseCase.execute(
         {
           transactionId: newComgateRecurringPayment.transId,
-          status: "PAID",
+          status: PaymentStatus.PAID,
         },
         newPayment.id
       );

@@ -80,7 +80,7 @@ export const getSubscriptionText = (endDate: Date, status?: string): string => {
     case 'CANCELLED':
       return `bylo zrušeno, konec přístupu dne ${getDate(endDate)}`
     case 'PENDING':
-      return 'není zaplacené'
+      return 'není zaplacené, koukněte do emailu.'
     default:
       return 'je platné'
   }

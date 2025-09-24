@@ -21,3 +21,10 @@ const createPaymentUseCase = createCreatePaymentUseCase({
 });
 
 export default createPaymentUseCase;
+
+export enum PaymentStatus {
+  PENDING = "PENDING",
+  PAID = "PAID",
+  CANCELLED = "CANCELLED",
+  AUTHORIZED = "AUTHORIZED",
+}

@@ -50,7 +50,7 @@ const MyProfile = () => {
           <Grid size={6}>
             <DetailColumn
               label={intl.formatMessage({ defaultMessage: 'Telefon', id: 'myProfile.phone' })}
-              input={'+420 732 358 754'}
+              input={user.phone_number}
             />
           </Grid>
           <Grid size={6}>

@@ -3,11 +3,10 @@ import PricingCard from '../../app/components/PricingCard'
 import { useSubscriptionMutation, useSubscriptionQuery } from '../../queries'
 import { getSubscriptionText } from '../../entity'
 import { useAuth0 } from '@auth0/auth0-react'
-import { isWoman, vocative } from 'czech-vocative'
-import { capitalizeFirstLetter } from '../SmsTabs'
 import AppTheme from '../../AppTheme'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { useIntl } from 'react-intl'
+import { getGreeting } from '../entity'
 
 export const SubscriptionPage = () => {
   const { mutate, error } = useSubscriptionMutation()
@@ -25,10 +24,9 @@ export const SubscriptionPage = () => {
       </Typography>
 
       <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
-        <strong
-          style={{
-            color: AppTheme.palette.primary.main,
-          }}>{`Dobrý den, ${isWoman(user?.family_name ?? '') ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(user?.family_name ?? ''))}, `}</strong>
+        <strong style={{ color: AppTheme.palette.primary.main }}>
+          {user ? `Dobrý den, ${getGreeting(user)}` : ''}
+        </strong>
         děkujeme za Váš zájem – naše služba funguje na bázi <strong>měsíčního předplatného</strong>, které se
         <strong> automaticky obnovuje</strong>. Předplatné můžete kdykoliv zrušit v záložce <strong>MŮJ PROFIL</strong>.
         Peníze za započatý měsíc jsou však nevratné.

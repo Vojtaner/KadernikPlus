@@ -1,4 +1,4 @@
-import { Prisma } from ".prisma/client";
+import { Prisma, SubscriptionStatus } from ".prisma/client";
 import {
   SubscriptionCreateData,
   SubscriptionRepositoryPort,
@@ -6,6 +6,7 @@ import {
 import subscriptionRepositoryDb from "../../../infrastructure/data/prisma/prisma-subscription-repository";
 import createPaymentUseCase, {
   CreatePaymentUseCaseType,
+  PaymentStatus,
 } from "../payment/create-payment";
 import comgatePaymentApi, {
   ComgateCreatePaymentReturnType,
@@ -22,7 +23,7 @@ import updatePaymentUseCase, {
 import { WithUserId } from "@/entities/user";
 import { httpError } from "../../../adapters/express/httpError";
 
-export type PaymentStatus = "PENDING" | "AUTHORIZED" | "PAID" | "CANCELLED";
+export type PaymentStatusType = "PENDING" | "AUTHORIZED" | "PAID" | "CANCELLED";
 
 const createAddSubscriptionUseCase = (dependencies: {
   subscriptionRepositoryDb: SubscriptionRepositoryPort;
@@ -38,11 +39,17 @@ const createAddSubscriptionUseCase = (dependencies: {
     const existingSubscription =
       await dependencies.subscriptionRepositoryDb.findByUserId(data.userId);
 
-    if (existingSubscription && existingSubscription.status === "ACTIVE") {
+    if (
+      existingSubscription &&
+      existingSubscription.status === SubscriptionStatus.ACTIVE
+    ) {
       throw new Error("Uživatel už má platné členství.");
     }
 
-    if (existingSubscription && existingSubscription.status === "PENDING") {
+    if (
+      existingSubscription &&
+      existingSubscription.status === PaymentStatus.PENDING
+    ) {
       throw httpError("Uživatel už má nezaplacené členství.", 403);
     }
 

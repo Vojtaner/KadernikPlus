@@ -3,6 +3,7 @@ import { PaymentRepositoryPort } from "../../ports/payment-repository";
 import paymentRepositoryDb from "../../../infrastructure/data/prisma/prisma-payment-repository";
 import { SubscriptionRepositoryPort } from "../../../application/ports/subscription-repository";
 import subscriptionRepositoryDb from "../../../infrastructure/data/prisma/prisma-subscription-repository";
+import { PaymentStatus } from "./create-payment";
 
 const createPushNotificationPaymentUseCase = (dependencies: {
   paymentRepositoryDb: PaymentRepositoryPort;
@@ -21,7 +22,7 @@ const createPushNotificationPaymentUseCase = (dependencies: {
       const now = new Date();
       const plus30DaysDate = new Date(now);
       plus30DaysDate.setDate(now.getDate() + 30);
-      if (updatedPayment && updatedPayment.status === "PAID") {
+      if (updatedPayment && updatedPayment.status === PaymentStatus.PAID) {
         const updatedSubscription =
           await dependencies.subscriptionRepositoryDb.update(
             updatedPayment.subscriptionId,
