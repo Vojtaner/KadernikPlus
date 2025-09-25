@@ -234,6 +234,8 @@ CREATE TABLE `Payment` (
 CREATE TABLE `Invoice` (
     `id` VARCHAR(191) NOT NULL,
     `invoiceNumber` VARCHAR(191) NOT NULL,
+    `sequence` INTEGER NOT NULL,
+    `year` INTEGER NOT NULL,
     `customerName` VARCHAR(191) NULL,
     `customerEmail` VARCHAR(191) NULL,
     `amount` DECIMAL(15, 5) NOT NULL,
@@ -243,9 +245,10 @@ CREATE TABLE `Invoice` (
     `notes` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `paymentId` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Invoice_invoiceNumber_key`(`invoiceNumber`),
-    INDEX `Invoice_invoiceNumber_idx`(`invoiceNumber`),
+    UNIQUE INDEX `Invoice_year_sequence_key`(`year`, `sequence`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -323,3 +326,6 @@ ALTER TABLE `Subscription` ADD CONSTRAINT `Subscription_userId_fkey` FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE `Payment` ADD CONSTRAINT `Payment_subscriptionId_fkey` FOREIGN KEY (`subscriptionId`) REFERENCES `Subscription`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Invoice` ADD CONSTRAINT `Invoice_paymentId_fkey` FOREIGN KEY (`paymentId`) REFERENCES `Payment`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
