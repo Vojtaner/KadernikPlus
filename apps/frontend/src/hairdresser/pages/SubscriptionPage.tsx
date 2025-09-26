@@ -15,14 +15,13 @@ export const SubscriptionPage = () => {
   const intl = useIntl()
 
   return (
-    <Stack height="100vh" spacing={2} alignItems="center" justifyContent="center">
-      <Typography variant="h3" fontWeight="bold">
+    <Stack spacing={2} alignItems="center" justifyContent="center">
+      <Typography variant="h4" fontWeight="bold" align="center">
         Vítejte v aplikaci!
       </Typography>
       <Typography variant="h4" fontWeight="bold" color="primary">
         Kadeřník+
       </Typography>
-
       <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
         <strong style={{ color: AppTheme.palette.primary.main }}>
           {user ? `Dobrý den, ${getGreeting(user)} ` : ''}
