@@ -54,7 +54,7 @@ export const ContactPicker: React.FC = () => {
       {
         selectedContacts.map((contact, index) => {
           const name = contact.name?.[0].split(' ')
-          const phone = contact.tel?.[0].slice(-9)
+          const phone = contact.tel?.[0].replace(/\D/g, '').slice(-9)
           const firstName = name?.[0]
           const lastName = name?.[1]
           insert(index, { firstName, lastName, phone })
