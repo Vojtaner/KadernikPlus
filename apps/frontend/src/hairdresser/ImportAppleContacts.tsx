@@ -55,7 +55,7 @@ export const ImportAppleContacts = () => {
             fullName = line.replace('FN:', '').trim()
           }
           if (line.startsWith('TEL')) {
-            phone = line.split(':')[1]?.trim().slice(-9)
+            phone = line.split(':')[1]?.replace(/\D/g, '').slice(-9)
           }
         })
         if (!fullName && !phone) {
