@@ -31,7 +31,7 @@ const MyProfile = () => {
   }
 
   if (!userData) {
-    return <Typography>Žádná data nenalezeny.</Typography>
+    return <Typography>Žádná data nenalezena.</Typography>
   }
 
   return (
