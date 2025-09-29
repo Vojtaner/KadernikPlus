@@ -7,8 +7,8 @@ COPY ./package*.json ./
 RUN npm install
 
 
-# ENV APP_PREFIX="PREFIX_"
-# ENV ASSET_DIR=/app/dist
+ENV APP_PREFIX="PREFIX_"
+ENV ASSET_DIR="/app/dist"
 
 COPY . .
 
@@ -22,7 +22,6 @@ FROM nginx:alpine
 WORKDIR /app
 # Nainstaluj bash, dos2unix
 RUN apk add --no-cache bash dos2unix
-
 
 # Přenes dist výstup z build fáze
 COPY --from=build /app/dist /usr/share/nginx/html

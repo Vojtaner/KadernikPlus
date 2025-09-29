@@ -3,35 +3,35 @@
 # ================================================================================
 # File: env.sh
 # Description: Replaces environment variables in asset files.
-# Usage: Run this script in your terminal, ensuring APP_PREFIX and ASSET_DIRS are set.
 # ================================================================================
 
-# Set the exit flag to exit immediately if any command fails
 set -e
 
-# Check if APP_PREFIX is set
-: "${APP_PREFIX:?APP_PREFIX must be set (e.g. APP_PREFIX='APP_PREFIX_')}"
-
-# Check if ASSET_DIRS is set
+: "${APP_PREFIX:?APP_PREFIX must be set (e.g. APP_PREFIX='PREFIX_')}"
 : "${ASSET_DIR:?Must set ASSET_DIR to one path}"
 
-# Check if the directory exists
 if [ ! -d "$ASSET_DIR" ]; then
     echo "Warning: directory '$ASSET_DIR' not found, skipping."
-    continue
+    exit 0
 fi
 
-# Display the current directory being scanned
 echo "Scanning directory: $ASSET_DIR"
 
-# Iterate through each environment variable that starts with APP_PREFIX
+# Replace all PREFIX_ variables
 env | grep "^${APP_PREFIX}" | while IFS='=' read -r key value; do
-    # Display the variable being replaced
     echo "  • Replacing ${key} → ${value}"
-
-    # Use find and sed to replace the variable in all files within the directory
-    find "$ASSET_DIR" -type f \
-        -exec sed -i "s|${key}|${value}|g" {} +
+    find "$ASSET_DIR" -type f -exec sed -i "s|${key}|${value}|g" {} +
 done
+
+echo "==== DEBUG: checking replaced bundle ===="
+# Najdi první JS soubor a ukaž prvních 60 řádků
+first_js=$(find "$ASSET_DIR" -name "index*.js" | head -n 1 || true)
+if [ -n "$first_js" ]; then
+    echo "Preview of $first_js:"
+    head -n 60 "$first_js"
+else
+    echo "No index*.js found in $ASSET_DIR"
+fi
+echo "==== END DEBUG ===="
 
 exec "$@"
