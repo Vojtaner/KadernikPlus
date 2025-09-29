@@ -33,7 +33,6 @@ import {
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
 import checkCors from "./utils/checkCors";
-import rateLimit from "express-rate-limit";
 import rateLimiter from "./utils/rateLimiter";
 
 dotenv.config();
