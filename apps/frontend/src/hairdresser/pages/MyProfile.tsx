@@ -81,8 +81,16 @@ const MyProfile = () => {
               input={userData.reviewUrl}
             />
           </Grid>
+          <Grid size={6}>
+            <UserProfilDialog
+              openButton={
+                <Button>{intl.formatMessage({ defaultMessage: 'Upravit profil', id: 'myProfile.editProfile' })}</Button>
+              }
+            />
+          </Grid>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />
+
         <Stack spacing={1}>
           <Stack direction="row" spacing={2} sx={{ fontWeight: 'bold' }} borderBottom="1px solid grey">
             <Typography fontWeight="bold" sx={{ width: 150 }}>
@@ -120,11 +128,6 @@ const MyProfile = () => {
                 {intl.formatMessage({ defaultMessage: 'Ukončit předplatné', id: 'myProfile.cancelSubscription' })}
               </Button>
             )}
-            <UserProfilDialog
-              openButton={
-                <Button>{intl.formatMessage({ defaultMessage: 'Upravit profil', id: 'myProfile.editProfile' })}</Button>
-              }
-            />
           </Stack>
         </Grid>
         <Divider sx={{ marginY: '30px' }} />

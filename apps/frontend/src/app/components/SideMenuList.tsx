@@ -8,7 +8,7 @@ import ContentCutIcon from '@mui/icons-material/ContentCut'
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import Face4Icon from '@mui/icons-material/Face4'
-import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
+// import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { type ReactNode } from 'react'
@@ -87,12 +87,12 @@ export const getMenuItems = (
     path: ROUTES.visits.path,
     icon: <PhotoCameraFrontOutlinedIcon />,
   },
-  {
-    key: 'sms',
-    title: intl.formatMessage({ id: 'sms', defaultMessage: 'SMSky' }),
-    path: ROUTES.sms.path,
-    icon: <SmsOutlinedIcon />,
-  },
+  // {
+  //   key: 'sms',
+  //   title: intl.formatMessage({ id: 'sms', defaultMessage: 'SMSky' }),
+  //   path: ROUTES.sms.path,
+  //   icon: <SmsOutlinedIcon />,
+  // },
   {
     key: 'shoppingList',
     title: intl.formatMessage({ id: 'shoppingList', defaultMessage: 'Nákupní seznam' }),

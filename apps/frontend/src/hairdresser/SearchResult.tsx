@@ -1,9 +1,10 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
-import { getTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
+import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
 import { Paths } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
+import { useIntl } from 'react-intl'
 
 type SearchResultProps = {
   clientData: ClientWithVisitsWithVisitServices
@@ -14,6 +15,7 @@ type SearchResultProps = {
 const SearchResult = (props: SearchResultProps) => {
   const { sx, clientData, onActiveSearch } = props
   const navigate = useAppNavigate()
+  const intl = useIntl()
 
   const latestVisit = getLatestVisit(clientData.visits)
 
@@ -48,13 +50,15 @@ const SearchResult = (props: SearchResultProps) => {
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography variant="h6" color="info.main" fontSize="0.7rem">
-            {latestVisit?.depositStatus?.toUpperCase()}
+            {clientData.deposit
+              ? latestVisit?.depositStatus?.toUpperCase()
+              : intl.formatMessage({ defaultMessage: 'NEPLATÍ ZÁLOHY', id: 'searchResult.NoDeposit' })}
           </Typography>
           <Typography variant="h6" color="info.main" fontSize="0.7rem">
             -
           </Typography>
           <Typography variant="caption" color="#ff6221" alignItems="center">
-            {latestVisit?.date && getTimeFromUtcToLocal(latestVisit?.date)}
+            {latestVisit?.date && getDateTimeFromUtcToLocal(latestVisit?.date)}
           </Typography>
         </Stack>
       </Stack>

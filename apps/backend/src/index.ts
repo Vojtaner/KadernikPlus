@@ -32,6 +32,7 @@ import {
   register,
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
+import checkCors from "./utils/checkCors";
 
 dotenv.config();
 
@@ -53,9 +54,13 @@ const jwtCheck = auth({
 app.use(metricsMiddleware);
 register.registerMetric(httpRequests);
 
-app.use(cors());
+app.use(cors({ origin: checkCors, credentials: true }));
+
 app.use(express.json());
 
+app.get("/cors-origin-test", (req, res) => {
+  res.json({ message: "CORS setup working ✅" });
+});
 app.use((req, res, next) => {
   res.on("finish", () => {
     httpRequests.inc({ method: req.method, status: res.statusCode });
