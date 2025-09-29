@@ -30,8 +30,8 @@ RUN dos2unix /env.sh && chmod +x /env.sh
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Set ASSET_DIR and APP_PREFIX only — actual variables come from Railway
-ENV ASSET_DIR="/usr/share/nginx/html"
-ENV APP_PREFIX="PREFIX_"
+# ENV ASSET_DIR="/usr/share/nginx/html"
+# ENV APP_PREFIX="PREFIX_"
 
 # Debug: print environment variables (optional)
 # ENTRYPOINT ["/bin/sh", "-c", "env; /env.sh; exec nginx -g 'daemon off;'"]

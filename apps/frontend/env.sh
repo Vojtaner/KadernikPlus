@@ -9,7 +9,7 @@ set -e
 
 # Hardcoded values
 APP_PREFIX="PREFIX_"
-ASSET_DIR="app/dist/asset"
+ASSET_DIR="/usr/share/nginx/html"
 
 # Check if the directory exists
 if [ ! -d "$ASSET_DIR" ]; then
