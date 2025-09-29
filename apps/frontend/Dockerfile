@@ -2,58 +2,42 @@
 FROM node:23-bullseye-slim AS build
 WORKDIR /app
 
+# Install dependencies
 COPY ./package*.json ./
-
 RUN npm install
 
-
-ENV APP_PREFIX="PREFIX_"
-ENV ASSET_DIR="/app/dist"
-
+# Copy source
 COPY . .
 
+# Build the frontend (placeholders remain)
 RUN npm run build
 
-
-
-# ===== STAGE 2: Final image with Nginx & env.sh =====
+# ===== STAGE 2: Nginx + env.sh =====
 FROM nginx:alpine
-
 WORKDIR /app
-# Nainstaluj bash, dos2unix
+
+# Install tools
 RUN apk add --no-cache bash dos2unix
 
-# Přenes dist výstup z build fáze
+# Copy build output
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Přenes env.sh a připrav ho ke spuštění
+# Copy env.sh and make it executable
 COPY env.sh /env.sh
 RUN dos2unix /env.sh && chmod +x /env.sh
 
-# Přenes vlastní Nginx konfiguraci (přes port 8083)
+# Copy custom Nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Environment proměnné
-ENV PORT=8083
-ENV APP_PREFIX="PREFIX_"
+# Set ASSET_DIR and APP_PREFIX only — actual variables come from Railway
 ENV ASSET_DIR="/usr/share/nginx/html"
+ENV APP_PREFIX="PREFIX_"
 
-# Spustí env.sh před nginxem
-ENTRYPOINT ["/env.sh"]
+# Debug: print environment variables (optional)
+# ENTRYPOINT ["/bin/sh", "-c", "env; /env.sh; exec nginx -g 'daemon off;'"]
 
-# Standardní příkaz pro Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Run env.sh at container start, then start Nginx
+ENTRYPOINT ["/bin/sh", "-c", "/env.sh && exec nginx -g 'daemon off;'"]
 
-
-# spuštění
-# docker run -p 3004:80 \
-#   -e PREFIX_API_URL=http://localhost:3021  \
-#   -e PREFIX_PORT=80 \
-#   -e PREFIX_ENABLE_MOCKS=false \
-#   -e PREFIX_IS_DEVELOPMENT=false \
-#   -e PREFIX_AUT0_DOMAIN=dev-ri7i8tb9.us.auth0.com \
-#   -e PREFIX_AUT0_CLIENT_ID=IXBSMrmYutHAC8gNTXg1hCyavwnEczbo\
-#   -e PREFIX_AUT0_AUDIENCE=http://localhost:3021\
-#   my-nginx
-
-
+# Expose port
+EXPOSE 8083
