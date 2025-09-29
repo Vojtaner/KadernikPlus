@@ -2,7 +2,7 @@
 
 # ================================================================================
 # File: env.sh
-# Description: Replaces environment variables in asset files and previews first 50 chars
+# Description: Replaces env placeholders only in JS bundles and HTML, shows preview
 # ================================================================================
 
 set -e
@@ -15,23 +15,22 @@ if [ ! -d "$ASSET_DIR" ]; then
     exit 0
 fi
 
-echo "Scanning directory: $ASSET_DIR"
+echo "Scanning directory: $ASSET_DIR for JS/HTML files"
 
 env | grep "^${APP_PREFIX}" | while IFS='=' read -r key value; do
     echo "  • Replacing ${key} → ${value}"
 
-    # Iterate over files
-    find "$ASSET_DIR" -type f | while read file; do
-        # Show first 50 chars before replacement
-        before=$(head -c 50 "$file")
-        echo "    BEFORE: ${before}"
-
-        # Replace the placeholder
-        sed -i "s|${key}|${value}|g" "$file"
-
-        # Show first 50 chars after replacement
-        after=$(head -c 50 "$file")
-        echo "    AFTER:  ${after}"
+    # Only process JS and HTML files
+    find "$ASSET_DIR" -type f \( -name "*.js" -o -name "*.html" \) | while read file; do
+        # Show first 50 characters containing placeholder (if present)
+        if grep -q "$key" "$file"; then
+            before=$(grep -o ".\{0,25\}$key.\{0,25\}" "$file" | head -n1)
+            sed -i "s|${key}|${value}|g" "$file"
+            after=$(grep -o ".\{0,25\}$value.\{0,25\}" "$file" | head -n1)
+            echo "    $file"
+            echo "      BEFORE: $before"
+            echo "      AFTER:  $after"
+        fi
     done
 done
 
