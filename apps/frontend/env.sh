@@ -1,8 +1,7 @@
 #!/usr/bin/env sh
-
 # ================================================================================
 # File: env.sh
-# Description: Replaces environment variables in asset files.
+# Description: Replaces environment variables in asset files and prints structure
 # ================================================================================
 
 set -e
@@ -18,14 +17,29 @@ if [ ! -d "$ASSET_DIR" ]; then
 fi
 
 echo "Scanning directory: $ASSET_DIR"
+echo "Folder structure:"
+find "$ASSET_DIR" -type f
 
 # Iterate through each environment variable that starts with APP_PREFIX
 env | grep "^${APP_PREFIX}" | while IFS='=' read -r key value; do
-    echo "  • Replacing ${key} → ${value}"
+    echo ""
+    echo "Replacing ${key} → ${value}"
 
-    # Replace in files
-    find "$ASSET_DIR" -type f \
-        -exec sed -i "s|${key}|${value}|g" {} +
+    # Replace in files and show 50 chars before/after match (for .js/.html)
+    find "$ASSET_DIR" -type f \( -name "*.js" -o -name "*.html" \) | while read file; do
+        # Show preview before replacement
+        grep -o ".\{0,50\}${key}.\{0,50\}" "$file" | while read match; do
+            echo "BEFORE: $match"
+        done
+
+        # Replace variable
+        sed -i "s|${key}|${value}|g" "$file"
+
+        # Show preview after replacement
+        grep -o ".\{0,50\}${value}.\{0,50\}" "$file" | while read match; do
+            echo "AFTER : $match"
+        done
+    done
 done
 
 exec "$@"
