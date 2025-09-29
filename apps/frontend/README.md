@@ -45,3 +45,7 @@ docker run -it --rm -p 8083:8083 \
 ```bash
 tree -I 'node_modules|.git' > directory-structure.txt
 ```
+
+## Import proměnných VITE a ENV
+
+Ve frontendu importuje VITE env proměnné pomocí `import.meta.env.VITE_IS_DEVELOPMENT` v .env musí proměnná začínat `VITE_` následně skript env.sh nahrazuje tyto proměnné na jiné `PREFIX_` a ty servíruje v runtime Railway...vite v buildtime, railway v runtime -> nutný runtime replacement
