@@ -6,6 +6,7 @@ COPY ./package*.json ./
 
 RUN npm install
 
+
 ENV APP_PREFIX=PREFIX_
 ENV ASSET_DIR=/app/dist
 
