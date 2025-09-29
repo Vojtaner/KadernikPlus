@@ -18,7 +18,7 @@ set -e
 # Check if the directory exists
 if [ ! -d "$ASSET_DIR" ]; then
     echo "Warning: directory '$ASSET_DIR' not found, skipping."
-    exit 0
+    continue
 fi
 
 # Display the current directory being scanned

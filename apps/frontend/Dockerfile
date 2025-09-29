@@ -7,8 +7,8 @@ COPY ./package*.json ./
 RUN npm install
 
 
-ENV APP_PREFIX=PREFIX_
-ENV ASSET_DIR=/app/dist
+# ENV APP_PREFIX="PREFIX_"
+# ENV ASSET_DIR=/app/dist
 
 COPY . .
 
@@ -36,8 +36,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Environment proměnné
 ENV PORT=8083
-ENV APP_PREFIX=PREFIX_
-ENV ASSET_DIR=/usr/share/nginx/html
+ENV APP_PREFIX="PREFIX_"
+ENV ASSET_DIR="/usr/share/nginx/html"
 
 # Spustí env.sh před nginxem
 ENTRYPOINT ["/env.sh"]
