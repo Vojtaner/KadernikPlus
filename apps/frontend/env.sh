@@ -2,7 +2,7 @@
 
 # ================================================================================
 # File: env.sh
-# Description: Replaces environment variables in asset files.
+# Description: Replaces environment variables in asset files and previews first 50 chars
 # ================================================================================
 
 set -e
@@ -17,21 +17,22 @@ fi
 
 echo "Scanning directory: $ASSET_DIR"
 
-# Replace all PREFIX_ variables
 env | grep "^${APP_PREFIX}" | while IFS='=' read -r key value; do
     echo "  • Replacing ${key} → ${value}"
-    find "$ASSET_DIR" -type f -exec sed -i "s|${key}|${value}|g" {} +
-done
 
-echo "==== DEBUG: checking replaced bundle ===="
-# Najdi první JS soubor a ukaž prvních 60 řádků
-first_js=$(find "$ASSET_DIR" -name "index*.js" | head -n 1 || true)
-if [ -n "$first_js" ]; then
-    echo "Preview of $first_js:"
-    head -n 60 "$first_js"
-else
-    echo "No index*.js found in $ASSET_DIR"
-fi
-echo "==== END DEBUG ===="
+    # Iterate over files
+    find "$ASSET_DIR" -type f | while read file; do
+        # Show first 50 chars before replacement
+        before=$(head -c 50 "$file")
+        echo "    BEFORE: ${before}"
+
+        # Replace the placeholder
+        sed -i "s|${key}|${value}|g" "$file"
+
+        # Show first 50 chars after replacement
+        after=$(head -c 50 "$file")
+        echo "    AFTER:  ${after}"
+    done
+done
 
 exec "$@"
