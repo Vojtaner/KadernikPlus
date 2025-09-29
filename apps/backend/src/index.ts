@@ -34,6 +34,7 @@ import {
 import invoiceRouter from "./routes/invoice-routes";
 import checkCors from "./utils/checkCors";
 import rateLimit from "express-rate-limit";
+import rateLimiter from "./utils/rateLimiter";
 
 dotenv.config();
 
@@ -63,15 +64,7 @@ app.get("/cors-origin-test", (req, res) => {
   res.json({ message: "CORS setup working ✅" });
 });
 
-const limiter = rateLimit({
-  windowMs: Number(getEnvVar("RATE_LIMIT_WINDOW_MS")) || 60_000,
-  max: Number(getEnvVar("RATE_LIMIT_MAX")) || 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: "Too many requests, please try again later.",
-});
-
-app.use(limiter);
+app.use(rateLimiter);
 
 app.use((req, res, next) => {
   res.on("finish", () => {
