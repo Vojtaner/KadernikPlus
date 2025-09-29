@@ -39,12 +39,14 @@ const TopBar = (props: TopBarProps) => {
               transition: 'transform 0.5s ease-in-out',
             }}
           />
-          <Button
-            href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
-            sx={{ bgcolor: AppTheme.palette.info.main }}
-            variant="contained">
-            Video návody
-          </Button>
+          {!isSearchActive && (
+            <Button
+              href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
+              sx={{ bgcolor: AppTheme.palette.info.main }}
+              variant="contained">
+              Video návody
+            </Button>
+          )}
         </Stack>
         <Stack
           direction="row"

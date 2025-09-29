@@ -17,18 +17,27 @@ export const subscriptionApi = {
   extend: (subscriptionId: string) => `/api/subscription/extend/${encodeURIComponent(subscriptionId)}`,
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
 }
+
 export const invoiceApi = {
   getAll: () => `api/invoices`,
 }
 
+//---- User ----
 export const updateUserData = async (axios: AxiosInstance, userData: UserForm): Promise<null> =>
   apiCall(async () => await axios.put(userApi.get(), userData), 'Uživatele se nepovedlo upravit.')
 
 export const deleteUser = async (axios: AxiosInstance): Promise<{ deletionScheduledAt: string }> =>
   apiCall(async () => await axios.delete(userApi.deleteUser()), 'Uživatele se nepovedlo smazat.')
 
+export const getUser = async (axios: AxiosInstance): Promise<UserForm> =>
+  apiCall(async () => await axios.get(userApi.get()), 'Nepovedlo se načíst uživatele.')
+
+//---- Logs ----
+
 export const getLogs = async (axios: AxiosInstance): Promise<LogData[]> =>
   apiCall(async () => await axios.get(userApi.getAllLogs()), 'Logy se nepovedlo načíst.')
+
+//---- Subscription ----
 
 export const postCreateSubscription = async (
   axios: AxiosInstance,
@@ -49,8 +58,7 @@ export const getSubscription = async (axios: AxiosInstance): Promise<Subscriptio
 export const postExtendSubscription = async (axios: AxiosInstance, subscriptionId: string): Promise<Subscription> =>
   apiCall(async () => await axios.post(subscriptionApi.extend(subscriptionId)), 'Nepovedlo se prodloužit předplatné.')
 
-export const getUser = async (axios: AxiosInstance): Promise<UserForm> =>
-  apiCall(async () => await axios.get(userApi.get()), 'Nepovedlo se načíst uživatele.')
+//---- Invoices ----
 
 export const getInvoices = async (axios: AxiosInstance): Promise<Invoice[]> =>
   apiCall(async () => await axios.get(invoiceApi.getAll()), 'Nepovedlo se načíst faktury.')
