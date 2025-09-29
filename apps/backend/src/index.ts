@@ -33,6 +33,7 @@ import {
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
 import checkCors from "./utils/checkCors";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -61,6 +62,17 @@ app.use(express.json());
 app.get("/cors-origin-test", (req, res) => {
   res.json({ message: "CORS setup working ✅" });
 });
+
+const limiter = rateLimit({
+  windowMs: Number(getEnvVar("RATE_LIMIT_WINDOW_MS")) || 60_000,
+  max: Number(getEnvVar("RATE_LIMIT_MAX")) || 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Too many requests, please try again later.",
+});
+
+app.use(limiter);
+
 app.use((req, res, next) => {
   res.on("finish", () => {
     httpRequests.inc({ method: req.method, status: res.statusCode });
