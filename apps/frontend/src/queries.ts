@@ -84,7 +84,6 @@ export const useSubscriptionMutation = () => {
       window.location.assign(data.redirect)
     },
     onError: (error) => {
-      console.log({ error })
       addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },

@@ -7,6 +7,8 @@ services:
         VITE_IS_DEVELOPMENT: true
         VITE_ENABLE_MOCKS: true
         VITE_PORT: 3021
+    env_file:
+      - ./frontend/.env.dev
     volumes:
       - ./frontend:/app/frontend
       - /app/frontend/node_modules
@@ -23,6 +25,8 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile.dev
+    env_file:
+      - ./backend/.env.dev
     container_name: node-hairdresser-api
     volumes:
       - ./backend:/backend # mount everything (src, prisma, env, etc.)
