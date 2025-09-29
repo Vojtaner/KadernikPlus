@@ -123,7 +123,7 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
 
   const recurringPayment = async (data: ComgateRecurringPaymentData) => {
     const body: ComgateRecurringPayment = {
-      test: getEnvVar("IS_DEVELOPMENT") === "true" ? "1" : "0",
+      test: getEnvVar("IS_DEVELOPMENT") === "true" ? "1" : "1",
       price: data.price,
       curr: data.curr,
       label: `Subscription ${data.label}`,

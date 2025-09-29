@@ -31,7 +31,13 @@ const MyProfile = () => {
   }
 
   if (!userData) {
-    return <Typography>Žádná data nenalezena.</Typography>
+
+    return (
+      <Typography>
+        {intl.formatMessage({ id: 'myProfile.missingData', defaultMessage: 'Žádná data nenalezena.' })}
+      </Typography>
+    )
+
   }
 
   return (
