@@ -15,18 +15,14 @@ COPY ./package.json ./
 # ENV SENTRY_RELEASE = "default_release_tag_refactor"
 # ENV SENTRY_LOG_LEVEL=debug
 
-
 ARG SENTRY_AUTH_TOKEN
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
 # Fake DB URL just for prisma generate (types only)
 ENV DATABASE_URL="mysql://user:pass@localhost:3306/fake"
 
-
 RUN npm install
 
 COPY . .
-
-
 
 RUN npx prisma generate
 
