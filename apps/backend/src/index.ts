@@ -53,6 +53,7 @@ const jwtCheck = auth({
 });
 
 app.use(metricsMiddleware);
+
 register.registerMetric(httpRequests);
 
 app.use(cors({ origin: checkCors, credentials: true }));
