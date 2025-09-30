@@ -6,6 +6,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import { useImportClientMutation } from './client/queries'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import PersonSearchIcon from '@mui/icons-material/PersonSearch'
+import { useIntl } from 'react-intl'
 
 export type Contact = {
   firstName?: string
@@ -15,6 +16,7 @@ export type Contact = {
 
 export const ContactPicker: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
+  const intl = useIntl()
   const { control, setValue } = useForm<{
     contacts: Contact[]
   }>({
@@ -41,7 +43,9 @@ export const ContactPicker: React.FC = () => {
         })
         setContactsToForm(selectedContacts)
       } catch (error) {
-        setError('Výběr kontaktů byl zrušen nebo selhal.')
+        setError(
+          intl.formatMessage({ id: 'contactPicker.error', defaultMessage: 'Výběr kontaktů byl zrušen nebo selhal.' })
+        )
         console.error(error)
       }
     } else {

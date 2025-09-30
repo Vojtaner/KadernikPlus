@@ -18,16 +18,17 @@ COPY ./package.json ./
 
 ARG SENTRY_AUTH_TOKEN
 ENV SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
-ARG DATABASE_URL
-ENV DATABASE_URL=${DATABASE_URL}
+# Fake DB URL just for prisma generate (types only)
+ENV DATABASE_URL="mysql://user:pass@localhost:3306/fake"
 
 
 RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
 
+
+RUN npx prisma generate
 
 RUN npm run build
 

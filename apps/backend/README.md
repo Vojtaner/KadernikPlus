@@ -189,3 +189,26 @@ npx railway status
 npx railway connect (případně)
 npx railway environment
 ```
+
+# Comgate
+
+V portálu je nutné nastavit backend i frontend url nyní produkce a preprodukce a v env vyměnit heslo a merchant.
+Na testlinkách nejde platba kvůli nekonzistentním URL.Vývoj kvůli callbacku url na localhost.
+
+## Railway databáze
+
+Přepnutí schématu pomocí nastavení v databazi env MYSQL_DATABASE na název schématu. Zde v kodu se nastavuje dynamická hodnota pro databázi
+
+````
+const databaseUrl = `${getEnvVar("DATABASE_URL_BASE")}/${
+  process.env.RAILWAY_GIT_BRANCH
+}`;
+
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: databaseUrl,
+    },
+  },
+});```
+````

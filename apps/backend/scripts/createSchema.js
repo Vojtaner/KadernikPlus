@@ -15,10 +15,10 @@ if (!branch) {
 }
 
 const connectionConfig = {
-  host: process.env.MYSQL_HOST || "mysql.railway.internal",
-  user: process.env.MYSQL_USER || "root",
-  password: process.env.MYSQL_PASSWORD || "",
-  port: Number(process.env.MYSQL_PORT || 3306),
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  port: Number(process.env.MYSQL_PORT),
 };
 
 const schemaName = branch.replace(/[^a-zA-Z0-9_]/g, "_");
@@ -31,11 +31,6 @@ async function main() {
     console.log(`✅ Schema ${schemaName} is ready`);
 
     await connection.end();
-
-    const databaseUrl = `mysql://${connectionConfig.user}:${connectionConfig.password}@${connectionConfig.host}:${connectionConfig.port}/${schemaName}`;
-    console.log(
-      `Set DATABASE_URL=${databaseUrl} in variables in your PR environment`
-    );
   } catch (err) {
     console.error("Error creating schema:", err);
     process.exit(1);
