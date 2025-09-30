@@ -179,3 +179,13 @@ INSERT INTO kadernikminus.visit_services SELECT * FROM kadernikplus.visit_servic
 CREATE TABLE kadernikminus.visits LIKE kadernikplus.visits;
 INSERT INTO kadernikminus.visits SELECT * FROM kadernikplus.visits;
 ```
+
+# VYTVOŘENÍ TESTLINKU
+
+High-level vytvořím větev bez pomlček, ideálně jedno slovo, špatně se to překládá pro vytvoření schématu. Automaticky je umožněno vytvoření PR environment v railway kopii ze staging, kde je auto generated DATABASE_URL. Predeploy step spustí node scripts/createSchema.js a ten vytvoří dynamické schéma v databázi staging a hlasí platný dynamický string DATABASE_URL pro kontrolu. Mohu zkontrolovat zda je schéma vytvořeno pomocí scriptu...lokálně doplnit
+
+```
+npx railway status
+npx railway connect (případně)
+npx railway environment
+```
