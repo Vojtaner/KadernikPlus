@@ -26,13 +26,11 @@ RUN npm install
 
 COPY . .
 
-CMD ["sh", "-c", "npx prisma generate && node setup-db.js"]
+RUN npx prisma generate
+
 
 RUN npm run build
 
+CMD ["npm", "run" ,"start"]
 
 
-
-# REMOVE this:
-#  RUN npx prisma generate
-# Instead, run at container startup
