@@ -1,35 +1,42 @@
 import { getEnvVar } from "./getEnvVar";
 
-const allowedOrigins = getEnvVar("CORS_ORIGINS")?.split(",") || [];
+const allowedOriginsRaw = getEnvVar("CORS_ORIGINS")?.split(",") || [];
 
-const checkCors = (
+// Rozdělit na přesné URL a regexy
+const allowedExact: string[] = [];
+const allowedRegex: RegExp[] = [];
+
+allowedOriginsRaw.forEach((pattern) => {
+  pattern = pattern.trim();
+  if (!pattern) return;
+
+  // Pokud začíná ^ nebo končí $, považovat za regex
+  if (pattern.startsWith("^") || pattern.endsWith("$")) {
+    try {
+      allowedRegex.push(new RegExp(pattern));
+    } catch (err) {
+      console.warn(`Invalid CORS regex skipped: ${pattern}`);
+    }
+  } else {
+    // Přesná URL → escapujeme pro RegExp interně
+    allowedExact.push(pattern);
+  }
+});
+
+export const checkCors = (
   origin: string | undefined,
   callback: (err: Error | null, allow?: boolean) => void
 ) => {
   if (!origin) return callback(null, true);
 
-  try {
-    const url = new URL(origin);
-    const host = url.host;
+  // Přesná shoda
+  if (allowedExact.includes(origin)) return callback(null, true);
 
-    // Pro každou povolenou doménu kontrolujeme:
-    // - přesná shoda
-    // - subdomény (např. frontend-pr-37.up.railway.app)
-    const isAllowed = allowedOrigins.some((allowed) => {
-      // povolený vzor obsahuje hvězdičku -> glob-like match
-      if (allowed.includes("*")) {
-        const regex = new RegExp(
-          "^" + allowed.replace(/\./g, "\\.").replace(/\*/g, ".*") + "$"
-        );
-        return regex.test(host);
-      }
-      return host === allowed || host.endsWith(`.${allowed}`);
-    });
+  // Regex shoda
+  const regexMatch = allowedRegex.some((r) => r.test(origin));
+  if (regexMatch) return callback(null, true);
 
-    callback(isAllowed ? null : new Error("Nepovolené CORS"), isAllowed);
-  } catch {
-    callback(new Error("Nepovolené CORS"));
-  }
+  // Nepovolené
+  console.warn(`CORS blocked: ${origin}`);
+  callback(new Error("Nepovolené CORS policy."));
 };
-
-export default checkCors;
