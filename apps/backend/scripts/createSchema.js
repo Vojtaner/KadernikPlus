@@ -8,8 +8,6 @@
 import mysql from "mysql2/promise";
 
 const branch = process.env.RAILWAY_GIT_BRANCH;
-const dbBaseUrl = process.env.DATABASE_URL_BASE;
-const schemaUrl = `${dbBaseUrl}/${branch}`;
 
 if (!branch) {
   console.error("RAILWAY_GIT_BRANCH is not set!");
@@ -32,14 +30,7 @@ async function main() {
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${schemaName}\`;`);
     console.log(`✅ Schema ${schemaName} is ready`);
 
-    process.env.DATABASE_URL = `${schemaUrl}`;
-
     await connection.end();
-
-    const databaseUrl = `mysql://${connectionConfig.user}:${connectionConfig.password}@${connectionConfig.host}:${connectionConfig.port}/${schemaName}`;
-    console.log(
-      `Set DATABASE_URL=${databaseUrl} in variables in your PR environment`
-    );
   } catch (err) {
     console.error("Error creating schema:", err);
     process.exit(1);
