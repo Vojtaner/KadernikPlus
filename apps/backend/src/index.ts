@@ -32,8 +32,8 @@ import {
   register,
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
-import checkCors from "./utils/checkCors";
 import rateLimiter from "./utils/rateLimiter";
+import { checkCors } from "./utils/checkCors";
 
 dotenv.config();
 
@@ -53,6 +53,7 @@ const jwtCheck = auth({
 });
 
 app.use(metricsMiddleware);
+
 register.registerMetric(httpRequests);
 
 app.use(cors({ origin: checkCors, credentials: true }));
