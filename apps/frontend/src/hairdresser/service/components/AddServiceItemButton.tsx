@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import FormDialog from '../../../app/components/Dialog'
 import TextField from '../../../app/components/TextField'
 import type { ServiceCreateOrUpdateData } from '../../../entities/service'
@@ -15,6 +15,7 @@ type AddServiceItemButtonProps = {
 const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
   const { openButton, defaultValues } = props
   const [open, setOpen] = useState(false)
+  const intl = useIntl()
   const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues })
   const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation()
 
@@ -66,7 +67,10 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
       }
       onOpenButton={openDialogButton}
       title="Přidat službu"
-      dialogHelperText="Zde přidáte službu do ceníku."
+      dialogHelperText={intl.formatMessage({
+        id: 'addServiceButton.helperText',
+        defaultMessage: 'Zde přidáte službu do ceníku.',
+      })}
     />
   )
 }
