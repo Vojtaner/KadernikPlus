@@ -26,8 +26,6 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
-
 CMD ["sh", "-c", "npx prisma generate && node setup-db.js"]
 
 RUN npm run build
