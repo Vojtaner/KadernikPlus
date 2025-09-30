@@ -189,3 +189,12 @@ npx railway status
 npx railway connect (případně)
 npx railway environment
 ```
+
+# Comgate
+
+V portálu je nutné nastavit backend i frontend url nyní produkce a preprodukce a v env vyměnit heslo a merchant.
+Na testlinkách nejde platba kvůli nekonzistentním URL.Vývoj kvůli callbacku url na localhost.
+
+## Railway databáze
+
+Přepnutí schématu pomocí nastavení v databazi env MYSQL_DATABASE na název schématu.
