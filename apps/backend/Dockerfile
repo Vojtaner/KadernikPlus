@@ -32,6 +32,6 @@ RUN npx prisma generate
 
 RUN npm run build
 
-CMD ["npm", "run" ,"start"]
+CMD ["/bin/sh", "-c", "npm run start"]
 
 
