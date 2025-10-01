@@ -38,6 +38,7 @@ import { checkCors } from "./utils/checkCors";
 dotenv.config();
 
 const Sentry = initSentry();
+
 const app = express();
 
 const PORT = getEnvVar("PORT") || 3000;
