@@ -42,7 +42,7 @@ const Sentry = initSentry();
 const app = express();
 
 const PORT = getEnvVar("PORT") || 3000;
-app.set("trust proxy", true); //backend běží za proxy a express neduvěřuje, nyní ano chyba X-forwarded-future*
+app.set("trust proxy", 1); //backend běží za proxy a express neduvěřuje, nyní ano chyba X-forwarded-future*
 app.get("/debug", () => {
   throw new Error("Test Sentry");
 });
