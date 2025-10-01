@@ -236,3 +236,16 @@ Expanzí proměnných prostředí získáš dynamické schéma podle PR branch.
 Takhle už není potřeba ručně upravovat .env ani pevně nastavovat branch ve variablách.
 
 Chceš, abych ti ukázal kompletní workflow schema-per-branch v Railway s tímto predeploy?
+
+# Vymazání DB schémat
+
+Takto se vymažou DB schémata zatím ručně. Kontrola přes `npx railway connect` vybrat servisu databáze a v mysql rozjet `SHOW DATABASES;` před i po
+
+```
+export PROJECT_ID=a94ce022-3f34-4c63-88a5-285ba69d9cb8
+export SERVICE_ID=af16548c-93a7-4e24-8b98-ee0a5114554e
+
+#ze složky backend
+
+./scripts/cleanupSchemas.sh <deleted-schema-branch-name> <deleted-schema-branch-name>
+```
