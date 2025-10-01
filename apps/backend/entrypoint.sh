@@ -14,3 +14,4 @@ echo "--------------------------------------"
 env | grep DATABASE_URL
 # Spustíme aplikaci
 exec npm run start
+

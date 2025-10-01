@@ -109,7 +109,9 @@ app.get("/metrics", async (req, res) => {
 const startServer = async () => {
   try {
     await prisma.$connect();
-    console.log("Connected to the database successfully!");
+    console.log(
+      `Connected to the database successfully! DATABASE_URL=${process.env.DATABASE_URL}`
+    );
 
     app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
