@@ -11,7 +11,6 @@ RUN npm install
 
 COPY . .
 
-# Fake DB jen pro generate, runtime DB se nastaví v entrypoint.sh
 RUN DATABASE_URL="mysql://user:pass@localhost:3306/fake" npx prisma generate
 
 RUN npm run build
@@ -20,9 +19,6 @@ COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-
-
-
 
 # ENV AUTH0_M2M_AUDIENCE="http://kadernikplus908.io"
 # ENV AUTH0_ISSUER_BASE_URL="https://dev-vmu4oy0e2nc3n6l6.us.auth0.com/"

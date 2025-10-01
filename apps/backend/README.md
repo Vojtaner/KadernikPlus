@@ -199,7 +199,7 @@ Na testlinkách nejde platba kvůli nekonzistentním URL.Vývoj kvůli callbacku
 
 Přepnutí schématu pomocí nastavení v databazi env MYSQL_DATABASE na název schématu. Zde v kodu se nastavuje dynamická hodnota pro databázi
 
-````
+```
 const databaseUrl = `${getEnvVar("DATABASE_URL_BASE")}/${
   process.env.RAILWAY_GIT_BRANCH
 }`;
@@ -210,5 +210,29 @@ const prisma = new PrismaClient({
       url: databaseUrl,
     },
   },
-});```
-````
+});
+```
+
+V Railway platí:
+
+Predeploy i Start příkazy běží buď v exec form nebo shell form.
+
+Pokud potřebuješ, aby se rozvinuly proměnné prostředí ($RAILWAY_GIT_BRANCH, $DATABASE_URL_BASE), musíš použít shell form s /bin/sh -c "...".
+
+Bez shellu (exec form) se proměnné nerozvinou a příkaz je spuštěn doslova, takže např. DATABASE_URL="${DATABASE_URL_BASE}/${RAILWAY_GIT_BRANCH}" nebude fungovat.
+
+Tvůj příklad je tedy korektní:
+
+/bin/sh -c "node scripts/createSchema.js && DATABASE_URL=\"${DATABASE_URL_BASE}/${RAILWAY_GIT_BRANCH}\" npx prisma migrate dev"
+
+To:
+
+Spustí skript createSchema.js, který vytvoří databázové schéma podle branch.
+
+Předefinuje DATABASE_URL inline pro aktuální příkaz npx prisma migrate dev.
+
+Expanzí proměnných prostředí získáš dynamické schéma podle PR branch.
+
+Takhle už není potřeba ručně upravovat .env ani pevně nastavovat branch ve variablách.
+
+Chceš, abych ti ukázal kompletní workflow schema-per-branch v Railway s tímto predeploy?
