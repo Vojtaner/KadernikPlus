@@ -20,7 +20,6 @@ const connectionConfig = {
   password: process.env.MYSQL_PASSWORD,
   port: Number(process.env.MYSQL_PORT),
 };
-
 const schemaName = branch.replace(/[^a-zA-Z0-9_]/g, "_");
 
 async function main() {
