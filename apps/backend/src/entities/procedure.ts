@@ -8,6 +8,8 @@ type AddProcedureStockAllowanceType = (Omit<
   quantity: number;
 })[];
 
+type Nothing = string;
+
 export type Procedure = {
   id: string;
   visitId: string;
