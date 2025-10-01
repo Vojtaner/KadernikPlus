@@ -57,7 +57,9 @@ app.use(metricsMiddleware);
 
 register.registerMetric(httpRequests);
 
-app.use(cors({ origin: checkCors, credentials: true }));
+app.use(cors());
+
+// app.use(cors({ origin: checkCors, credentials: true }));
 
 app.use(express.json());
 
