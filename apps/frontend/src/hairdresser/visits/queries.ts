@@ -19,7 +19,7 @@ import type {
 } from './entity'
 import { getClientVisits } from '../client/api'
 
-export const useClientVisitsQuery = (clientId: string | undefined, isEnabled: boolean) => {
+export const useClientVisitsQuery = (clientId: string | undefined, isEnabled?: boolean) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
