@@ -19,7 +19,7 @@ import type {
 } from './entity'
 import { getClientVisits } from '../client/api'
 
-export const useClientVisitsQuery = (clientId: string | undefined) => {
+export const useClientVisitsQuery = (clientId: string | undefined, isEnabled: boolean) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
@@ -32,8 +32,8 @@ export const useClientVisitsQuery = (clientId: string | undefined) => {
       return getClientVisits(axios, clientId)
     },
     staleTime: 24 * 60 * 60 * 1000,
+    enabled: isEnabled,
     refetchOnWindowFocus: false,
-    refetchOnMount: true,
   })
 }
 

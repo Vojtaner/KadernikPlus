@@ -45,7 +45,7 @@ export default function FormDialog<TFieldValues extends FieldValues = FieldValue
               handleSubmit?.(onValidHandle, onInvalidHandle)()
               scroll()
             },
-            sx: { minWidth: '80vw' },
+            sx: { width: { md: '28vw', xs: '100vw' } },
           },
         }}>
         <DialogTitle>{title}</DialogTitle>

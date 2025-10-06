@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button } from '@mui/material'
 import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'

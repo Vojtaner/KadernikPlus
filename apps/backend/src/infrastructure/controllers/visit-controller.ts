@@ -89,6 +89,7 @@ const createVisitController = (dependencies: {
         const newVisit = await dependencies.addVisitUseCase.execute({
           ...visitDataWithUserId,
           clientId: newClient.id,
+          dateTo: visitDataWithUserId.dateTo,
         });
 
         return {

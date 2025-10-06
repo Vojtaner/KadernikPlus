@@ -85,7 +85,7 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
   const createPayment = async (data: ComgatePaymentData) => {
     const body: ComgateCreatePaymentRequired = {
       merchant: getEnvVar("MERCHANT"),
-      test: getEnvVar("IS_DEVELOPMENT") === "true" ? "1" : "0",
+      test: getEnvVar("IS_DEVELOPMENT") === "true" ? "1" : "1",
       price: data.price.toString(),
       curr: data.currency,
       label: `Subscription ${data.label}`,

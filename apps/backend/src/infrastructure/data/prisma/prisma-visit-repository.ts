@@ -31,6 +31,7 @@ export const createVisitRepositoryDb = (
         clientId: visitData.clientId,
         userId: visitData.userId,
         date: visitData.date,
+        dateTo: visitData.dateTo,
         paidPrice: Number(visitData.paidPrice),
         teamId: userTeam.teamId,
         deposit: Number(visitData.deposit) ?? 0,
@@ -160,7 +161,7 @@ export const createVisitRepositoryDb = (
         date: visitData.date,
         deposit: Number(visitData.deposit),
         note: visitData.note,
-
+        dateTo: visitData.dateTo,
         depositStatus: { set: visitData.depositStatus },
         visitServices: {
           update: {

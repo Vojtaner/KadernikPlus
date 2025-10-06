@@ -19,6 +19,7 @@ import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../
 import ProcedureCard from '../ProcedureCard'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 import { useEffect } from 'react'
+import { FormattedMessage } from 'react-intl'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
@@ -48,7 +49,11 @@ const VisitDetail = () => {
   }
 
   if (!proceduresData || !visitData) {
-    return <Typography>Požadovaná data nejsou dostupná.</Typography>
+    return (
+      <Typography>
+        <FormattedMessage defaultMessage="Požadovaná data nejsou dostupná." id="visitDetail.failedToLoadData" />
+      </Typography>
+    )
   }
 
   const hasZeroProcedures = proceduresData.length === 0
@@ -65,7 +70,7 @@ const VisitDetail = () => {
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
               startIcon={<EditOutlinedIcon fontSize="small" color="primary" />}>
-              Dokončit
+              <FormattedMessage defaultMessage="Dokončit" id="visitDetail.finalize" />
             </Button>
           }
         />
@@ -75,7 +80,7 @@ const VisitDetail = () => {
             startIcon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
             sx={{ background: `${AppTheme.palette.primary.light}` }}
             onClick={() => navigate(Paths.clientDetail(visitData.clientId))}>
-            Profil zákazníka
+            <FormattedMessage defaultMessage="Profil zákazníka" id="visitDetail.customerProfile" />
           </Button>
         )}
         {visitData && (
@@ -92,7 +97,7 @@ const VisitDetail = () => {
                     navigate(Paths.clientDetail(visitData.clientId))
                     queryClient.invalidateQueries({ queryKey: ['visits'] })
                   }}>
-                  Smazat
+                  <FormattedMessage defaultMessage="Smazat" id="visitDetail.delete" />
                 </Button>
               </Tooltip>
             }
@@ -113,7 +118,7 @@ const VisitDetail = () => {
             paddingY: 1,
           },
         }}>
-        Postup
+        <FormattedMessage defaultMessage="Postup" id="visitDetail.procedure" />
       </Divider>
 
       <Stack spacing={4}>
@@ -135,15 +140,18 @@ const VisitDetail = () => {
                 variant="outlined"
                 disabled={visitData.visitStatus}
                 sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
-                + Přidat proceduru
+                <FormattedMessage defaultMessage="+ Přidat proceduru" id="visitDetail.addProcedureButton" />
               </Button>
             }
           />
         )}
         {visitData.visitStatus && (
           <Typography color="info" fontWeight="600" align="center">
-            Návštěva je uzavřená z bezpečnostních důvodů ji nelze editovat ani smazat. Můžete ji znovu otevřít v
-            dokončení návštěvy.
+            <FormattedMessage
+              defaultMessage=" Návštěva je uzavřená z bezpečnostních důvodů ji nelze editovat ani smazat. Můžete ji znovu otevřít v
+            dokončení návštěvy."
+              id="visitDetail.finishProcedureWarrning"
+            />
           </Typography>
         )}
         {previusVisitProcedure &&

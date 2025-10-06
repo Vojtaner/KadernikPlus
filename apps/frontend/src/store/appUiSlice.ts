@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 
 export type AppLanguage = 'cs' | 'en'
 
-interface AppUiState {
+type AppUiState = {
   isDrawerOpen: boolean
   searchText: string
   currentLocationAppendix: string

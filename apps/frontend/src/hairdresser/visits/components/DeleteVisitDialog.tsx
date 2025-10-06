@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import React from 'react'
 import { FormattedMessage } from 'react-intl'
 import { useAppNavigate } from '../../../hooks'

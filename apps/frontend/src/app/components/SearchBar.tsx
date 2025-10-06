@@ -19,7 +19,7 @@ const SearchBar = ({ isActive, onToggleActive, sx }: SearchBarProps) => {
   const [internalActive, setInternalActive] = useState(false)
   const active = isActive ?? internalActive
 
-  const { control, watch, reset } = useForm<{ searchValue: string }>({
+  const { control, watch, resetField } = useForm<{ searchValue: string }>({
     defaultValues: { searchValue: '' },
   })
 
@@ -45,7 +45,7 @@ const SearchBar = ({ isActive, onToggleActive, sx }: SearchBarProps) => {
       value={searchValue}
       control={control}
       onToggle={toggleActive}
-      onReset={() => reset({ searchValue: '' })}
+      onReset={() => resetField('searchValue')}
       onInputClick={(e) => e.stopPropagation()}
       sx={sx}
     />
@@ -101,15 +101,15 @@ const SearchBarView = ({ isActive, value, onToggle, onReset, onInputClick, contr
           type="search"
           placeholder={searchActivePlaceholder}
           onClick={onInputClick}
-          slotProps={{
-            input: {
-              endAdornment: value && (
-                <IconButton onClick={onReset} edge="end" size="small">
-                  <ClearIcon fontSize="small" sx={{ color: 'white' }} />
-                </IconButton>
-              ),
-            },
-          }}
+          // slotProps={{
+          //   input: {
+          //     endAdornment: value && (
+          //       <IconButton onClick={onReset} edge="end" size="small">
+          //         <ClearIcon fontSize="small" sx={{ color: 'white' }} />
+          //       </IconButton>
+          //     ),
+          //   },
+          // }}
           sx={{
             width: '100%',
             alignSelf: 'center',

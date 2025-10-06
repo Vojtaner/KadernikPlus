@@ -1,6 +1,6 @@
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DateTimePicker, type DateValidationError, type PickerChangeHandlerContext } from '@mui/x-date-pickers'
+import { DateTimePicker, type DateTimeValidationError, type PickerChangeHandlerContext } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import 'dayjs/locale/cs'
 import { Controller, type Control, type FieldPath, type FieldValues, type RegisterOptions } from 'react-hook-form'
@@ -17,30 +17,30 @@ export type DatePickerProps<TFieldValues extends FieldValues> = {
   maxDate?: Dayjs
   disabled?: boolean
   rules?: RegisterOptions<TFieldValues, FieldPath<TFieldValues>>
-  onChange?: ((value: PickerValue, context: PickerChangeHandlerContext<DateValidationError>) => void) | undefined
+  onAccept?:
+    | ((value: Date | undefined, context: PickerChangeHandlerContext<DateTimeValidationError>) => void)
+    | undefined
+  onChange?: ((value: PickerValue, context: PickerChangeHandlerContext<DateTimeValidationError>) => void) | undefined
 }
 
-export default function BasicDateTimePicker<TFieldValues extends FieldValues>({
-  fieldPath,
-  control,
-  label,
-  rules,
-  disabled,
-}: DatePickerProps<TFieldValues>) {
+export default function BasicDateTimePicker<TFieldValues extends FieldValues>(props: DatePickerProps<TFieldValues>) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">
       <Controller
-        name={fieldPath}
-        control={control}
-        rules={rules}
+        name={props.fieldPath}
+        control={props.control}
+        rules={props.rules}
         render={({ field, fieldState: { error } }) => (
           <DateTimePicker
             {...field}
-            disabled={disabled}
-            label={label ?? 'Datum'}
+            disabled={props.disabled}
+            label={props.label ?? 'Datum'}
             ampm={false}
+            onAccept={(date, context) => props.onAccept?.(date?.toDate(), context)}
             value={dayjs(field.value)}
-            onChange={(date) => field.onChange(date?.toDate())}
+            onChange={(date) => {
+              field.onChange(date?.toDate())
+            }}
             slotProps={{
               textField: {
                 fullWidth: true,
