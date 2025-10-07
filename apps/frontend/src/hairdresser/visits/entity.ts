@@ -10,6 +10,7 @@ export type Visit = {
   id?: string
   clientId: string
   date: Date
+  dateTo: Date
   paidPrice?: number
   deposit?: number
   depositStatus?: DepositStatus | null
@@ -23,6 +24,7 @@ export type Visit = {
 export type CreateVisitType = {
   clientId?: string
   date: Date
+  dateTo: Date
   deposit?: number
   depositRequired: boolean
   serviceIds: string[]
@@ -104,7 +106,7 @@ export const depositStatusOptions = Object.entries(DepositStatus).map(([key, val
 
 export type VisitDetailFormType = Pick<
   Visit,
-  'date' | 'paidPrice' | 'deposit' | 'depositStatus' | 'hairdresserId' | 'note'
+  'date' | 'paidPrice' | 'deposit' | 'depositStatus' | 'hairdresserId' | 'note' | 'dateTo'
 > & { hairCutId?: string; visitServiceId: string; visitClosed: boolean }
 
 export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: Dayjs }) => {

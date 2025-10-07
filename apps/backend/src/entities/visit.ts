@@ -8,6 +8,7 @@ export type Visit = {
   id?: string;
   clientId: string;
   date: Date;
+  dateTo: Date;
   paidPrice?: number;
   deposit?: number;
   depositStatus?: DepositStatus | null;
@@ -24,6 +25,7 @@ export type VisitCreateData = Visit;
 export type CreateVisitType = {
   clientId: string;
   date: Date;
+  dateTo: Date;
   depositAmount?: number;
   depositRequired: boolean;
   serviceIds: string;
@@ -84,5 +86,11 @@ export const depositStatusOptions = Object.entries(DepositStatus).map(
 
 export type VisitDetailFormType = Pick<
   Visit,
-  "date" | "paidPrice" | "deposit" | "depositStatus" | "hairdresserId" | "note"
+  | "date"
+  | "paidPrice"
+  | "deposit"
+  | "depositStatus"
+  | "hairdresserId"
+  | "note"
+  | "dateTo"
 > & { hairCutId: string; visitServiceId: string };

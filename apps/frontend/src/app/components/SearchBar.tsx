@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { Stack, IconButton, Typography, type SxProps } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import SearchOffIcon from '@mui/icons-material/SearchOff'
-import ClearIcon from '@mui/icons-material/Clear'
 import { useForm, type Control } from 'react-hook-form'
 import TextField from './TextField'
 import { useIntl } from 'react-intl'
@@ -19,7 +18,7 @@ const SearchBar = ({ isActive, onToggleActive, sx }: SearchBarProps) => {
   const [internalActive, setInternalActive] = useState(false)
   const active = isActive ?? internalActive
 
-  const { control, watch, reset } = useForm<{ searchValue: string }>({
+  const { control, watch, resetField } = useForm<{ searchValue: string }>({
     defaultValues: { searchValue: '' },
   })
 
@@ -45,7 +44,7 @@ const SearchBar = ({ isActive, onToggleActive, sx }: SearchBarProps) => {
       value={searchValue}
       control={control}
       onToggle={toggleActive}
-      onReset={() => reset({ searchValue: '' })}
+      onReset={() => resetField('searchValue')}
       onInputClick={(e) => e.stopPropagation()}
       sx={sx}
     />
@@ -69,7 +68,7 @@ type SearchBarViewProps = {
   sx?: SxProps
 }
 
-const SearchBarView = ({ isActive, value, onToggle, onReset, onInputClick, control, sx }: SearchBarViewProps) => {
+const SearchBarView = ({ isActive, onToggle, onInputClick, control, sx }: SearchBarViewProps) => {
   const intl = useIntl()
   const searchInActivePlaceholder = intl.formatMessage({
     defaultMessage: 'Vyhledej zákazníka...',
@@ -101,15 +100,15 @@ const SearchBarView = ({ isActive, value, onToggle, onReset, onInputClick, contr
           type="search"
           placeholder={searchActivePlaceholder}
           onClick={onInputClick}
-          slotProps={{
-            input: {
-              endAdornment: value && (
-                <IconButton onClick={onReset} edge="end" size="small">
-                  <ClearIcon fontSize="small" sx={{ color: 'white' }} />
-                </IconButton>
-              ),
-            },
-          }}
+          // slotProps={{
+          //   input: {
+          //     endAdornment: value && (
+          //       <IconButton onClick={onReset} edge="end" size="small">
+          //         <ClearIcon fontSize="small" sx={{ color: 'white' }} />
+          //       </IconButton>
+          //     ),
+          //   },
+          // }}
           sx={{
             width: '100%',
             alignSelf: 'center',

@@ -60,9 +60,11 @@ const VisitsList = (props: VisitListProps) => {
 
   const filteredData =
     visitListFilters.view === 'byClosedNoStockAllowances' ? onlyClosedVisitsWithoutStockAllowances : visitData
-  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort((a, b) => {
-    return getDateTimeFromUtcToLocal(a.date).localeCompare(getDateTimeFromUtcToLocal(b.date))
-  })
+
+  const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  )
+
   const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
   const rows = createVisitsTable(rowsWithHeaders)
 
@@ -179,6 +181,7 @@ type VisitRow =
   | {
       id: string
       date: string
+      dateTo: string
       client: string
       serviceName: string
       visitState: boolean
@@ -193,8 +196,8 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
   {
     field: 'date',
     headerName: 'Čas',
-    disableColumnMenu: true,
     width: 45,
+    hideSortIcons: false,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) =>
@@ -210,7 +213,12 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
           {params.row.label}
         </Box>
       ) : (
-        <Typography fontSize="12px">{params.value}</Typography>
+        <Stack>
+          <Typography fontSize="12px">{params.row.date}</Typography>
+          <Typography color="text.secondary" fontSize="12px">
+            {params.row.dateTo}
+          </Typography>
+        </Stack>
       ),
   },
 
@@ -218,7 +226,6 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
-    disableColumnMenu: true,
     minWidth: 55,
     renderCell: (params) =>
       !params.row.isHeader && (
@@ -238,7 +245,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'serviceName',
     headerName: 'Účes',
     minWidth: 70,
-    disableColumnMenu: true,
+    width: 150,
   },
   {
     field: 'visitState',
@@ -246,7 +253,6 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     width: 70,
     display: 'flex',
     editable: false,
-    disableColumnMenu: true,
     renderCell: (params) => {
       const isVisitOpen = params.row.visitState
       return (
@@ -266,7 +272,6 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     headerName: 'Detail',
     width: 10,
     editable: false,
-    disableColumnMenu: true,
     renderCell: (params) => {
       if (!params.row.isHeader && params.row.clientId) {
         const clientId = params.row.clientId
@@ -312,6 +317,7 @@ const createVisitsTable = (
       id: visit.id,
       isHeader: false,
       date: getTimeFromUtcToLocal(visit.date),
+      dateTo: getTimeFromUtcToLocal(visit.dateTo),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
       serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
       visitState: visit.visitStatus,

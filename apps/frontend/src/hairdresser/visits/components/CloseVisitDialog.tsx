@@ -1,5 +1,5 @@
 import { Button, List } from '@mui/material'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import { FormattedMessage } from 'react-intl'
 import CloseIcon from '@mui/icons-material/Close'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'

@@ -89,3 +89,15 @@ export type Invoice = {
   amount: number
   currency: string
 }
+
+export const APP_LAYOUT_WIDTH = 30
+
+export const getParsedFullName = (fullName: string) => {
+  const splitedFullName = fullName.split(' ')
+
+  if (splitedFullName.length === 1) {
+    return { lastName: splitedFullName[0], firstName: '-' }
+  } else {
+    return { lastName: splitedFullName[1], firstName: splitedFullName[0] }
+  }
+}

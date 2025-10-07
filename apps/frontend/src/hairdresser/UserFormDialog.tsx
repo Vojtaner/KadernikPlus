@@ -5,7 +5,7 @@ import TextField from '../app/components/TextField'
 import { useUpdateUserMutation } from '../queries'
 import type { UserForm } from '../entities/user'
 import { useForm } from 'react-hook-form'
-import FormDialog from '../app/components/Dialog'
+import FormDialog from '../app/components/FormDialog'
 import { addPropsToReactElement } from './entity'
 
 const useUserProfileForm = () => {

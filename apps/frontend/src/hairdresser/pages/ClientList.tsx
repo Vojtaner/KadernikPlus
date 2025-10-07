@@ -35,7 +35,7 @@ const ClientsList = () => {
         rows={clientList}
         columns={createColumns(navigate)}
         columnHeaderHeight={50}
-        hideFooter={true}
+        hideFooter={false}
       />
     </Box>
   )

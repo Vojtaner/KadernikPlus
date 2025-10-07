@@ -1,5 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
 import SelectField from '../../../app/components/SelectField'
 import TextField from '../../../app/components/TextField'
@@ -30,6 +30,7 @@ const EditVisitDetailDialog = (props: {
   const { control, handleSubmit, getValues, setValue } = useForm<VisitDetailFormType>({
     defaultValues: {
       date: visit?.date,
+      dateTo: visit?.dateTo,
       deposit: visit?.deposit,
       depositStatus: visit?.depositStatus,
       hairdresserId: visit?.userId,
@@ -71,7 +72,11 @@ const EditVisitDetailDialog = (props: {
 
   const onSubmit = () => {
     const formData = getValues()
-    changeVisitStatus({ status: formData.visitClosed, visitId })
+
+    if (formData.visitClosed !== null) {
+      changeVisitStatus({ status: formData.visitClosed, visitId })
+    }
+
     updateVisitMutation(
       { ...formData, visitServiceId: visit.visitServices[0].id },
       {
@@ -146,6 +151,7 @@ const EditVisitDetailDialog = (props: {
           {/* funkcionalita na přeobjednávání zatím aus
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} /> */}
           <BasicDateTimePicker fieldPath="date" control={control} disabled={visitClosed} />
+          <BasicDateTimePicker fieldPath="dateTo" control={control} label="Datum do" disabled={visitClosed} />
           <ServicesAutoComplete fieldPath="hairCutId" control={control} disabled={visitClosed} />
           <TextField
             disabled={visitClosed}

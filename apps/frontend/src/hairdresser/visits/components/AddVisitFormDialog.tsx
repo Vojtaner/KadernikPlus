@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import MenuIconButton from '../../../app/components/MenuBoxIcon'
 import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
 import AddVisitForm, { useAddVisitForm } from './AddVisitForm'
@@ -32,10 +32,10 @@ export const AddVisitFormDialog = () => {
       actions={
         <>
           <Button onClick={handleClose}>
-            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+            <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import { FormattedMessage, useIntl } from 'react-intl'
 import { Button, Typography } from '@mui/material'
 import { addPropsToReactElement } from '../../entity'

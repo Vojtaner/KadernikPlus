@@ -1,5 +1,5 @@
 import { Button, type BoxProps, type SxProps } from '@mui/material'
-import FormDialog from '../app/components/Dialog'
+import FormDialog from '../app/components/FormDialog'
 import { useState } from 'react'
 import React from 'react'
 import {
@@ -27,7 +27,7 @@ const SmsSendDialog = (props: {
 }) => {
   const { openButton, clientId } = props
   const [open, setOpen] = useState(false)
-  const { data: clientData } = useClientVisitsQuery(clientId)
+  const { data: clientData } = useClientVisitsQuery(clientId, open)
   const { data: userData } = useUserDataQuery()
 
   if (!clientData?.length) {

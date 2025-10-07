@@ -1,5 +1,5 @@
 import { Button } from '@mui/material'
-import FormDialog from '../../../app/components/Dialog'
+import FormDialog from '../../../app/components/FormDialog'
 import { useState } from 'react'
 import type { EditClient, NewClient } from '../../../entities/client'
 import React from 'react'

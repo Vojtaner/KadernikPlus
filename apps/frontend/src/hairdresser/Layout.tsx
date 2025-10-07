@@ -18,6 +18,7 @@ import { useAppNavigate } from '../hooks'
 import { useAppSelector } from '../store/store'
 import SideMenu from './SideMenu'
 import AddServiceItemButton from '../hairdresser/service/components/AddServiceItemButton'
+import { APP_LAYOUT_WIDTH } from './entity'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
@@ -37,7 +38,7 @@ const Layout = (props: PropsWithChildren) => {
   return (
     <Stack
       spacing={isSearchActive ? 1 : 0}
-      sx={{ minWidth: { md: '30vw' }, bgcolor: '#c81f5b' }}
+      sx={{ minWidth: { md: `${APP_LAYOUT_WIDTH}vw` }, bgcolor: '#c81f5b' }}
       boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}>
       <Stack
         sx={{

@@ -185,6 +185,7 @@ model Visit {
   clientId      String
   userId        String
   date          DateTime
+  dateTo        DateTime?
   note          String?
   deposit       Int?
   depositStatus DepositStatus? @default(NEZAPLACENO)

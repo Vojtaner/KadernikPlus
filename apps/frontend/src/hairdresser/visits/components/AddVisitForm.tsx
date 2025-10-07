@@ -15,7 +15,9 @@ import { firstNameValidationrule, phoneValidationRule } from '../../entity'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)
-  const { control, resetField, handleSubmit } = useForm<CreateVisitType>({ defaultValues: { depositRequired: false } })
+  const { control, resetField, handleSubmit, setValue } = useForm<CreateVisitType>({
+    defaultValues: { depositRequired: false },
+  })
   const date = useWatch({ control, name: 'date' })
   const intl = useIntl()
   const depositRequired = useWatch({ control, name: 'depositRequired' })
@@ -33,6 +35,7 @@ export const useAddVisitForm = () => {
     title: intl.formatMessage({ defaultMessage: 'Objednat', id: 'addVisit.order' }),
     control,
     isNewClient,
+    setValue,
     setIsNewClient,
     resetField,
     depositRequired,
@@ -46,13 +49,14 @@ type AddVisitFormProps = Omit<ReturnType<typeof useAddVisitForm>, 'handleSubmit'
 
 const AddVisitForm = (props: AddVisitFormProps) => {
   const intl = useIntl()
-  const { control, isNewClient, setIsNewClient, resetField, depositRequired, visitsOnSelectedDate } = props
+  const { control, isNewClient, setValue, setIsNewClient, resetField, depositRequired, visitsOnSelectedDate } = props
 
   return (
     <>
       <BasicDateTimePicker
         fieldPath="date"
         control={control}
+        onAccept={(date) => date && setValue('dateTo', date)}
         rules={{
           validate: (value) => {
             if (!value) {
@@ -72,6 +76,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
           },
         }}
       />
+      <BasicDateTimePicker fieldPath="dateTo" control={control} label="Datum do" />
       <Stack direction="row" spacing={1} alignItems="center">
         {!isNewClient && (
           <Box sx={{ flex: 9 }}>
