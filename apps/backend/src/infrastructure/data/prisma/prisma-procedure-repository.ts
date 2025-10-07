@@ -2,8 +2,13 @@ import { Prisma, PrismaClient } from ".prisma/client";
 import {
   ProcedureCreateData,
   ProcedureRepositoryPort,
+  StockAllowanceProcedureType,
 } from "../../../application/ports/procedure-repository";
 import prisma from "./prisma";
+import logRepositoryDb from "./prisma-log-repository";
+import visitRepositoryDb from "./prisma-visit-repository";
+import dayjs from "dayjs";
+import stockItemRepositoryDb from "./prisma-stock-item-repository";
 
 export const fullProcedureInclude = Prisma.validator<Prisma.ProcedureInclude>()(
   {
@@ -23,11 +28,19 @@ const createProcedureRepositoryDb = (
   prisma: PrismaClient
 ): ProcedureRepositoryPort => ({
   findByVisitId: async (visitId: string) => {
-    return prisma.procedure.findMany({
+    const procedures = await prisma.procedure.findMany({
       where: { visitId },
       orderBy: { stepOrder: "asc" },
       include: { stockAllowances: { include: { stockItem: true } } },
     });
+
+    return procedures.map((proc) => ({
+      ...proc,
+      stockAllowances: proc.stockAllowances.map((sa) => ({
+        ...sa,
+        stockAllowanceId: sa.id,
+      })),
+    }));
   },
 
   addOrUpdate: async (data: ProcedureCreateData) => {
@@ -48,16 +61,12 @@ const createProcedureRepositoryDb = (
         throw new Error("Procedura nenalezena.");
       }
 
-      const existingIds = new Set(existing.stockAllowances.map((s) => s.id));
-      const incomingIds = new Set(
-        stockAllowances.map((s) => s.stockAllowanceId).filter(Boolean)
-      );
+      const visit = await visitRepositoryDb.findById(visitId);
 
-      const toCreate = stockAllowances.filter((s) => !s.stockAllowanceId);
-      const toUpdate = stockAllowances.filter(
-        (s) => s.stockAllowanceId && existingIds.has(s.stockAllowanceId)
+      const diff = getStockAllowanceDiff(
+        existing.stockAllowances,
+        stockAllowances
       );
-      const toDelete = [...existingIds].filter((id) => !incomingIds.has(id));
 
       return prisma.$transaction(async (tx) => {
         const stockItemIds = stockAllowances.map(
@@ -81,8 +90,8 @@ const createProcedureRepositoryDb = (
             description,
             visit: { connect: { id: visitId } },
             stockAllowances: {
-              deleteMany: { id: { in: toDelete } },
-              update: toUpdate.map((s) => ({
+              deleteMany: { id: { in: diff.toDelete.map((s) => s.id!) } },
+              update: diff.toUpdate.map((s) => ({
                 where: { id: s.stockAllowanceId! },
                 data: {
                   stockItemId: s.stockItemId,
@@ -91,7 +100,7 @@ const createProcedureRepositoryDb = (
                   stockItemName: stockItemNameMap.get(s.stockItemId) ?? "",
                 },
               })),
-              create: toCreate.map((s) => ({
+              create: diff.toCreate.map((s) => ({
                 stockItemId: s.stockItemId,
                 quantity: s.quantity,
                 avgUnitPrice: stockItemPriceMap.get(s.stockItemId) ?? 0,
@@ -104,54 +113,102 @@ const createProcedureRepositoryDb = (
           include: { stockAllowances: { include: { stockItem: true } } },
         });
 
-        if (toDelete.length > 0) {
-          const deletedItems = existing.stockAllowances.filter((sa) =>
-            toDelete.includes(sa.id)
-          );
+        await Promise.all(
+          diff.toDelete.map(async (item) => {
+            await adjustStockItem(tx, item.stockItemId, Number(item.quantity));
 
-          await Promise.all(
-            deletedItems.map(async (item) => {
+            const stockItem = await stockItemRepositoryDb.getStockItemById(
+              item.stockItemId,
+              userId
+            );
+
+            await logRepositoryDb.log({
+              userId,
+              action: "delete",
+              entityType: "stockItem",
+              entityId: item.stockItemId,
+              message: `Smazána položka procedury: Návštěva ${dayjs(
+                visit?.date
+              ).format("DD.MM.YYYY")}/${visit?.client?.lastName ?? ""} ${
+                item.stockItemName
+              }, množství: ${item.quantity}${stockItem?.unit}`,
+              metadata: { item },
+              teamId: teamMember.teamId,
+            });
+          })
+        );
+
+        await Promise.all(
+          diff.toUpdate.map(async (item) => {
+            const prev = existing.stockAllowances.find(
+              (sa) => sa.id === item.stockAllowanceId
+            );
+
+            if (!prev) {
+              return;
+            }
+
+            if (prev.stockItemId !== item.stockItemId) {
               await adjustStockItem(
                 tx,
-                item.stockItemId,
-                Number(item.quantity)
+                prev.stockItemId,
+                Number(prev.quantity)
               );
-            })
-          );
-        }
-
-        if (toUpdate.length > 0) {
-          await Promise.all(
-            toUpdate.map(async (item) => {
-              const prev = existing.stockAllowances.find(
-                (sa) => sa.id === item.stockAllowanceId
-              );
-              if (!prev) return;
-
-              if (prev.stockItemId !== item.stockItemId) {
-                await adjustStockItem(
-                  tx,
-                  prev.stockItemId,
-                  Number(prev.quantity)
-                );
-                await adjustStockItem(tx, item.stockItemId, -item.quantity);
-              } else {
-                const diff = item.quantity - Number(prev.quantity);
-                if (diff !== 0) {
-                  await adjustStockItem(tx, item.stockItemId, diff);
-                }
-              }
-            })
-          );
-        }
-
-        if (toCreate.length > 0) {
-          await Promise.all(
-            toCreate.map(async (item) => {
               await adjustStockItem(tx, item.stockItemId, -item.quantity);
-            })
-          );
-        }
+            } else {
+              const diffQty = item.quantity - Number(prev.quantity);
+              if (diffQty !== 0) {
+                await adjustStockItem(tx, item.stockItemId, diffQty);
+              }
+            }
+
+            const stockItem = await stockItemRepositoryDb.getStockItemById(
+              item.stockItemId,
+              userId
+            );
+
+            await logRepositoryDb.log({
+              userId,
+              action: "update",
+              entityType: "stockItem",
+              entityId: item.stockItemId,
+              message: `Upravena položka procedury: Návštěva ${dayjs(
+                visit?.date
+              ).format("DD.MM.YYYY")}/${visit?.client?.lastName ?? ""} ${
+                prev.stockItemName
+              } z hodnoty ${prev.quantity}${stockItem?.unit} na ${
+                item.quantity
+              }${stockItem?.unit}`,
+              metadata: { prev, item },
+              teamId: teamMember.teamId,
+            });
+          })
+        );
+
+        await Promise.all(
+          diff.toCreate.map(async (item) => {
+            await adjustStockItem(tx, item.stockItemId, -item.quantity);
+
+            const stockItem = await stockItemRepositoryDb.getStockItemById(
+              item.stockItemId,
+              userId
+            );
+
+            await logRepositoryDb.log({
+              userId,
+              action: "create",
+              entityType: "stockItem",
+              entityId: item.stockItemId,
+              message: `Přidána položka procedury: Návštěva ${dayjs(
+                visit?.date
+              ).format("DD.MM.YYYY")}/${visit?.client?.lastName ?? ""} ${
+                stockItem?.activeName
+              }, množství: ${item.quantity}${stockItem?.unit}`,
+              metadata: { item },
+              teamId: teamMember.teamId,
+            });
+          })
+        );
 
         return updated;
       });
@@ -198,6 +255,15 @@ const createProcedureRepositoryDb = (
         await Promise.all(
           stockAllowances.map(async (item) => {
             await adjustStockItem(tx, item.stockItemId, -Number(item.quantity));
+            await logRepositoryDb.log({
+              userId,
+              action: "create",
+              entityType: "stockItem",
+              entityId: item.stockItemId,
+              message: `Přidána zásobní položka: ${item.stockItemId} (${item.quantity})`,
+              metadata: { item },
+              teamId: teamMember.teamId,
+            });
           })
         );
       }
@@ -292,3 +358,29 @@ const computeStepOrder = async (visitId: string) => {
   });
   return lastStep ? lastStep.stepOrder + 1 : 1;
 };
+
+function getStockAllowanceDiff(
+  existing: StockAllowanceProcedureType[],
+  incoming: ProcedureCreateData["stockAllowances"] = []
+) {
+  const incomingIds = new Set(
+    incoming.map((s) => s.stockAllowanceId).filter(Boolean)
+  );
+  const toDelete = existing.filter((s) => s.id && !incomingIds.has(s.id!));
+
+  const toCreate = incoming.filter((s) => !s.stockAllowanceId);
+
+  const existingMap = new Map(existing.map((s) => [s.id, s]));
+  const toUpdate = incoming.filter((s) => {
+    if (!s.stockAllowanceId || !existingMap.has(s.stockAllowanceId))
+      return false;
+    const prev = existingMap.get(s.stockAllowanceId);
+    return (
+      prev &&
+      (prev.stockItemId !== s.stockItemId ||
+        Number(prev.quantity) !== Number(s.quantity))
+    );
+  });
+
+  return { toCreate, toUpdate, toDelete };
+}

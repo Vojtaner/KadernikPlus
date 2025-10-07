@@ -65,9 +65,10 @@ const createStockItemController = (dependencies: {
     CreateOrUpdateStockItemControllerType
   > = async (httpRequest) => {
     const data = httpRequest.body;
+    const userId = httpRequest.userId;
 
     const newOrUpdatedStockItem =
-      await dependencies.createOrUpdateStockItemUseCase.execute(data);
+      await dependencies.createOrUpdateStockItemUseCase.execute(data, userId);
 
     return {
       statusCode: 201,

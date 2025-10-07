@@ -1,6 +1,10 @@
 import { Prisma, PrismaClient, Stock, StockItem } from ".prisma/client";
 import { StockItemCreateData } from "../../../entities/stock-item";
-import { StockItemRepositoryPort } from "../../../application/ports/stock-item-repository";
+import {
+  StockItemOperation,
+  StockItemRepositoryPort,
+  StockItemWithOperation,
+} from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
@@ -18,9 +22,10 @@ const createStockItemRepositoryDb = (
         data: { isActive: false },
       });
     },
+
     createOrUpdateStockItem: async (
       data: StockItemCreateData
-    ): Promise<StockItem | undefined> => {
+    ): Promise<StockItemWithOperation> => {
       try {
         const isPurchase = isPurchaseStockItem(data);
 
@@ -49,19 +54,23 @@ const createStockItemRepositoryDb = (
             updatedQuantity > 0 ? updatedTotalPrice / updatedQuantity : 0;
 
           if (existing) {
-            return await prismaStockRepository.stockItem.update({
-              where: { id },
-              data: {
-                quantity: new Prisma.Decimal(updatedQuantity),
-                totalPrice: new Prisma.Decimal(updatedTotalPrice),
-                avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
-                packageCount: new Prisma.Decimal(updatedPackageCount),
-                lastPackageQuantity: new Prisma.Decimal(quantity),
-              },
-            });
-          }
+            const purchasedStockItem =
+              await prismaStockRepository.stockItem.update({
+                where: { id },
+                data: {
+                  quantity: new Prisma.Decimal(updatedQuantity),
+                  totalPrice: new Prisma.Decimal(updatedTotalPrice),
+                  avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
+                  packageCount: new Prisma.Decimal(updatedPackageCount),
+                  lastPackageQuantity: new Prisma.Decimal(quantity),
+                },
+              });
 
-          return;
+            return {
+              ...purchasedStockItem,
+              operation: StockItemOperation.PURCHASE,
+            };
+          }
         }
 
         if (data.id) {
@@ -80,7 +89,7 @@ const createStockItemRepositoryDb = (
           const avgPrice =
             updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
 
-          return await prisma.stockItem.update({
+          const updatedStockItem = await prisma.stockItem.update({
             where: { id },
             data: {
               itemName,
@@ -94,6 +103,11 @@ const createStockItemRepositoryDb = (
               stockId,
             },
           });
+
+          return {
+            ...updatedStockItem,
+            operation: StockItemOperation.UPDATE,
+          };
         }
 
         const {
@@ -120,7 +134,7 @@ const createStockItemRepositoryDb = (
           );
         }
 
-        return await prismaStockRepository.stockItem.create({
+        const createdStockItem = await prismaStockRepository.stockItem.create({
           data: {
             itemName,
             unit,
@@ -135,6 +149,11 @@ const createStockItemRepositoryDb = (
             stock: { connect: { id: stockId } },
           },
         });
+
+        return {
+          ...createdStockItem,
+          operation: StockItemOperation.CREATE,
+        };
       } catch (err) {
         if (
           err instanceof PrismaClientKnownRequestError &&
@@ -288,7 +307,6 @@ const createStockItemRepositoryDb = (
           },
         },
       });
-
       return stockItemsByStock;
     },
   };

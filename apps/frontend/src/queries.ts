@@ -26,23 +26,7 @@ export const useSubscriptionQuery = () => {
   return useQuery<Subscription | ''>({
     queryKey: ['subscription'],
     queryFn: () => getSubscription(axios),
-  })
-}
-
-export const useUserDataQuery = () => {
-  const axios = useAxios()
-
-  return useQuery<UserForm>({
-    queryKey: ['user'],
-    queryFn: () => getUser(axios),
-  })
-}
-export const useInvoicesQuery = () => {
-  const axios = useAxios()
-
-  return useQuery<Invoice[]>({
-    queryKey: ['invoices'],
-    queryFn: () => getInvoices(axios),
+    refetchOnMount: false,
   })
 }
 
@@ -108,6 +92,14 @@ export const useCancelSubscriptionMutation = () => {
   })
 }
 
+export const useUserDataQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<UserForm>({
+    queryKey: ['user'],
+    queryFn: () => getUser(axios),
+  })
+}
 export const useUpdateUserMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
@@ -142,6 +134,15 @@ export const useDeleteUserMutation = () => {
       addSnackBarMessage({ text: error.message, type: 'error' })
       console.error(error)
     },
+  })
+}
+
+export const useInvoicesQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Invoice[]>({
+    queryKey: ['invoices'],
+    queryFn: () => getInvoices(axios),
   })
 }
 

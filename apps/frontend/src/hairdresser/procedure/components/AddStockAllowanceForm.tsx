@@ -21,7 +21,7 @@ type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
   remove: UseFieldArrayRemove
   fields: AddProcedureStockAllowanceType
   readonlyAllowances: (Omit<StockAllowance, 'id' | 'quantity'> & {
-    id: string
+    stockAllowanceId: string
     quantity: number | null
     stockItemName?: string
     avgUnitPrice?: string
@@ -49,9 +49,9 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           const stockItemQuantityCritical = updatedStockQuantity && updatedStockQuantity < stockItem.threshold
 
           return (
-            <Stack key={field.id} spacing={0.5}>
+            <Stack key={field.stockAllowanceId} spacing={0.5}>
               <Grid container spacing={2} alignItems="center">
-                <Controller name={`stockAllowances.${index}.id`} control={control} render={() => <></>} />
+                <Controller name={`stockAllowances.${index}.stockAllowanceId`} control={control} render={() => <></>} />
                 <Grid size={7}>
                   <StockItemsAutoComplete fieldPath={`stockAllowances.${index}.stockItemId`} control={control} />
                 </Grid>
@@ -87,7 +87,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
         }
       })}
       {readonlyAllowances.map((stockAllowance) => (
-        <Stack key={stockAllowance.id} spacing={0.5}>
+        <Stack key={stockAllowance.stockAllowanceId} spacing={0.5}>
           <Grid container spacing={2} alignItems="center">
             <Grid size={7}>
               <TextField label="Položka" readonly defaultValue={stockAllowance.stockItemName} fullWidth />
@@ -107,7 +107,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           </Typography>
         </Stack>
       ))}
-      <Button onClick={() => append({ stockItemId: '', quantity: null, id: '' })} variant="outlined">
+      <Button onClick={() => append({ stockItemId: '', quantity: null, stockAllowanceId: '' })} variant="outlined">
         Přidat materiál
       </Button>
     </Stack>

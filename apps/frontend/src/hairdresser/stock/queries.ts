@@ -32,6 +32,7 @@ export const useCreateOrUpdateStockItemMutation = (
     onSuccess(data, variables, context) {
       options?.onSuccess?.(data, variables, context)
       queryClient.invalidateQueries({ queryKey: ['stockItems'] })
+      queryClient.invalidateQueries({ queryKey: ['logs'] })
       addSnackBarMessage({ text: 'Materiál úspěšně přidán/upraven.', type: 'success' })
     },
     onError: (error) => {
@@ -65,6 +66,7 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
     queryFn: () => {
       return getStockItems(axios, stockId ?? '')
     },
+    refetchOnMount: false,
   })
 }
 export const useStockAllowancesQuery = ({

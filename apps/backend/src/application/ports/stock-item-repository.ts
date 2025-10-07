@@ -4,7 +4,7 @@ import { Prisma, Stock, StockItem } from "@prisma/client";
 export type StockItemRepositoryPort = {
   createOrUpdateStockItem(
     data: StockItemCreateData | StockItemBuyData
-  ): Promise<StockItem | undefined>;
+  ): Promise<StockItemWithOperation | undefined>;
   getStockItemById(
     stockItemId: string,
     userId: string
@@ -18,4 +18,14 @@ export type StockItemRepositoryPort = {
       stockItems: StockItem[];
     })[]
   >;
+};
+
+export enum StockItemOperation {
+  PURCHASE = "purchase",
+  CREATE = "create",
+  UPDATE = "update",
+}
+
+export type StockItemWithOperation = StockItem & {
+  operation: StockItemOperation;
 };

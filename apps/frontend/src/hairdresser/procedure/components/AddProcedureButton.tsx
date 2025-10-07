@@ -18,7 +18,7 @@ import { addPropsToReactElement } from '../../entity'
 import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 
 export type AddProcedureStockAllowanceType = (Omit<StockAllowance, 'id' | 'quantity'> & {
-  id: string
+  stockAllowanceId: string
   quantity: number | null
   stockItemName?: string
   avgUnitPrice?: string
@@ -78,7 +78,6 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
     if (defaultValues) {
       const stockAllowancesDefault = mapDefaultStockAlowances(editableAllowances)
       replace(stockAllowancesDefault)
-      reset({ stockAllowances: stockAllowancesDefault, description: defaultValues.description })
     }
 
     setOpen(true)

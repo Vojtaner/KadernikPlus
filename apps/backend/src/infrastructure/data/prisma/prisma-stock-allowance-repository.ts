@@ -28,7 +28,6 @@ const createStockAllowanceRepositoryDb = (
           user: { select: { name: true } },
         },
       });
-
       return stockAllowances;
     },
   };
