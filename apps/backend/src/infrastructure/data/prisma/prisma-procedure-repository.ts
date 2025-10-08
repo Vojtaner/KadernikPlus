@@ -50,6 +50,7 @@ const createProcedureRepositoryDb = (
     if (!teamMember) {
       throw new Error("Nepodařilo se identifikovat váš tým.");
     }
+    const visit = await visitRepositoryDb.findById(visitId);
 
     if (id) {
       const existing = await prisma.procedure.findUnique({
@@ -60,8 +61,6 @@ const createProcedureRepositoryDb = (
       if (!existing) {
         throw new Error("Procedura nenalezena.");
       }
-
-      const visit = await visitRepositoryDb.findById(visitId);
 
       const diff = getStockAllowanceDiff(
         existing.stockAllowances,
@@ -255,12 +254,22 @@ const createProcedureRepositoryDb = (
         await Promise.all(
           stockAllowances.map(async (item) => {
             await adjustStockItem(tx, item.stockItemId, -Number(item.quantity));
+
+            const stockItem = await stockItemRepositoryDb.getStockItemById(
+              item.stockItemId,
+              userId
+            );
+
             await logRepositoryDb.log({
               userId,
               action: "create",
               entityType: "stockItem",
               entityId: item.stockItemId,
-              message: `Přidána zásobní položka: ${item.stockItemId} (${item.quantity})`,
+              message: `Přidána položka procedury: Návštěva ${dayjs(
+                visit?.date
+              ).format("DD.MM.YYYY")}/${visit?.client?.lastName ?? ""} ${
+                stockItem?.activeName
+              }, množství: ${item.quantity}${stockItem?.unit}`,
               metadata: { item },
               teamId: teamMember.teamId,
             });
