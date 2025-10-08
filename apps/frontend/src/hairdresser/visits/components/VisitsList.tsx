@@ -197,7 +197,6 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'date',
     headerName: 'Čas',
     width: 45,
-    hideSortIcons: false,
     display: 'flex',
     minWidth: 20,
     renderCell: (params) =>

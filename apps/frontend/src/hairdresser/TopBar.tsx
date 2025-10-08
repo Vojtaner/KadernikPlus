@@ -8,6 +8,7 @@ import { useAppNavigate } from '../hooks'
 import { useDispatch } from 'react-redux'
 import { toggleDrawer } from '../store/appUiSlice'
 import AppTheme from '../AppTheme'
+import { useUserDataQuery } from '../queries'
 
 type TopBarProps = {
   onActiveSearch: (state: boolean) => void
@@ -17,6 +18,8 @@ type TopBarProps = {
 const TopBar = (props: TopBarProps) => {
   const { onActiveSearch, isSearchActive } = props
   const dispatch = useDispatch()
+  const { data: userData } = useUserDataQuery()
+  const colorScheme = userData?.colorScheme ?? '#c81f5b'
 
   return (
     <Stack
@@ -29,7 +32,7 @@ const TopBar = (props: TopBarProps) => {
         paddingBottom: isSearchActive ? '0px' : '8px',
         top: 0,
         transition: 'padding-bottom 0.7s ease',
-        background: '#c81f5b',
+        background: colorScheme,
       }}>
       <Stack direction="column" spacing={1}>
         <Stack direction="row" spacing={2}>
@@ -134,6 +137,7 @@ type AppLogoProps = { sx?: SxProps<Theme> }
 export const AppLogo = (props: AppLogoProps) => {
   const { sx } = props
   const navigate = useAppNavigate()
+  const { data: userData } = useUserDataQuery()
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
@@ -149,7 +153,9 @@ export const AppLogo = (props: AppLogoProps) => {
         }}>
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
         <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
-          <img width="100px" src={logo} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
+          {userData?.colorScheme ? null : (
+            <img width="100px" src={logo} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
+          )}
         </div>
       </Box>
     </Stack>

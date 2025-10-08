@@ -40,7 +40,7 @@ const createUserRepositoryDb = (
   },
   update: async (
     userId: string,
-    data: { bankAccount: string }
+    data: { bankAccount: string; colorScheme: string }
   ): Promise<User | null> => {
     const user = await prismaUserRepository.user.update({
       where: { id: userId },
