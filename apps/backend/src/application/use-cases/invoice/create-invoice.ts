@@ -38,11 +38,11 @@ export const createCreateInvoiceUseCase = (dependencies: {
       status: InvoiceStatus.PAID,
       issuedAt: new Date(),
       paymentId: payment.id,
-      notes: `Faktura za předplatné typu ${
+      notes: `Faktura za predplatné typu ${
         subscription.plan
       }, platného do ${dayjs(subscription.endDate).format(
         "DD/MM/YYYY"
-      )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
+      )}. Predplatné se automaticky obnoví. Uživatel muže predplatné zrušit ve svém profilu.`,
     });
   },
 });

@@ -72,6 +72,17 @@ const InvoicePdf = (props: { invoice: Invoice }) => {
 
         <View style={styles.section}>
           <Text>
+            <Text style={styles.label}>Obchodník: </Text>
+            Vojtěch Laurin
+          </Text>
+          <Text>
+            <Text style={styles.label}>IČO: </Text>
+            06380298
+          </Text>
+        </View>
+
+        <View style={styles.section}>
+          <Text>
             <Text style={styles.label}>Zákazník: </Text>
             {invoice.customerName}
           </Text>
