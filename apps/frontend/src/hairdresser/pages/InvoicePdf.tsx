@@ -1,4 +1,4 @@
-import { Page, Text, Document, StyleSheet, pdf, View, Image } from '@react-pdf/renderer'
+import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
 import type { Invoice } from '../entity'
 import saveAs from 'file-saver'
 
@@ -57,6 +57,12 @@ const styles = StyleSheet.create({
   tableCell: {
     color: '#000',
   },
+  text: { fontFamily: 'Roboto', fontSize: 14 },
+})
+
+Font.register({
+  family: 'Roboto',
+  src: '/fonts/Roboto-Regular.ttf', // put in public/fonts/
 })
 
 const InvoicePdf = (props: { invoice: Invoice }) => {
