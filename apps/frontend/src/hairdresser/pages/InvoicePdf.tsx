@@ -1,6 +1,7 @@
 import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
 import type { Invoice } from '../entity'
 import saveAs from 'file-saver'
+import Roboto from '../../../public/assets/fonts/Roboto-Regular.ttf'
 
 const styles = StyleSheet.create({
   page: {
@@ -62,7 +63,7 @@ const styles = StyleSheet.create({
 
 Font.register({
   family: 'Roboto',
-  src: '/fonts/Roboto-Regular.ttf', // put in public/fonts/
+  src: Roboto,
 })
 
 const InvoicePdf = (props: { invoice: Invoice }) => {
