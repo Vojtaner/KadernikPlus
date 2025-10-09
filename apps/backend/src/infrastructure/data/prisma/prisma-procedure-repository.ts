@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from ".prisma/client";
+import { Prisma, PrismaClient, StockAllowance } from ".prisma/client";
 import {
   ProcedureCreateData,
   ProcedureRepositoryPort,
@@ -9,6 +9,8 @@ import logRepositoryDb from "./prisma-log-repository";
 import visitRepositoryDb from "./prisma-visit-repository";
 import dayjs from "dayjs";
 import stockItemRepositoryDb from "./prisma-stock-item-repository";
+import { httpError } from "../../../adapters/express/httpError";
+import { it } from "node:test";
 
 export const fullProcedureInclude = Prisma.validator<Prisma.ProcedureInclude>()(
   {
@@ -42,9 +44,22 @@ const createProcedureRepositoryDb = (
       })),
     }));
   },
+  /*
+   1. Chodí seznam stockAllowance, buď existují nebo ne.
+   2. Pokud existují upravím to, pokud ne vytvořím to, pokud k dané proceduře je něco navíc vymažu to.
+   3. Natáhnu proceduru stockallowances.
+   4. 
+  */
 
   addOrUpdate: async (data: ProcedureCreateData) => {
-    const { id, userId, visitId, description, stockAllowances = [] } = data;
+    const {
+      id: procedureId,
+      userId,
+      visitId,
+      description,
+      stockAllowances = [],
+    } = data;
+    console.log({ stockAllowances });
     const teamMember = await prisma.teamMember.findFirst({ where: { userId } });
 
     if (!teamMember) {
@@ -52,46 +67,50 @@ const createProcedureRepositoryDb = (
     }
     const visit = await visitRepositoryDb.findById(visitId);
 
-    if (id) {
-      const existing = await prisma.procedure.findUnique({
-        where: { id },
+    if (procedureId) {
+      const existingProcedure = await prisma.procedure.findUnique({
+        where: { id: procedureId },
         include: { stockAllowances: true },
       });
 
-      if (!existing) {
-        throw new Error("Procedura nenalezena.");
+      if (!existingProcedure) {
+        throw httpError("Procedura nenalezena.", 404);
       }
 
-      const diff = getStockAllowanceDiff(
-        existing.stockAllowances,
+      const { toCreate, toUpdate, toDelete } = diffStockAllowances(
+        existingProcedure.stockAllowances,
         stockAllowances
       );
 
       return prisma.$transaction(async (tx) => {
+        //nové změny a jeji sotckitemId
         const stockItemIds = stockAllowances.map(
           (stockAllowance) => stockAllowance.stockItemId
         );
+
+        //nalezeny skladové položky
         const stockItems = await tx.stockItem.findMany({
           where: { id: { in: stockItemIds } },
           select: { id: true, avgUnitPrice: true, itemName: true },
         });
 
         const stockItemPriceMap = new Map(
-          stockItems.map((si) => [si.id, si.avgUnitPrice])
+          stockItems.map((stockItem) => [stockItem.id, stockItem.avgUnitPrice])
         );
+
         const stockItemNameMap = new Map(
-          stockItems.map((si) => [si.id, si.itemName])
+          stockItems.map((stockItem) => [stockItem.id, stockItem.itemName])
         );
 
         const updated = await tx.procedure.update({
-          where: { id },
+          where: { id: procedureId },
           data: {
             description,
             visit: { connect: { id: visitId } },
             stockAllowances: {
-              deleteMany: { id: { in: diff.toDelete.map((s) => s.id!) } },
-              update: diff.toUpdate.map((s) => ({
-                where: { id: s.stockAllowanceId! },
+              deleteMany: { id: { in: toDelete.map((s) => s.id) } },
+              update: toUpdate.map((s) => ({
+                where: { id: s.id },
                 data: {
                   stockItemId: s.stockItemId,
                   quantity: s.quantity,
@@ -99,7 +118,7 @@ const createProcedureRepositoryDb = (
                   stockItemName: stockItemNameMap.get(s.stockItemId) ?? "",
                 },
               })),
-              create: diff.toCreate.map((s) => ({
+              create: toCreate.map((s) => ({
                 stockItemId: s.stockItemId,
                 quantity: s.quantity,
                 avgUnitPrice: stockItemPriceMap.get(s.stockItemId) ?? 0,
@@ -113,7 +132,7 @@ const createProcedureRepositoryDb = (
         });
 
         await Promise.all(
-          diff.toDelete.map(async (item) => {
+          toDelete.map(async (item) => {
             await adjustStockItem(tx, item.stockItemId, Number(item.quantity));
 
             const stockItem = await stockItemRepositoryDb.getStockItemById(
@@ -138,33 +157,36 @@ const createProcedureRepositoryDb = (
         );
 
         await Promise.all(
-          diff.toUpdate.map(async (item) => {
-            const prev = existing.stockAllowances.find(
-              (sa) => sa.id === item.stockAllowanceId
-            );
-
-            if (!prev) {
-              return;
-            }
-
-            if (prev.stockItemId !== item.stockItemId) {
-              await adjustStockItem(
-                tx,
-                prev.stockItemId,
-                Number(prev.quantity)
+          toUpdate.map(async (item) => {
+            const existingStockAllowance =
+              existingProcedure.stockAllowances.find(
+                (stockAllowance) => stockAllowance.id === item.id
               );
-              await adjustStockItem(tx, item.stockItemId, -item.quantity);
-            } else {
-              const diffQty = item.quantity - Number(prev.quantity);
-              if (diffQty !== 0) {
-                await adjustStockItem(tx, item.stockItemId, diffQty);
-              }
-            }
 
             const stockItem = await stockItemRepositoryDb.getStockItemById(
               item.stockItemId,
               userId
             );
+
+            if (!existingStockAllowance) {
+              return;
+            }
+
+            if (existingStockAllowance.stockItemId !== item.stockItemId) {
+              await adjustStockItem(
+                tx,
+                existingStockAllowance.stockItemId,
+                Number(existingStockAllowance.quantity)
+              );
+              await adjustStockItem(tx, item.stockItemId, -item.quantity);
+            } else {
+              const diffQuantity =
+                0 - item.quantity + Number(existingStockAllowance.quantity);
+
+              if (diffQuantity !== 0) {
+                await adjustStockItem(tx, item.stockItemId, diffQuantity);
+              }
+            }
 
             await logRepositoryDb.log({
               userId,
@@ -174,18 +196,18 @@ const createProcedureRepositoryDb = (
               message: `Upravena položka procedury: Návštěva ${dayjs(
                 visit?.date
               ).format("DD.MM.YYYY")}/${visit?.client?.lastName ?? ""} ${
-                prev.stockItemName
-              } z hodnoty ${prev.quantity}${stockItem?.unit} na ${
-                item.quantity
-              }${stockItem?.unit}`,
-              metadata: { prev, item },
+                existingStockAllowance.stockItemName
+              } z hodnoty ${existingStockAllowance.quantity}${
+                stockItem?.unit
+              } na ${item.quantity}${stockItem?.unit}`,
+              metadata: { existingStockAllowance, item },
               teamId: teamMember.teamId,
             });
           })
         );
 
         await Promise.all(
-          diff.toCreate.map(async (item) => {
+          toCreate.map(async (item) => {
             await adjustStockItem(tx, item.stockItemId, -item.quantity);
 
             const stockItem = await stockItemRepositoryDb.getStockItemById(
@@ -327,7 +349,9 @@ async function adjustStockItem(
     select: { quantity: true, totalPrice: true, packageCount: true },
   });
 
-  if (!stockItem) throw new Error(`Stock item ${stockItemId} not found`);
+  if (!stockItem) {
+    throw httpError(`Skladová položka ${stockItemId} nenalezena`, 404);
+  }
 
   const oldQuantity = Number(stockItem.quantity);
   const oldTotalPrice = Number(stockItem.totalPrice);
@@ -356,9 +380,7 @@ async function adjustStockItem(
 
   const updated = await tx.stockItem.findUnique({ where: { id: stockItemId } });
   if (!updated || Number(updated.quantity) < 0)
-    throw new Error(
-      `Skladová položka ${stockItemId} ${updated?.itemName} množství záporné!`
-    );
+    throw new Error(`Skladová položka ${updated?.itemName} množství záporné!`);
 }
 
 const computeStepOrder = async (visitId: string) => {
@@ -369,28 +391,57 @@ const computeStepOrder = async (visitId: string) => {
   return lastStep ? lastStep.stepOrder + 1 : 1;
 };
 
-function getStockAllowanceDiff(
-  existing: StockAllowanceProcedureType[],
-  incoming: ProcedureCreateData["stockAllowances"] = []
-) {
-  const incomingIds = new Set(
-    incoming.map((s) => s.stockAllowanceId).filter(Boolean)
-  );
-  const toDelete = existing.filter((s) => s.id && !incomingIds.has(s.id!));
+type ListStockAllowanceType = {
+  id: string;
+  quantity: number;
+  stockItemId: string;
+  stockItemName: string | null;
+};
 
-  const toCreate = incoming.filter((s) => !s.stockAllowanceId);
+const diffStockAllowances = (
+  existing: StockAllowance[],
+  modified: {
+    id: string;
+    stockItemId: string;
+    stockAllowanceId?: string;
+    quantity: number;
+    userId: string;
+  }[]
+) => {
+  const toCreate: Omit<ListStockAllowanceType, "stockItemName">[] = [];
+  const toUpdate: ListStockAllowanceType[] = [];
+  const toDelete: ListStockAllowanceType[] = [];
 
-  const existingMap = new Map(existing.map((s) => [s.id, s]));
-  const toUpdate = incoming.filter((s) => {
-    if (!s.stockAllowanceId || !existingMap.has(s.stockAllowanceId))
-      return false;
-    const prev = existingMap.get(s.stockAllowanceId);
-    return (
-      prev &&
-      (prev.stockItemId !== s.stockItemId ||
-        Number(prev.quantity) !== Number(s.quantity))
-    );
-  });
+  for (const item of existing) {
+    const match = modified.find((m) => m.stockAllowanceId === item.id);
 
-  return { toCreate, toUpdate, toDelete };
-}
+    if (!match) {
+      toDelete.push({
+        id: item.id,
+        quantity: Number(item.quantity),
+        stockItemId: item.stockItemId,
+        stockItemName: item.stockItemName,
+      });
+    } else if (match.quantity !== Number(item.quantity)) {
+      toUpdate.push({
+        id: item.id,
+        quantity: match.quantity,
+        stockItemId: match.stockItemId,
+        stockItemName: item.stockItemName,
+      });
+    }
+  }
+
+  for (const item of modified) {
+    const match = existing.find((e) => e.id === item.stockAllowanceId);
+    if (!match) {
+      toCreate.push({
+        id: item.id,
+        quantity: item.quantity,
+        stockItemId: item.stockItemId,
+      });
+    }
+  }
+  console.log({ toCreate, toDelete, toUpdate });
+  return { toCreate, toDelete, toUpdate };
+};
