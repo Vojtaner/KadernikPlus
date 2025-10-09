@@ -130,3 +130,5 @@ export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: D
 
   return '/api/visits'
 }
+
+export const getIsVisitInPast = (date: Date) => new Date(date).getTime() < Date.now()

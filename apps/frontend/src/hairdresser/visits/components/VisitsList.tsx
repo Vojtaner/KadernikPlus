@@ -11,7 +11,7 @@ import { FilterTableButton } from '../../pages/Consumption'
 import Loader from '../../pages/Loader'
 import { Paths } from '../../../routes/AppRoutes'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import { DepositStatus, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
+import { DepositStatus, getIsVisitInPast, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
@@ -52,7 +52,7 @@ const VisitsList = (props: VisitListProps) => {
     return <Loader />
   }
 
-  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
+  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus && getIsVisitInPast(visit.date))
 
   const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
     (visit) => visit.visitStatus && getMissingStockAllowanceError(visit.procedures)
