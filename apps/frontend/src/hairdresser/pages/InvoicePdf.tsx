@@ -3,11 +3,16 @@ import type { Invoice } from '../entity'
 import saveAs from 'file-saver'
 import Roboto from '../../../public/assets/fonts/Roboto-Regular.ttf'
 
+Font.register({
+  family: 'Roboto',
+  src: Roboto,
+})
+
 const styles = StyleSheet.create({
   page: {
     backgroundColor: '#ffffff',
     padding: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Roboto',
   },
   header: {
     flexDirection: 'row',
@@ -59,11 +64,6 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   text: { fontFamily: 'Roboto', fontSize: 14 },
-})
-
-Font.register({
-  family: 'Roboto',
-  src: Roboto,
 })
 
 const InvoicePdf = (props: { invoice: Invoice }) => {
