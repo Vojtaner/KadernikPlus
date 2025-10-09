@@ -35,9 +35,10 @@ const Stock = () => {
 export default Stock
 
 const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
-  { field: 'itemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
+  { field: 'itemName', flex: 3, headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'price',
+    flex: 2,
     headerName: 'Cena',
     disableColumnMenu: true,
     width: 70,
@@ -47,6 +48,7 @@ const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   },
   {
     field: 'packageCount',
+    flex: 3,
     headerName: 'Bal./Min.',
     disableColumnMenu: true,
     width: 85,
@@ -62,6 +64,7 @@ const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   {
     field: 'quantity',
     headerName: 'Množ.',
+    flex: 2,
     width: 75,
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -73,6 +76,7 @@ const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   {
     field: 'edit',
     headerName: '',
+    flex: 2,
     width: 100,
     editable: false,
     display: 'flex',

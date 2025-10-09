@@ -74,11 +74,12 @@ type ShoppingListItemType = { id: string; item: string; price: number; amount: n
 
 const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
   return [
-    { field: 'item', headerName: 'Položka', disableColumnMenu: true, minWidth: 130 },
+    { field: 'item', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 130 },
     {
       field: 'price',
       headerName: 'Cena',
       disableColumnMenu: true,
+      flex: 3,
       display: 'flex',
       minWidth: 80,
       renderCell: (params) => formatToCZK(params.row.price),
@@ -86,6 +87,7 @@ const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
     {
       field: 'amount',
       headerName: 'Množství',
+      flex: 3,
       minWidth: 90,
       disableColumnMenu: true,
       renderCell: (params) => `${params.value} ks`,
@@ -93,6 +95,7 @@ const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
     {
       field: 'edit',
       headerName: '',
+      flex: 3,
       width: 20,
       editable: false,
       display: 'flex',

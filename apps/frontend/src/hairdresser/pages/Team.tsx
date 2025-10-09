@@ -66,11 +66,11 @@ const createColumns = (
   navigate: (path: string) => void,
   allRows: (TeamSettings & { userId: string })[]
 ): GridColDef<(TeamSettings & { userId: string })[][number]>[] => [
-  { field: 'name', headerName: 'Uživatel', minWidth: 110, disableColumnMenu: true },
-
+  { field: 'name', headerName: 'Uživatel', flex: 6, minWidth: 110, disableColumnMenu: true },
   {
     field: 'canAccessStocks',
     headerName: 'Sklad',
+    flex: 6,
     width: 85,
     disableColumnMenu: true,
     renderCell: (params) => (

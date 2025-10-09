@@ -33,10 +33,11 @@ export default PriceList
 
 const createColumns = (): GridColDef<Service[][number]>[] => {
   return [
-    { field: 'serviceName', headerName: 'Položka', disableColumnMenu: true, minWidth: 160 },
+    { field: 'serviceName', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 160 },
     {
       field: 'basePrice',
       headerName: 'Cena',
+      flex: 3,
       disableColumnMenu: true,
       width: 120,
       renderCell: (params) => `${params.value},00 Kč`,
@@ -52,6 +53,7 @@ const createColumns = (): GridColDef<Service[][number]>[] => {
       field: 'edit',
       headerName: '',
       width: 20,
+      flex: 3,
       editable: false,
       display: 'flex',
       disableColumnMenu: true,
@@ -78,8 +80,3 @@ const createColumns = (): GridColDef<Service[][number]>[] => {
     },
   ]
 }
-// id: string
-// serviceName: string
-// basePrice: number
-// userId?: string
-// teamId?: string

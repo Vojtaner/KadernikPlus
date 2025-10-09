@@ -198,6 +198,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     headerName: 'Čas',
     width: 45,
     display: 'flex',
+    flex: 1,
     minWidth: 20,
     renderCell: (params) =>
       params.row.isHeader ? (
@@ -225,6 +226,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
+    flex: 3,
     minWidth: 55,
     renderCell: (params) =>
       !params.row.isHeader && (
@@ -244,12 +246,14 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'serviceName',
     headerName: 'Účes',
     minWidth: 70,
+    flex: 3,
     width: 150,
   },
   {
     field: 'visitState',
     headerName: 'Stav',
     width: 70,
+    flex: 3,
     display: 'flex',
     editable: false,
     renderCell: (params) => {
@@ -270,6 +274,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'visitDetailButton',
     headerName: 'Detail',
     width: 10,
+    flex: 2,
     editable: false,
     renderCell: (params) => {
       if (!params.row.isHeader && params.row.clientId) {

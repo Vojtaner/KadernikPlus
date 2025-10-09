@@ -354,10 +354,11 @@ async function adjustStockItem(
     },
   });
 
-  // Optional: check consistency
   const updated = await tx.stockItem.findUnique({ where: { id: stockItemId } });
   if (!updated || Number(updated.quantity) < 0)
-    throw new Error(`Stock item ${stockItemId} quantity negative!`);
+    throw new Error(
+      `Skladová položka ${stockItemId} ${updated?.itemName} množství záporné!`
+    );
 }
 
 const computeStepOrder = async (visitId: string) => {
