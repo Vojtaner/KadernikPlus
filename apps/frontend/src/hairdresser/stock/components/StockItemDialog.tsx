@@ -5,6 +5,8 @@ import { Button } from '@mui/material'
 import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
 import StockItemForm, { useStockItemForm } from './StockItemForm'
 import { addPropsToReactElement } from '../../entity'
+import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
+import FullscreenImage from '../../FullScreenImage'
 
 type StockItemDialogProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
@@ -62,6 +64,7 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
       handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
+          <FullscreenImage src={StockTutorial} />
           <Button onClick={handleClose}>
             <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
@@ -71,14 +74,16 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
         </>
       }
       formFields={
-        <StockItemForm
-          control={control}
-          isPurchaseStockItem={isPurchaseStockItem}
-          setIsPurchaseStockItem={setIsPurchaseStockItem}
-          formUsagePurpose={formUsagePurpose}
-          getValues={getValues}
-          stockItem={{ lastPackageQuantity, unit, avgUnitPrice }}
-        />
+        <>
+          <StockItemForm
+            control={control}
+            isPurchaseStockItem={isPurchaseStockItem}
+            setIsPurchaseStockItem={setIsPurchaseStockItem}
+            formUsagePurpose={formUsagePurpose}
+            getValues={getValues}
+            stockItem={{ lastPackageQuantity, unit, avgUnitPrice }}
+          />
+        </>
       }
       onOpenButton={addPropsToReactElement(openButton, {
         onClick: (e: React.MouseEvent) => {
