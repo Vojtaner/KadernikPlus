@@ -75,17 +75,21 @@ export const createPaymentController = (dependencies: {
     };
   const getPaymentByRefIdController: PaymentControllerType["getPaymentByRefIdController"] =
     async (httpRequests) => {
-      const userId = httpRequests.userId;
+      try {
+        const userId = httpRequests.userId;
 
-      const payment = await dependencies.getPaymentByRefIdUseCase.execute(
-        userId
-      );
+        const payment = await dependencies.getPaymentByRefIdUseCase.execute(
+          userId
+        );
 
-      if (!payment) {
-        return { statusCode: 200, body: null };
+        if (!payment) {
+          return { statusCode: 204, body: null };
+        }
+
+        return { statusCode: 200, body: payment };
+      } catch (err) {
+        throw httpError("Platbu se nepodařilo najít.", 500);
       }
-
-      return { statusCode: 200, body: payment };
     };
   return {
     updatePushNotificationPaymentController,

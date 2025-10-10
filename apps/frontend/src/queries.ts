@@ -85,8 +85,6 @@ export const useImportPaymentQuery = () => {
   return useQuery<Payment | null>({
     queryKey: ['importPayment'],
     queryFn: () => getPayment(axios),
-    refetchOnMount: false,
-    staleTime: 'static',
   })
 }
 
@@ -107,6 +105,7 @@ export const useImportPaymentMutation = () => {
     mutationFn: async (data) => postCreateImportPayment(axios, data),
     onSuccess: (data) => {
       addSnackBarMessage({ text: 'Platba založena', type: 'success' })
+      queryClient.invalidateQueries({ queryKey: ['importPayment'] })
       window.location.assign(data.redirect)
     },
     onError: (error) => {
