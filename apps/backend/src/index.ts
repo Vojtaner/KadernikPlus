@@ -47,8 +47,8 @@ app.get("/debug", () => {
 });
 app.get("/debug/prisma", async (req, res) => {
   try {
-    const users = await prisma.user.findUnique({
-      where: { id: "not_exisitng_id" },
+    const users = await prisma.user.create({
+      data: { email: "vojtech.laurin@email.com", name: "Vojta" },
     });
 
     if (!users) {
@@ -75,7 +75,6 @@ app.use(cors());
 
 // app.use(cors({ origin: checkCors, credentials: true }));
 app.use(express.json());
-app.use(Sentry.expressErrorHandler());
 
 app.get("/cors-origin-test", (req, res) => {
   res.json({ message: "CORS setup working ✅" });
@@ -114,8 +113,8 @@ app.use("/api/stock-allowance", stockAllowanceRoutes);
 app.use("/api/subscription", subscriptionRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/invoices", invoiceRouter);
+app.use(Sentry.expressErrorHandler());
 
-Sentry.setupExpressErrorHandler(app);
 app.use(errorHandler);
 
 app.get("/metrics", async (req, res) => {
