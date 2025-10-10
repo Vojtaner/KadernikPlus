@@ -5,8 +5,8 @@ import { Button } from '@mui/material'
 import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
 import StockItemForm, { useStockItemForm } from './StockItemForm'
 import { addPropsToReactElement } from '../../entity'
-import FullscreenImage from '../../FullScreenImage'
 import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
+import FullScreenImage from '../../FullscreenImage'
 
 type StockItemDialogProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
@@ -64,7 +64,7 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
       handleSubmit={() => handleSubmit(onSubmit)}
       actions={
         <>
-          <FullscreenImage src={StockTutorial} />
+          <FullScreenImage src={StockTutorial} />
           <Button onClick={handleClose}>
             <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
