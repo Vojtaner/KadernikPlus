@@ -34,6 +34,7 @@ import {
 import invoiceRouter from "./routes/invoice-routes";
 import rateLimiter from "./utils/rateLimiter";
 import { checkCors } from "./utils/checkCors";
+import { httpError } from "./adapters/express/httpError";
 
 dotenv.config();
 
@@ -43,6 +44,21 @@ const PORT = getEnvVar("PORT") || 3000;
 app.set("trust proxy", 1); //backend běží za proxy a express neduvěřuje, nyní ano chyba X-forwarded-future*
 app.get("/debug", () => {
   throw new Error("Test Sentry");
+});
+app.get("/debug/prisma", async (req, res) => {
+  try {
+    const users = await prisma.user.findUnique({
+      where: { id: "not_exisitng_id" },
+    });
+
+    if (!users) {
+      throw httpError("Error prisma test zachycen!", 404);
+    }
+
+    res.json({ users });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || "Internal Server Error" });
+  }
 });
 
 const jwtCheck = auth({
