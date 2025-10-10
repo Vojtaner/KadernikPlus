@@ -21,6 +21,7 @@ import AddServiceItemButton from '../hairdresser/service/components/AddServiceIt
 import { APP_LAYOUT_WIDTH } from './entity'
 import { useUserDataQuery } from '../queries'
 
+
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
