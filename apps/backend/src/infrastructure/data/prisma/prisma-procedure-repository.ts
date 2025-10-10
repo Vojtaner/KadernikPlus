@@ -10,7 +10,6 @@ import visitRepositoryDb from "./prisma-visit-repository";
 import dayjs from "dayjs";
 import stockItemRepositoryDb from "./prisma-stock-item-repository";
 import { httpError } from "../../../adapters/express/httpError";
-import { it } from "node:test";
 
 export const fullProcedureInclude = Prisma.validator<Prisma.ProcedureInclude>()(
   {
@@ -44,13 +43,6 @@ const createProcedureRepositoryDb = (
       })),
     }));
   },
-  /*
-   1. Chodí seznam stockAllowance, buď existují nebo ne.
-   2. Pokud existují upravím to, pokud ne vytvořím to, pokud k dané proceduře je něco navíc vymažu to.
-   3. Natáhnu proceduru stockallowances.
-   4. 
-  */
-
   addOrUpdate: async (data: ProcedureCreateData) => {
     const {
       id: procedureId,
@@ -59,7 +51,7 @@ const createProcedureRepositoryDb = (
       description,
       stockAllowances = [],
     } = data;
-    console.log({ stockAllowances });
+
     const teamMember = await prisma.teamMember.findFirst({ where: { userId } });
 
     if (!teamMember) {
@@ -442,6 +434,6 @@ const diffStockAllowances = (
       });
     }
   }
-  console.log({ toCreate, toDelete, toUpdate });
+
   return { toCreate, toDelete, toUpdate };
 };

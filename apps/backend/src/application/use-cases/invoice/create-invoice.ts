@@ -42,7 +42,7 @@ export const createCreateInvoiceUseCase = (dependencies: {
         subscription.plan
       }, platného do ${dayjs(subscription.endDate).format(
         "DD/MM/YYYY"
-      )}. Předplatné se automaticky obnoví. Uživatel muže předplatné zrušit ve svém profilu.`,
+      )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
     });
   },
 });
