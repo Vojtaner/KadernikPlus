@@ -8,7 +8,12 @@ const createInvoiceRepositoryDb = (
   return {
     findAll: async (userId: string) => {
       const invoices = await prisma.invoice.findMany({
-        where: { payment: { subscription: { userId } } },
+        where: {
+          OR: [
+            { payment: { subscription: { userId } } },
+            { payment: { refId: userId } },
+          ],
+        },
       });
 
       return invoices;

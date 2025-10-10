@@ -1,6 +1,6 @@
 import { type AxiosInstance } from 'axios'
 import type { LogData } from '../entities/logs'
-import type { Subscription, SubscriptionCreateData } from '../entities/subscription'
+import type { CreateImportPayment, Payment, Subscription, SubscriptionCreateData } from '../entities/subscription'
 import type { UserForm } from '../entities/user'
 import { apiCall, type Invoice } from '../hairdresser/entity'
 
@@ -16,6 +16,10 @@ export const subscriptionApi = {
   create: () => `/api/subscription/`,
   extend: (subscriptionId: string) => `/api/subscription/extend/${encodeURIComponent(subscriptionId)}`,
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
+}
+export const importPaymentApi = {
+  get: () => `api/payment`,
+  create: () => `api/payment/import`,
 }
 
 export const invoiceApi = {
@@ -62,3 +66,18 @@ export const postExtendSubscription = async (axios: AxiosInstance, subscriptionI
 
 export const getInvoices = async (axios: AxiosInstance): Promise<Invoice[]> =>
   apiCall(async () => await axios.get(invoiceApi.getAll()), 'Nepovedlo se načíst faktury.')
+
+//---- Import Payment ----
+
+export const postCreateImportPayment = async (
+  axios: AxiosInstance,
+  params: CreateImportPayment
+): Promise<{
+  code: number
+  message: string
+  transId: string
+  redirect: string
+}> => apiCall(async () => await axios.post(importPaymentApi.create(), params), 'Platbu se nepovedlo vytvořit.')
+
+export const getPayment = async (axios: AxiosInstance): Promise<Payment> =>
+  apiCall(async () => await axios.get(importPaymentApi.get()), 'Nepovedlo získat podrobnosti o platbě.')

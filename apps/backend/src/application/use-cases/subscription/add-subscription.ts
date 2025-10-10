@@ -78,7 +78,7 @@ const createAddSubscriptionUseCase = (dependencies: {
       currency: data.currency || "CZK",
       provider: "COMGATE",
       status: PaymentStatus.PENDING,
-      refId: generate8DigitNumber(),
+      refId: generate8DigitNumber().toString(),
       transactionId: generate8DigitNumber().toString(),
     });
 
@@ -87,6 +87,7 @@ const createAddSubscriptionUseCase = (dependencies: {
         price: Number(newPayment.amount),
         currency: newPayment.currency,
         email: user.email,
+        initRecurring: true,
         refId: newPayment.refId.toString(),
         fullName: user.name,
         label: `Předplatné typu - ${newSubscription.plan}`,

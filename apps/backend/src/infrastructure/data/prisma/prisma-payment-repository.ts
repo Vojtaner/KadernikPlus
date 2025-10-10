@@ -50,6 +50,13 @@ const createPaymentRepositoryDb = (
 
       return payment;
     },
+    getPaymentByRefId: async (refId: string) => {
+      const payment = await prismaClient.payment.findUnique({
+        where: { refId },
+      });
+
+      return payment;
+    },
     findBySubscriptionId: async (subscriptionId: string) => {
       const alreadyPendingPayment = await prismaClient.payment.findFirst({
         where: { subscriptionId, status: PaymentStatus.PENDING },

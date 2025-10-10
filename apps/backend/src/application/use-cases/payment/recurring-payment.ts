@@ -52,7 +52,7 @@ const createRecurringPaymentUseCase = (dependencies: {
       currency: lastPayment.currency,
       provider: "COMGATE",
       status: PaymentStatus.PENDING,
-      refId: generate8DigitNumber(),
+      refId: generate8DigitNumber().toString(),
       transactionId: generate8DigitNumber().toString(),
     });
 
@@ -93,6 +93,13 @@ const createRecurringPaymentUseCase = (dependencies: {
         );
       }
 
+      if (!updatedPayment.subscriptionId) {
+        throw httpError(
+          "Id předplatného chybí, kontaktujte administrátora.",
+          404
+        );
+      }
+
       const updatedSubscription =
         await dependencies.subscriptionRepositoryDb.update(
           updatedPayment.subscriptionId,
@@ -104,7 +111,12 @@ const createRecurringPaymentUseCase = (dependencies: {
 
       const newInvoice = await dependencies.createInvoiceUseCase.execute({
         payment: updatedPayment,
-        subscription: updatedSubscription,
+        userId: updatedSubscription.userId,
+        note: `Faktura za předplatné typu ${
+          updatedSubscription.plan
+        }, platného do ${dayjs(updatedSubscription.endDate).format(
+          "DD/MM/YYYY"
+        )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
       });
     }
 

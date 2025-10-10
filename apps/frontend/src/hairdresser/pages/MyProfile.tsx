@@ -7,6 +7,7 @@ import { useIntl } from 'react-intl'
 import {
   useCancelSubscriptionMutation,
   useDeleteUserMutation,
+  useImportPaymentQuery,
   useInvoicesQuery,
   useSubscriptionQuery,
   useUserDataQuery,
@@ -24,6 +25,7 @@ const MyProfile = () => {
   const { data: subscription } = useSubscriptionQuery()
   const { mutate: cancelSubscription } = useCancelSubscriptionMutation()
   const { mutate: deleteUser } = useDeleteUserMutation()
+  const { data: importPayment } = useImportPaymentQuery()
   const { data: invoices } = useInvoicesQuery()
   const subscriptionId = subscription ? subscription.id : undefined
 
@@ -147,13 +149,25 @@ const MyProfile = () => {
           <Typography variant="body2">
             Zde můžete provést hromadný import kontaktů pouze česká tel. kontakty.
           </Typography>
-          <Grid container rowSpacing={2}>
-            <ContactPicker />
-          </Grid>
-          <Grid container rowSpacing={2} gap={2}>
-            <ImportAppleContacts />
-          </Grid>
+          <MuiColorPicker />
         </Stack>
+        {importPayment?.status === 'PAID' && (
+          <>
+            <Divider sx={{ marginY: '30px' }} />
+            <Stack spacing={2}>
+              <Typography variant="body2">
+                Zde můžete provést hromadný import kontaktů pouze české tel. kontakty. Následně je budete moci editovat
+                před uložením.
+              </Typography>
+              <Grid container rowSpacing={2}>
+                <ContactPicker />
+              </Grid>
+              <Grid container rowSpacing={2} gap={2}>
+                <ImportAppleContacts />
+              </Grid>
+            </Stack>
+          </>
+        )}
       </>
     )
   )

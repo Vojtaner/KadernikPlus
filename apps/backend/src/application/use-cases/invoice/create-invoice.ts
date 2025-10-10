@@ -10,12 +10,10 @@ export const createCreateInvoiceUseCase = (dependencies: {
   invoiceRepositoryDb: InvoiceRepositoryPort;
   getUserByIdUseCase: GetUserByIdUseCaseType;
 }) => ({
-  execute: async (data: { payment: Payment; subscription: Subscription }) => {
-    const { payment, subscription } = data;
+  execute: async (data: { payment: Payment; userId: string; note: string }) => {
+    const { payment, userId, note } = data;
 
-    const user = await dependencies.getUserByIdUseCase.execute(
-      subscription.userId
-    );
+    const user = await dependencies.getUserByIdUseCase.execute(userId);
 
     const year = dayjs().year();
     const lastInvoice = await dependencies.invoiceRepositoryDb.findLastByYear(
@@ -38,11 +36,7 @@ export const createCreateInvoiceUseCase = (dependencies: {
       status: InvoiceStatus.PAID,
       issuedAt: new Date(),
       paymentId: payment.id,
-      notes: `Faktura za předplatné typu ${
-        subscription.plan
-      }, platného do ${dayjs(subscription.endDate).format(
-        "DD/MM/YYYY"
-      )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
+      notes: note,
     });
   },
 });

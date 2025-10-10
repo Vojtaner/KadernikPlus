@@ -15,6 +15,7 @@ export const ROUTES = {
   shoppingList: { path: '/shopping-list', breadcrumb: 'Nákupní seznam' },
   profile: { path: '/profile', breadcrumb: 'Můj profil' },
   subscription: { path: '/subscription', breadcrumb: '' },
+  importContactsPage: { path: '/payment/import', breadcrumb: '' },
   consumption: { path: '/consumption/:teamId', breadcrumb: 'Spotřeba' },
   services: { path: '/services', breadcrumb: 'Služby' },
   stock: { path: '/stock/:stockId', breadcrumb: 'Sklad' },
