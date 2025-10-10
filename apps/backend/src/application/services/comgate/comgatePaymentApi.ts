@@ -20,6 +20,7 @@ export type ComgatePaymentData = {
   phone: string;
   refId: string;
   fullName: string;
+  initRecurring: boolean;
 };
 
 export type ComgatePayment = {
@@ -93,7 +94,7 @@ const createComgatePaymentApi = (): ComgatePaymentApiType => {
       method: "ALL",
       email: data.email,
       fullName: data.fullName,
-      initRecurring: true,
+      initRecurring: data.initRecurring,
       phone: data.phone,
       secret: getEnvVar("COMGATE_SECRET"),
     };

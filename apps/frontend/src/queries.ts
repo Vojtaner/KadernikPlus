@@ -3,14 +3,16 @@ import { useMutation } from '@tanstack/react-query'
 import { useAxios } from './axios/axios'
 import type { LogData } from './entities/logs'
 import { useAddSnackbarMessage } from './hooks/useAddSnackBar'
-import type { Subscription, SubscriptionCreateData } from './entities/subscription'
+import type { CreateImportPayment, Payment, Subscription, SubscriptionCreateData } from './entities/subscription'
 import {
   deleteUser,
   getInvoices,
   getLogs,
+  getPayment,
   getSubscription,
   getUser,
   postCancelSubscription,
+  postCreateImportPayment,
   postCreateSubscription,
   postExtendSubscription,
   updateUserData,
@@ -48,6 +50,7 @@ export const useExtendSubscriptionMutation = () => {
 
   return { mutation }
 }
+
 export const useSubscriptionMutation = () => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()
@@ -63,6 +66,45 @@ export const useSubscriptionMutation = () => {
     SubscriptionCreateData
   >({
     mutationFn: async (data) => postCreateSubscription(axios, data),
+    onSuccess: (data) => {
+      addSnackBarMessage({ text: 'Platba založena', type: 'success' })
+      window.location.assign(data.redirect)
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
+
+  return { ...mutation }
+}
+
+export const useImportPaymentQuery = () => {
+  const axios = useAxios()
+
+  return useQuery<Payment | null>({
+    queryKey: ['importPayment'],
+    queryFn: () => getPayment(axios),
+    refetchOnMount: false,
+    staleTime: 'static',
+  })
+}
+
+export const useImportPaymentMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+
+  const mutation = useMutation<
+    {
+      code: number
+      message: string
+      transId: string
+      redirect: string
+    },
+    { message: string; code: number },
+    CreateImportPayment
+  >({
+    mutationFn: async (data) => postCreateImportPayment(axios, data),
     onSuccess: (data) => {
       addSnackBarMessage({ text: 'Platba založena', type: 'success' })
       window.location.assign(data.redirect)

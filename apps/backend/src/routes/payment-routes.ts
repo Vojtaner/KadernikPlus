@@ -8,5 +8,13 @@ paymentRouter.post(
   "/callback",
   makeExpressCallback(paymentController.updatePushNotificationPaymentController)
 );
+paymentRouter.post(
+  "/import",
+  makeExpressCallback(paymentController.createImportPaymentController)
+);
+paymentRouter.get(
+  "/",
+  makeExpressCallback(paymentController.getPaymentByRefIdController)
+);
 
 export default paymentRouter;

@@ -1,4 +1,6 @@
 export type SubscriptionPlans = 'pro'
+
+export type ImportStatus = 'PAID' | 'CANCELLED' | 'PENDING'
 export type SubscriptionStates = 'ACTIVE' | 'CANCELLED' | 'EXPIRED' | 'PENDING'
 
 export type SubscriptionCreateData = {
@@ -17,4 +19,14 @@ export type Subscription = {
   endDate: string
   startDate: string
   userId: string
+}
+export type CreateImportPayment = {
+  currency: 'CZK'
+  price: number
+}
+
+export type Payment = {
+  id: string
+  refId: string
+  status: ImportStatus
 }

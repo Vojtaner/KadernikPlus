@@ -1,0 +1,65 @@
+import { Button, Stack, Typography } from '@mui/material'
+import PricingCard from '../../app/components/PricingCard'
+import { useAuth0 } from '@auth0/auth0-react'
+import AppTheme from '../../AppTheme'
+import LogoutIcon from '@mui/icons-material/Logout'
+import { FormattedMessage, useIntl } from 'react-intl'
+import { useImportPaymentMutation } from '../../queries'
+
+const ImportContactsPage = () => {
+  const { user, logout } = useAuth0()
+  const { mutate: purchaseImport } = useImportPaymentMutation()
+
+  const intl = useIntl()
+
+  const handlePurchase = () => {
+    purchaseImport({ currency: 'CZK', price: 99900 })
+  }
+
+  return (
+    <Stack spacing={2} alignItems="center" justifyContent="center" minHeight="85vh" width="100%">
+      <Typography variant="h4" fontWeight="bold" align="center">
+        <FormattedMessage id="importPage.welcome" defaultMessage="Ušetřete si čas při startu aplikace" />
+      </Typography>
+      <Typography variant="h4" fontWeight="bold" color="primary">
+        <FormattedMessage id="importPage.headline" defaultMessage="Import kontaktů" />
+      </Typography>
+      <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
+        <strong style={{ color: AppTheme.palette.primary.main }}>
+          {user
+            ? `${intl.formatMessage({
+                id: 'importPage.greeting',
+                defaultMessage: 'Dobrý den,',
+              })} ${user.name || ''} `
+            : ''}
+        </strong>
+        {intl.formatMessage({
+          id: 'importPage.introduction.1',
+          defaultMessage: ' namísto ručního zadávání stovek záznamů si můžete jednorázově dokoupit funkci importu.',
+        })}
+      </Typography>
+
+      <Button variant="contained" onClick={() => logout()} startIcon={<LogoutIcon />}>
+        {intl.formatMessage({ id: 'logOut', defaultMessage: 'Odhlásit se' })}
+      </Button>
+
+      <PricingCard
+        title="Cena"
+        price="Kč 999"
+        period="/jednorázově"
+        description="Proč se vyplatí připlatit:"
+        features={[
+          'Ušetřte hodiny ručního zadávání',
+          '800 kontaktů naimportujete během chvíle',
+          'Bez chybného a nudného opisování',
+          'Kontakt ručně trvá až 1-2min, kolik ušetříte?',
+        ]}
+        ctaText="Koupit import"
+        onClick={handlePurchase}
+        active
+      />
+    </Stack>
+  )
+}
+
+export default ImportContactsPage

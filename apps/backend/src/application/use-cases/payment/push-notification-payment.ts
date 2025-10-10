@@ -10,8 +10,9 @@ import createInvoiceUseCase, {
 import getUserByIdUseCase, {
   GetUserByIdUseCaseType,
 } from "../user/get-user-by-id";
-import { InvoiceRepositoryPort } from "@/application/ports/invoice-repository";
+import { InvoiceRepositoryPort } from "../../../application/ports/invoice-repository";
 import invoiceRepositoryDb from "../../../infrastructure/data/prisma/prisma-invoice-repository";
+import dayjs from "dayjs";
 
 const createPushNotificationPaymentUseCase = (dependencies: {
   paymentRepositoryDb: PaymentRepositoryPort;
@@ -20,36 +21,49 @@ const createPushNotificationPaymentUseCase = (dependencies: {
   getUserByIdUseCase: GetUserByIdUseCaseType;
   invoiceRepositoryDb: InvoiceRepositoryPort;
 }) => ({
-  execute: async (data: Partial<Payment>, id?: string) => {
+  execute: async (data: Partial<Payment>) => {
     try {
       const updatedPayment =
         await dependencies.paymentRepositoryDb.updatePayment({
           transactionId: data.transactionId,
           status: data.status,
           initRecurringId: data.initRecurringId,
-          refId: Number(data.refId),
+          refId: data.refId,
         });
 
       const now = new Date();
       const plus30DaysDate = new Date(now);
       plus30DaysDate.setDate(now.getDate() + 30);
+
       if (updatedPayment && updatedPayment.status === PaymentStatus.PAID) {
-        const updatedSubscription =
-          await dependencies.subscriptionRepositoryDb.update(
-            updatedPayment.subscriptionId,
-            {
-              status: SubscriptionStatus.ACTIVE,
-              startDate: now,
-              endDate: plus30DaysDate,
-            }
-          );
+        if (updatedPayment?.initRecurringId && updatedPayment.subscriptionId) {
+          const updatedSubscription =
+            await dependencies.subscriptionRepositoryDb.update(
+              updatedPayment.subscriptionId,
+              {
+                status: SubscriptionStatus.ACTIVE,
+                startDate: now,
+                endDate: plus30DaysDate,
+              }
+            );
+          const newInvoice = await dependencies.createInvoiceUseCase.execute({
+            payment: updatedPayment,
+            userId: updatedSubscription.userId,
+            note: `Faktura za předplatné typu ${
+              updatedSubscription.plan
+            }, platného do ${dayjs(updatedSubscription.endDate).format(
+              "DD/MM/YYYY"
+            )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
+          });
 
-        const newInvoice = await dependencies.createInvoiceUseCase.execute({
-          payment: updatedPayment,
-          subscription: updatedSubscription,
-        });
-
-        return updatedSubscription;
+          return updatedSubscription;
+        } else {
+          const newInvoice = await dependencies.createInvoiceUseCase.execute({
+            payment: updatedPayment,
+            userId: updatedPayment.refId,
+            note: "Prémiový přístup k funkci importu kontaktů neomezeně.",
+          });
+        }
       }
     } catch (error) {
       console.error("createPushNotificationPaymentUseCase", error);

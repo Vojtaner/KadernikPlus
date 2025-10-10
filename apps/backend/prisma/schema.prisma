@@ -252,17 +252,17 @@ model Subscription {
 
 model Payment {
   id             String       @id @default(uuid())
-  subscriptionId String
-  refId          Int          @unique
+  subscriptionId String?
+  refId          String          @unique
   provider       String
-  initRecurringId String       @default("")
+  initRecurringId String?       @default("")
   transactionId  String       @unique
   amount         Decimal      @db.Decimal(15, 5)
   currency       String       @default("CZK")
   status         PaymentStatus @default(PENDING)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  subscription   Subscription @relation(fields: [subscriptionId], references: [id])
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
   invoices  Invoice[]
   
   @@index([subscriptionId], map: "Payment_subscriptionId_fkey")

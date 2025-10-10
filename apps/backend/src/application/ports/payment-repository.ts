@@ -8,7 +8,7 @@ export interface PaymentRepositoryPort {
     data: Partial<Payment>,
     id?: string
   ) => Promise<Payment | undefined>;
-
+  getPaymentByRefId: (refId: string) => Promise<Payment | null>;
   findByExternalId(externalId: string): Promise<Payment | null>;
   findBySubscriptionId(subscriptionId: string): Promise<Payment | null>;
 }

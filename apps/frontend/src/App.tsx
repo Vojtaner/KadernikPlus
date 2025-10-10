@@ -14,6 +14,7 @@ import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './hairdresser/pages/SubscriptionPage'
 import SubscriptionGuard from './hairdresser/SubscriptionGuard'
 import Layout from './hairdresser/Layout'
+import ImportContactsPage from './hairdresser/pages/ImportContactsPage'
 
 function App() {
   const methods = useAppForm()
@@ -27,6 +28,7 @@ function App() {
               <AuthGuard>
                 <Routes>
                   <Route path={ROUTES.subscription.path} element={<SubscriptionPage />} />
+                  <Route path={ROUTES.importContactsPage.path} element={<ImportContactsPage />} />
 
                   <Route
                     path="/*"
