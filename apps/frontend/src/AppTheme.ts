@@ -39,8 +39,6 @@ const AppTheme = createTheme(
           },
 
           contained: {
-            // gradient background
-            background: '#c81f5b',
             color: '#fff',
             boxShadow: '0px 2px 6px rgba(0,0,0,0.2)',
             '&:hover': {

@@ -15,6 +15,7 @@ import { ContactPicker } from '../ContactPicker'
 import { ImportAppleContacts } from '../ImportAppleContacts'
 import { downloadInvoice } from './InvoicePdf'
 import { getDate } from '../visits/components/VisitsList'
+import MuiColorPicker from './MuiColorPicker'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
@@ -31,13 +32,11 @@ const MyProfile = () => {
   }
 
   if (!userData) {
-
     return (
       <Typography>
         {intl.formatMessage({ id: 'myProfile.missingData', defaultMessage: 'Žádná data nenalezena.' })}
       </Typography>
     )
-
   }
 
   return (
@@ -136,6 +135,13 @@ const MyProfile = () => {
             )}
           </Stack>
         </Grid>
+        <Divider sx={{ marginY: '30px' }} />
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography fontWeight="bold">
+            {intl.formatMessage({ defaultMessage: 'Schéma aplikace', id: 'myProfile.colorScheme' })}
+          </Typography>
+          <MuiColorPicker />
+        </Stack>
         <Divider sx={{ marginY: '30px' }} />
         <Stack spacing={2}>
           <Typography variant="body2">

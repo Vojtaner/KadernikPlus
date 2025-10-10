@@ -47,7 +47,7 @@ const createColumns = (navigate: (path: string) => void): GridColDef<Client[][nu
   {
     field: 'name',
     headerName: 'Klient',
-    flex: 2.5,
+    flex: 4,
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -57,8 +57,7 @@ const createColumns = (navigate: (path: string) => void): GridColDef<Client[][nu
   {
     field: 'phone',
     headerName: 'Telefon',
-    flex: 2.5,
-
+    flex: 4,
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -71,8 +70,7 @@ const createColumns = (navigate: (path: string) => void): GridColDef<Client[][nu
     field: 'edit',
     headerName: '',
     editable: false,
-    flex: 2,
-
+    flex: 4,
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (

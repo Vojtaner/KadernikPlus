@@ -1,12 +1,18 @@
-import { Page, Text, Document, StyleSheet, pdf, View, Image } from '@react-pdf/renderer'
+import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
 import type { Invoice } from '../entity'
 import saveAs from 'file-saver'
+import Roboto from '../../../public/assets/fonts/Roboto-Regular.ttf'
+
+Font.register({
+  family: 'Roboto',
+  src: Roboto,
+})
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: '#ffffff',
     padding: 40,
-    fontFamily: 'Helvetica',
+    fontFamily: 'Roboto',
   },
   header: {
     flexDirection: 'row',
@@ -57,6 +63,7 @@ const styles = StyleSheet.create({
   tableCell: {
     color: '#000',
   },
+  text: { fontFamily: 'Roboto', fontSize: 14 },
 })
 
 const InvoicePdf = (props: { invoice: Invoice }) => {
@@ -68,6 +75,17 @@ const InvoicePdf = (props: { invoice: Invoice }) => {
         <View style={styles.header}>
           <Text style={styles.title}>Faktura {invoice.invoiceNumber}</Text>
           <Image src="/path/to/logo.png" style={styles.logo} />
+        </View>
+
+        <View style={styles.section}>
+          <Text>
+            <Text style={styles.label}>Obchodník: </Text>
+            Vojtěch Laurin
+          </Text>
+          <Text>
+            <Text style={styles.label}>IČO: </Text>
+            06380298
+          </Text>
         </View>
 
         <View style={styles.section}>

@@ -18,6 +18,7 @@ export const useProceduresQuery = (visitId: string | undefined) => {
 
       return procedures
     },
+    refetchOnMount: false,
   })
 }
 

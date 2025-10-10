@@ -71,11 +71,11 @@ const ProcedureCard = (props: ProcedureCardProps) => {
         <Stack direction="row" rowGap={2} columnGap={1} alignItems="center" flexWrap="wrap" justifyContent="flex-end">
           {defaultStockAllowances.map((stockAllowance) => (
             <StockAllowance
-              id={stockAllowance.id}
+              id={stockAllowance.stockAllowanceId}
               //nechci default na nulu ale typy jsou rozhozený, oprava později
               name={stockAllowance.stockItemName ?? ''}
               quantity={stockAllowance.quantity}
-              key={stockAllowance.id}
+              key={stockAllowance.stockAllowanceId}
             />
           ))}
         </Stack>

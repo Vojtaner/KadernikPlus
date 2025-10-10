@@ -19,11 +19,14 @@ import { useAppSelector } from '../store/store'
 import SideMenu from './SideMenu'
 import AddServiceItemButton from '../hairdresser/service/components/AddServiceItemButton'
 import { APP_LAYOUT_WIDTH } from './entity'
+import { useUserDataQuery } from '../queries'
+
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const [isSearchActive, setIsSearchActive] = useState(false)
   const intl = useIntl()
+  const { data: userData } = useUserDataQuery()
 
   const route = useCurrentRoute()
   const navigate = useAppNavigate()
@@ -38,7 +41,7 @@ const Layout = (props: PropsWithChildren) => {
   return (
     <Stack
       spacing={isSearchActive ? 1 : 0}
-      sx={{ minWidth: { md: `${APP_LAYOUT_WIDTH}vw` }, bgcolor: '#c81f5b' }}
+      sx={{ minWidth: { md: `${APP_LAYOUT_WIDTH}vw` }, bgcolor: userData?.colorScheme ?? '#c81f5b' }}
       boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}>
       <Stack
         sx={{

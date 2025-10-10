@@ -2,7 +2,7 @@ import { Paths, ROUTES, type AppRoutePath } from '../../routes/AppRoutes'
 import LanguageIcon from '@mui/icons-material/Language'
 import { type IntlShape } from 'react-intl'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
-// import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
+import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
 import LocalOfferIcon from '@mui/icons-material/LocalOffer'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
 import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
@@ -14,27 +14,31 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import { type ReactNode } from 'react'
 import type { Location } from 'react-router-dom'
 import SideMenuButton from './SideMenuButton'
+import { Divider } from '@mui/material'
 
 export const SideMenuList = (props: { items: MenuItem[]; onClose: () => void; location: Location }) => {
   const { items: menuItems, onClose, location } = props
 
   return (
     <>
-      {menuItems.map((menuItem) =>
-        !menuItem.condition || menuItem.condition() ? (
-          <SideMenuButton
-            key={menuItem.key}
-            isActive={location.pathname === menuItem.path}
-            to={menuItem.path}
-            title={menuItem.title}
-            icon={menuItem.icon}
-            onClick={() => {
-              onClose()
-              menuItem.onClick?.()
-            }}
-          />
+      {menuItems.map((menuItem, index) => {
+        return !menuItem.condition || menuItem.condition() ? (
+          <>
+            {[2, 10].includes(index) ? <Divider sx={{ border: '1px solid rgba(1,1,1,0.2)' }} /> : null}
+            <SideMenuButton
+              key={menuItem.key}
+              isActive={location.pathname === menuItem.path}
+              to={menuItem.path}
+              title={menuItem.title}
+              icon={menuItem.icon}
+              onClick={() => {
+                onClose()
+                menuItem.onClick?.()
+              }}
+            />
+          </>
         ) : null
-      )}
+      })}
     </>
   )
 }
@@ -112,18 +116,18 @@ export const getMenuItems = (
     path: ROUTES.services.path,
     icon: <LocalOfferIcon />,
   },
-  // {
-  //   key: 'logs',
-  //   title: intl.formatMessage({ id: 'logs', defaultMessage: 'Záznamy o aktivitě' }),
-  //   path: ROUTES.logs.path,
-  //   icon: <LightbulbOutlineIcon />,
-  // },
   {
     key: 'stock',
     title: intl.formatMessage({ id: 'stock', defaultMessage: 'Sklad' }),
     path: stocks?.[0]?.id ? Paths.stock(stocks[0].id) : '#',
     icon: <WarehouseIcon />,
     condition: () => !!stocks?.length,
+  },
+  {
+    key: 'logs',
+    title: intl.formatMessage({ id: 'logs', defaultMessage: 'Záznamy o aktivitě' }),
+    path: ROUTES.logs.path,
+    icon: <LightbulbOutlineIcon />,
   },
   {
     key: 'language',

@@ -14,8 +14,9 @@ export interface User {
 }
 
 export type UserForm = {
-  bankAccount: string
-  reviewUrl: string
+  bankAccount?: string
+  reviewUrl?: string
+  colorScheme?: string
 }
 
 /**

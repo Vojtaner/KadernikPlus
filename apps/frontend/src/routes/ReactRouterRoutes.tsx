@@ -12,6 +12,7 @@ import { ROUTES } from './AppRoutes'
 import { Dashboard } from '../hairdresser/pages/Dashboard'
 import ClientProfile from '../hairdresser/pages/ClientProfile'
 import ClientsList from '../hairdresser/pages/ClientList'
+import Logs from '../hairdresser/pages/Logs'
 
 const ReactRouterRoutes = () => {
   return (
@@ -23,7 +24,7 @@ const ReactRouterRoutes = () => {
       <Route path={ROUTES.shoppingList.path} element={<AuthenticationGuard component={ShoppingList} />} />
       <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />
       <Route path={ROUTES.services.path} element={<AuthenticationGuard component={PriceList} />} />
-      {/* <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} /> */}
+      <Route path={ROUTES.logs.path} element={<AuthenticationGuard component={Logs} />} />
       <Route
         path={ROUTES.visits.path}
         element={<AuthenticationGuard component={() => <VisitsList visitListApplyFilter="allVisitsPage" />} />}

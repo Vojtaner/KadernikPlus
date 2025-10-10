@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../store/store'
 import { setCurrentLocationAppendix } from '../../store/appUiSlice'
 import { useAppNavigate } from '../../hooks'
 import type { ReactNode } from 'react'
+import { useUserDataQuery } from '../../queries'
 
 type SideMenuListItemProps = {
   title: string
@@ -19,9 +20,11 @@ const SideMenuButton = (props: SideMenuListItemProps) => {
   const { title, to, icon, isActive = false, disabled = false, onClick } = props
   const navigate = useAppNavigate()
   const dispatch = useAppDispatch()
+  const { data: userData } = useUserDataQuery()
+  const colorScheme = userData?.colorScheme ?? AppTheme.palette.primary.main
 
   return (
-    <ListItem disablePadding sx={isActive ? { bgcolor: AppTheme.palette.primary.main, fontWeight: 700 } : {}}>
+    <ListItem disablePadding sx={isActive ? { bgcolor: colorScheme, fontWeight: 700 } : {}}>
       <ListItemButton
         disabled={disabled}
         onClick={(e) => {

@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Box, IconButton } from '@mui/material'
 import { type CurrentRoute } from '../../routes/AppRoutes'
+import { useUserDataQuery } from '../../queries'
 
 const SectionHeader = (props: {
   onGoBack: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -10,6 +11,7 @@ const SectionHeader = (props: {
   route: CurrentRoute
 }) => {
   const { onGoBack, routeAppendix, route } = props
+  const { data: userData } = useUserDataQuery()
 
   if (!route) {
     onGoBack()
@@ -17,7 +19,7 @@ const SectionHeader = (props: {
   }
 
   return (
-    <Box bgcolor="#c81f5b">
+    <Box bgcolor={userData?.colorScheme ?? '#c81f5b'}>
       <Stack
         direction="row"
         bgcolor="#f6f6f6"

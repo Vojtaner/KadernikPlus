@@ -11,7 +11,7 @@ import { FilterTableButton } from '../../pages/Consumption'
 import Loader from '../../pages/Loader'
 import { Paths } from '../../../routes/AppRoutes'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import { DepositStatus, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
+import { DepositStatus, getIsVisitInPast, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
@@ -52,7 +52,7 @@ const VisitsList = (props: VisitListProps) => {
     return <Loader />
   }
 
-  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus)
+  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus && getIsVisitInPast(visit.date))
 
   const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
     (visit) => visit.visitStatus && getMissingStockAllowanceError(visit.procedures)
@@ -199,6 +199,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     width: 45,
     hideSortIcons: false,
     display: 'flex',
+    flex: 1,
     minWidth: 20,
     renderCell: (params) =>
       params.row.isHeader ? (
@@ -226,6 +227,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
+    flex: 3,
     minWidth: 55,
     renderCell: (params) =>
       !params.row.isHeader && (
@@ -245,12 +247,14 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'serviceName',
     headerName: 'Účes',
     minWidth: 70,
+    flex: 3,
     width: 150,
   },
   {
     field: 'visitState',
     headerName: 'Stav',
     width: 70,
+    flex: 3,
     display: 'flex',
     editable: false,
     renderCell: (params) => {
@@ -271,6 +275,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'visitDetailButton',
     headerName: 'Detail',
     width: 10,
+    flex: 2,
     editable: false,
     renderCell: (params) => {
       if (!params.row.isHeader && params.row.clientId) {

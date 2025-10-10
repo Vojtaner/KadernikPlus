@@ -144,10 +144,11 @@ export const FilterTableButton = (props: {
 }
 
 const createColumnsByProduct = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
-  { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
+  { field: 'stockItemName', headerName: 'Položka', flex: 4, disableColumnMenu: true, minWidth: 100 },
   {
     field: 'totalQuantity',
     headerName: 'Množ./Kč',
+    flex: 4,
     minWidth: 70,
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -161,6 +162,7 @@ const createColumnsByProduct = (): GridColDef<ConsumptionTableByProductByUserTyp
   },
   {
     field: 'user',
+    flex: 4,
     headerName: 'Kdo',
     disableColumnMenu: true,
     display: 'flex',
@@ -172,6 +174,7 @@ const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[]
   {
     field: 'user',
     headerName: 'Kdo',
+    flex: 6,
     disableColumnMenu: true,
     display: 'flex',
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
@@ -180,6 +183,7 @@ const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[]
     field: 'totalQuantity',
     headerName: 'Celkem',
     minWidth: 70,
+    flex: 6,
     disableColumnMenu: true,
     renderCell: (params) => (
       <>
@@ -196,6 +200,7 @@ const createColumnsAllRecords = (
   {
     field: 'date',
     headerName: 'Datum',
+    flex: 3,
     disableColumnMenu: true,
     minWidth: 40,
     renderCell: (params) => (
@@ -207,10 +212,11 @@ const createColumnsAllRecords = (
       </Button>
     ),
   },
-  { field: 'stockItemName', headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
+  { field: 'stockItemName', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 100 },
   {
     field: 'stockAllowanceQuantity',
     headerName: 'Množ./Kč',
+    flex: 3,
     minWidth: 40,
     disableColumnMenu: true,
     renderCell: (params) => (
@@ -225,6 +231,7 @@ const createColumnsAllRecords = (
   {
     field: 'user',
     headerName: 'Kdo',
+    flex: 3,
     disableColumnMenu: true,
     display: 'flex',
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,

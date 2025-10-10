@@ -128,6 +128,7 @@ const startServer = async () => {
 startServer();
 
 process.on("beforeExit", async () => {
+  console.log("Flushing Sentry events...");
+  await Sentry.flush(2000);
   await prisma.$disconnect();
-  console.log("Disconnected from the database.");
 });
