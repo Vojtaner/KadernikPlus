@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl'
 import AppTheme from '../AppTheme'
 import CloseIcon from '@mui/icons-material/Close'
 
-export default function FullscreenImage(props: { src: string }) {
+const FullScreenImage = (props: { src: string }) => {
   const [showImage, setShowImage] = useState(false)
 
   return (
@@ -50,3 +50,5 @@ export default function FullscreenImage(props: { src: string }) {
     </>
   )
 }
+
+export default FullScreenImage

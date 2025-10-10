@@ -5,8 +5,8 @@ import { Button } from '@mui/material'
 import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
 import StockItemForm, { useStockItemForm } from './StockItemForm'
 import { addPropsToReactElement } from '../../entity'
-import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
 import FullscreenImage from '../../FullScreenImage'
+import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
 
 type StockItemDialogProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>
