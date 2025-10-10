@@ -1,6 +1,6 @@
-import "./application/services/sentry/instrument";
-import initSentry from "./application/services/sentry/instrument";
+import "../src/application/services/sentry/instrument";
 import express from "express";
+import * as Sentry from "@sentry/node";
 import dotenv from "dotenv";
 import "./application/crons/anonymize-users";
 import {
@@ -37,8 +37,6 @@ import { checkCors } from "./utils/checkCors";
 
 dotenv.config();
 
-const Sentry = initSentry();
-
 const app = express();
 
 const PORT = getEnvVar("PORT") || 3000;
@@ -60,8 +58,8 @@ register.registerMetric(httpRequests);
 app.use(cors());
 
 // app.use(cors({ origin: checkCors, credentials: true }));
-
 app.use(express.json());
+app.use(Sentry.expressErrorHandler());
 
 app.get("/cors-origin-test", (req, res) => {
   res.json({ message: "CORS setup working ✅" });
