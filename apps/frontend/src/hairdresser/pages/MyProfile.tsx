@@ -144,6 +144,13 @@ const MyProfile = () => {
           </Typography>
           <MuiColorPicker />
         </Stack>
+        <Divider sx={{ marginY: '30px' }} />
+        <Stack spacing={2}>
+          <Typography variant="body2">
+            Zde můžete provést hromadný import kontaktů pouze česká tel. kontakty.
+          </Typography>
+          <MuiColorPicker />
+        </Stack>
         {importPayment?.status === 'PAID' && (
           <>
             <Divider sx={{ marginY: '30px' }} />
