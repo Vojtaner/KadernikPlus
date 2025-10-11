@@ -18,3 +18,5 @@ Sentry.init({
     // nodeProfilingIntegration(),
   ],
 });
+
+export default Sentry;
