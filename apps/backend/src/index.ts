@@ -1,4 +1,4 @@
-import "../src/application/services/sentry/instrument";
+import "./application/services/sentry/instrument";
 import express from "express";
 import Sentry from "./application/services/sentry/instrument";
 import dotenv from "dotenv";
@@ -33,8 +33,8 @@ import {
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
 import rateLimiter from "./utils/rateLimiter";
-import { checkCors } from "./utils/checkCors";
-import { httpError } from "./adapters/express/httpError";
+// import { checkCors } from "./utils/checkCors";
+// import { httpError } from "./adapters/express/httpError";
 
 dotenv.config();
 
