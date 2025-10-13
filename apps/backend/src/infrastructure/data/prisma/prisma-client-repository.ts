@@ -137,29 +137,25 @@ const createClientRepositoryDb = (
     },
 
     importAll: async (userId: string, contacts: Contact[]) => {
-      // find user's team
-      const userTeam = await prismaRepository.teamMember.findFirst({
+      const userTeamMember = await prismaRepository.teamMember.findFirst({
         where: { userId },
       });
 
-      if (!userTeam) {
+      if (!userTeamMember) {
         throw new Error("Uživatel není v žádném týmu.");
       }
 
-      // collect all phone numbers from input
       const phones = contacts
         .map((c) => c.phone)
         .filter((p): p is string => Boolean(p));
 
-      // find existing clients by phone in one query
       const existingClients = await prismaRepository.client.findMany({
-        where: { phone: { in: phones } },
+        where: { AND: [{ phone: { in: phones } }, { userId }] },
         select: { phone: true },
       });
 
       const existingPhones = new Set(existingClients.map((c) => c.phone));
 
-      // filter out those that already exist
       const newContacts = contacts.filter(
         (c) =>
           c.phone && !existingPhones.has(c.phone) && c.firstName && c.lastName
@@ -175,7 +171,7 @@ const createClientRepositoryDb = (
           lastName: c.lastName,
           phone: c.phone,
           deposit: false,
-          teamId: userTeam.teamId,
+          teamId: userTeamMember.teamId,
           userId,
         })),
         skipDuplicates: true,
@@ -186,7 +182,6 @@ const createClientRepositoryDb = (
         skipped: contacts.length - createdClients.count,
       };
     },
-
     findById: async (
       id: string,
       userId: string
