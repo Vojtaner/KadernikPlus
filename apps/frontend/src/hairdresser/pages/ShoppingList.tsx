@@ -22,6 +22,7 @@ const ShoppingList = (props: ShoppingListProps) => {
   if (!stockItems) {
     return <Loader />
   }
+
   const shoppingList = createShoppingList(stockItems)
   const shoppingListColumns = createColumns()
 
@@ -46,7 +47,7 @@ const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => 
     const lastPackageQuantity = Number(item.lastPackageQuantity)
     const packageCount = Number(item.packageCount)
 
-    const requiredPackages = threshold + 1
+    const requiredPackages = threshold === 0 ? 0 : threshold + 1
 
     if (!item.id) {
       throw new Error(`Položka ${item.itemName} nemá ID.`)

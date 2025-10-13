@@ -226,7 +226,6 @@ const getVisitDistanceLabel = (visitDate: string | Date): string => {
   const today = new Date()
   const visit = new Date(visitDate)
 
-  // Normalize both dates to midnight
   today.setHours(0, 0, 0, 0)
   visit.setHours(0, 0, 0, 0)
 

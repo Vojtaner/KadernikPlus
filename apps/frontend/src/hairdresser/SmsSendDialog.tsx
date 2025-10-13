@@ -16,6 +16,7 @@ import SendIcon from '@mui/icons-material/Send'
 import AppTheme from '../AppTheme'
 import { useClientVisitsQuery } from '../hairdresser/visits/queries'
 import { useUserDataQuery } from '../queries'
+import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{
@@ -29,10 +30,19 @@ const SmsSendDialog = (props: {
   const [open, setOpen] = useState(false)
   const { data: clientData } = useClientVisitsQuery(clientId, open)
   const { data: userData } = useUserDataQuery()
+  const addSnackbarMessage = useAddSnackbarMessage()
 
   if (!clientData?.length) {
     const disabledOpenDialogButton = React.cloneElement(openButton, {
-      icon: <SendIcon fontSize="small" color="disabled" />,
+      icon: (
+        <SendIcon
+          fontSize="small"
+          color="disabled"
+          onClick={() =>
+            addSnackbarMessage({ text: 'Nelze odeslat SMS — klient musí mít návštěvu návštěvu.', type: 'warning' })
+          }
+        />
+      ),
       sx: { background: `${AppTheme.palette.grey[200]}`, color: `${AppTheme.palette.grey[500]}` },
     })
 
