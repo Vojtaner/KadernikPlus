@@ -51,7 +51,7 @@ const createColumns = (navigate: (path: string) => void): GridColDef<Client[][nu
     display: 'flex',
     disableColumnMenu: true,
     renderCell: (params) => (
-      <Typography sx={{ color: '#888', marginLeft: 0 }}>{`${params.row.firstName} ${params.row.lastName}`}</Typography>
+      <Typography sx={{ color: '#888', marginLeft: 0 }}>{`${params.row.lastName} ${params.row.firstName}`}</Typography>
     ),
   },
   {
