@@ -113,7 +113,12 @@ const createClientRepositoryDb = (
 
       if (clientData.phone) {
         const alreadyExistingPhone = await prismaRepository.client.findUnique({
-          where: { phone: clientData.phone },
+          where: {
+            userId_phone: {
+              userId: clientData.userId,
+              phone: clientData.phone,
+            },
+          },
         });
 
         if (alreadyExistingPhone) {
@@ -217,14 +222,6 @@ const createClientRepositoryDb = (
         "Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění.",
         403
       );
-    },
-
-    findByPhone: async (phone: string): Promise<Client | null> => {
-      const client = await prismaRepository.client.findUnique({
-        where: { phone },
-      });
-
-      return client;
     },
   };
 };

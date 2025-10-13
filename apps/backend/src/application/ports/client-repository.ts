@@ -19,7 +19,6 @@ export type ClientRepositoryPort = {
   >;
   findById: (id: string, userId: string) => Promise<ClientWithVisits | null>;
   findAll: (userId: string) => Promise<Client[]>;
-  findByPhone: (phone: string) => Promise<Client | null>;
   search: (
     teamId: string,
     query: string,
