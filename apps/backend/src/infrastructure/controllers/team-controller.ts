@@ -11,18 +11,13 @@ const createTeamController = (dependencies: {
     httpRequest
   ) => {
     const teamId = httpRequest.params.teamId;
-
-    const team = await dependencies.getTeamByIdUseCase.execute({
-      teamId,
-    });
-
+    const team = await dependencies.getTeamByIdUseCase.execute({ teamId });
     if (!team) {
       return {
         statusCode: 404,
         body: { error: "Team not found" },
       };
     }
-
     return {
       statusCode: 200,
       body: team,

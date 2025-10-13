@@ -19,28 +19,19 @@ const createPaymentRepositoryDb = (
       if (!id && !data.refId) {
         throw new Error("Platbu nelze aktualizovat chybí ID nebo REFID.");
       }
-
-      try {
-        if (data.refId) {
-          const updatedPayment = await prisma.payment.update({
-            where: { refId: data.refId },
-            data,
-          });
-
-          return updatedPayment;
-        }
-
-        if (id) {
-          const updatedPayment = await prisma.payment.update({
-            where: { id },
-            data,
-          });
-
-          return updatedPayment;
-        }
-      } catch (error) {
-        console.error("prismaPaymentRepositoryDb - updatePayment error", error);
-        throw new Error("Platbu nelze aktualizovat.");
+      if (data.refId) {
+        const updatedPayment = await prisma.payment.update({
+          where: { refId: data.refId },
+          data,
+        });
+        return updatedPayment;
+      }
+      if (id) {
+        const updatedPayment = await prisma.payment.update({
+          where: { id },
+          data,
+        });
+        return updatedPayment;
       }
     },
     findByExternalId: async (transactionId: string) => {

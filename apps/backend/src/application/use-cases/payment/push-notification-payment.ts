@@ -22,52 +22,47 @@ const createPushNotificationPaymentUseCase = (dependencies: {
   invoiceRepositoryDb: InvoiceRepositoryPort;
 }) => ({
   execute: async (data: Partial<Payment>) => {
-    try {
-      const updatedPayment =
-        await dependencies.paymentRepositoryDb.updatePayment({
-          transactionId: data.transactionId,
-          status: data.status,
-          initRecurringId: data.initRecurringId,
-          refId: data.refId,
-        });
-
-      const now = new Date();
-      const plus30DaysDate = new Date(now);
-      plus30DaysDate.setDate(now.getDate() + 30);
-
-      if (updatedPayment && updatedPayment.status === PaymentStatus.PAID) {
-        if (updatedPayment?.initRecurringId && updatedPayment.subscriptionId) {
-          const updatedSubscription =
-            await dependencies.subscriptionRepositoryDb.update(
-              updatedPayment.subscriptionId,
-              {
-                status: SubscriptionStatus.ACTIVE,
-                startDate: now,
-                endDate: plus30DaysDate,
-              }
-            );
-          const newInvoice = await dependencies.createInvoiceUseCase.execute({
-            payment: updatedPayment,
-            userId: updatedSubscription.userId,
-            note: `Faktura za předplatné typu ${
-              updatedSubscription.plan
-            }, platného do ${dayjs(updatedSubscription.endDate).format(
-              "DD/MM/YYYY"
-            )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
-          });
-
-          return updatedSubscription;
-        } else {
-          const newInvoice = await dependencies.createInvoiceUseCase.execute({
-            payment: updatedPayment,
-            userId: updatedPayment.refId,
-            note: "Prémiový přístup k funkci importu kontaktů neomezeně.",
-          });
-        }
+    const updatedPayment = await dependencies.paymentRepositoryDb.updatePayment(
+      {
+        transactionId: data.transactionId,
+        status: data.status,
+        initRecurringId: data.initRecurringId,
+        refId: data.refId,
       }
-    } catch (error) {
-      console.error("createPushNotificationPaymentUseCase", error);
-      throw new Error("Platbu se nepovedlo zpracovat.");
+    );
+
+    const now = new Date();
+    const plus30DaysDate = new Date(now);
+    plus30DaysDate.setDate(now.getDate() + 30);
+
+    if (updatedPayment && updatedPayment.status === PaymentStatus.PAID) {
+      if (updatedPayment?.initRecurringId && updatedPayment.subscriptionId) {
+        const updatedSubscription =
+          await dependencies.subscriptionRepositoryDb.update(
+            updatedPayment.subscriptionId,
+            {
+              status: SubscriptionStatus.ACTIVE,
+              startDate: now,
+              endDate: plus30DaysDate,
+            }
+          );
+        const newInvoice = await dependencies.createInvoiceUseCase.execute({
+          payment: updatedPayment,
+          userId: updatedSubscription.userId,
+          note: `Faktura za předplatné typu ${
+            updatedSubscription.plan
+          }, platného do ${dayjs(updatedSubscription.endDate).format(
+            "DD/MM/YYYY"
+          )}. Předplatné se automaticky obnoví. Uživatel může předplatné zrušit ve svém profilu.`,
+        });
+        return updatedSubscription;
+      } else {
+        const newInvoice = await dependencies.createInvoiceUseCase.execute({
+          payment: updatedPayment,
+          userId: updatedPayment.refId,
+          note: "Prémiový přístup k funkci importu kontaktů neomezeně.",
+        });
+      }
     }
   },
 });

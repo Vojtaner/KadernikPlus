@@ -20,26 +20,18 @@ const createStockAllowanceController = (dependencies: {
     const userId = httpRequest.userId;
     const { fromDate, toDate } = httpRequest.query;
 
-    try {
-      const stockAllowances =
-        await dependencies.getAllStockAllowancesByTeamIdUseCase.execute(
-          teamId,
-          userId,
-          fromDate,
-          toDate
-        );
+    const stockAllowances =
+      await dependencies.getAllStockAllowancesByTeamIdUseCase.execute(
+        teamId,
+        userId,
+        fromDate,
+        toDate
+      );
 
-      return {
-        statusCode: 200,
-        body: stockAllowances,
-      };
-    } catch (error) {
-      console.error("getAllStockAllowancesByTeamIdController", error);
-      return {
-        statusCode: 500,
-        body: { error: "Server error" },
-      };
-    }
+    return {
+      statusCode: 200,
+      body: stockAllowances,
+    };
   };
   return { getAllStockAllowancesByTeamIdController };
 };

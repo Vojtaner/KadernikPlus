@@ -39,23 +39,18 @@ export const createPaymentController = (dependencies: {
     body: ComgateUpdatePaymentRequired;
   }> = async (httpRequest) => {
     const data = httpRequest.body;
-
     const paymentData: Partial<Payment> = {
       refId: data.refId,
       transactionId: data.transId,
       status: data.status,
     };
-
-    try {
-      const payment =
-        await dependencies.updatePushNotificationPaymentUseCase.execute(
-          paymentData
-        );
-      return { statusCode: 200, message: "OK" };
-    } catch (error) {
-      throw new Error("Platbu se nepovedlo aktualizovat.");
-    }
+    const payment =
+      await dependencies.updatePushNotificationPaymentUseCase.execute(
+        paymentData
+      );
+    return { statusCode: 200, message: "OK" };
   };
+
   const createImportPaymentController: PaymentControllerType["createImportPaymentController"] =
     async (httpRequests) => {
       const userId = httpRequests.userId;
@@ -73,24 +68,22 @@ export const createPaymentController = (dependencies: {
 
       return { statusCode: 201, body: newImportPayment };
     };
+
   const getPaymentByRefIdController: PaymentControllerType["getPaymentByRefIdController"] =
     async (httpRequests) => {
-      try {
-        const userId = httpRequests.userId;
+      const userId = httpRequests.userId;
 
-        const payment = await dependencies.getPaymentByRefIdUseCase.execute(
-          userId
-        );
+      const payment = await dependencies.getPaymentByRefIdUseCase.execute(
+        userId
+      );
 
-        if (!payment) {
-          return { statusCode: 204, body: null };
-        }
-
-        return { statusCode: 200, body: payment };
-      } catch (err) {
-        throw httpError("Platbu se nepodařilo najít.", 500);
+      if (!payment) {
+        return { statusCode: 204, body: null };
       }
+
+      return { statusCode: 200, body: payment };
     };
+
   return {
     updatePushNotificationPaymentController,
     createImportPaymentController,

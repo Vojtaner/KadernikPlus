@@ -26,96 +26,60 @@ const createStockItemRepositoryDb = (
     createOrUpdateStockItem: async (
       data: StockItemCreateData
     ): Promise<StockItemWithOperation> => {
-      try {
-        const isPurchase = isPurchaseStockItem(data);
+      const isPurchase = isPurchaseStockItem(data);
 
-        if (isPurchase) {
-          const { id, totalPrice, quantity, packageCount } = data;
-          const existing = await prismaStockRepository.stockItem.findFirst({
-            where: { id },
-          });
+      if (isPurchase) {
+        const { id, totalPrice, quantity, packageCount } = data;
+        const existing = await prismaStockRepository.stockItem.findFirst({
+          where: { id },
+        });
 
-          if (!existing) {
-            throw httpError("Nepodařilo se najít položku na skladu.", 404);
-          }
-
-          const newQuantityPerPiece = Number(quantity);
-          const newTotalPrice = Number(totalPrice);
-          const newPackageCount = Number(packageCount);
-
-          const newTotalQuantity = newQuantityPerPiece * newPackageCount;
-
-          const updatedQuantity = newTotalQuantity + Number(existing.quantity);
-          const updatedTotalPrice = newTotalPrice + Number(existing.totalPrice);
-          const updatedPackageCount =
-            newPackageCount + Number(existing.packageCount);
-
-          const updatedAvgPrice =
-            updatedQuantity > 0 ? updatedTotalPrice / updatedQuantity : 0;
-
-          if (existing) {
-            const purchasedStockItem =
-              await prismaStockRepository.stockItem.update({
-                where: { id },
-                data: {
-                  quantity: new Prisma.Decimal(updatedQuantity),
-                  totalPrice: new Prisma.Decimal(updatedTotalPrice),
-                  avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
-                  packageCount: new Prisma.Decimal(updatedPackageCount),
-                  lastPackageQuantity: new Prisma.Decimal(quantity),
-                },
-              });
-
-            return {
-              ...purchasedStockItem,
-              operation: StockItemOperation.PURCHASE,
-            };
-          }
+        if (!existing) {
+          throw httpError("Nepodařilo se najít položku na skladu.", 404);
         }
 
-        if (data.id) {
-          const {
-            id,
-            itemName,
-            quantity,
-            totalPrice,
-            threshold,
-            unit,
-            stockId,
-            packageCount,
-          } = data;
+        const newQuantityPerPiece = Number(quantity);
+        const newTotalPrice = Number(totalPrice);
+        const newPackageCount = Number(packageCount);
 
-          const updatedQuantity = packageCount * quantity;
-          const avgPrice =
-            updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
+        const newTotalQuantity = newQuantityPerPiece * newPackageCount;
 
-          const updatedStockItem = await prisma.stockItem.update({
-            where: { id },
-            data: {
-              itemName,
-              quantity: new Prisma.Decimal(updatedQuantity),
-              totalPrice: new Prisma.Decimal(totalPrice),
-              avgUnitPrice: new Prisma.Decimal(avgPrice),
-              threshold: new Prisma.Decimal(threshold),
-              packageCount: new Prisma.Decimal(packageCount),
-              lastPackageQuantity: new Prisma.Decimal(quantity),
-              unit,
-              stockId,
-            },
-          });
+        const updatedQuantity = newTotalQuantity + Number(existing.quantity);
+        const updatedTotalPrice = newTotalPrice + Number(existing.totalPrice);
+        const updatedPackageCount =
+          newPackageCount + Number(existing.packageCount);
+
+        const updatedAvgPrice =
+          updatedQuantity > 0 ? updatedTotalPrice / updatedQuantity : 0;
+
+        if (existing) {
+          const purchasedStockItem =
+            await prismaStockRepository.stockItem.update({
+              where: { id },
+              data: {
+                quantity: new Prisma.Decimal(updatedQuantity),
+                totalPrice: new Prisma.Decimal(updatedTotalPrice),
+                avgUnitPrice: new Prisma.Decimal(updatedAvgPrice),
+                packageCount: new Prisma.Decimal(updatedPackageCount),
+                lastPackageQuantity: new Prisma.Decimal(quantity),
+              },
+            });
 
           return {
-            ...updatedStockItem,
-            operation: StockItemOperation.UPDATE,
+            ...purchasedStockItem,
+            operation: StockItemOperation.PURCHASE,
           };
         }
+      }
 
+      if (data.id) {
         const {
+          id,
           itemName,
-          unit,
           quantity,
-          threshold,
           totalPrice,
+          threshold,
+          unit,
           stockId,
           packageCount,
         } = data;
@@ -123,122 +87,133 @@ const createStockItemRepositoryDb = (
         const updatedQuantity = packageCount * quantity;
         const avgPrice = updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
 
-        if (
-          await prisma.stockItem.findFirst({
-            where: { stockId: data.stockId, activeName: data.itemName },
-          })
-        ) {
-          throw httpError(
-            "Aktivní položka se stejným názvem již existuje.",
-            409
-          );
-        }
-
-        const createdStockItem = await prismaStockRepository.stockItem.create({
+        const updatedStockItem = await prisma.stockItem.update({
+          where: { id },
           data: {
             itemName,
-            unit,
             quantity: new Prisma.Decimal(updatedQuantity),
             totalPrice: new Prisma.Decimal(totalPrice),
             avgUnitPrice: new Prisma.Decimal(avgPrice),
             threshold: new Prisma.Decimal(threshold),
-            isActive: true,
-            activeName: data.itemName,
             packageCount: new Prisma.Decimal(packageCount),
             lastPackageQuantity: new Prisma.Decimal(quantity),
-            stock: { connect: { id: stockId } },
+            unit,
+            stockId,
           },
         });
 
         return {
-          ...createdStockItem,
-          operation: StockItemOperation.CREATE,
+          ...updatedStockItem,
+          operation: StockItemOperation.UPDATE,
         };
-      } catch (err) {
-        if (
-          err instanceof PrismaClientKnownRequestError &&
-          err.code === "P2002"
-        ) {
-          throw StockItemAlreadyExistsError();
-        }
-
-        throw err;
       }
+
+      const {
+        itemName,
+        unit,
+        quantity,
+        threshold,
+        totalPrice,
+        stockId,
+        packageCount,
+      } = data;
+
+      const updatedQuantity = packageCount * quantity;
+      const avgPrice = updatedQuantity > 0 ? totalPrice / updatedQuantity : 0;
+
+      if (
+        await prisma.stockItem.findFirst({
+          where: { stockId: data.stockId, activeName: data.itemName },
+        })
+      ) {
+        throw httpError("Aktivní položka se stejným názvem již existuje.", 409);
+      }
+
+      const createdStockItem = await prismaStockRepository.stockItem.create({
+        data: {
+          itemName,
+          unit,
+          quantity: new Prisma.Decimal(updatedQuantity),
+          totalPrice: new Prisma.Decimal(totalPrice),
+          avgUnitPrice: new Prisma.Decimal(avgPrice),
+          threshold: new Prisma.Decimal(threshold),
+          isActive: true,
+          activeName: data.itemName,
+          packageCount: new Prisma.Decimal(packageCount),
+          lastPackageQuantity: new Prisma.Decimal(quantity),
+          stock: { connect: { id: stockId } },
+        },
+      });
+
+      return {
+        ...createdStockItem,
+        operation: StockItemOperation.CREATE,
+      };
     },
     deleteStockItem: async (id: string, userId: string): Promise<void> => {
-      try {
-        const teamMember = await prismaStockRepository.teamMember.findFirst({
-          where: { userId },
-        });
+      const teamMember = await prismaStockRepository.teamMember.findFirst({
+        where: { userId },
+      });
 
-        const stockItem = await prismaStockRepository.stockItem.findUnique({
-          where: { id },
-          include: { stock: true },
-        });
+      const stockItem = await prismaStockRepository.stockItem.findUnique({
+        where: { id },
+        include: { stock: true },
+      });
 
-        if (!stockItem) {
-          throw new Error("Položka skladu nebyla nalezena.");
-        }
-
-        const isOwnStock =
-          stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
-          stockItem.stock.ownerId === userId;
-
-        const isTeamStock =
-          stockItem.stock.teamId === teamMember?.teamId &&
-          teamMember?.canAccessStocks;
-
-        if (!isOwnStock && !isTeamStock) {
-          throw new Error("Nemáte oprávnění k odstranění této položky skladu.");
-        }
-        await prismaStockRepository.stockItem.update({
-          where: { id },
-          data: { isActive: false, activeName: null },
-        });
-      } catch (error) {
-        console.error("deleteStockItem error:", error);
-        throw error;
+      if (!stockItem) {
+        throw new Error("Položka skladu nebyla nalezena.");
       }
+
+      const isOwnStock =
+        stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
+        stockItem.stock.ownerId === userId;
+
+      const isTeamStock =
+        stockItem.stock.teamId === teamMember?.teamId &&
+        teamMember?.canAccessStocks;
+
+      if (!isOwnStock && !isTeamStock) {
+        throw new Error("Nemáte oprávnění k odstranění této položky skladu.");
+      }
+      await prismaStockRepository.stockItem.update({
+        where: { id },
+        data: { isActive: false, activeName: null },
+      });
     },
 
     getStockItemById: async (
       stockItemId: string,
       userId: string
     ): Promise<StockItem> => {
-      try {
-        const teamMember = await prismaStockRepository.teamMember.findFirst({
-          where: { userId },
-        });
+      const teamMember = await prismaStockRepository.teamMember.findFirst({
+        where: { userId },
+      });
 
-        const stockItem = await prismaStockRepository.stockItem.findUnique({
-          where: { id: stockItemId, isActive: true },
-          include: { stock: true },
-        });
+      const stockItem = await prismaStockRepository.stockItem.findUnique({
+        where: { id: stockItemId, isActive: true },
+        include: { stock: true },
+      });
 
-        if (!stockItem) {
-          throw httpError("Položka skladu nebyla nalezena.", 404);
-        }
-
-        const isOwnStock =
-          stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
-          stockItem.stock.ownerId === userId;
-
-        const isTeamStock =
-          stockItem.stock.teamId === teamMember?.teamId &&
-          teamMember?.canAccessStocks;
-
-        if (!isOwnStock && !isTeamStock) {
-          throw httpError(
-            "Nemáte oprávnění k přístupu k této položce skladu.",
-            403
-          );
-        }
-
-        return stockItem;
-      } catch (error) {
-        console.error("getStockItemById error:", error);
-        throw error;
+      if (!stockItem) {
+        throw httpError("Položka skladu nebyla nalezena.", 404);
       }
+
+      const isOwnStock =
+        stockItem.stock.teamId === DEFAULT_USERS_TEAM &&
+        stockItem.stock.ownerId === userId;
+
+      const isTeamStock =
+        stockItem.stock.teamId === teamMember?.teamId &&
+        teamMember?.canAccessStocks;
+
+      if (!isOwnStock && !isTeamStock) {
+        throw httpError(
+          "Nemáte oprávnění k přístupu k této položce skladu.",
+          403
+        );
+      }
+
+      return stockItem;
     },
 
     findStockItemByName: async (

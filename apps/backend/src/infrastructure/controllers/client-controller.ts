@@ -31,151 +31,80 @@ const createClientController = (dependencies: {
   const findClientsController: ControllerFunction<{
     query: { query: string };
   }> = async (httpRequest) => {
-    try {
-      const { query } = httpRequest.query;
-      const userId = httpRequest.userId;
-
-      const clients = await dependencies.searchClientsUseCase.execute(
-        userId,
-        query
-      );
-
-      return {
-        statusCode: 200,
-        body: clients,
-      };
-    } catch (error: any) {
-      console.error("Error in findClientsController:", error);
-      return {
-        statusCode: 500,
-        body: { error: "Internal Server Error" },
-      };
-    }
+    const { query } = httpRequest.query;
+    const userId = httpRequest.userId;
+    const clients = await dependencies.searchClientsUseCase.execute(
+      userId,
+      query
+    );
+    return {
+      statusCode: 200,
+      body: clients,
+    };
   };
 
   const addOrUpdateClientController: ControllerFunction<
     AddClientControllerType
   > = async (httpRequest) => {
-    try {
-      const clientData: ClientOrUpdateCreateData = httpRequest.body;
-      const userId = httpRequest.userId;
+    const clientData: ClientOrUpdateCreateData = httpRequest.body;
+    const userId = httpRequest.userId;
 
-      const clientDataWithUserId = { ...clientData, userId };
+    const clientDataWithUserId = { ...clientData, userId };
 
-      const newOrUpdatedClient =
-        await dependencies.addOrUpdateClientUseCase.execute(
-          clientDataWithUserId
-        );
-      return {
-        statusCode: 201,
-        body: newOrUpdatedClient,
-      };
-    } catch (error: any) {
-      if (
-        error.name === "UserNotFoundError" ||
-        error.name === "ClientNotFoundError"
-      ) {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in addClientController:", error);
-      throw error;
-    }
+    const newOrUpdatedClient =
+      await dependencies.addOrUpdateClientUseCase.execute(clientDataWithUserId);
+    return {
+      statusCode: 201,
+      body: newOrUpdatedClient,
+    };
   };
+
   const importClientsController: ControllerFunction<
     ImportClientsControllerType
   > = async (httpRequest) => {
-    try {
-      const { contacts } = httpRequest.body;
-      const userId = httpRequest.userId;
+    const { contacts } = httpRequest.body;
+    const userId = httpRequest.userId;
 
-      const newOrUpdatedClient =
-        await dependencies.importClientsUseCase.execute({
-          clientImport: contacts,
-          userId,
-        });
-      return {
-        statusCode: 201,
-        body: newOrUpdatedClient,
-      };
-    } catch (error: any) {
-      if (
-        error.name === "UserNotFoundError" ||
-        error.name === "ClientNotFoundError"
-      ) {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in importClients:", error);
-      throw error;
-    }
+    const newOrUpdatedClient = await dependencies.importClientsUseCase.execute({
+      clientImport: contacts,
+      userId,
+    });
+    return {
+      statusCode: 201,
+      body: newOrUpdatedClient,
+    };
   };
 
   const getAllClientsByUserIdController: ControllerFunction<
     GetClientByIdControllerType
   > = async (httpRequest) => {
-    try {
-      const userId = httpRequest.userId;
+    const userId = httpRequest.userId;
 
-      const clients = await dependencies.getAllClientsByUserIdUseCase.execute(
-        userId
-      );
+    const clients = await dependencies.getAllClientsByUserIdUseCase.execute(
+      userId
+    );
 
-      return {
-        statusCode: 201,
-        body: clients,
-      };
-    } catch (error: any) {
-      if (
-        error.name === "UserNotFoundError" ||
-        error.name === "ClientNotFoundError"
-      ) {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in getAllClientsController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 201,
+      body: clients,
+    };
   };
+
   const getClientByIdController: ControllerFunction<
     GetClientByIdControllerType
   > = async (httpRequest) => {
-    try {
-      const clientId = httpRequest.params.clientId;
-      const userId = httpRequest.userId;
+    const clientId = httpRequest.params.clientId;
+    const userId = httpRequest.userId;
 
-      const client = await dependencies.getClientByIdUseCase.execute(
-        clientId,
-        userId
-      );
+    const client = await dependencies.getClientByIdUseCase.execute(
+      clientId,
+      userId
+    );
 
-      return {
-        statusCode: 201,
-        body: client,
-      };
-    } catch (error: any) {
-      if (
-        error.name === "UserNotFoundError" ||
-        error.name === "ClientNotFoundError"
-      ) {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in getClientByIdController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 201,
+      body: client,
+    };
   };
 
   return {

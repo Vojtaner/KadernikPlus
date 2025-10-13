@@ -30,52 +30,34 @@ export const createProcedureController = (dependencies: {
   const getProceduresController: ControllerFunction<
     GetProceduresControllerType
   > = async (httpRequest) => {
-    try {
-      const visitId = httpRequest.params.visitId;
-      const result = await dependencies.getProceduresUseCase.execute(visitId);
-
-      return { statusCode: 200, body: result };
-    } catch (error: any) {
-      console.error("getProceduresController", error);
-      return { statusCode: 500, body: { error: error.message } };
-    }
+    const visitId = httpRequest.params.visitId;
+    const result = await dependencies.getProceduresUseCase.execute(visitId);
+    return { statusCode: 200, body: result };
   };
+
   const deleteProcedureController: ControllerFunction<
     DeleteProcedureControllerType
   > = async (httpRequest) => {
-    try {
-      const procedureId = httpRequest.params.id;
-      const result = await dependencies.deleteProcedureUseCase.execute(
-        procedureId
-      );
-
-      return { statusCode: 200, body: result };
-    } catch (error: any) {
-      console.error("deleteProcedureController", error);
-      return { statusCode: 500, body: { error: error.message } };
-    }
+    const procedureId = httpRequest.params.id;
+    const result = await dependencies.deleteProcedureUseCase.execute(
+      procedureId
+    );
+    return { statusCode: 200, body: result };
   };
 
   const addOrUpdateProcedureController: ControllerFunction<
     AddOrUpdateProcedureControllerType
   > = async (httpRequest) => {
-    try {
-      const visitId = httpRequest.params.visitId;
-      const procedureData: ProcedureCreateData = {
-        ...httpRequest.body,
-        visitId,
-        userId: httpRequest.userId,
-      };
-
-      const result = await dependencies.addOrUpdateProcedureUseCase.execute(
-        procedureData
-      );
-
-      return { statusCode: 201, body: result };
-    } catch (error: any) {
-      console.error("addOrUpdateProcedureController", error);
-      return { statusCode: 400, body: { error: error.message } };
-    }
+    const visitId = httpRequest.params.visitId;
+    const procedureData: ProcedureCreateData = {
+      ...httpRequest.body,
+      visitId,
+      userId: httpRequest.userId,
+    };
+    const result = await dependencies.addOrUpdateProcedureUseCase.execute(
+      procedureData
+    );
+    return { statusCode: 201, body: result };
   };
 
   return {
