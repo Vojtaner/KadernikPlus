@@ -202,15 +202,19 @@ export function groupVisits(visits: VisitWithServices[]): VisitGroups {
     const visitDate = new Date(visit.date)
     const isFuture = visitDate > now
     const isPast = visitDate < now
+    const daysSinceVisit = (now.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24)
+
     const unpaidDeposit = visit.depositStatus === DepositStatus.NEZAPLACENO && visit.client.deposit === true
 
     if (isFuture) {
       invitations.push(visit)
     }
-    if (unpaidDeposit) {
+
+    if (unpaidDeposit && isFuture) {
       payments.push(visit)
     }
-    if (isPast) {
+
+    if (isPast && daysSinceVisit <= 14) {
       reviews.push(visit)
     }
   })
