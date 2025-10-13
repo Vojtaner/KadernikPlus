@@ -116,27 +116,14 @@ const createUserController = (dependencies: {
     GetUserByIdControllerType
   > = async (httpRequest) => {
     const userId = httpRequest.userId;
-    try {
-      if (!userId) {
-        throw httpError("Chybí uživatelské ID.", 400);
-      }
 
-      const user = await dependencies.getUserByIdUseCase.execute(userId);
-
-      return {
-        statusCode: 200,
-        body: user,
-      };
-    } catch (error: any) {
-      if (error.name === "UserNotFoundError") {
-        return {
-          statusCode: 404,
-          body: { error: error.message },
-        };
-      }
-      console.error("Error in getUserByIdController:", error);
-      throw error;
+    if (!userId) {
+      throw httpError("Chybí uživatelské ID.", 400);
     }
+
+    const user = await dependencies.getUserByIdUseCase.execute(userId);
+
+    return { statusCode: 200, body: user };
   };
 
   return {

@@ -54,13 +54,11 @@ export const makeExpressCallback = <T>(controller: ControllerFunction<T>) => {
       if (httpResponse.headers) {
         res.set(httpResponse.headers);
       }
+
       res.status(httpResponse.statusCode).send(httpResponse.body);
     } catch (e: any) {
       console.error("Error in makeExpressCallback:", e);
-      res.status(e.status || 500).send({
-        message: e.message || "Neznámý error,chyba serveru.",
-        status: e.status || 500,
-      });
+      next(e);
     }
   };
 };

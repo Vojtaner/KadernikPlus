@@ -1,6 +1,6 @@
 import "./application/services/sentry/instrument";
-import initSentry from "./application/services/sentry/instrument";
 import express from "express";
+import Sentry from "./application/services/sentry/instrument";
 import dotenv from "dotenv";
 import "./application/crons/anonymize-users";
 import {
@@ -18,7 +18,7 @@ import {
 import prisma from "./infrastructure/data/prisma/prisma";
 import cors from "cors";
 import { auth } from "express-oauth2-jwt-bearer";
-import errorHandler from "./utils/errorHandler";
+// import errorHandler from "./utils/errorHandler";
 import ensureUserExistsMiddleware from "./adapters/express/ensureUserExistsMiddleware";
 import ensureUserExistsUseCase from "./application/use-cases/user/ensure-user-exists";
 import { getEnvVar } from "./utils/getEnvVar";
@@ -33,11 +33,10 @@ import {
 } from "./application/services/prometheus/prometheus";
 import invoiceRouter from "./routes/invoice-routes";
 import rateLimiter from "./utils/rateLimiter";
-import { checkCors } from "./utils/checkCors";
+// import { checkCors } from "./utils/checkCors";
+// import { httpError } from "./adapters/express/httpError";
 
 dotenv.config();
-
-const Sentry = initSentry();
 
 const app = express();
 
@@ -45,6 +44,17 @@ const PORT = getEnvVar("PORT") || 3000;
 app.set("trust proxy", 1); //backend běží za proxy a express neduvěřuje, nyní ano chyba X-forwarded-future*
 app.get("/debug", () => {
   throw new Error("Test Sentry");
+});
+
+app.get("/debug/prisma", async (req, res, next) => {
+  try {
+    const users = await prisma.user.create({
+      data: { email: "vojtech.laurin@email.com", name: "Vojta" },
+    });
+    res.send("ok");
+  } catch (err) {
+    next(err);
+  }
 });
 
 const jwtCheck = auth({
@@ -60,7 +70,6 @@ register.registerMetric(httpRequests);
 app.use(cors());
 
 // app.use(cors({ origin: checkCors, credentials: true }));
-
 app.use(express.json());
 
 app.get("/cors-origin-test", (req, res) => {
@@ -101,8 +110,52 @@ app.use("/api/subscription", subscriptionRouter);
 app.use("/api/payment", paymentRouter);
 app.use("/api/invoices", invoiceRouter);
 
-Sentry.setupExpressErrorHandler(app);
-app.use(errorHandler);
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    const userId = req.auth?.payload.sub || "test_user_id_context";
+
+    Sentry.withScope((scope) => {
+      if (userId) {
+        scope.setUser({ id: userId });
+      }
+
+      scope.setContext("request", {
+        method: req.method,
+        path: req.path,
+        query: req.query,
+        body: req.body,
+      });
+
+      Sentry.captureException(err);
+    });
+
+    let status = 500;
+    // | Název                     | Popis                                                 | HTTP status |
+    // | ------------------------- | ----------------------------------------------------- | ----------- |
+    // | `NotFoundError`           | Resource neexistuje (DB záznam, route, soubor…)       | 404         |
+    // | `ValidationError`         | Špatný vstup od uživatele (request body/query/params) | 400         |
+    // | `UnauthorizedError`       | JWT chybí nebo je neplatný                            | 401         |
+    // | `ForbiddenError`          | Uživateli chybí oprávnění                             | 403         |
+    // | `ConflictError`           | Např. unikátní constraint v DB                        | 409         |
+    // | `InternalServerError`     | Neočekávaná chyba                                     | 500         |
+    // | `BadRequestError`         | Jiný typ špatného requestu                            | 400         |
+    // | `TimeoutError`            | Externí API timeout / DB timeout                      | 504         |
+    // | `ServiceUnavailableError` | Externí služba nedostupná                             | 503         |
+
+    res
+      .status(status)
+      .json({ message: err.message || "Internal Server Error" });
+  }
+);
+
+// app.use(Sentry.expressErrorHandler());
+
+// app.use(errorHandler);
 
 app.get("/metrics", async (req, res) => {
   res.set("Content-Type", register.contentType);
