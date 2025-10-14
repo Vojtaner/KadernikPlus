@@ -2,10 +2,12 @@ import { configureStore } from '@reduxjs/toolkit'
 import appUiSlice from './appUiSlice'
 import snackBarReducer from './snackBarReducer'
 import { useDispatch, useSelector, useStore } from 'react-redux'
+import searchResultsReducer from './searchResultsReducer'
 
 const rootReducer = {
   appUi: appUiSlice,
   snackbarMessage: snackBarReducer,
+  searchResults: searchResultsReducer,
 }
 
 const store = configureStore({

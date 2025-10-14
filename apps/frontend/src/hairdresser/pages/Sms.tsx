@@ -1,7 +1,7 @@
-import SmsTabs from '../SmsTabs'
+// import SmsTabs from '../SmsTabs'
 
-const SmsPage = () => {
-  return <SmsTabs />
-}
+// const SmsPage = () => {
+//   return <SmsTabs />
+// }
 
-export default SmsPage
+// export default SmsPage

@@ -3,7 +3,6 @@ import type {
   ClientWithVisits,
   Client,
   ClientOrUpdateCreateData,
-  ClientSearchPayload,
   ClientWithVisitsWithVisitServices,
 } from '../../entities/client'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../visits/entity'
@@ -16,7 +15,15 @@ export const clientApi = {
   create: () => `/api/clients`,
   import: () => `/api/clients/import`,
   getVisits: (clientId: string) => `/api/visits/client/${encodeURIComponent(clientId)}`,
-  search: (nameOrPhone: string) => `/api/clients/search?query=${encodeURIComponent(nameOrPhone)}`,
+  search: (clientIds?: string[]) => {
+    const params = new URLSearchParams()
+
+    if (clientIds?.length) {
+      clientIds.forEach((id) => params.append('ids', id))
+    }
+
+    return `/api/clients/search?${params.toString()}`
+  },
 }
 
 export const getClientById = async (axios: AxiosInstance, clientId: string): Promise<ClientWithVisits> =>
@@ -40,8 +47,8 @@ export const postCreateNewClient = async (
 export const postImportContacts = async (axios: AxiosInstance, data: { contacts: Contact[] }): Promise<boolean> =>
   apiCall(async () => await axios.post(clientApi.import(), data), 'Klienty se nepodařilo importovat.')
 
-export const patchSearchClients = async (
+export const getSearchClients = async (
   axios: AxiosInstance,
-  payload: ClientSearchPayload
+  payload: string[]
 ): Promise<ClientWithVisitsWithVisitServices[]> =>
-  apiCall(async () => await axios.patch(clientApi.search(payload.nameOrPhone), payload), 'Klienty se nepovedlo najít.')
+  apiCall(async () => await axios.get(clientApi.search(payload)), 'Klienty se nepovedlo najít.')

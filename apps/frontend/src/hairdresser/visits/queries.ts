@@ -78,6 +78,8 @@ export const useVisitQuery = (visitId: string | undefined) => {
         deposit: Number(data.deposit),
       }))
     },
+    refetchOnMount: false,
+    staleTime: 20 * 60 * 1000,
   })
 }
 
@@ -167,5 +169,7 @@ export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; t
     queryFn: () => {
       return getVisits(axios, params.query, params.date)
     },
+    staleTime: 20 * 60 * 1000,
+    refetchOnMount: false,
   })
 }

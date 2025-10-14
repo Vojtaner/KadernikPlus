@@ -1,133 +1,28 @@
-import { useState, useEffect } from 'react'
-import { Stack, IconButton, Typography, type SxProps } from '@mui/material'
+import { Stack, IconButton, type SxProps } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import SearchOffIcon from '@mui/icons-material/SearchOff'
-import { useForm, type Control } from 'react-hook-form'
-import TextField from './TextField'
-import { useIntl } from 'react-intl'
-import { useDebounce } from '../../hooks'
-import { useSearchClientsQuery } from '../../hairdresser/client/queries'
+import { useAppDispatch, useAppSelector } from '../../store/store'
+import { setSearchState } from '../../store/appUiSlice'
+import ClientSearch from './ClientSearch'
 
 type SearchBarProps = {
-  isActive?: boolean
-  onToggleActive?: (active: boolean) => void
   sx?: SxProps
 }
 
-const SearchBar = ({ isActive, onToggleActive, sx }: SearchBarProps) => {
-  const [internalActive, setInternalActive] = useState(false)
-  const active = isActive ?? internalActive
-
-  const { control, watch, resetField } = useForm<{ searchValue: string }>({
-    defaultValues: { searchValue: '' },
-  })
-
-  const searchValue = watch('searchValue')
-  const debouncedSearch = useDebounce(searchValue, 500)
-  const { refetch } = useSearchClientsQuery({ nameOrPhone: debouncedSearch }, !!debouncedSearch)
-
-  useEffect(() => {
-    if (debouncedSearch) {
-      refetch()
-    }
-  }, [debouncedSearch, refetch])
-
-  const toggleActive = () => {
-    const next = !active
-    setInternalActive(next)
-    onToggleActive?.(next)
-  }
-
-  return (
-    <SearchBarView
-      isActive={active}
-      value={searchValue}
-      control={control}
-      onToggle={toggleActive}
-      onReset={() => resetField('searchValue')}
-      onInputClick={(e) => e.stopPropagation()}
-      sx={sx}
-    />
-  )
-}
-
-type SearchBarViewProps = {
-  isActive: boolean
-  value: string
-  onToggle: () => void
-  onReset: () => void
-  onInputClick: (e: React.MouseEvent) => void
-  control: Control<
-    {
-      searchValue: string
-    },
-    {
-      searchValue: string
-    }
-  >
-  sx?: SxProps
-}
-
-const SearchBarView = ({ isActive, onToggle, onInputClick, control, sx }: SearchBarViewProps) => {
-  const intl = useIntl()
-  const searchInActivePlaceholder = intl.formatMessage({
-    defaultMessage: 'Vyhledej zákazníka...',
-    id: 'searchInactivePlaceholder',
-  })
-  const searchActivePlaceholder = intl.formatMessage({
-    defaultMessage: 'Zadejte jméno, příjmení...',
-    id: 'searchActivePlaceholder',
-  })
+const SearchBar = ({ sx }: SearchBarProps) => {
+  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
+  const dispatch = useAppDispatch()
 
   return (
     <Stack
-      onClick={onToggle}
+      onClick={() => dispatch(setSearchState(!isSearchActive))}
       direction="row"
-      sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px' }}
+      sx={{ flex: 85, bgcolor: '#140f1124', borderRadius: '10px', height: '2.8rem' }}
       justifyContent="space-between">
       <IconButton sx={{ ...sx, width: 48 }}>
-        {isActive ? <SearchOffIcon sx={{ color: '#f0f0f0' }} /> : <SearchIcon sx={{ color: '#f0f0f0' }} />}
+        {isSearchActive ? <SearchOffIcon sx={{ color: '#f0f0f0' }} /> : <SearchIcon sx={{ color: '#f0f0f0' }} />}
       </IconButton>
-
-      {!isActive ? (
-        <Typography color="#ffffff91" sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-          {searchInActivePlaceholder}
-        </Typography>
-      ) : (
-        <TextField
-          fieldPath="searchValue"
-          control={control}
-          type="search"
-          placeholder={searchActivePlaceholder}
-          onClick={onInputClick}
-          // slotProps={{
-          //   input: {
-          //     endAdornment: value && (
-          //       <IconButton onClick={onReset} edge="end" size="small">
-          //         <ClearIcon fontSize="small" sx={{ color: 'white' }} />
-          //       </IconButton>
-          //     ),
-          //   },
-          // }}
-          sx={{
-            width: '100%',
-            alignSelf: 'center',
-            background: 'none',
-            '& .MuiInputBase-root': {
-              color: '#ffffffb5',
-            },
-            '& .MuiOutlinedInput-notchedOutline': {
-              border: 'none',
-            },
-            '& .MuiOutlinedInput-input': {
-              padding: '0',
-            },
-            '& input[type="search"]::-webkit-search-cancel-button': {
-              display: 'none',
-            },
-          }}
-        />
-      )}
+      <ClientSearch />
     </Stack>
   )
 }

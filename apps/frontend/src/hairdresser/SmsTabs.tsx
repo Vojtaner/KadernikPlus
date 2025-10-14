@@ -1,92 +1,90 @@
-import { Box, IconButton, Stack, Tab, Typography } from '@mui/material'
+import { IconButton, Stack, Typography } from '@mui/material'
 import SmsCard from '../app/components/SmsCard'
-import TabContext from '@mui/lab/TabContext'
-import TabList from '@mui/lab/TabList'
-import { TabPanel } from '@mui/lab'
-import { useState, type ReactElement } from 'react'
+
+import { type ReactElement } from 'react'
 import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
-import { DepositStatus, type VisitService, type VisitWithServices } from '../hairdresser/visits/entity'
-import Loader from '../hairdresser/pages/Loader'
-import dayjs from 'dayjs'
-import InsertInvitationIcon from '@mui/icons-material/InsertInvitation'
+import {
+  DepositStatus,
+  type VisitService,
+  type VisitWithServices,
+  type VisitWithServicesHotFix,
+} from '../hairdresser/visits/entity'
 import { FormattedMessage } from 'react-intl'
-import { useVisitsQuery } from '../hairdresser/visits/queries'
-import { useUserDataQuery } from '../queries'
 
-const SmsTabs = () => {
-  const [value, setValue] = useState('1')
-  const from = dayjs().subtract(4, 'day')
-  const to = dayjs().add(8, 'day')
-  const { data: userData } = useUserDataQuery()
+// const SmsTabs = () => {
+//   const [value, setValue] = useState('1')
+//   const from = dayjs().subtract(4, 'day')
+//   const to = dayjs().add(8, 'day')
+//   const { data: userData } = useUserDataQuery()
 
-  const { data: visitData, isLoading } = useVisitsQuery({ query: { from, to } })
+//   const { data: visitData, isLoading } = useVisitsQuery({ query: { from, to } })
 
-  if (isLoading) {
-    return <Loader />
-  }
-  if (!visitData) {
-    return <Typography>Žádné SMS nenalezeny.</Typography>
-  }
+//   if (isLoading) {
+//     return <Loader />
+//   }
+//   if (!visitData) {
+//     return <Typography>Žádné SMS nenalezeny.</Typography>
+//   }
 
-  const groupedVisits = groupVisits(visitData)
+//   const groupedVisits = groupVisits(visitData)
 
-  const handleChange = (_: React.SyntheticEvent, newValue: string) => setValue(newValue)
+//   const handleChange = (_: React.SyntheticEvent, newValue: string) => setValue(newValue)
 
-  return (
-    <Box sx={{ width: '100%', typography: 'body1' }}>
-      <TabContext value={value}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <TabList onChange={handleChange}>
-            <Tab label="Upozornění" value="1" />
-            <Tab label="Zálohy" value="2" />
-            <Tab label="Recenze" value="3" />
-          </TabList>
-        </Box>
+//   return (
+//     <Box sx={{ width: '100%', typography: 'body1' }}>
+//       <TabContext value={value}>
+//         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+//           <TabList onChange={handleChange}>
+//             <Tab label="Upozornění" value="1" />
+//             <Tab label="Zálohy" value="2" />
+//             <Tab label="Recenze" value="3" />
+//           </TabList>
+//         </Box>
 
-        <TabPanel value="1" sx={{ py: 2, px: 0 }}>
-          <SmsList
-            icon={<InsertInvitationIcon />}
-            visits={groupedVisits.invitations}
-            getText={(invitationVisit) =>
-              formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
-                date: invitationVisit.date,
-              })
-            }
-          />
-        </TabPanel>
+//         <TabPanel value="1" sx={{ py: 2, px: 0 }}>
+//           <SmsList
+//             icon={<InsertInvitationIcon />}
+//             visits={groupedVisits.invitations}
+//             getText={(invitationVisit) =>
+//               formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
+//                 date: invitationVisit.date,
+//               })
+//             }
+//           />
+//         </TabPanel>
 
-        <TabPanel value="2" sx={{ py: 2, px: 0 }}>
-          <SmsList
-            visits={groupedVisits.payments}
-            getText={(payment) =>
-              formatVisitPartialPaymentReminderSms(
-                payment.client.lastName,
-                payment.visitServices,
-                userData?.bankAccount,
-                {
-                  date: payment.date,
-                  depositRequired: payment.client.deposit,
-                  depositAmount: payment.deposit,
-                  depositStatus: payment.depositStatus,
-                }
-              )
-            }
-          />
-        </TabPanel>
+//         <TabPanel value="2" sx={{ py: 2, px: 0 }}>
+//           <SmsList
+//             visits={groupedVisits.payments}
+//             getText={(payment) =>
+//               formatVisitPartialPaymentReminderSms(
+//                 payment.client.lastName,
+//                 payment.visitServices,
+//                 userData?.bankAccount,
+//                 {
+//                   date: payment.date,
+//                   depositRequired: payment.client.deposit,
+//                   depositAmount: payment.deposit,
+//                   depositStatus: payment.depositStatus,
+//                 }
+//               )
+//             }
+//           />
+//         </TabPanel>
 
-        <TabPanel value="3" sx={{ py: 2, px: 0 }}>
-          <SmsList
-            visits={groupedVisits.reviews}
-            getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
-          />
-        </TabPanel>
-      </TabContext>
-    </Box>
-  )
-}
+//         <TabPanel value="3" sx={{ py: 2, px: 0 }}>
+//           <SmsList
+//             visits={groupedVisits.reviews}
+//             getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
+//           />
+//         </TabPanel>
+//       </TabContext>
+//     </Box>
+//   )
+// }
 
-export default SmsTabs
+// export default SmsTabs
 
 export const SmsList = <T extends VisitWithServices>({
   visits,
@@ -191,33 +189,31 @@ type VisitGroups = {
   reviews: VisitWithServices[]
 }
 
-export function groupVisits(visits: VisitWithServices[]): VisitGroups {
+export function sortAutoSms(visit: VisitWithServicesHotFix): VisitGroups {
   const now = new Date()
 
   const invitations: VisitWithServices[] = []
   const payments: VisitWithServices[] = []
   const reviews: VisitWithServices[] = []
 
-  visits.forEach((visit) => {
-    const visitDate = new Date(visit.date)
-    const isFuture = visitDate > now
-    const isPast = visitDate < now
-    const daysSinceVisit = (now.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24)
+  const visitDate = new Date(visit.date)
+  const isFuture = visitDate > now
+  const isPast = visitDate < now
+  const daysSinceVisit = (now.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24)
 
-    const unpaidDeposit = visit.depositStatus === DepositStatus.NEZAPLACENO && visit.client.deposit === true
+  const unpaidDeposit = visit.depositStatus === DepositStatus.NEZAPLACENO && visit.client.deposit === true
 
-    if (isFuture) {
-      invitations.push(visit)
-    }
+  if (isFuture) {
+    invitations.push(visit)
+  }
 
-    if (unpaidDeposit && isFuture) {
-      payments.push(visit)
-    }
+  if (unpaidDeposit && isFuture) {
+    payments.push(visit)
+  }
 
-    if (isPast && daysSinceVisit <= 14) {
-      reviews.push(visit)
-    }
-  })
+  if (isPast && daysSinceVisit <= 14) {
+    reviews.push(visit)
+  }
 
   return { invitations, payments, reviews }
 }

@@ -29,13 +29,20 @@ const createClientController = (dependencies: {
   searchClientsUseCase: SearchClientsUseCaseType;
 }) => {
   const findClientsController: ControllerFunction<{
-    query: { query: string };
+    query: { ids: string };
   }> = async (httpRequest) => {
-    const { query } = httpRequest.query;
     const userId = httpRequest.userId;
+    const ids = httpRequest.query.ids;
+
+    const idList = Array.isArray(ids)
+      ? ids
+      : typeof ids === "string"
+      ? [ids]
+      : [];
+
     const clients = await dependencies.searchClientsUseCase.execute(
       userId,
-      query
+      idList
     );
     return {
       statusCode: 200,

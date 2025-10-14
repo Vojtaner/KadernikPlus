@@ -20,8 +20,7 @@ export type ClientRepositoryPort = {
   findById: (id: string, userId: string) => Promise<ClientWithVisits | null>;
   findAll: (userId: string) => Promise<Client[]>;
   search: (
-    teamId: string,
-    query: string,
+    idList: string[],
     userId: string
   ) => Promise<ClientWithVisitsAndServices[]>;
 };

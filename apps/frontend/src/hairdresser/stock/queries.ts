@@ -14,7 +14,7 @@ export const useStocksQuery = () => {
   return useQuery<Stock[]>({
     queryKey: ['stocks'],
     queryFn: () => getStocks(axios),
-    staleTime: 1000 * 60 * 5,
+    staleTime: 1000 * 60 * 20,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
@@ -66,6 +66,8 @@ export const useStockItemsQuery = (stockId: string | undefined) => {
     queryFn: () => {
       return getStockItems(axios, stockId ?? '')
     },
+    staleTime: 1000 * 60 * 20,
+    refetchOnWindowFocus: false,
     refetchOnMount: false,
   })
 }
@@ -88,5 +90,8 @@ export const useStockAllowancesQuery = ({
       }
       return getStockAllowances(axios, { teamId, fromDate, toDate })
     },
+    staleTime: 1000 * 60 * 20,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }

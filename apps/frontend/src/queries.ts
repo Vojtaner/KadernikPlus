@@ -139,6 +139,8 @@ export const useUserDataQuery = () => {
   return useQuery<UserForm>({
     queryKey: ['user'],
     queryFn: () => getUser(axios),
+    staleTime: 20 * 60 * 1000,
+    refetchOnMount: false,
   })
 }
 export const useUpdateUserMutation = () => {

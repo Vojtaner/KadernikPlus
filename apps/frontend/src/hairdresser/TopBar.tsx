@@ -1,163 +1,69 @@
-import { Box, Button, Stack, type SxProps, type Theme } from '@mui/material'
-import MenuBox from '../app/components/MenuBox'
-import SearchBar from '../app/components/SearchBar'
-import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import { ROUTES } from '../routes/AppRoutes'
-import logo from '../../public/logo.png'
-import { useAppNavigate } from '../hooks'
+import { Stack, Button } from '@mui/material'
 import { useDispatch } from 'react-redux'
-import { toggleDrawer } from '../store/appUiSlice'
-import AppTheme from '../AppTheme'
+import MenuBox from '../app/components/MenuBox'
 import { useUserDataQuery } from '../queries'
+import { toggleDrawer } from '../store/appUiSlice'
+import { useAppSelector } from '../store/store'
+import SearchBar from '../app/components/SearchBar'
+import { AppLogo } from './AppLogo'
 
-type TopBarProps = {
-  onActiveSearch: (state: boolean) => void
-  isSearchActive: boolean
-}
-
-const TopBar = (props: TopBarProps) => {
-  const { onActiveSearch, isSearchActive } = props
+const TopBar = () => {
   const dispatch = useDispatch()
+  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
   const { data: userData } = useUserDataQuery()
   const colorScheme = userData?.colorScheme ?? '#c81f5b'
 
   return (
     <Stack
+      spacing={isSearchActive ? 0 : 1}
       sx={{
-        height: '100px',
-        paddingX: '10px',
+        height: 100,
+        px: 2,
+        py: 1,
+        pb: isSearchActive ? 0 : 1,
         position: 'sticky',
-        overflow: 'hidden',
-        paddingY: '10px',
-        paddingBottom: isSearchActive ? '0px' : '8px',
         top: 0,
+        overflow: 'hidden',
         transition: 'padding-bottom 0.7s ease',
         background: colorScheme,
       }}>
-      <Stack direction="column" spacing={1}>
-        <Stack direction="row" spacing={2}>
-          <AppLogo
-            sx={{
-              transform: `${isSearchActive ? 'translateY(-120%)' : 'translateY(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-            }}
-          />
-          {!isSearchActive && (
-            <Button
-              href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
-              sx={{ bgcolor: AppTheme.palette.info.main }}
-              variant="contained">
-              Video návody
-            </Button>
-          )}
-        </Stack>
+      <Stack direction="row" spacing={2} alignItems="center">
+        <AppLogo
+          sx={{
+            transform: isSearchActive ? 'translateY(-120%)' : 'translateY(0)',
+            transition: 'transform 0.5s ease-in-out',
+          }}
+        />
+        {!isSearchActive && (
+          <Button href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w" variant="contained" color="info">
+            Video návody
+          </Button>
+        )}
+      </Stack>
+
+      <Stack spacing={4}>
         <Stack
           direction="row"
           spacing={1}
           alignItems="center"
           sx={{
-            transform: `${isSearchActive ? 'translateY(-90%)' : 'translateY(0)'}`,
+            transform: isSearchActive ? 'translateY(-70%)' : 'translateY(0)',
             transition: 'transform 0.5s ease-in-out',
             position: 'relative',
           }}>
-          <SearchBar
-            isActive={isSearchActive}
-            onToggleActive={(state) => {
-              onActiveSearch(state)
-              onActiveSearch(state)
-            }}
-          />
+          <SearchBar />
           <MenuBox onClick={() => dispatch(toggleDrawer())} />
-          {/* <TopBarFilterButtonsStack
-            sx={{
-              transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
-              transition: 'transform 0.5s ease-in-out',
-              position: 'absolute',
-              top: '45px',
-              left: '0px',
-            }}
-          /> */}
         </Stack>
+        {/* <TopBarFilterButtonsStack
+          sx={{
+            transform: `${!isSearchActive ? 'translateX(-160%)' : 'translateX(0)'}`,
+            transition: 'transform 0.5s ease-in-out',
+            position: 'absolute',
+          }}
+        /> */}
       </Stack>
     </Stack>
   )
 }
 
 export default TopBar
-
-// type TopBarFilterButtonsStackProps = {
-//   sx: SxProps<Theme>
-// }
-
-// const TopBarFilterButtonsStack = (props: TopBarFilterButtonsStackProps) => {
-//   const { sx } = props
-
-//   return (
-//     <Stack
-//       sx={{ height: '100%', ...sx }}
-//       display="flex"
-//       direction="row"
-//       spacing={4}
-//       alignItems="center"
-//       justifyContent="flex-start">
-//       <TopBarFilterButton isActive={true} text="Všichni" />
-//       <TopBarFilterButton isActive={false} text="Pavla" />
-//       <TopBarFilterButton isActive={false} text="Monika" />
-//     </Stack>
-//   )
-// }
-
-// type TopBarFilterButtonProps = {
-//   isActive: boolean
-//   onClick?: () => void
-//   text: string
-// }
-
-// const TopBarFilterButton = (props: TopBarFilterButtonProps) => {
-//   const { isActive = false, onClick, text } = props
-
-//   const buttonProps = {
-//     bgcolor: isActive ? AppTheme.palette.common.white : '',
-//     borderRadius: '5px',
-//     color: isActive ? AppTheme.palette.primary.main : AppTheme.palette.common.white,
-//     paddingX: '6px',
-//     paddingY: '3px',
-//   }
-
-//   return (
-//     <Box {...buttonProps} onClick={onClick}>
-//       <Typography sx={{ minWidth: 'max-content', width: 'auto' }} fontSize="small">
-//         {text}
-//       </Typography>
-//     </Box>
-//   )
-// }
-type AppLogoProps = { sx?: SxProps<Theme> }
-
-export const AppLogo = (props: AppLogoProps) => {
-  const { sx } = props
-  const navigate = useAppNavigate()
-  const { data: userData } = useUserDataQuery()
-
-  return (
-    <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
-      <Box
-        component="a"
-        onClick={() => navigate(ROUTES.home.path)}
-        sx={{
-          textDecoration: 'none',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          cursor: 'pointer',
-        }}>
-        <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
-        <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
-          {userData?.colorScheme ? null : (
-            <img width="100px" src={logo} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
-          )}
-        </div>
-      </Box>
-    </Stack>
-  )
-}

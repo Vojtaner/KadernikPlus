@@ -5,15 +5,17 @@ import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/Visi
 import { Paths } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
 import { useIntl } from 'react-intl'
+import { useAppDispatch } from '../store/store'
+import { setSearchState } from '../store/appUiSlice'
 
 type SearchResultProps = {
   clientData: ClientWithVisitsWithVisitServices
   sx?: SxProps
-  onActiveSearch: (state: boolean) => void
 }
 
 const SearchResult = (props: SearchResultProps) => {
-  const { sx, clientData, onActiveSearch } = props
+  const { sx, clientData } = props
+  const dispatch = useAppDispatch()
   const navigate = useAppNavigate()
   const intl = useIntl()
 
@@ -27,13 +29,14 @@ const SearchResult = (props: SearchResultProps) => {
       justifyContent="flex-start"
       spacing={1}
       sx={{
+        cursor: 'pointer',
         textDecoration: 'none',
         color: 'inherit',
         ...sx,
       }}
       component="a"
       onClick={() => {
-        onActiveSearch(false)
+        dispatch(setSearchState(false))
         navigate(Paths.clientDetail(clientData.id))
       }}>
       <IconButton>

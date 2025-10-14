@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack'
 import BottomBar from '../app/components/BottomBar'
 import TopBar from './TopBar'
-import { useState, type PropsWithChildren } from 'react'
+import { type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import SearchResults from '../hairdresser/pages/SearchResults'
 import SectionHeader from '../app/components/SectionHeader'
@@ -21,20 +21,16 @@ import AddServiceItemButton from '../hairdresser/service/components/AddServiceIt
 import { APP_LAYOUT_WIDTH } from './entity'
 import { useUserDataQuery } from '../queries'
 
-
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
-  const [isSearchActive, setIsSearchActive] = useState(false)
+  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
+
   const intl = useIntl()
   const { data: userData } = useUserDataQuery()
 
   const route = useCurrentRoute()
   const navigate = useAppNavigate()
   const routeAppendix = useAppSelector((state) => state.appUi.currentLocationAppendix)
-
-  const onActiveSearch = (state: boolean) => {
-    setIsSearchActive(state)
-  }
 
   document.body.style.background = '#f6f6f6'
 
@@ -50,7 +46,7 @@ const Layout = (props: PropsWithChildren) => {
           top: 0,
           width: { md: '100%' },
         }}>
-        <TopBar onActiveSearch={onActiveSearch} isSearchActive={isSearchActive} />
+        <TopBar />
         {!isSearchActive && <SectionHeader onGoBack={() => navigate(-1)} route={route} routeAppendix={routeAppendix} />}
       </Stack>
       <Box
@@ -62,7 +58,7 @@ const Layout = (props: PropsWithChildren) => {
         sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
-          {isSearchActive && <SearchResults isSearchActive={isSearchActive} onActiveSearch={onActiveSearch} />}
+          {isSearchActive && <SearchResults />}
         </>
       </Box>
       <BottomBar>

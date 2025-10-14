@@ -1,4 +1,4 @@
-import { Stack, Box, Typography, IconButton } from '@mui/material'
+import { Stack, Box, Typography } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
@@ -17,6 +17,10 @@ import { useVisitsQuery } from '../queries'
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import { getButtonStyle } from '../../entity'
+import SmsSendDialog from '../../SmsSendDialog'
+import SendIcon from '@mui/icons-material/Send'
+import AppTheme from '../../../AppTheme'
+import BoxIcon from '../../../app/components/BoxIcon'
 
 type VisitListProps = {
   columnHeaderHeight?: 0
@@ -254,7 +258,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'visitState',
     headerName: 'Stav',
     width: 70,
-    flex: 3,
+    flex: 2,
     display: 'flex',
     editable: false,
     renderCell: (params) => {
@@ -275,15 +279,33 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'visitDetailButton',
     headerName: 'Detail',
     width: 10,
-    flex: 2,
+    flex: 3,
+    display: 'flex',
     editable: false,
     renderCell: (params) => {
       if (!params.row.isHeader && params.row.clientId) {
         const clientId = params.row.clientId
         return (
-          <IconButton onClick={() => navigate(Paths.visitDetail(clientId, params.row.id))}>
-            <PhotoCameraFrontOutlinedIcon fontSize="medium" color="primary" />
-          </IconButton>
+          <Stack direction="row" spacing={1}>
+            <SmsSendDialog
+              visitId={params.row.id}
+              openButton={
+                <BoxIcon
+                  size="small"
+                  sx={{ background: `${AppTheme.palette.common.white}`, color: `${AppTheme.palette.info.main}` }}
+                  icon={<SendIcon fontSize="small" color="info" />}
+                />
+              }
+            />
+
+            <BoxIcon
+              onClick={() => navigate(Paths.visitDetail(clientId, params.row.id))}
+              size="small"
+              boxColor="#61fb0133"
+              sx={{ background: `${AppTheme.palette.common.white}`, color: `${AppTheme.palette.info.main}` }}
+              icon={<PhotoCameraFrontOutlinedIcon fontSize="small" color="primary" />}
+            />
+          </Stack>
         )
       }
     },
