@@ -59,74 +59,53 @@ const createVisitController = (dependencies: {
   const addVisitController: ControllerFunction<AddVisitControllerType> = async (
     httpRequest
   ) => {
-    try {
-      const visitData = httpRequest.body;
-      const original = new Date(visitData.date);
-      const shiftedTime = original;
-      const userId = httpRequest.userId;
-      const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
+    const visitData = httpRequest.body;
+    const original = new Date(visitData.date);
+    const shiftedTime = original;
+    const userId = httpRequest.userId;
+    const visitDataWithUserId = { ...visitData, userId, date: shiftedTime };
 
-      if (
-        !visitData.clientId &&
-        visitData.firstName &&
-        visitData.lastName &&
-        visitData.phone
-      ) {
-        const clientData = {
-          id: "",
-          firstName: visitData.firstName,
-          lastName: visitData.lastName,
-          phone: visitData.phone,
-          note: visitData.clientNote,
-          userId,
-          deposit: visitData.depositRequired,
-        };
+    if (
+      !visitData.clientId &&
+      visitData.firstName &&
+      visitData.lastName &&
+      visitData.phone
+    ) {
+      const clientData = {
+        id: "",
+        firstName: visitData.firstName,
+        lastName: visitData.lastName,
+        phone: visitData.phone,
+        note: visitData.clientNote,
+        userId,
+        deposit: visitData.depositRequired,
+      };
 
-        const newClient = await dependencies.addOrUpdateClientUseCase.execute(
-          clientData
-        );
-
-        const newVisit = await dependencies.addVisitUseCase.execute({
-          ...visitDataWithUserId,
-          clientId: newClient.id,
-          dateTo: visitDataWithUserId.dateTo,
-        });
-
-        return {
-          statusCode: 201,
-          body: newVisit,
-        };
-      } else if (!visitData.clientId || !visitDataWithUserId.date || !userId) {
-        return {
-          statusCode: 400,
-          body: {
-            error: "Missing required visit fields: clientId, userId, date.",
-          },
-        };
-      }
-
-      const newVisit = await dependencies.addVisitUseCase.execute(
-        visitDataWithUserId
+      const newClient = await dependencies.addOrUpdateClientUseCase.execute(
+        clientData
       );
+
+      const newVisit = await dependencies.addVisitUseCase.execute({
+        ...visitDataWithUserId,
+        clientId: newClient.id,
+        dateTo: visitDataWithUserId.dateTo,
+      });
 
       return {
         statusCode: 201,
         body: newVisit,
       };
-    } catch (error: any) {
-      if (
-        error.name === "UserNotFoundError" ||
-        error.name === "ClientNotFoundError"
-      ) {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in addVisitController:", error);
-      throw error;
     }
+
+    const newVisit = await dependencies.addVisitUseCase.execute({
+      ...visitDataWithUserId,
+      dateTo: visitDataWithUserId.dateTo,
+    });
+
+    return {
+      statusCode: 201,
+      body: newVisit,
+    };
   };
 
   const getVisitsByDatesController: ControllerFunction<
@@ -148,159 +127,95 @@ const createVisitController = (dependencies: {
         ? { date, userId }
         : { userId };
 
-    try {
-      const visits = await dependencies.getVisitsByDatesUseCase.execute(
-        queryData
-      );
+    const visits = await dependencies.getVisitsByDatesUseCase.execute(
+      queryData
+    );
 
-      return {
-        statusCode: 200,
-        body: visits,
-      };
-    } catch (error: any) {
-      if (error.name === "ClientNotFoundError") {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in getVisitsController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 200,
+      body: visits,
+    };
   };
 
   const getVisitByIdController: ControllerFunction<
     GetVisitByIdControllerType
   > = async (httpRequest) => {
-    try {
-      const { visitId } = httpRequest.params;
-      const visit = await dependencies.getVisitByIdUseCase.execute(visitId);
+    const { visitId } = httpRequest.params;
+    const visit = await dependencies.getVisitByIdUseCase.execute(visitId);
 
-      return {
-        statusCode: 200,
-        body: visit,
-      };
-    } catch (error: any) {
-      if (error.name === "VisitNotFoundError") {
-        return {
-          statusCode: 400,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in findVisitByIdController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 200,
+      body: visit,
+    };
   };
   const updateVisitStatusController: ControllerFunction<
     UpdateVisitStatusControllerType
   > = async (httpRequest) => {
-    try {
-      const { visitId, status } = httpRequest.body;
+    const { visitId, status } = httpRequest.body;
 
-      if (!visitId || typeof status !== "boolean") {
-        throw Error("Missing or invalid visitId or checked");
-      }
-
-      const updatedVisit = await dependencies.updateVisitStatusUseCase.execute({
-        visitId,
-        status,
-      });
-
-      return {
-        statusCode: 200,
-        body: updatedVisit,
-      };
-    } catch (err) {
-      throw err;
+    if (!visitId || typeof status !== "boolean") {
+      throw Error("Chybějící nebo špatné ID návštěvy.");
     }
+
+    const updatedVisit = await dependencies.updateVisitStatusUseCase.execute({
+      visitId,
+      status,
+    });
+
+    return {
+      statusCode: 200,
+      body: updatedVisit,
+    };
   };
   const updateVisitController: ControllerFunction<
     UpdateVisitControllerType
   > = async (httpRequest) => {
-    try {
-      const visitId = httpRequest.params.visitId;
-      const visitData = httpRequest.body;
+    const visitId = httpRequest.params.visitId;
+    const visitData = httpRequest.body;
 
-      const updatedVisit = await dependencies.updateVisitUseCase.execute({
-        id: visitId,
-        ...visitData,
-      });
+    const updatedVisit = await dependencies.updateVisitUseCase.execute({
+      id: visitId,
+      ...visitData,
+    });
 
-      return {
-        statusCode: 200,
-        body: updatedVisit,
-      };
-    } catch (error: any) {
-      if (error.name === "VisitNotFoundError") {
-        return {
-          statusCode: 404,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in updateVisitController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 200,
+      body: updatedVisit,
+    };
   };
 
   const getVisitsByClientIdController: ControllerFunction<
     GetVisitsByClientIdControllerType
   > = async (httpRequest) => {
-    try {
-      const clientId = httpRequest.params.clientId;
-      const userId = httpRequest.userId;
+    const clientId = httpRequest.params.clientId;
+    const userId = httpRequest.userId;
 
-      const visits = await dependencies.getVisitsByClientIdUseCase.execute(
-        clientId,
-        userId
-      );
+    const visits = await dependencies.getVisitsByClientIdUseCase.execute(
+      clientId,
+      userId
+    );
 
-      const sortedVisits = [...visits].sort(
-        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-      );
+    const sortedVisits = [...visits].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
 
-      return {
-        statusCode: 200,
-        body: sortedVisits,
-      };
-    } catch (error: any) {
-      if (error.name === "ClientNotFoundError") {
-        return {
-          statusCode: 404,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in getVisitsByClientIdController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 200,
+      body: sortedVisits,
+    };
   };
 
   const deleteVisitController: ControllerFunction<
     DeleteVisitControllerType
   > = async (httpRequest) => {
-    try {
-      const { visitId } = httpRequest.params;
+    const { visitId } = httpRequest.params;
 
-      await dependencies.deleteVisitUseCase.execute(visitId);
+    await dependencies.deleteVisitUseCase.execute(visitId);
 
-      return {
-        statusCode: 204,
-        body: null,
-      };
-    } catch (error: any) {
-      if (error.name === "VisitNotFoundError") {
-        return {
-          statusCode: 404,
-          body: { error: error.message },
-        };
-      }
-
-      console.error("Error in deleteVisitController:", error);
-      throw error;
-    }
+    return {
+      statusCode: 204,
+      body: null,
+    };
   };
 
   return {

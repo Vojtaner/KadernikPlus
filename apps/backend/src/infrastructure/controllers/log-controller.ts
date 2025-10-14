@@ -12,9 +12,7 @@ const createLogController = (dependencies: {
     GetAllLogsControllerType
   > = async (httpRequest) => {
     const userId = httpRequest.userId;
-
     const logs = await dependencies.getAllLogsUseCase.execute(userId);
-
     return {
       statusCode: 200,
       body: logs,

@@ -37,27 +37,20 @@ const createSubscriptionController = (dependencies: {
   const addSubscriptionController: ControllerFunction<
     SubscriptionControllerType["addSubscriptionController"]
   > = async (httpRequest) => {
-    try {
-      const paymentUrl = await dependencies.addSubscriptionUseCase.execute({
-        ...httpRequest.body,
-        userId: httpRequest.userId,
-      });
-
-      return { statusCode: 201, body: paymentUrl };
-    } catch (error: any) {
-      return { statusCode: 400, body: { error: error.message } };
-    }
+    const paymentUrl = await dependencies.addSubscriptionUseCase.execute({
+      ...httpRequest.body,
+      userId: httpRequest.userId,
+    });
+    return { statusCode: 201, body: paymentUrl };
   };
 
   const extendSubscriptionController: ControllerFunction<
     SubscriptionControllerType["extendSubscriptionController"]
   > = async (httpRequest) => {
     const { subscriptionId } = httpRequest.params;
-
     const sub = await dependencies.extendSubscriptionUseCase.execute(
       subscriptionId
     );
-
     return { statusCode: 200, body: sub };
   };
 

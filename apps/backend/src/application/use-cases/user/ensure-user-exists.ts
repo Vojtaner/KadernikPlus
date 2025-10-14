@@ -32,30 +32,25 @@ export const createEnsureUserExists = (dependencies: {
       }
 
       if (!user) {
-        try {
-          const managementApiData =
-            await dependencies.auth0ManagementApi.users.get({
-              id: userId,
-            });
-
-          const {
-            data: { email, name },
-          } = managementApiData;
-
-          if (!managementApiData) {
-            throw new Error("Špatně nastavená pravidla v Auth0.");
-          }
-
-          const user = await dependencies.addUserUseCase.execute({
-            email,
+        const managementApiData =
+          await dependencies.auth0ManagementApi.users.get({
             id: userId,
-            name,
-            authProvider: "auth0",
           });
-        } catch (error) {
-          console.error("createEnsureUserExists", error);
-          throw new Error("Chyba v ověřování uživatele.");
+
+        const {
+          data: { email, name },
+        } = managementApiData;
+
+        if (!managementApiData) {
+          throw new Error("Špatně nastavená pravidla v Auth0.");
         }
+
+        await dependencies.addUserUseCase.execute({
+          email,
+          id: userId,
+          name,
+          authProvider: "auth0",
+        });
       }
     },
   };

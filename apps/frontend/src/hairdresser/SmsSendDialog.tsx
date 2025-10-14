@@ -6,15 +6,13 @@ import {
   formatVisitInvitationToSms,
   formatVisitPartialPaymentReminderSms,
   formatVisitReviewRequestSms,
-  groupVisits,
   SmsList,
+  sortAutoSms,
 } from './SmsTabs'
 import QrCodeIcon from '@mui/icons-material/QrCode'
 import AddAlertIcon from '@mui/icons-material/AddAlert'
 import RateReviewIcon from '@mui/icons-material/RateReview'
-import SendIcon from '@mui/icons-material/Send'
-import AppTheme from '../AppTheme'
-import { useClientVisitsQuery } from '../hairdresser/visits/queries'
+import { useVisitQuery } from '../hairdresser/visits/queries'
 import { useUserDataQuery } from '../queries'
 
 const SmsSendDialog = (props: {
@@ -23,21 +21,12 @@ const SmsSendDialog = (props: {
     icon?: React.ReactNode
     sx?: SxProps<BoxProps>
   }>
-  clientId: string
+  visitId: string
 }) => {
-  const { openButton, clientId } = props
+  const { openButton, visitId } = props
   const [open, setOpen] = useState(false)
-  const { data: clientData } = useClientVisitsQuery(clientId, open)
+  const { data: visitData } = useVisitQuery(visitId)
   const { data: userData } = useUserDataQuery()
-
-  if (!clientData?.length) {
-    const disabledOpenDialogButton = React.cloneElement(openButton, {
-      icon: <SendIcon fontSize="small" color="disabled" />,
-      sx: { background: `${AppTheme.palette.grey[200]}`, color: `${AppTheme.palette.grey[500]}` },
-    })
-
-    return disabledOpenDialogButton
-  }
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -54,7 +43,11 @@ const SmsSendDialog = (props: {
     setOpen(false)
   }
 
-  const groupedVisits = groupVisits(clientData)
+  if (!visitData) {
+    return null
+  }
+
+  const groupedVisits = sortAutoSms(visitData)
 
   return (
     <FormDialog

@@ -166,7 +166,7 @@ model Client {
   id        String  @id @default(uuid())
   firstName String
   lastName  String
-  phone     String? @unique
+  phone     String?
   deposit   Boolean @default(true)
   note      String? @db.Text
   userId    String
@@ -179,6 +179,7 @@ model Client {
   @@index([userId], map: "clients_userId_fkey")
   @@fulltext([firstName, lastName, phone])
   @@map("clients")
+  @@unique([userId, phone])
 }
 
 model Visit {

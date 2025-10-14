@@ -11,7 +11,6 @@ import VisitsList from '../hairdresser/visits/components/VisitsList'
 import { ROUTES } from './AppRoutes'
 import { Dashboard } from '../hairdresser/pages/Dashboard'
 import ClientProfile from '../hairdresser/pages/ClientProfile'
-import ClientsList from '../hairdresser/pages/ClientList'
 import Logs from '../hairdresser/pages/Logs'
 
 const ReactRouterRoutes = () => {
@@ -19,7 +18,7 @@ const ReactRouterRoutes = () => {
     <Routes>
       <Route path={ROUTES.profile.path} element={<AuthenticationGuard component={MyProfile} />} />
       <Route path={ROUTES.home.path} element={<AuthenticationGuard component={Dashboard} />} />
-      <Route path={ROUTES.clients.path} element={<AuthenticationGuard component={ClientsList} />} />
+      {/* <Route path={ROUTES.clients.path} element={<AuthenticationGuard component={ClientsList} />} /> */}
       {/* <Route path={ROUTES.sms.path} element={<AuthenticationGuard component={SmsPage} />} /> */}
       <Route path={ROUTES.shoppingList.path} element={<AuthenticationGuard component={ShoppingList} />} />
       <Route path={ROUTES.consumption.path} element={<AuthenticationGuard component={Consumption} />} />

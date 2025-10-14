@@ -2,7 +2,8 @@ import { ClientRepositoryPort } from "../../../application/ports/client-reposito
 import clientRepositoryDb from "../../../infrastructure/data/prisma/prisma-client-repository";
 import { TeamMemberRepositoryPort } from "../../../application/ports/team-member-repository";
 import teamMemberRepositoryDb from "../../../infrastructure/data/prisma/prisma-team-member-repository";
-import { ClientWithVisitsAndServices } from "@/infrastructure/mappers/client-mapper";
+import { ClientWithVisitsAndServices } from "../../../infrastructure/mappers/client-mapper";
+import { httpError } from "../../../adapters/express/httpError";
 
 const createSearchClientsUseCase = (dependencies: {
   clientRepositoryDb: ClientRepositoryPort;
@@ -11,21 +12,21 @@ const createSearchClientsUseCase = (dependencies: {
   return {
     execute: async (
       userId: string,
-      query: string
+      idList: string[]
     ): Promise<ClientWithVisitsAndServices[]> => {
-      if (!query) {
+      if (!idList.length) {
         return [];
       }
+
       const teamMember =
         await dependencies.teamMemberRepositoryDb.findUniqueMember(userId);
 
       if (!teamMember) {
-        throw Error("User has no team assigned.");
+        throw httpError("Uživatel není v žádném týmu", 404);
       }
 
       const clients = await dependencies.clientRepositoryDb.search(
-        teamMember.teamId,
-        query,
+        idList,
         userId
       );
 

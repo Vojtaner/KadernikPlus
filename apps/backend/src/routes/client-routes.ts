@@ -13,7 +13,7 @@ clientRoutes.post(
   makeExpressCallback(clientController.importClientsController)
 );
 
-clientRoutes.patch(
+clientRoutes.get(
   "/search",
   makeExpressCallback(clientController.findClientsController)
 );

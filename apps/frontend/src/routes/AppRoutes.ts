@@ -7,7 +7,7 @@ export type AppRoute = {
 export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path'] | string
 
 export const ROUTES = {
-  clients: { path: '/clients', breadcrumb: 'Klienti' },
+  // clients: { path: '/clients', breadcrumb: 'Klienti' },
   clientDetail: { path: '/clients/:clientId', breadcrumb: 'Detail klienta' },
   visitDetail: { path: '/clients/:clientId/visits/:visitId', breadcrumb: 'Detail návštěvy' },
   visits: { path: '/visits', breadcrumb: 'Všechny návštěvy' },

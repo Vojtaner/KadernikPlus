@@ -3,14 +3,13 @@ import type { AxiosError } from 'axios'
 import { useAxios } from '../../axios/axios'
 import type {
   ClientOrUpdateCreateData,
-  ClientSearchPayload,
   ClientWithVisitsWithVisitServices,
   Client,
   ClientWithVisits,
 } from '../../entities/client'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { postCreateNewClient, patchSearchClients, getClients, getClientById, postImportContacts } from './api'
+import { postCreateNewClient, getClients, getClientById, postImportContacts, getSearchClients } from './api'
 import type { Contact } from '../ContactPicker'
 
 export const useCreateNewOrUpdateClientMutation = () => {
@@ -52,13 +51,13 @@ export const useImportClientMutation = (options?: UseMutationOptions<boolean, un
   })
 }
 
-export const useSearchClientsQuery = (payload: ClientSearchPayload, enabled = true) => {
+export const useSearchClientsQuery = (payload: string[], enabled = true) => {
   const axios = useAxios()
 
   return useQuery<ClientWithVisitsWithVisitServices[], Error>({
     queryKey: ['searchClients'],
-    queryFn: () => patchSearchClients(axios, payload),
-    enabled: enabled && !!payload.nameOrPhone,
+    queryFn: () => getSearchClients(axios, payload),
+    enabled: enabled && !!payload.length,
   })
 }
 
@@ -68,6 +67,8 @@ export const useClientsQuery = () => {
   return useQuery<Client[]>({
     queryKey: ['clients'],
     queryFn: () => getClients(axios),
+    staleTime: 20 * 1000 * 60,
+    refetchOnMount: false,
   })
 }
 export const useClientQuery = (clientId: string | undefined) => {

@@ -16,4 +16,5 @@ const Note = (props: NoteProps) => {
     </Stack>
   )
 }
+
 export default Note

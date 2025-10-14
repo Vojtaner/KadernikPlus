@@ -79,12 +79,12 @@ export const getMenuItems = (
     path: ROUTES.home.path,
     icon: <DashboardIcon />,
   },
-  {
-    key: 'clients',
-    title: intl.formatMessage({ id: 'clients', defaultMessage: 'Klienti' }),
-    path: ROUTES.clients.path,
-    icon: <Face4Icon />,
-  },
+  // {
+  //   key: 'clients',
+  //   title: intl.formatMessage({ id: 'clients', defaultMessage: 'Klienti' }),
+  //   path: ROUTES.clients.path,
+  //   icon: <Face4Icon />,
+  // },
   {
     key: 'visits',
     title: intl.formatMessage({ id: 'visitsList', defaultMessage: 'Návštěvy' }),

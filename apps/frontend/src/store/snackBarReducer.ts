@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export type SnackbarMessage = { type: 'success' | 'error' | 'warning'; text: string | undefined; unique: string }
 
-export interface SnackbarMessageStoreState {
+export type SnackbarMessageStoreState = {
   messages: SnackbarMessage[]
 }
 

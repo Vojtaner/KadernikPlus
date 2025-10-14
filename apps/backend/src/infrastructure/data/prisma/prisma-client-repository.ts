@@ -34,8 +34,7 @@ const createClientRepositoryDb = (
       return clients;
     },
     search: async (
-      teamId: string,
-      query: string,
+      idsList: string[],
       userId: string
     ): Promise<ClientWithVisitsAndServices[]> => {
       const teamMember = await prismaRepository.teamMember.findFirst({
@@ -44,33 +43,14 @@ const createClientRepositoryDb = (
         },
       });
 
-      const conditions: Record<string, number | string | { search: string }>[] =
-        [
-          {
-            userId,
-            firstName: {
-              search: query,
-            },
-            lastName: {
-              search: query,
-            },
-            phone: {
-              search: query,
-            },
-          },
-        ];
-
-      if (teamMember?.canAccessClients && teamMember.teamId) {
-        conditions.push({ teamId });
-      }
-
       const clients = await prismaRepository.client.findMany({
-        where: { AND: conditions },
+        where: { id: { in: idsList } },
         include: {
           visits: {
             include: { visitServices: { include: { service: true } } },
           },
         },
+        take: 100,
       });
 
       return clients;
@@ -113,7 +93,12 @@ const createClientRepositoryDb = (
 
       if (clientData.phone) {
         const alreadyExistingPhone = await prismaRepository.client.findUnique({
-          where: { phone: clientData.phone },
+          where: {
+            userId_phone: {
+              userId: clientData.userId,
+              phone: clientData.phone,
+            },
+          },
         });
 
         if (alreadyExistingPhone) {
@@ -217,14 +202,6 @@ const createClientRepositoryDb = (
         "Klient neexistuje, není ve vašem týmu nebo k němu nemáte oprávnění.",
         403
       );
-    },
-
-    findByPhone: async (phone: string): Promise<Client | null> => {
-      const client = await prismaRepository.client.findUnique({
-        where: { phone },
-      });
-
-      return client;
     },
   };
 };
