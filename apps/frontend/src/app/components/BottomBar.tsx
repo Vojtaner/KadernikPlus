@@ -1,5 +1,4 @@
 import Stack from '@mui/material/Stack'
-
 import type { PropsWithChildren } from 'react'
 import { useUserDataQuery } from '../../queries'
 
