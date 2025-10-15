@@ -8,6 +8,12 @@ clientRoutes.post(
   "/",
   makeExpressCallback(clientController.addOrUpdateClientController)
 );
+
+clientRoutes.delete(
+  "/:clientId",
+  makeExpressCallback(clientController.deleteClientByIdController)
+);
+
 clientRoutes.post(
   "/import",
   makeExpressCallback(clientController.importClientsController)

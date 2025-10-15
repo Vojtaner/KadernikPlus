@@ -18,6 +18,7 @@ export type ClientRepositoryPort = {
     { created: never[]; skipped: number } | { created: number; skipped: number }
   >;
   findById: (id: string, userId: string) => Promise<ClientWithVisits | null>;
+  deleteById: (id: string) => Promise<Client>;
   findAll: (userId: string) => Promise<Client[]>;
   search: (
     idList: string[],

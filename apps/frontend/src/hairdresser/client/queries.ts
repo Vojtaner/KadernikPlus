@@ -9,8 +9,17 @@ import type {
 } from '../../entities/client'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { postCreateNewClient, getClients, getClientById, postImportContacts, getSearchClients } from './api'
+import {
+  postCreateNewClient,
+  getClients,
+  getClientById,
+  postImportContacts,
+  getSearchClients,
+  deleteClient,
+} from './api'
 import type { Contact } from '../ContactPicker'
+import { useAppNavigate } from '../../hooks'
+import { ROUTES } from '../../routes/AppRoutes'
 
 export const useCreateNewOrUpdateClientMutation = () => {
   const axios = useAxios()
@@ -31,6 +40,27 @@ export const useCreateNewOrUpdateClientMutation = () => {
     },
   })
 }
+export const useDeleteClientMutation = () => {
+  const axios = useAxios()
+  const addSnackBarMessage = useAddSnackbarMessage()
+  const navigate = useAppNavigate()
+
+  return useMutation<Client, Error, string>({
+    mutationFn: (clientId: string) => deleteClient(axios, clientId),
+    onSuccess: (client) => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
+      queryClient.invalidateQueries({ queryKey: ['searchClients'] })
+      queryClient.invalidateQueries({ queryKey: ['client', client.id] })
+      addSnackBarMessage({ text: 'Klienta se podařilo smazat.', type: 'success' })
+      navigate(ROUTES.home.path)
+    },
+    onError: (error) => {
+      addSnackBarMessage({ text: error.message, type: 'error' })
+      console.error(error)
+    },
+  })
+}
+
 export const useImportClientMutation = (options?: UseMutationOptions<boolean, unknown, { contacts: Contact[] }>) => {
   const axios = useAxios()
   const addSnackBarMessage = useAddSnackbarMessage()

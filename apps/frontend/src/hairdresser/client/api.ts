@@ -12,6 +12,7 @@ import { apiCall } from '../entity'
 export const clientApi = {
   getById: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
   getAll: () => `/api/clients/`,
+  delete: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
   create: () => `/api/clients`,
   import: () => `/api/clients/import`,
   getVisits: (clientId: string) => `/api/visits/client/${encodeURIComponent(clientId)}`,
@@ -46,6 +47,9 @@ export const postCreateNewClient = async (
 
 export const postImportContacts = async (axios: AxiosInstance, data: { contacts: Contact[] }): Promise<boolean> =>
   apiCall(async () => await axios.post(clientApi.import(), data), 'Klienty se nepodařilo importovat.')
+
+export const deleteClient = async (axios: AxiosInstance, clientId: string): Promise<Client> =>
+  apiCall(async () => await axios.delete(clientApi.delete(clientId)), 'Klienta se nepodařilo smazat.')
 
 export const getSearchClients = async (
   axios: AxiosInstance,

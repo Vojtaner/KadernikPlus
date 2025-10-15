@@ -1,4 +1,4 @@
-import { Button, Divider, Stack, Typography } from '@mui/material'
+import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
 import Loader from './Loader'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
@@ -8,15 +8,19 @@ import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import AppTheme from '../../AppTheme'
 import AddEditClientFormDialog from '../client/components/AddEditClientFormDialog'
 import ClientProfileGrid from '../client/components/ClientProfileGrid'
-import { useClientQuery } from '../client/queries'
+import { useClientQuery, useDeleteClientMutation } from '../client/queries'
 import VisitDetailCard from '../visits/components/VisitDetailCard'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
 import { getDateTimeFromUtcToLocal } from '../visits/components/VisitsList'
 import AddVisitFormDialog from '../visits/components/AddVisitFormDialog'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
+import BoxIcon from '../../app/components/BoxIcon'
+import DeleteDialog from '../visits/components/DeleteDialog'
 
 const ClientProfile = () => {
   const { clientId } = useParams()
+  const { mutate } = useDeleteClientMutation()
   const { data: clientData, isLoading, error } = useClientQuery(clientId)
   const addSnackbarMessage = useAddSnackbarMessage()
 
@@ -42,6 +46,7 @@ const ClientProfile = () => {
           startIcon={<SmsOutlinedIcon fontSize="small" color="info" />}>
           SMS
         </Button>
+
         <AddEditClientFormDialog
           defaultValues={{
             firstName: clientData.firstName,
@@ -59,16 +64,7 @@ const ClientProfile = () => {
           }
           clientId={clientData.id}
         />
-        <AddVisitFormDialog
-          openButton={
-            <Button
-              size="medium"
-              sx={{ background: `${AppTheme.palette.secondary.light}`, color: `${AppTheme.palette.secondary.main}` }}
-              startIcon={<EditCalendarIcon fontSize="small" color="sencondary" />}>
-              Objednat
-            </Button>
-          }
-        />
+
         <Button
           size="medium"
           href={`tel:+420${clientData.phone}`}
@@ -76,6 +72,27 @@ const ClientProfile = () => {
           startIcon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}>
           Volat
         </Button>
+        <AddVisitFormDialog
+          openButton={
+            <BoxIcon
+              icon={<EditCalendarIcon fontSize="small" color="primary" />}
+              sx={{ background: `${AppTheme.palette.primary}` }}
+            />
+          }
+        />
+        <DeleteDialog
+          openButton={
+            <Tooltip title="Nelze smazat klienta, pokud má návštěvu.">
+              <BoxIcon
+                icon={<DeleteForeverIcon fontSize="small" color="error" />}
+                sx={{ background: `${AppTheme.palette.primary.light}` }}
+              />
+            </Tooltip>
+          }
+          title="Opravdu chcete klienta smazat?"
+          dialogHelperText="Klient bude smazán z vaší databáze."
+          onConfirm={() => clientId && mutate(clientId)}
+        />
       </Stack>
       <Divider />
 

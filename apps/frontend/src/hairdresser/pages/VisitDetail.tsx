@@ -11,13 +11,12 @@ import AppTheme from '../../AppTheme'
 import { Paths } from '../../routes/AppRoutes'
 import { useAppNavigate } from '../../hooks'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import DeleteVisitDialogProps from '../visits/components/DeleteVisitDialog'
+import DeleteDialog from '../visits/components/DeleteDialog'
 import AddProcedureButton from '../procedure/components/AddProcedureButton'
 import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/VisitDetailGrid'
 import { useProceduresQuery } from '../procedure/queries'
 import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
 import ProcedureCard from '../ProcedureCard'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
 import { useEffect } from 'react'
 import { FormattedMessage } from 'react-intl'
 
@@ -26,7 +25,6 @@ const VisitDetail = () => {
   const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
-
   const dispatch = useAppDispatch()
   const navigate = useAppNavigate()
   const { mutate: deleteVisitMutation } = useDeleteVisitMutation()
@@ -84,24 +82,24 @@ const VisitDetail = () => {
           </Button>
         )}
         {visitData && (
-          <DeleteVisitDialogProps
+          <DeleteDialog
             openButton={
               <Tooltip title="Nelze smazat návštěva, pokud máte vytvořenou spotřebu.">
                 <Button
                   disabled={!isVisitDeletable}
                   size="medium"
                   startIcon={<DeleteOutlineIcon fontSize="small" color={!isVisitDeletable ? 'disabled' : 'primary'} />}
-                  sx={{ background: `${AppTheme.palette.primary.light}` }}
-                  onClick={() => {
-                    deleteVisitMutation(visitId)
-                    navigate(Paths.clientDetail(visitData.clientId))
-                    queryClient.invalidateQueries({ queryKey: ['visits'] })
-                  }}>
+                  sx={{ background: `${AppTheme.palette.primary.light}` }}>
                   <FormattedMessage defaultMessage="Smazat" id="visitDetail.delete" />
                 </Button>
               </Tooltip>
             }
-            onConfirm={() => deleteVisitMutation(visitId)}
+            title="Opravu si přejete smazat návštěvu?"
+            dialogHelperText="Návštěva bude smazána z vašeho seznamu."
+            onConfirm={() => {
+              deleteVisitMutation(visitId)
+              navigate(Paths.clientDetail(visitData.clientId))
+            }}
           />
         )}
       </Stack>

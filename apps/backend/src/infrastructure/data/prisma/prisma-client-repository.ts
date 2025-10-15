@@ -167,6 +167,11 @@ const createClientRepositoryDb = (
         skipped: contacts.length - createdClients.count,
       };
     },
+    deleteById: async (id: string): Promise<Client> => {
+      return await prismaRepository.client.delete({
+        where: { id },
+      });
+    },
     findById: async (
       id: string,
       userId: string

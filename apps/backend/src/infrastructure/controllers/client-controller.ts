@@ -15,8 +15,12 @@ import searchClientsUseCase, {
 import importClientsUseCase, {
   CreateImportClientsUseCaseType,
 } from "../../application/use-cases/clients/import-clients";
+import deleteClientByIdUseCase, {
+  DeleteClientByIdUseCaseType,
+} from "../../application/use-cases/clients/delete-client";
 
 type GetClientByIdControllerType = { params: { clientId: string } };
+type DeleteClientByIdControllerType = { params: { clientId: string } };
 type ImportClientsControllerType = {
   body: { contacts: { firstName: string; lastName: string; phone: string }[] };
 };
@@ -27,6 +31,7 @@ const createClientController = (dependencies: {
   getClientByIdUseCase: CreateGetClientByIdUseCaseType;
   getAllClientsByUserIdUseCase: GetAllClientsByUserIdUseCaseType;
   searchClientsUseCase: SearchClientsUseCaseType;
+  deleteClientByIdUseCase: DeleteClientByIdUseCaseType;
 }) => {
   const findClientsController: ControllerFunction<{
     query: { ids: string };
@@ -97,6 +102,20 @@ const createClientController = (dependencies: {
     };
   };
 
+  const deleteClientByIdController: ControllerFunction<
+    DeleteClientByIdControllerType
+  > = async (httpRequest) => {
+    const userId = httpRequest.userId;
+    const clientId = httpRequest.params.clientId;
+
+    await dependencies.deleteClientByIdUseCase.execute(userId, clientId);
+
+    return {
+      statusCode: 200,
+      body: { message: "Klient smazán úspěšně." },
+    };
+  };
+
   const getClientByIdController: ControllerFunction<
     GetClientByIdControllerType
   > = async (httpRequest) => {
@@ -115,6 +134,7 @@ const createClientController = (dependencies: {
   };
 
   return {
+    deleteClientByIdController,
     addOrUpdateClientController,
     importClientsController,
     getClientByIdController,
@@ -129,6 +149,7 @@ const clientController = createClientController({
   getAllClientsByUserIdUseCase,
   searchClientsUseCase,
   importClientsUseCase,
+  deleteClientByIdUseCase,
 });
 
 export default clientController;
