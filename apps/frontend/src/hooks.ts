@@ -77,7 +77,7 @@ export const DEFAULT_PERSISTENT_FILTERS: PersistentFiltersType = {
   language: 'cs',
 }
 
-const STORAGE_KEY = 'persistentFilters'
+export const STORAGE_KEY = 'persistentFilters'
 
 export function usePersistentFilters() {
   const [filters, setFilters] = useState<PersistentFiltersType>(() => {

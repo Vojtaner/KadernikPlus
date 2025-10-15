@@ -30,13 +30,15 @@ function AutoComplete<TFieldValues extends FieldValues>({
   defaultValue,
   placeholder,
   disabled,
-}: AutoCompleteProps<TFieldValues>) {
+  required,
+}: AutoCompleteProps<TFieldValues> & { required?: boolean }) {
   return (
     <Controller
       name={fieldPath}
       control={control}
       defaultValue={defaultValue}
-      render={({ field }) => {
+      rules={required ? { required: 'Toto pole je povinné' } : undefined} // přidá validaci
+      render={({ field, fieldState }) => {
         return (
           <Autocomplete
             noOptionsText="Žádné možnosti"
@@ -48,7 +50,15 @@ function AutoComplete<TFieldValues extends FieldValues>({
               onChange?.(e)
               field.onChange(selectedClient?.id ?? null)
             }}
-            renderInput={(params) => <TextField {...params} label={label} placeholder={placeholder} />}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={label}
+                placeholder={placeholder}
+                error={!!fieldState.error}
+                helperText={fieldState.error?.message}
+              />
+            )}
             isOptionEqualToValue={(option, value) => option.id === value.id}
           />
         )

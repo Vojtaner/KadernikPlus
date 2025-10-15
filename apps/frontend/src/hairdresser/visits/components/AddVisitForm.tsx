@@ -12,6 +12,7 @@ import ClientAutoComplete from '../../client/components/ClientAutoComplete'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 import { useCreateVisitMutation, useVisitsQuery } from '../queries'
 import { firstNameValidationrule, phoneValidationRule } from '../../entity'
+import { useParams } from 'react-router-dom'
 
 export const useAddVisitForm = () => {
   const [isNewClient, setIsNewClient] = useState(false)
@@ -19,7 +20,6 @@ export const useAddVisitForm = () => {
     defaultValues: { depositRequired: false },
   })
   const date = useWatch({ control, name: 'date' })
-  const intl = useIntl()
   const depositRequired = useWatch({ control, name: 'depositRequired' })
   const { data: visitsOnSelectedDate } = useVisitsQuery({ date: dayjs(date) })
 
@@ -32,7 +32,6 @@ export const useAddVisitForm = () => {
   })
 
   return {
-    title: intl.formatMessage({ defaultMessage: 'Objednat', id: 'addVisit.order' }),
     control,
     isNewClient,
     setValue,
@@ -49,6 +48,7 @@ type AddVisitFormProps = Omit<ReturnType<typeof useAddVisitForm>, 'handleSubmit'
 
 const AddVisitForm = (props: AddVisitFormProps) => {
   const intl = useIntl()
+  const { clientId } = useParams()
   const { control, isNewClient, setValue, setIsNewClient, resetField, depositRequired, visitsOnSelectedDate } = props
 
   return (
@@ -80,7 +80,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
       <Stack direction="row" spacing={1} alignItems="center">
         {!isNewClient && (
           <Box sx={{ flex: 9 }}>
-            <ClientAutoComplete fieldPath="clientId" control={control} />
+            <ClientAutoComplete fieldPath="clientId" control={control} defaultValue={clientId ?? undefined} />
           </Box>
         )}
         <Box sx={{ flex: 3 }}>

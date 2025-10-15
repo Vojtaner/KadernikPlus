@@ -18,6 +18,7 @@ import type {
   VisitWithServicesWithProceduresWithStockAllowances,
 } from './entity'
 import { getClientVisits } from '../client/api'
+import { STORAGE_KEY, type PersistentFiltersType } from '../../hooks'
 
 export const useClientVisitsQuery = (clientId: string | undefined, isEnabled?: boolean) => {
   const axios = useAxios()
@@ -142,8 +143,17 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
       return visitId
     },
     onSuccess: () => {
+      //zde by se dalo nějak wrappovat do funkce tahání ze localstorage
+      const persistentFilters = localStorage.getItem(STORAGE_KEY)
+      const { from, to }: PersistentFiltersType['visits']['dashBoardVisitOverView']['dates'] = persistentFilters
+        ? JSON.parse(persistentFilters).visits.dashBoardVisitOverView.dates
+        : ''
+
       queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
-      queryClient.invalidateQueries({ queryKey: ['visits'] })
+      queryClient.invalidateQueries({
+        queryKey: ['visits', dayjs(from).format('YYYY-MM-DD'), dayjs(to).format('YYYY-MM-DD')],
+      })
+
       addSnackBarMessage({ text: 'Návštěva byla upravena.', type: 'success' })
     },
     onError: (error) => {
@@ -170,6 +180,5 @@ export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; t
       return getVisits(axios, params.query, params.date)
     },
     staleTime: 20 * 60 * 1000,
-    refetchOnMount: false,
   })
 }

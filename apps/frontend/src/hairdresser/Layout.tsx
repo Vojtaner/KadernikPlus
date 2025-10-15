@@ -8,7 +8,6 @@ import SectionHeader from '../app/components/SectionHeader'
 import AddVisitFormDialog from '../hairdresser/visits/components/AddVisitFormDialog'
 import AddEditClientFormDialog from '../hairdresser/client/components/AddEditClientFormDialog'
 import { StockItemDialog } from '../hairdresser/stock/components/StockItemDialog'
-import MenuIconButton from '../app/components/MenuBoxIcon'
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
 import WarehouseIcon from '@mui/icons-material/Warehouse'
 import ContentCutIcon from '@mui/icons-material/ContentCut'
@@ -20,6 +19,8 @@ import SideMenu from './SideMenu'
 import AddServiceItemButton from '../hairdresser/service/components/AddServiceItemButton'
 import { APP_LAYOUT_WIDTH } from './entity'
 import { useUserDataQuery } from '../queries'
+import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
+import MenuIconButton from '../app/components/MenuBoxIcon'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
@@ -78,7 +79,14 @@ const Layout = (props: PropsWithChildren) => {
             />
           }
         />
-        <AddVisitFormDialog />
+        <AddVisitFormDialog
+          openButton={
+            <MenuIconButton
+              icon={<MoreTimeOutlinedIcon fontSize="large" />}
+              title={intl.formatMessage({ defaultMessage: 'Objednat', id: 'addVisit.order' })}
+            />
+          }
+        />
         <StockItemDialog
           formUsagePurpose="purchaseAndNewStockItem"
           openButton={

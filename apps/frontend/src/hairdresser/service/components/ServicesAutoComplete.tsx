@@ -29,6 +29,7 @@ const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesA
   return (
     <AutoComplete
       options={options}
+      required={true}
       control={control}
       fieldPath={fieldPath}
       disabled={disabled}

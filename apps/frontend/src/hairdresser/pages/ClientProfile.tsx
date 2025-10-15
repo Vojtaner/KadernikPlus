@@ -12,12 +12,14 @@ import { useClientQuery } from '../client/queries'
 import VisitDetailCard from '../visits/components/VisitDetailCard'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
 import { getDateTimeFromUtcToLocal } from '../visits/components/VisitsList'
+import AddVisitFormDialog from '../visits/components/AddVisitFormDialog'
+import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 
 const ClientProfile = () => {
   const { clientId } = useParams()
   const { data: clientData, isLoading, error } = useClientQuery(clientId)
   const addSnackbarMessage = useAddSnackbarMessage()
-  
+
   if (isLoading) {
     return <Loader />
   }
@@ -38,7 +40,7 @@ const ClientProfile = () => {
           href={`sms:+420${clientData.phone}`}
           sx={{ background: `${AppTheme.palette.info.light}`, color: `${AppTheme.palette.info.main}` }}
           startIcon={<SmsOutlinedIcon fontSize="small" color="info" />}>
-          Poslat SMS
+          SMS
         </Button>
         <AddEditClientFormDialog
           defaultValues={{
@@ -52,10 +54,20 @@ const ClientProfile = () => {
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
               startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
-              Upravit klienta
+              Upravit
             </Button>
           }
           clientId={clientData.id}
+        />
+        <AddVisitFormDialog
+          openButton={
+            <Button
+              size="medium"
+              sx={{ background: `${AppTheme.palette.secondary.light}`, color: `${AppTheme.palette.secondary.main}` }}
+              startIcon={<EditCalendarIcon fontSize="small" color="sencondary" />}>
+              Objednat
+            </Button>
+          }
         />
         <Button
           size="medium"

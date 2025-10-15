@@ -10,10 +10,11 @@ type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & 
   sx?: object
   [key: string]: unknown
   rowHeight?: number
+  disableColumnMenu?: boolean
 }
 
 function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridProps<T>) {
-  const { rows, columns, columnHeaderHeight, hideFooter, rowHeight } = props
+  const { rows, columns, columnHeaderHeight, hideFooter, rowHeight, disableColumnMenu = false } = props
 
   const gridColumns: readonly GridColDef[] = React.useMemo(
     () =>
@@ -31,6 +32,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         rows={rows}
         columns={gridColumns}
         localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
+        disableColumnMenu={disableColumnMenu}
         sx={{
           ...props.sx,
           fontSize: '12px',

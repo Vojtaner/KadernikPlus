@@ -1,15 +1,15 @@
 import { Button } from '@mui/material'
 import FormDialog from '../../../app/components/FormDialog'
-import MenuIconButton from '../../../app/components/MenuBoxIcon'
-import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
+
 import AddVisitForm, { useAddVisitForm } from './AddVisitForm'
-import { useState } from 'react'
+import { useState, type ReactElement } from 'react'
 import type { CreateVisitType } from '../entity'
 import { FormattedMessage } from 'react-intl'
+import { addPropsToReactElement } from '../../entity'
 
-export const AddVisitFormDialog = () => {
+export const AddVisitFormDialog = (props: { openButton: ReactElement }) => {
   const [open, setOpen] = useState(false)
-  const { setIsNewClient, handleSubmit, title, createVisitMutation, ...formProps } = useAddVisitForm()
+  const { setIsNewClient, handleSubmit, createVisitMutation, ...formProps } = useAddVisitForm()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -41,9 +41,7 @@ export const AddVisitFormDialog = () => {
       }
       formFields={<AddVisitForm {...formProps} setIsNewClient={setIsNewClient} />}
       handleSubmit={() => handleSubmit(onSubmit)}
-      onOpenButton={
-        <MenuIconButton icon={<MoreTimeOutlinedIcon fontSize="large" />} onClick={handleClickOpen} title={title} />
-      }
+      onOpenButton={addPropsToReactElement(props.openButton, { onClick: handleClickOpen })}
       title="Objednat"
     />
   )

@@ -1,6 +1,8 @@
 import * as Sentry from "@sentry/node";
 import { Request, Response, NextFunction } from "express";
 
+import { Prisma } from "@prisma/client";
+
 export function errorHandler(
   err: any,
   req: Request,
@@ -20,21 +22,33 @@ export function errorHandler(
     Sentry.captureException(err);
   });
 
-  const status =
-    typeof err?.statusCode === "number"
-      ? err.statusCode
-      : err.name === "ValidationError"
-      ? 400
-      : err.name === "NotFoundError"
-      ? 404
-      : err.name === "ConflictError"
-      ? 409
-      : 500;
+  let status: number;
+  let message: string;
 
-  const message =
-    process.env.NODE_ENV === "production" && status === 500
-      ? "Neznámý server error"
-      : err.message || "Neočekáváný error";
+  if (
+    err instanceof Prisma.PrismaClientKnownRequestError ||
+    err instanceof Prisma.PrismaClientUnknownRequestError ||
+    err instanceof Prisma.PrismaClientValidationError
+  ) {
+    status = 500;
+    message = "Neznámý server error";
+  } else {
+    status =
+      typeof err?.statusCode === "number"
+        ? err.statusCode
+        : err.name === "ValidationError"
+        ? 400
+        : err.name === "NotFoundError"
+        ? 404
+        : err.name === "ConflictError"
+        ? 409
+        : 500;
+
+    message =
+      process.env.NODE_ENV === "production" && status === 500
+        ? "Neznámý server error"
+        : err.message || "Neočekáváný error";
+  }
 
   if (process.env.NODE_ENV !== "production") {
     console.error("[ErrorHandler]", err);

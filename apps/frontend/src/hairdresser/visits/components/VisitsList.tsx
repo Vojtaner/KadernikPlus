@@ -121,6 +121,9 @@ const VisitsList = (props: VisitListProps) => {
         )}
         {visitListFilters.view === 'byAll' && (
           <AppDataGrid
+            disableColumnMenu={
+              visitListApplyFilter === 'dashBoardVisitOverView' || visitListApplyFilter === 'onlyOpenVisits'
+            }
             rows={rows}
             columns={createColumns(navigate)}
             columnHeaderHeight={columnHeaderHeight}
@@ -144,6 +147,7 @@ const VisitsList = (props: VisitListProps) => {
         {visitListFilters.view === 'byClosedNoStockAllowances' && (
           <AppDataGrid
             rows={rows}
+            disableColumnMenu={true}
             columns={createColumns(navigate)}
             columnHeaderHeight={columnHeaderHeight}
             hideFooter={hideFooter}
@@ -203,7 +207,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     width: 45,
     hideSortIcons: false,
     display: 'flex',
-    flex: 1,
+    flex: 1.5,
     minWidth: 20,
     renderCell: (params) =>
       params.row.isHeader ? (
@@ -231,7 +235,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'client',
     headerName: 'Zákazník',
     display: 'flex',
-    flex: 3,
+    flex: 3.5,
     minWidth: 55,
     renderCell: (params) =>
       !params.row.isHeader && (
@@ -251,14 +255,14 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
     field: 'serviceName',
     headerName: 'Účes',
     minWidth: 70,
-    flex: 3,
+    flex: 2.5,
     width: 150,
   },
   {
     field: 'visitState',
     headerName: 'Stav',
     width: 70,
-    flex: 2,
+    flex: 1.5,
     display: 'flex',
     editable: false,
     renderCell: (params) => {
@@ -269,7 +273,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
             fontSize="0.9rem"
             onClick={() => (params.row.clientId ? navigate(Paths.visitDetail(params.row.clientId, params.row.id)) : {})}
             color={isVisitOpen ? 'success' : 'error'}>
-            {isVisitOpen ? 'Uzavř.' : 'Neuzavř.'}
+            {isVisitOpen ? 'Zavř.' : 'Nezavř.'}
           </Typography>
         )
       )
