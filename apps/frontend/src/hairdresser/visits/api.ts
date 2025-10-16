@@ -17,11 +17,11 @@ export const visitApi = {
   getById: (visitId: string) => `/api/visits/${encodeURIComponent(visitId)}`,
 }
 
-export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServicesHotFix> =>
-  apiCall(async () => await axios.get(visitApi.getById(visitId)), 'Návštěva nenalezena.')
-
 export const postCreateVisit = async (axios: AxiosInstance, visitData: CreateVisitType): Promise<CreateVisitType> =>
   apiCall(async () => await axios.post(visitApi.get(), visitData), 'Návštěvu se nepodařilo vytvořit.')
+
+export const getVisitByVisitId = async (axios: AxiosInstance, visitId: string): Promise<VisitWithServicesHotFix> =>
+  apiCall(async () => await axios.get(visitApi.getById(visitId)), 'Návštěva nenalezena.')
 
 export const patchUpdateVisit = async (
   axios: AxiosInstance,

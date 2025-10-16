@@ -1,6 +1,5 @@
 import { LogRepositoryPort } from "../../ports/log-repository";
 import logRepositoryDb, {
-  LogData,
   Logs,
 } from "../../../infrastructure/data/prisma/prisma-log-repository";
 
@@ -10,7 +9,6 @@ const createGetAllLogsUseCase = (dependencies: {
   return {
     execute: async (userId: string): Promise<Logs[]> => {
       const logs = await dependencies.logRepositoryDb.getAllLogs(userId);
-      // Map entityId: null to entityId: undefined to match LogData type
       return logs;
     },
   };

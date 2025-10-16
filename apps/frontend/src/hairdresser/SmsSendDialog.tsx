@@ -25,7 +25,7 @@ const SmsSendDialog = (props: {
 }) => {
   const { openButton, visitId } = props
   const [open, setOpen] = useState(false)
-  const { data: visitData } = useVisitQuery(visitId)
+  const { data: visitData } = useVisitQuery(visitId, open)
   const { data: userData } = useUserDataQuery()
 
   const handleClickOpen = () => {
@@ -43,10 +43,6 @@ const SmsSendDialog = (props: {
     setOpen(false)
   }
 
-  if (!visitData) {
-    return null
-  }
-
   const groupedVisits = sortAutoSms(visitData)
 
   return (
@@ -60,46 +56,50 @@ const SmsSendDialog = (props: {
       }
       formFields={
         <>
-          {groupedVisits.invitations.length ? (
-            <SmsList
-              visits={groupedVisits.invitations}
-              title="Pozvánka"
-              icon={<AddAlertIcon />}
-              getText={(invitationVisit) =>
-                formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
-                  date: invitationVisit.date,
-                })
-              }
-            />
-          ) : null}
-          {groupedVisits.payments.length ? (
-            <SmsList
-              visits={groupedVisits.payments}
-              title="Záloha"
-              icon={<QrCodeIcon />}
-              getText={(payment) =>
-                formatVisitPartialPaymentReminderSms(
-                  payment.client.lastName,
-                  payment.visitServices,
-                  userData?.bankAccount,
-                  {
-                    date: payment.date,
-                    depositAmount: payment.deposit,
-                    depositStatus: payment.depositStatus,
-                    depositRequired: payment.client.deposit,
+          {groupedVisits && (
+            <>
+              {groupedVisits.invitations.length ? (
+                <SmsList
+                  visits={groupedVisits.invitations}
+                  title="Pozvánka"
+                  icon={<AddAlertIcon />}
+                  getText={(invitationVisit) =>
+                    formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
+                      date: invitationVisit.date,
+                    })
                   }
-                )
-              }
-            />
-          ) : null}
-          {groupedVisits.reviews.length ? (
-            <SmsList
-              title="Recenze"
-              icon={<RateReviewIcon />}
-              visits={groupedVisits.reviews}
-              getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
-            />
-          ) : null}
+                />
+              ) : null}
+              {groupedVisits.payments.length ? (
+                <SmsList
+                  visits={groupedVisits.payments}
+                  title="Záloha"
+                  icon={<QrCodeIcon />}
+                  getText={(payment) =>
+                    formatVisitPartialPaymentReminderSms(
+                      payment.client.lastName,
+                      payment.visitServices,
+                      userData?.bankAccount,
+                      {
+                        date: payment.date,
+                        depositAmount: payment.deposit,
+                        depositStatus: payment.depositStatus,
+                        depositRequired: payment.client.deposit,
+                      }
+                    )
+                  }
+                />
+              ) : null}
+              {groupedVisits.reviews.length ? (
+                <SmsList
+                  title="Recenze"
+                  icon={<RateReviewIcon />}
+                  visits={groupedVisits.reviews}
+                  getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
+                />
+              ) : null}
+            </>
+          )}
         </>
       }
       onOpenButton={openDialogButton}

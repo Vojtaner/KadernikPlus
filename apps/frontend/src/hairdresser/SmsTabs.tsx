@@ -189,7 +189,11 @@ type VisitGroups = {
   reviews: VisitWithServices[]
 }
 
-export function sortAutoSms(visit: VisitWithServicesHotFix): VisitGroups {
+export function sortAutoSms(visit: VisitWithServicesHotFix | undefined): VisitGroups | undefined {
+  if (!visit) {
+    return undefined
+  }
+
   const now = new Date()
 
   const invitations: VisitWithServices[] = []

@@ -63,14 +63,16 @@ export const useDeleteVisitMutation = () => {
   })
 }
 
-export const useVisitQuery = (visitId: string | undefined) => {
+export const getVisitByIdQueryKey = (visitId: string | undefined) => ['visit', visitId]
+
+export const useVisitQuery = (visitId: string | undefined, enabled = true) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesHotFix>({
-    queryKey: ['visit', visitId],
-    queryFn: () => {
+    queryKey: getVisitByIdQueryKey(visitId),
+    queryFn: async () => {
       if (!visitId) {
-        throw new Error('Visit ID is required to fetch visits.')
+        throw new Error('ID návštěvy je povinné.')
       }
 
       return getVisitByVisitId(axios, visitId).then((data) => ({
@@ -79,6 +81,7 @@ export const useVisitQuery = (visitId: string | undefined) => {
         deposit: Number(data.deposit),
       }))
     },
+    enabled,
     refetchOnMount: false,
     staleTime: 20 * 60 * 1000,
   })
@@ -118,7 +121,7 @@ export const useVisitStatusMutation = () => {
       return data
     },
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['visit', data.visitId] })
+      queryClient.invalidateQueries({ queryKey: getVisitByIdQueryKey(data.visitId) })
       queryClient.invalidateQueries({ queryKey: ['visits'] })
       addSnackBarMessage({ text: 'Stav návštěvy byl upraven.', type: 'success' })
     },
@@ -149,7 +152,7 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
         ? JSON.parse(persistentFilters).visits.dashBoardVisitOverView.dates
         : ''
 
-      queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
+      queryClient.invalidateQueries({ queryKey: getVisitByIdQueryKey(visitId) })
       queryClient.invalidateQueries({
         queryKey: ['visits', dayjs(from).format('YYYY-MM-DD'), dayjs(to).format('YYYY-MM-DD')],
       })
@@ -179,6 +182,8 @@ export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; t
     queryFn: () => {
       return getVisits(axios, params.query, params.date)
     },
+    refetchOnMount: false,
+
     staleTime: 20 * 60 * 1000,
   })
 }

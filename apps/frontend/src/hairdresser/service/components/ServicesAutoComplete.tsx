@@ -5,6 +5,7 @@ import AutoComplete from '../../../app/components/AutoComplete'
 import Loader from '../../pages/Loader'
 import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import { useServicesQuery } from '../queries'
+import { getVisitByIdQueryKey } from '../../visits/queries'
 
 type ServicesAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>
@@ -36,7 +37,7 @@ const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesA
       label="Vyberte službu"
       placeholder="Hledejte..."
       onChange={() => {
-        queryClient.invalidateQueries({ queryKey: ['visit', visitId] })
+        queryClient.invalidateQueries({ queryKey: getVisitByIdQueryKey(visitId) })
       }}
     />
   )

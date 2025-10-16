@@ -149,7 +149,6 @@ const MyProfile = () => {
           <Typography variant="body2">
             Zde můžete provést hromadný import kontaktů pouze česká tel. kontakty.
           </Typography>
-          <MuiColorPicker />
         </Stack>
         {importPayment?.status === 'PAID' && (
           <>
@@ -168,6 +167,7 @@ const MyProfile = () => {
             </Stack>
           </>
         )}
+        <ImportAppleContacts />
       </>
     )
   )

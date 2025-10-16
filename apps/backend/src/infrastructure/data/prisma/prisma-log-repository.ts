@@ -28,7 +28,7 @@ const createLogRepository = (prisma: PrismaClient) => {
       });
 
       const logs = await prisma.logEntry.findMany({
-        where: { OR: [{ teamId: teamMember?.teamId, userId }] },
+        where: { OR: [{ teamId: teamMember?.teamId }, { userId }] },
         include: { user: true },
         orderBy: { createdAt: "desc" },
       });

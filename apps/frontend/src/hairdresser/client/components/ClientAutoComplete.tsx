@@ -19,7 +19,12 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAuto
     return <Loader />
   }
 
-  const options = clients.map((client) => ({ id: client.id, name: `${client.firstName} ${client.lastName}` }))
+  const options = clients.map((client) => ({
+    id: client.id,
+    name: `${client.firstName} ${client.lastName}`,
+    lastName: `${client.lastName}`,
+    firstName: `${client.firstName}`,
+  }))
 
   return (
     <AutoComplete
