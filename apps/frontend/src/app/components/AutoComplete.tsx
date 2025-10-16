@@ -1,54 +1,58 @@
 import { Autocomplete, TextField } from '@mui/material'
-import {
-  Controller,
-  type Control,
-  type FieldPath,
-  type FieldPathValue,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form'
-import type { Identifiable } from './SelectField'
+import { Controller, type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
 import type { SyntheticEvent } from 'react'
+import type { Identifiable } from './SelectField'
 
-type AutoCompleteProps<TFieldValues extends FieldValues> = {
+type AutoCompleteProps<TFieldValues extends FieldValues, TOption extends object> = {
   fieldPath: FieldPath<TFieldValues>
   control: Control<TFieldValues>
-  options: Identifiable[] | []
+  options: TOption[]
   label: string
+  getOptionLabel: (option: TOption) => string
+  getOptionValue: (option: TOption) => string | number
   onChange?: (event: SyntheticEvent) => void
-  defaultValue?: FieldPathValue<TFieldValues, Path<TFieldValues>> | undefined
+  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
   placeholder?: string
   disabled?: boolean
+  required?: boolean
 }
 
-function AutoComplete<TFieldValues extends FieldValues>({
+function AutoComplete<TFieldValues extends FieldValues, TOption extends object>({
   fieldPath,
   control,
   options,
   label,
+  getOptionLabel,
+  getOptionValue,
   onChange,
   defaultValue,
   placeholder,
   disabled,
   required,
-}: AutoCompleteProps<TFieldValues> & { required?: boolean }) {
+}: AutoCompleteProps<TFieldValues, TOption>) {
+  const labelFn = getOptionLabel ?? ((opt: Identifiable) => opt?.name ?? '')
+  const valueFn = getOptionValue ?? ((opt: Identifiable) => opt?.id ?? '')
+
   return (
     <Controller
       name={fieldPath}
       control={control}
       defaultValue={defaultValue}
-      rules={required ? { required: 'Toto pole je povinné' } : undefined} // přidá validaci
+      rules={required ? { required: 'Toto pole je povinné' } : undefined}
       render={({ field, fieldState }) => {
+        const selected = options.find((opt) => valueFn(opt) === field.value) ?? null
+
         return (
           <Autocomplete
             noOptionsText="Žádné možnosti"
             options={options}
             disabled={disabled}
-            getOptionLabel={(option) => option.name}
-            value={options.find((option) => option.id === field.value) || null}
-            onChange={(e, selectedClient) => {
+            value={selected}
+            getOptionLabel={labelFn}
+            isOptionEqualToValue={(opt, val) => valueFn(opt) === valueFn(val)}
+            onChange={(e, option) => {
               onChange?.(e)
-              field.onChange(selectedClient?.id ?? null)
+              field.onChange(option ? valueFn(option) : null)
             }}
             renderInput={(params) => (
               <TextField
@@ -59,7 +63,6 @@ function AutoComplete<TFieldValues extends FieldValues>({
                 helperText={fieldState.error?.message}
               />
             )}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
           />
         )
       }}

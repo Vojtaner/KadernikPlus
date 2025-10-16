@@ -36,6 +36,8 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
     <AutoComplete
       placeholder="Hledejte..."
       options={teamMemberOptions}
+      getOptionLabel={(o) => o.name}
+      getOptionValue={(o) => o.id}
       control={control}
       fieldPath={fieldPath}
       label="Vyberte člena týmu"

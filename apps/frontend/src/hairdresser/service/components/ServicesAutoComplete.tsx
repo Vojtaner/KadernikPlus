@@ -30,6 +30,8 @@ const ServicesAutoComplete = <TFieldValues extends FieldValues>(props: ServicesA
   return (
     <AutoComplete
       options={options}
+      getOptionLabel={(o) => o.name}
+      getOptionValue={(o) => o.id}
       required={true}
       control={control}
       fieldPath={fieldPath}

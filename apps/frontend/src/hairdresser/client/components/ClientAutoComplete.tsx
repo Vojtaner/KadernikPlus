@@ -8,10 +8,15 @@ type ClientsAutoCompleteProps<TFieldValues extends FieldValues> = {
   fieldPath: FieldPath<TFieldValues>
   control: Control<TFieldValues>
   defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
+  required?: boolean
 }
 
-const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAutoCompleteProps<TFieldValues>) => {
-  const { control, fieldPath, defaultValue } = props
+const ClientAutoComplete = <TFieldValues extends FieldValues>({
+  control,
+  fieldPath,
+  defaultValue,
+  required,
+}: ClientsAutoCompleteProps<TFieldValues>) => {
   const { data: clients } = useClientsQuery()
   const intl = useIntl()
 
@@ -19,11 +24,11 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAuto
     return <Loader />
   }
 
-  const options = clients.map((client) => ({
-    id: client.id,
-    name: `${client.firstName} ${client.lastName}`,
-    lastName: `${client.lastName}`,
-    firstName: `${client.firstName}`,
+  const options = clients.map((c) => ({
+    id: c.id,
+    firstName: c.firstName,
+    lastName: c.lastName,
+    name: `${c.firstName && c.firstName !== '-' ? c.firstName : ''} ${c.lastName}`.trim(),
   }))
 
   return (
@@ -32,8 +37,17 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>(props: ClientsAuto
       control={control}
       fieldPath={fieldPath}
       defaultValue={defaultValue}
-      label={intl.formatMessage({ id: 'clientAutoComplete.selectClient', defaultMessage: 'Vyberte klienta' })}
-      placeholder={intl.formatMessage({ id: 'clientAutoComplete.searchPlaceholder', defaultMessage: 'Hledejte...' })}
+      required={required}
+      getOptionLabel={(o) => o.name}
+      getOptionValue={(o) => o.id}
+      label={intl.formatMessage({
+        id: 'clientAutoComplete.selectClient',
+        defaultMessage: 'Vyberte klienta',
+      })}
+      placeholder={intl.formatMessage({
+        id: 'clientAutoComplete.searchPlaceholder',
+        defaultMessage: 'Hledejte...',
+      })}
     />
   )
 }

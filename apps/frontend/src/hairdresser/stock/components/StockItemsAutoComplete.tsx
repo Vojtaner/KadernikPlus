@@ -35,6 +35,8 @@ const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockIt
       options={stockItemsOptions}
       defaultValue={defaultValue}
       control={control}
+      getOptionLabel={(o) => o.name}
+      getOptionValue={(o) => o.id}
       fieldPath={fieldPath}
       label="Vyberte položku"
       placeholder="Hledejte..."
