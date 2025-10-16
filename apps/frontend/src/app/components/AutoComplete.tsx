@@ -31,6 +31,7 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
   required,
 }: AutoCompleteProps<TFieldValues, TOption>) {
   const labelFn = getOptionLabel ?? ((opt: Identifiable) => opt?.name ?? '')
+
   const valueFn = getOptionValue ?? ((opt: Identifiable) => opt?.id ?? '')
 
   return (
