@@ -48,6 +48,11 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
             noOptionsText="Žádné možnosti"
             options={options}
             disabled={disabled}
+            renderOption={(props, option) => (
+              <li {...props} key={valueFn(option)}>
+                {labelFn(option)}
+              </li>
+            )}
             value={selected}
             getOptionLabel={labelFn}
             isOptionEqualToValue={(opt, val) => valueFn(opt) === valueFn(val)}
