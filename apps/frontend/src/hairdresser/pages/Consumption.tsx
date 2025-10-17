@@ -8,14 +8,14 @@ import {
   type StockViewKey,
 } from '../../entity'
 import { useForm } from 'react-hook-form'
-import Loader from './Loader'
+import Loader from '../Loader'
 import ErrorBoundary from './ErrorBoundary'
 
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { Paths } from '../../routes/AppRoutes'
 import { useParams } from 'react-router-dom'
 import { useState } from 'react'
-import { useIntl } from 'react-intl'
+import { useIntl, type IntlShape } from 'react-intl'
 import type { OverridableStringUnion } from '@mui/types'
 import { useAppNavigate, usePersistentFilters } from '../../hooks'
 import dayjs from 'dayjs'
@@ -118,12 +118,14 @@ const Consumption = () => {
           />
         </Stack>
         {tabelView === 'allRecords' && (
-          <AppDataGrid rows={stockAllowancesTableAllRecords} columns={createColumnsAllRecords(navigate)} />
+          <AppDataGrid rows={stockAllowancesTableAllRecords} columns={createColumnsAllRecords(navigate, intl)} />
         )}
         {tabelView === 'byProduct' && (
-          <AppDataGrid rows={stockAllowancesTableByProduct} columns={createColumnsByProduct()} />
+          <AppDataGrid rows={stockAllowancesTableByProduct} columns={createColumnsByProduct(intl)} />
         )}
-        {tabelView === 'byUser' && <AppDataGrid rows={stockAllowancesTableByUser} columns={createColumnsByUser()} />}
+        {tabelView === 'byUser' && (
+          <AppDataGrid rows={stockAllowancesTableByUser} columns={createColumnsByUser(intl)} />
+        )}
       </Stack>
     </Stack>
   )
@@ -143,11 +145,14 @@ export const FilterTableButton = (props: {
   )
 }
 
-const createColumnsByProduct = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
+const createColumnsByProduct = (intl: IntlShape): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   { field: 'stockItemName', headerName: 'Položka', flex: 4, disableColumnMenu: true, minWidth: 100 },
   {
     field: 'totalQuantity',
-    headerName: 'Množ./Kč',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Množ./Kč',
+      id: 'consumption.quantityPrice',
+    })}`,
     flex: 4,
     minWidth: 70,
     disableColumnMenu: true,
@@ -163,17 +168,23 @@ const createColumnsByProduct = (): GridColDef<ConsumptionTableByProductByUserTyp
   {
     field: 'user',
     flex: 4,
-    headerName: 'Kdo',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Kdo',
+      id: 'consumption.person',
+    })}`,
     disableColumnMenu: true,
     display: 'flex',
     renderCell: (params) => <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>,
   },
 ]
 
-const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
+const createColumnsByUser = (intl: IntlShape): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   {
     field: 'user',
-    headerName: 'Kdo',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Kdo',
+      id: 'consumption.person',
+    })}`,
     flex: 6,
     disableColumnMenu: true,
     display: 'flex',
@@ -181,7 +192,10 @@ const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[]
   },
   {
     field: 'totalQuantity',
-    headerName: 'Celkem',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Celkem',
+      id: 'consumption.totalQuantity',
+    })}`,
     minWidth: 70,
     flex: 6,
     disableColumnMenu: true,
@@ -195,11 +209,15 @@ const createColumnsByUser = (): GridColDef<ConsumptionTableByProductByUserType[]
 ]
 
 const createColumnsAllRecords = (
-  navigate: (path: string) => void
+  navigate: (path: string) => void,
+  intl: IntlShape
 ): GridColDef<ConsumptionTableAllRecordType[][number]>[] => [
   {
     field: 'date',
-    headerName: 'Datum',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Datum',
+      id: 'consumption.date',
+    })}`,
     flex: 3,
     disableColumnMenu: true,
     minWidth: 40,
@@ -212,10 +230,22 @@ const createColumnsAllRecords = (
       </Button>
     ),
   },
-  { field: 'stockItemName', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 100 },
+  {
+    field: 'stockItemName',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Položka',
+      id: 'consumption.item',
+    })}`,
+    flex: 3,
+    disableColumnMenu: true,
+    minWidth: 100,
+  },
   {
     field: 'stockAllowanceQuantity',
-    headerName: 'Množ./Kč',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Množ./Kč',
+      id: 'consumption.quantityPrice',
+    })}`,
     flex: 3,
     minWidth: 40,
     disableColumnMenu: true,
@@ -230,7 +260,10 @@ const createColumnsAllRecords = (
   },
   {
     field: 'user',
-    headerName: 'Kdo',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Kdo',
+      id: 'consumption.person',
+    })}`,
     flex: 3,
     disableColumnMenu: true,
     display: 'flex',

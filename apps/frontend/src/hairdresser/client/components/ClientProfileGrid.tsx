@@ -5,6 +5,7 @@ import type { ClientWithVisits } from '../../../entities/client'
 import Note from '../../../app/components/Note'
 import RedSwitch from '../../../app/components/Switch/RedSwitch'
 import { useCreateNewOrUpdateClientMutation } from '../queries'
+import { useIntl } from 'react-intl'
 type ClientProfileGridProps = {
   clientData: ClientWithVisits
 }
@@ -14,27 +15,43 @@ const ClientProfileGrid = (props: ClientProfileGridProps) => {
   const earnedMoneyPerClient = clientData.visits.reduce((prev, curr) => prev + Number(curr.paidPrice), 0)
   const visitCount = clientData.visits.length
   const { mutate: changeClientDepositStatus } = useCreateNewOrUpdateClientMutation()
+  const intl = useIntl()
 
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4} padding={0}>
-        <DetailColumn label="Jméno a příjmení" input={`${clientData.firstName} ${clientData.lastName}`} />
+        <DetailColumn
+          label={intl.formatMessage({ defaultMessage: 'Jméno a příjmení', id: 'clientProfile.fullName' })}
+          input={`${clientData.firstName} ${clientData.lastName}`}
+        />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Telefon" input={clientData.phone} />
+        <DetailColumn
+          label={intl.formatMessage({ defaultMessage: 'Telefon', id: 'clientProfile.phone' })}
+          input={clientData.phone}
+        />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Tržby celkem" input={formatToCZK(earnedMoneyPerClient)} />
+        <DetailColumn
+          label={intl.formatMessage({ defaultMessage: 'Tržby celkem', id: 'clientProfile.totalRevenue' })}
+          input={formatToCZK(earnedMoneyPerClient)}
+        />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Náštěvy celkem" input={visitCount} />
+        <DetailColumn
+          label={intl.formatMessage({ defaultMessage: 'Návštěvy celkem', id: 'clientProfile.totalVisits' })}
+          input={visitCount}
+        />
       </Grid>
       <Grid size={4} alignContent="center" justifyContent="center">
-        <Note note={clientData.note} label="Informace o zákazníkovi" />
+        <Note
+          note={clientData.note}
+          label={intl.formatMessage({ defaultMessage: 'Informace o zákazníkovi', id: 'clientProfile.clientInfo' })}
+        />
       </Grid>
       <Grid size={4} alignContent="center" justifyContent="center">
         <DetailColumn
-          label="Platí zálohy"
+          label={intl.formatMessage({ defaultMessage: 'Platí zálohy', id: 'clientProfile.depositRequirement' })}
           input={
             <RedSwitch
               checked={clientData.deposit}

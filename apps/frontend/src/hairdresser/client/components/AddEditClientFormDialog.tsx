@@ -42,10 +42,10 @@ const AddEditClientFormDialog = (props: AddEditClientFormDialogProps) => {
       actions={
         <>
           <Button onClick={handleClose}>
-            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+            <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }

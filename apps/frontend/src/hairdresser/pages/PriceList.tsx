@@ -4,13 +4,15 @@ import BoxIcon from '../../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../../app/components/DataGrid'
 import type { Service } from '../../entities/service'
-import Loader from './Loader'
+import Loader from '../Loader'
 import ErrorBoundary from './ErrorBoundary'
 import { useServicesQuery } from '../service/queries'
 import AddServiceItemButton from '../service/components/AddServiceItemButton'
+import { useIntl, type IntlShape } from 'react-intl'
 
 const PriceList = () => {
   const { data: services, isLoading, isError } = useServicesQuery()
+  const intl = useIntl()
 
   if (isLoading) {
     return <Loader />
@@ -20,7 +22,7 @@ const PriceList = () => {
     return <ErrorBoundary />
   }
 
-  const columns = createColumns()
+  const columns = createColumns(intl)
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -31,24 +33,17 @@ const PriceList = () => {
 
 export default PriceList
 
-const createColumns = (): GridColDef<Service[][number]>[] => {
+const createColumns = (intl: IntlShape): GridColDef<Service[][number]>[] => {
   return [
     { field: 'serviceName', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 160 },
     {
       field: 'basePrice',
-      headerName: 'Cena',
+      headerName: `${intl.formatMessage({ id: 'priceList.price', defaultMessage: 'Cena' })}`,
       flex: 3,
       disableColumnMenu: true,
       width: 120,
       renderCell: (params) => `${params.value},00 Kč`,
     },
-    // {
-    //   field: 'category',
-    //   headerName: 'Kategorie',
-    //   type: 'string',
-    //   disableColumnMenu: true,
-    //   minWidth: 80,
-    // },
     {
       field: 'edit',
       headerName: '',
@@ -68,7 +63,7 @@ const createColumns = (): GridColDef<Service[][number]>[] => {
             }}
             openButton={
               <BoxIcon
-                size={'small'}
+                size="small"
                 key={params.id}
                 icon={<EditOutlinedIcon fontSize="small" color="secondary" />}
                 boxColor="secondary.light"

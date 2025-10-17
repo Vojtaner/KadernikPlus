@@ -30,7 +30,14 @@ const ClientForm = (props: ClientFormProps) => {
         fullWidth
         rules={firstNameValidationrule}
       />
-      <TextField fieldPath="phone" control={control} label="Telefon" type="tel" fullWidth rules={phoneValidationRule} />
+      <TextField
+        fieldPath="phone"
+        control={control}
+        label={intl.formatMessage({ defaultMessage: 'Telefon', id: 'client.clientInfo' })}
+        type="tel"
+        fullWidth
+        rules={phoneValidationRule}
+      />
       <TextField
         fieldPath="note"
         control={control}

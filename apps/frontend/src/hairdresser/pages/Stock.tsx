@@ -4,7 +4,7 @@ import BoxIcon from '../../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import AppDataGrid from '../../app/components/DataGrid'
 import ErrorBoundary from './ErrorBoundary'
-import Loader from './Loader'
+import Loader from '../Loader'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import Stack from '@mui/material/Stack'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
@@ -12,10 +12,12 @@ import { mapStocksStockItemsToFlatStockItems, type ExistingStockItem } from '../
 import { useStockItemsQuery } from '../stock/queries'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
 import DeleteStockItemDialog from '../stock/components/DeleteStockItemDialog'
+import { useIntl, type IntlShape } from 'react-intl'
 
 const Stock = () => {
   const { data: stocksWithStockItems, isError, isLoading } = useStockItemsQuery(undefined)
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
+  const intl = useIntl()
 
   if (isLoading) {
     return <Loader />
@@ -27,19 +29,19 @@ const Stock = () => {
 
   return (
     <Box sx={{ height: '100%' }}>
-      <AppDataGrid rows={stockItems} columns={createColumns()} />
+      <AppDataGrid rows={stockItems} columns={createColumns(intl)} />
     </Box>
   )
 }
 
 export default Stock
 
-const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
+const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>[] => [
   { field: 'itemName', flex: 3, headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
   {
     field: 'price',
     flex: 2,
-    headerName: 'Cena',
+    headerName: `${intl.formatMessage({ id: 'stock.price', defaultMessage: 'Cena' })}`,
     disableColumnMenu: true,
     width: 70,
     renderCell: (params) => {
@@ -49,7 +51,7 @@ const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   {
     field: 'packageCount',
     flex: 3,
-    headerName: 'Bal./Min.',
+    headerName: `${intl.formatMessage({ id: 'stock.packageAndThreshold', defaultMessage: 'Bal./Min.' })}`,
     disableColumnMenu: true,
     width: 85,
     renderCell: (params) => {
@@ -63,7 +65,7 @@ const createColumns = (): GridColDef<ExistingStockItem[][number]>[] => [
   },
   {
     field: 'quantity',
-    headerName: 'Množ.',
+    headerName: `${intl.formatMessage({ id: 'stock.quantity', defaultMessage: 'Množ.' })}`,
     flex: 2,
     width: 75,
     disableColumnMenu: true,

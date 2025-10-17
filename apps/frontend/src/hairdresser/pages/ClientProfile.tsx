@@ -1,6 +1,6 @@
 import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
-import Loader from './Loader'
+import Loader from '../Loader'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'
@@ -17,12 +17,14 @@ import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import BoxIcon from '../../app/components/BoxIcon'
 import DeleteDialog from '../visits/components/DeleteDialog'
+import { useIntl } from 'react-intl'
 
 const ClientProfile = () => {
   const { clientId } = useParams()
   const { mutate } = useDeleteClientMutation()
   const { data: clientData, isLoading, error } = useClientQuery(clientId)
   const addSnackbarMessage = useAddSnackbarMessage()
+  const intl = useIntl()
 
   if (isLoading) {
     return <Loader />
@@ -44,7 +46,7 @@ const ClientProfile = () => {
           href={`sms:+420${clientData.phone}`}
           sx={{ background: `${AppTheme.palette.info.light}`, color: `${AppTheme.palette.info.main}` }}
           startIcon={<SmsOutlinedIcon fontSize="small" color="info" />}>
-          SMS
+          {intl.formatMessage({ defaultMessage: 'SMS', id: 'clientProfilePage.sms' })}
         </Button>
 
         <AddEditClientFormDialog
@@ -59,7 +61,7 @@ const ClientProfile = () => {
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
               startIcon={<EditOutlinedIcon fontSize="small" color="secondary" />}>
-              Upravit
+              {intl.formatMessage({ defaultMessage: 'Upravit', id: 'clientProfilePage.edit' })}
             </Button>
           }
           clientId={clientData.id}
@@ -70,7 +72,7 @@ const ClientProfile = () => {
           href={`tel:+420${clientData.phone}`}
           sx={{ background: `${AppTheme.palette.success.light}`, color: `${AppTheme.palette.success.main}` }}
           startIcon={<PhoneInTalkOutlinedIcon fontSize="small" color="success" />}>
-          Volat
+          {intl.formatMessage({ defaultMessage: 'Volat', id: 'clientProfilePage.call' })}
         </Button>
         <AddVisitFormDialog
           openButton={
@@ -82,15 +84,25 @@ const ClientProfile = () => {
         />
         <DeleteDialog
           openButton={
-            <Tooltip title="Nelze smazat klienta, pokud má návštěvu.">
+            <Tooltip
+              title={intl.formatMessage({
+                defaultMessage: 'Nelze smazat klienta, pokud má návštěvu.',
+                id: 'clientProfilePage.deleteClientContrainet',
+              })}>
               <BoxIcon
                 icon={<DeleteForeverIcon fontSize="small" color="error" />}
                 sx={{ background: `${AppTheme.palette.primary.light}` }}
               />
             </Tooltip>
           }
-          title="Opravdu chcete klienta smazat?"
-          dialogHelperText="Klient bude smazán z vaší databáze."
+          title={intl.formatMessage({
+            defaultMessage: 'Opravdu chcete klienta smazat?',
+            id: 'clientProfilePage.deleteClientConfirmTitle',
+          })}
+          dialogHelperText={intl.formatMessage({
+            defaultMessage: 'Klient bude smazán z vaší databáze.',
+            id: 'clientProfilePage.deleteClientConfirmHelperTitle',
+          })}
           onConfirm={() => clientId && mutate(clientId)}
         />
       </Stack>

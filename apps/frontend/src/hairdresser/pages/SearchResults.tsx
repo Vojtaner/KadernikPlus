@@ -1,13 +1,18 @@
 import { Typography } from '@mui/material'
 import { useAppSelector } from '../../store/store'
 import SearchResult from '../SearchResult'
+import { FormattedMessage } from 'react-intl'
 
 const SearchResults = () => {
   const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
   const searchResults = useAppSelector((state) => state.searchResults)
 
   if (isSearchActive && !searchResults.searchResults.length) {
-    return <Typography>Data nenalezena</Typography>
+    return (
+      <Typography>
+        <FormattedMessage id="searchResult.noData" defaultMessage="Data nenalezena" />
+      </Typography>
+    )
   }
 
   return (
@@ -29,5 +34,3 @@ const SearchResults = () => {
 }
 
 export default SearchResults
-
-// doladit dotahování návštěv

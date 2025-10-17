@@ -2,7 +2,7 @@ import { Box, Checkbox, Typography } from '@mui/material'
 import AppDataGrid from '../../app/components/DataGrid'
 import type { GridColDef } from '@mui/x-data-grid'
 import { useParams } from 'react-router-dom'
-import Loader from './Loader'
+import Loader from '../Loader'
 import type { TeamMember, TeamSettings } from '../../entities/team-member'
 import BoxIcon from '../../app/components/BoxIcon'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
@@ -14,10 +14,12 @@ import {
   type SkillUpdateInput,
 } from '../team/queries'
 import { useAppNavigate } from '../../hooks'
+import { FormattedMessage, useIntl, type IntlShape } from 'react-intl'
 
 const Team = () => {
   const { teamId } = useParams()
   const navigate = useAppNavigate()
+  const intl = useIntl()
   const { data: teamMembers, isLoading } = useTeamMembersQuery(teamId)
   const { mutate: updateTeamMemberSkill } = useUpdateTeamMemberSkill(teamId)
   const { mutate: deleteTeamMember } = useDeleteTeamMemberMutation()
@@ -31,11 +33,15 @@ const Team = () => {
   }
 
   if (!teamMembers) {
-    return <Typography>Žádní členové týmu nenalezeni.</Typography>
+    return (
+      <Typography>
+        <FormattedMessage id="team.noMembers" defaultMessage="Žádní členové týmu nenalezeni." />
+      </Typography>
+    )
   }
 
   const teamMembersRows = createTeamMemberSettingsRows(teamMembers)
-  const columns = createColumns(updateTeamMemberSkill, deleteTeamMember, navigate, teamMembersRows)
+  const columns = createColumns(updateTeamMemberSkill, deleteTeamMember, navigate, teamMembersRows, intl)
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -64,12 +70,13 @@ const createColumns = (
   updateFn: (data: SkillUpdateInput) => void,
   deleteFn: (id: string) => void,
   navigate: (path: string) => void,
-  allRows: (TeamSettings & { userId: string })[]
+  allRows: (TeamSettings & { userId: string })[],
+  intl: IntlShape
 ): GridColDef<(TeamSettings & { userId: string })[][number]>[] => [
   { field: 'name', headerName: 'Uživatel', flex: 6, minWidth: 110, disableColumnMenu: true },
   {
     field: 'canAccessStocks',
-    headerName: 'Sklad',
+    headerName: `${intl.formatMessage({ id: 'team.stock', defaultMessage: 'Sklad' })}`,
     flex: 6,
     width: 85,
     disableColumnMenu: true,
@@ -79,6 +86,7 @@ const createColumns = (
         color={params.value ? 'success' : 'default'}
         onChange={() => {
           const row = allRows.find((r) => r.userId === params.row.userId)
+
           if (!row) {
             return
           }
@@ -150,7 +158,6 @@ const createColumns = (
     field: 'delete',
     headerName: '',
     width: 60,
-
     disableColumnMenu: true,
     renderCell: (params) => (
       <BoxIcon

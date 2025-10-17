@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react'
 import { useEffect, type PropsWithChildren } from 'react'
-import Loader from '../../hairdresser/pages/Loader'
+import Loader from '../../hairdresser/Loader'
 import { useIntl } from 'react-intl'
 
 const AuthGuard = (props: PropsWithChildren) => {

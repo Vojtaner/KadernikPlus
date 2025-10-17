@@ -14,7 +14,7 @@ import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './hairdresser/pages/SubscriptionPage'
 import SubscriptionGuard from './hairdresser/SubscriptionGuard'
 import Layout from './hairdresser/Layout'
-import ImportContactsPage from './hairdresser/pages/ImportContactsPage'
+import ImportContactsPage from './hairdresser/ImportContactsPage'
 
 function App() {
   const methods = useAppForm()

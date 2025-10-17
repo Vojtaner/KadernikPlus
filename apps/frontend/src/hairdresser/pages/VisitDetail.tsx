@@ -4,7 +4,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import Note from '../../app/components/Note'
 import EditVisitDetailDialog from '../visits/components/EditVisitDetailDialog'
 import { useParams } from 'react-router-dom'
-import Loader from './Loader'
+import Loader from '../Loader'
 import { useAppDispatch } from '../../store/store'
 import { setCurrentLocationAppendix } from '../../store/appUiSlice'
 import AppTheme from '../../AppTheme'
@@ -18,10 +18,11 @@ import { useProceduresQuery } from '../procedure/queries'
 import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
 import ProcedureCard from '../ProcedureCard'
 import { useEffect } from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
+  const intl = useIntl()
   const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
@@ -84,7 +85,11 @@ const VisitDetail = () => {
         {visitData && (
           <DeleteDialog
             openButton={
-              <Tooltip title="Nelze smazat návštěva, pokud máte vytvořenou spotřebu.">
+              <Tooltip
+                title={intl.formatMessage({
+                  id: 'visitDetail.tooltipDelete',
+                  defaultMessage: 'Nelze smazat návštěva, pokud máte vytvořenou spotřebu.',
+                })}>
                 <Button
                   disabled={!isVisitDeletable}
                   size="medium"
@@ -94,8 +99,14 @@ const VisitDetail = () => {
                 </Button>
               </Tooltip>
             }
-            title="Opravu si přejete smazat návštěvu?"
-            dialogHelperText="Návštěva bude smazána z vašeho seznamu."
+            title={intl.formatMessage({
+              id: 'visitDetail.tooltipDeleteConfirm',
+              defaultMessage: 'Opravu si přejete smazat návštěvu?',
+            })}
+            dialogHelperText={intl.formatMessage({
+              id: 'visitDetail.tooltipDeleteHelperText',
+              defaultMessage: 'Návštěva bude smazána z vašeho seznamu.',
+            })}
             onConfirm={() => {
               deleteVisitMutation(visitId)
               navigate(Paths.clientDetail(visitData.clientId))
@@ -104,7 +115,13 @@ const VisitDetail = () => {
         )}
       </Stack>
       <Divider />
-      <Note note={visitData.note} label="Informace k návštěvě" />
+      <Note
+        note={visitData.note}
+        label={intl.formatMessage({
+          id: 'visitDetail.visitInfo',
+          defaultMessage: 'Informace k návštěvě',
+        })}
+      />
       <Divider
         sx={{
           '& .MuiDivider-wrapper': {

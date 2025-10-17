@@ -1,9 +1,9 @@
 import { Grid, Button, Stack, Divider, Typography } from '@mui/material'
 import DetailColumn from '../../app/components/DetailColumn'
 import { useAuth0 } from '@auth0/auth0-react'
-import Loader from './Loader'
+import Loader from '../Loader'
 import { UserProfilDialog } from '../UserFormDialog'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import {
   useCancelSubscriptionMutation,
   useDeleteUserMutation,
@@ -14,9 +14,9 @@ import {
 } from '../../queries'
 import { ContactPicker } from '../ContactPicker'
 import { ImportAppleContacts } from '../ImportAppleContacts'
-import { downloadInvoice } from './InvoicePdf'
+import { downloadInvoice } from '../InvoicePdf'
 import { getDate } from '../visits/components/VisitsList'
-import MuiColorPicker from './MuiColorPicker'
+import MuiColorPicker from '../MuiColorPicker'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()
@@ -101,10 +101,10 @@ const MyProfile = () => {
         <Stack spacing={1}>
           <Stack direction="row" spacing={2} sx={{ fontWeight: 'bold' }} borderBottom="1px solid grey">
             <Typography fontWeight="bold" sx={{ width: 150 }}>
-              Datum
+              <FormattedMessage id="myProfile.date" defaultMessage="Datum" />
             </Typography>
             <Typography fontWeight="bold" sx={{ width: 150 }}>
-              Číslo faktury
+              <FormattedMessage id="myProfile.invoiceNumber" defaultMessage="Číslo faktury" />
             </Typography>
             <Typography sx={{ width: 150 }} />
           </Stack>
@@ -118,7 +118,7 @@ const MyProfile = () => {
                 {invoice.invoiceNumber}
               </Typography>
               <Button variant="outlined" onClick={() => downloadInvoice(invoice)}>
-                Stáhnout fakturu
+                <FormattedMessage id="myProfile.downLoadInvoice" defaultMessage="Stáhnout fakturu" />
               </Button>
             </Stack>
           ))}
@@ -128,11 +128,11 @@ const MyProfile = () => {
         <Grid container rowSpacing={2}>
           <Stack direction="row" spacing={2}>
             <Button onClick={() => deleteUser()}>
-              {intl.formatMessage({ defaultMessage: 'Smazat profil', id: 'myProfile.deleteProfile' })}
+              <FormattedMessage id="myProfile.deleteProfile" defaultMessage="Smazat profil" />
             </Button>
             {subscriptionId && (
               <Button onClick={() => cancelSubscription(subscriptionId)}>
-                {intl.formatMessage({ defaultMessage: 'Ukončit předplatné', id: 'myProfile.cancelSubscription' })}
+                <FormattedMessage id="myProfile.cancelSubscription" defaultMessage="Ukončit předplatné" />
               </Button>
             )}
           </Stack>
@@ -140,23 +140,21 @@ const MyProfile = () => {
         <Divider sx={{ marginY: '30px' }} />
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography fontWeight="bold">
-            {intl.formatMessage({ defaultMessage: 'Schéma aplikace', id: 'myProfile.colorScheme' })}
+            <FormattedMessage id="myProfile.colorScheme" defaultMessage="Schéma aplikace" />
           </Typography>
           <MuiColorPicker />
         </Stack>
         <Divider sx={{ marginY: '30px' }} />
-        <Stack spacing={2}>
-          <Typography variant="body2">
-            Zde můžete provést hromadný import kontaktů pouze česká tel. kontakty.
-          </Typography>
-        </Stack>
         {importPayment?.status === 'PAID' && (
           <>
             <Divider sx={{ marginY: '30px' }} />
             <Stack spacing={2}>
               <Typography variant="body2">
-                Zde můžete provést hromadný import kontaktů pouze české tel. kontakty. Následně je budete moci editovat
-                před uložením.
+                <FormattedMessage
+                  id="myProfile.importText"
+                  defaultMessage="Zde můžete provést hromadný import kontaktů pouze české tel. kontakty. Následně je budete moci editovat
+                před uložením."
+                />
               </Typography>
               <Grid container rowSpacing={2}>
                 <ContactPicker />

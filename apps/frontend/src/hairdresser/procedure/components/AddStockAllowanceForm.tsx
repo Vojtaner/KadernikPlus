@@ -13,6 +13,7 @@ import type { StockAllowanceFormValues, AddProcedureStockAllowanceType } from '.
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
 import TextField from '../../../app/components/TextField'
 import { mapStocksStockItemsToFlatStockItems, type StockAllowance } from '../../stock/entity'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
   control: Control<TForm>
@@ -30,6 +31,7 @@ type AddStockAllowanceFormProps<TForm extends StockAllowanceFormValues> = {
 
 const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceFormValues>) => {
   const { control, append, remove, fields, readonlyAllowances } = props
+  const intl = useIntl()
   const { data: stocksWithStockItems } = useStockItemsQuery(undefined)
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
   const watchedStockAllowanecs = useWatch({ control })
@@ -58,7 +60,13 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
                 <Grid size={3}>
                   <TextField
                     type="number"
-                    label={`Množství (${stockItem?.unit ? stockItem?.unit : ''})`}
+                    label={intl.formatMessage(
+                      {
+                        id: 'formDialogAddProcedure.workflowDescription',
+                        defaultMessage: `Množství (unit)`,
+                      },
+                      { unit: stockItem?.unit ? stockItem?.unit : '' }
+                    )}
                     fieldPath={`stockAllowances.${index}.quantity`}
                     control={control}
                     required
@@ -73,7 +81,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
 
               {stockItem ? (
                 <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-                  Aktuálně ve skladu
+                  <FormattedMessage id="formDialogAddProcedure.stockState" defaultMessage="Aktuálně ve skladu" />
                   <Box
                     component="span"
                     color={stockItemQuantityCritical ? 'primary.main' : 'success.main'}
@@ -90,10 +98,25 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
         <Stack key={stockAllowance.stockAllowanceId} spacing={0.5}>
           <Grid container spacing={2} alignItems="center">
             <Grid size={7}>
-              <TextField label="Položka" readonly defaultValue={stockAllowance.stockItemName} fullWidth />
+              <TextField
+                label={intl.formatMessage({
+                  id: 'formDialogAddProcedure.item',
+                  defaultMessage: `Položka`,
+                })}
+                readonly
+                defaultValue={stockAllowance.stockItemName}
+                fullWidth
+              />
             </Grid>
             <Grid size={3}>
-              <TextField label="Množství" readonly defaultValue={stockAllowance.quantity} />
+              <TextField
+                label={intl.formatMessage({
+                  id: 'formDialogAddProcedure.quantity',
+                  defaultMessage: `Množství`,
+                })}
+                readonly
+                defaultValue={stockAllowance.quantity}
+              />
             </Grid>
             <Grid size={2}>
               <IconButton onClick={() => {}} color="error" disabled>
@@ -103,15 +126,24 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
           </Grid>
 
           <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
-            Položka je ze skladu, ke kterému již nemáte oprávnění nebo je smazána.
+            <FormattedMessage
+              id="formDialogAddProcedure.stockItemWarrning"
+              defaultMessage="Položka je ze skladu, ke kterému již nemáte oprávnění nebo je smazána."
+            />
           </Typography>
         </Stack>
       ))}
       <Button onClick={() => append({ stockItemId: '', quantity: null, stockAllowanceId: '' })} variant="outlined">
-        Přidat materiál
+        <FormattedMessage id="formDialogAddProcedure.addStockItem" defaultMessage="Přidat materiál" />
       </Button>
     </Stack>
   )
 }
 
 export default AddStockAllowanceForm
+
+//service
+//stock
+//team
+//visits
+//a níže...

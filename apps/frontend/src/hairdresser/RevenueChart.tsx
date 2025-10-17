@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 import dayjs from 'dayjs'
-import Loader from '../hairdresser/pages/Loader'
+import Loader from './Loader'
 import { useAppForm } from '../reactHookForm/store'
 import AppBarChart from './BarChart'
 import { usePersistentFilters } from '../hooks'

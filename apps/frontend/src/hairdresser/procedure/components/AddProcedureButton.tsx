@@ -8,7 +8,7 @@ import React from 'react'
 import type { PostNewProcedure } from '../../../entities/procedure'
 import { useParams } from 'react-router-dom'
 import { type StockAllowance } from '../../stock/entity'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useStocksQuery } from '../../stock/queries'
 import { useDeleteProcedureMutation, useProceduresMutation } from '../queries'
 import AddStockAllowanceForm from './AddStockAllowanceForm'
@@ -39,6 +39,7 @@ export type AddProcedureButtonProps = {
 }
 
 const AddProcedureButton = (props: AddProcedureButtonProps) => {
+  const intl = useIntl()
   const { openButton, defaultValues, procedureId } = props
   const { editableAllowances, readonlyAllowances } = useEditableAndReadonlyStockAllowances(
     defaultValues?.stockAllowances
@@ -109,14 +110,14 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
             <Button
               onClick={() => deleteProcedure.mutate(procedureId)}
               endIcon={<DeleteOutlineIcon fontSize="small" />}>
-              Smazat
+              <FormattedMessage id="formDialog.delete" defaultMessage="Smazat" />
             </Button>
           )}
           <Button onClick={handleClose}>
-            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+            <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }
@@ -124,7 +125,10 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
         <>
           <TextField
             fieldPath="description"
-            label="Popis postupu"
+            label={intl.formatMessage({
+              id: 'formDialogAddProcedure.procedureDescription',
+              defaultMessage: 'Popis postupu',
+            })}
             type="text"
             control={control}
             fullWidth
@@ -149,8 +153,14 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
         },
         color: 'error',
       })}
-      title="Přidat postup"
-      dialogHelperText="Zde zadejte popis úkonu, časy, komplikace, kompromisy."
+      title={intl.formatMessage({
+        id: 'formDialogAddProcedure.addProcedure',
+        defaultMessage: 'Přidat postup',
+      })}
+      dialogHelperText={intl.formatMessage({
+        id: 'formDialogAddProcedure.workflowDescription',
+        defaultMessage: 'Zde zadejte popis úkonu, časy, komplikace, kompromisy.',
+      })}
     />
   )
 }

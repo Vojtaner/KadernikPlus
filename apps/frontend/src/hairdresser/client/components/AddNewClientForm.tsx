@@ -2,6 +2,7 @@ import Stack from '@mui/material/Stack'
 import TextField from '../../../app/components/TextField'
 import type { Control } from 'react-hook-form'
 import { firstNameValidationrule, phoneValidationRule } from '../../entity'
+import { useIntl } from 'react-intl'
 
 type AddNewClientFormProps = {
   control: Control<AddNewClientFields>
@@ -13,16 +14,17 @@ type AddNewClientFields = {
   phone: string
   note?: string
 }
-//zde mi nefungovala typovost tak jsem to vyjmul pryč při vložení controlu mi to nevidělo hodnoty fielPath
+
 function AddNewClientForm(props: AddNewClientFormProps) {
   const { control } = props
+  const intl = useIntl()
 
   return (
     <Stack spacing={1} padding={1}>
       <TextField
         fieldPath="firstName"
         control={control}
-        label="Jméno"
+        label={intl.formatMessage({ defaultMessage: 'Jméno', id: 'clienForm.firstName' })}
         type="text"
         fullWidth
         rules={firstNameValidationrule}
@@ -30,7 +32,7 @@ function AddNewClientForm(props: AddNewClientFormProps) {
       <TextField
         fieldPath="lastName"
         control={control}
-        label="Přijmení"
+        label={intl.formatMessage({ defaultMessage: 'Příjmení', id: 'clienForm.lastName' })}
         type="text"
         fullWidth
         rules={firstNameValidationrule}
@@ -39,7 +41,7 @@ function AddNewClientForm(props: AddNewClientFormProps) {
       <TextField
         fieldPath="note"
         control={control}
-        label="Informace o klientovi"
+        label={intl.formatMessage({ defaultMessage: 'Informace o klientovi', id: 'clienForm.clientInfo' })}
         type="text"
         multiline
         minRows={2}

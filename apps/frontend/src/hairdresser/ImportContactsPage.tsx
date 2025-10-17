@@ -1,10 +1,10 @@
 import { Button, Stack, Typography } from '@mui/material'
-import PricingCard from '../../app/components/PricingCard'
+import PricingCard from '../app/components/PricingCard'
 import { useAuth0 } from '@auth0/auth0-react'
-import AppTheme from '../../AppTheme'
+import AppTheme from '../AppTheme'
 import LogoutIcon from '@mui/icons-material/Logout'
 import { FormattedMessage, useIntl } from 'react-intl'
-import { useImportPaymentMutation } from '../../queries'
+import { useImportPaymentMutation } from '../queries'
 
 const ImportContactsPage = () => {
   const { user, logout } = useAuth0()
@@ -42,19 +42,24 @@ const ImportContactsPage = () => {
       <Button variant="contained" onClick={() => logout()} startIcon={<LogoutIcon />}>
         {intl.formatMessage({ id: 'logOut', defaultMessage: 'Odhlásit se' })}
       </Button>
-
       <PricingCard
-        title="Cena"
+        title={intl.formatMessage({ id: 'pricingCard.title', defaultMessage: 'Cena' })}
         price="Kč 999"
-        period="/jednorázově"
-        description="Proč se vyplatí připlatit:"
+        period={intl.formatMessage({ id: 'pricingCard.period', defaultMessage: '/jednorázově' })}
+        description={intl.formatMessage({
+          id: 'pricingCard.description',
+          defaultMessage: 'Proč se vyplatí připlatit:',
+        })}
         features={[
-          'Ušetřte hodiny ručního zadávání',
-          '800 kontaktů naimportujete během chvíle',
-          'Bez chybného a nudného opisování',
-          'Kontakt ručně trvá až 1-2min, kolik ušetříte?',
+          intl.formatMessage({ id: 'pricingCard.feature1', defaultMessage: 'Ušetřte hodiny ručního zadávání' }),
+          intl.formatMessage({ id: 'pricingCard.feature2', defaultMessage: '800 kontaktů naimportujete během chvíle' }),
+          intl.formatMessage({ id: 'pricingCard.feature3', defaultMessage: 'Bez chybného a nudného opisování' }),
+          intl.formatMessage({
+            id: 'pricingCard.feature4',
+            defaultMessage: 'Kontakt ručně trvá až 1–2 min, kolik ušetříte?',
+          }),
         ]}
-        ctaText="Koupit import"
+        ctaText={intl.formatMessage({ id: 'pricingCard.ctaText', defaultMessage: 'Koupit import' })}
         onClick={handlePurchase}
         active
       />

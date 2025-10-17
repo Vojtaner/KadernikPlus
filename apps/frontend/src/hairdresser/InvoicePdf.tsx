@@ -1,11 +1,11 @@
 import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
-import type { Invoice } from '../entity'
+import type { Invoice } from './entity'
 import saveAs from 'file-saver'
-import Roboto from '../../../public/assets/fonts/Roboto-Regular.ttf'
+import { useIntl } from 'react-intl'
 
 Font.register({
   family: 'Roboto',
-  src: Roboto,
+  src: '/assets/fonts/Roboto-Regular.ttf',
 })
 
 const styles = StyleSheet.create({
@@ -66,35 +66,41 @@ const styles = StyleSheet.create({
   text: { fontFamily: 'Roboto', fontSize: 14 },
 })
 
-const InvoicePdf = (props: { invoice: Invoice }) => {
-  const { invoice } = props
+const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
+  const intl = useIntl()
 
   return (
     <Document>
       <Page style={styles.page}>
         <View style={styles.header}>
-          <Text style={styles.title}>Faktura {invoice.invoiceNumber}</Text>
+          <Text style={styles.title}>
+            {intl.formatMessage({ id: 'invoice.title', defaultMessage: 'Faktura' })} {invoice.invoiceNumber}
+          </Text>
           <Image src="/path/to/logo.png" style={styles.logo} />
         </View>
 
         <View style={styles.section}>
           <Text>
-            <Text style={styles.label}>Obchodník: </Text>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'invoice.merchant', defaultMessage: 'Obchodník:' })}
+            </Text>
             Vojtěch Laurin
           </Text>
           <Text>
-            <Text style={styles.label}>IČO: </Text>
+            <Text style={styles.label}>{intl.formatMessage({ id: 'invoice.ico', defaultMessage: 'IČO:' })} </Text>
             06380298
           </Text>
         </View>
 
         <View style={styles.section}>
           <Text>
-            <Text style={styles.label}>Zákazník: </Text>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'invoice.customer', defaultMessage: 'Zákazník:' })}
+            </Text>
             {invoice.customerName}
           </Text>
           <Text>
-            <Text style={styles.label}>E-mail: </Text>
+            <Text style={styles.label}>{intl.formatMessage({ id: 'invoice.email', defaultMessage: 'E-mail:' })} </Text>
             {invoice.customerEmail}
           </Text>
         </View>
@@ -102,16 +108,22 @@ const InvoicePdf = (props: { invoice: Invoice }) => {
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableColHeader}>
-              <Text style={styles.tableCellHeader}>Popis</Text>
+              <Text style={styles.tableCellHeader}>
+                {intl.formatMessage({ id: 'invoice.description', defaultMessage: 'Popis' })}
+              </Text>
             </View>
             <View style={styles.tableColHeader}>
-              <Text style={styles.tableCellHeader}>Hodnota</Text>
+              <Text style={styles.tableCellHeader}>
+                {intl.formatMessage({ id: 'invoice.value', defaultMessage: 'Hodnota' })}
+              </Text>
             </View>
           </View>
 
           <View style={styles.tableRow}>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>Cena</Text>
+              <Text style={styles.tableCell}>
+                {intl.formatMessage({ id: 'invoice.price', defaultMessage: 'Cena' })}
+              </Text>
             </View>
             <View style={styles.tableCol}>
               <Text style={styles.tableCell}>
@@ -120,28 +132,46 @@ const InvoicePdf = (props: { invoice: Invoice }) => {
             </View>
           </View>
 
+          {/* Status Row */}
           <View style={styles.tableRow}>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>Stav</Text>
+              <Text style={styles.tableCell}>
+                {intl.formatMessage({ id: 'invoice.status', defaultMessage: 'Stav' })}
+              </Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{invoice.status === 'PAID' ? 'Zaplaceno' : 'Nezaplaceno'}</Text>
+              <Text style={styles.tableCell}>
+                {invoice.status === 'PAID'
+                  ? intl.formatMessage({ id: 'invoice.paid', defaultMessage: 'Zaplaceno' })
+                  : intl.formatMessage({ id: 'invoice.unpaid', defaultMessage: 'Nezaplaceno' })}
+              </Text>
             </View>
           </View>
 
+          {/* Issued Date */}
           <View style={styles.tableRow}>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>Vystaveno</Text>
+              <Text style={styles.tableCell}>
+                {intl.formatMessage({ id: 'invoice.issued', defaultMessage: 'Vystaveno' })}
+              </Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{new Date(invoice.issuedAt).toLocaleDateString()}</Text>
+              <Text style={styles.tableCell}>
+                {new Date(invoice.issuedAt).toLocaleDateString(intl.locale, {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                })}
+              </Text>
             </View>
           </View>
 
           {invoice.notes && (
             <View style={styles.tableRow}>
               <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>Poznámka</Text>
+                <Text style={styles.tableCell}>
+                  {intl.formatMessage({ id: 'invoice.notes', defaultMessage: 'Poznámka' })}
+                </Text>
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>{invoice.notes}</Text>

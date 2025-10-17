@@ -1,13 +1,14 @@
 import { Box } from '@mui/material'
 import AppDataGrid from '../../app/components/DataGrid'
 import { type GridColDef } from '@mui/x-data-grid'
-import Loader from './Loader'
+import Loader from '../Loader'
 import BoxIcon from '../../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
 import { mapStocksStockItemsToFlatStockItems, type StockItem } from '../stock/entity'
 import { useStockItemsQuery } from '../stock/queries'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
+import { useIntl, type IntlShape } from 'react-intl'
 
 type ShoppingListProps = {
   columnHeaderHeight?: 0
@@ -18,13 +19,14 @@ const ShoppingList = (props: ShoppingListProps) => {
   const { columnHeaderHeight, hideFooter = false } = props
   const { data: stocksStockItems } = useStockItemsQuery(undefined)
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksStockItems)
+  const intl = useIntl()
 
   if (!stockItems) {
     return <Loader />
   }
 
-  const shoppingList = createShoppingList(stockItems)
-  const shoppingListColumns = createColumns()
+  const shoppingList = createShoppingList(stockItems, intl)
+  const shoppingListColumns = createColumns(intl)
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -40,7 +42,7 @@ const ShoppingList = (props: ShoppingListProps) => {
 
 export default ShoppingList
 
-const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => {
+const createShoppingList = (stockItems: StockItem[], intl: IntlShape): ShoppingListItemType[] => {
   return stockItems.flatMap((item): ShoppingListItemType[] => {
     const threshold = Number(item.threshold)
     const avgPrice = Number(item.avgUnitPrice)
@@ -50,7 +52,9 @@ const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => 
     const requiredPackages = threshold === 0 ? 0 : threshold + 1
 
     if (!item.id) {
-      throw new Error(`Položka ${item.itemName} nemá ID.`)
+      throw new Error(
+        `${intl.formatMessage({ id: '', defaultMessage: 'Položka item_name nemá ID.' }, { item_name: item.itemName })}`
+      )
     }
 
     if (packageCount < requiredPackages) {
@@ -73,12 +77,12 @@ const createShoppingList = (stockItems: StockItem[]): ShoppingListItemType[] => 
 
 type ShoppingListItemType = { id: string; item: string; price: number; amount: number; unit: string }
 
-const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
+const createColumns = (intl: IntlShape): GridColDef<ShoppingListItemType[][number]>[] => {
   return [
     { field: 'item', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 130 },
     {
       field: 'price',
-      headerName: 'Cena',
+      headerName: `${intl.formatMessage({ id: 'shoppingList.price', defaultMessage: 'Cena' })}`,
       disableColumnMenu: true,
       flex: 3,
       display: 'flex',
@@ -87,7 +91,7 @@ const createColumns = (): GridColDef<ShoppingListItemType[][number]>[] => {
     },
     {
       field: 'amount',
-      headerName: 'Množství',
+      headerName: `${intl.formatMessage({ id: 'shoppingList.quantity', defaultMessage: 'Množství' })}`,
       flex: 3,
       minWidth: 90,
       disableColumnMenu: true,

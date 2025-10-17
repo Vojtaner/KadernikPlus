@@ -2,7 +2,7 @@ import { Box, TextField, InputAdornment, Button, Popover } from '@mui/material'
 import { useState, useRef } from 'react'
 import { type ColorResult, ChromePicker } from 'react-color'
 import { useIntl } from 'react-intl'
-import { useUpdateUserMutation, useUserDataQuery } from '../../queries'
+import { useUpdateUserMutation, useUserDataQuery } from '../queries'
 
 const MuiColorPicker = () => {
   const { data: userData } = useUserDataQuery()
