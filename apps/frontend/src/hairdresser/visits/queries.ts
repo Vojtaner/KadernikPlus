@@ -1,5 +1,5 @@
 import { useQuery, useMutation, type UseMutationOptions } from '@tanstack/react-query'
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import { useAxios } from '../../axios/axios'
 import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
 import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
@@ -11,11 +11,13 @@ import {
   getVisits,
   deleteVisit,
 } from './api'
-import type {
-  VisitWithServicesHotFix,
-  CreateVisitType,
-  VisitDetailFormType,
-  VisitWithServicesWithProceduresWithStockAllowances,
+import {
+  type VisitWithServicesHotFix,
+  type CreateVisitType,
+  type VisitDetailFormType,
+  type VisitWithServicesWithProceduresWithStockAllowances,
+  type VisitsByDateQueryParams,
+  getVisitsByDateQueryKey,
 } from './entity'
 import { getClientVisits } from '../client/api'
 import { STORAGE_KEY, type PersistentFiltersType } from '../../hooks'
@@ -146,7 +148,6 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
       return visitId
     },
     onSuccess: () => {
-      //zde by se dalo nějak wrappovat do funkce tahání ze localstorage
       const persistentFilters = localStorage.getItem(STORAGE_KEY)
       const { from, to }: PersistentFiltersType['visits']['dashBoardVisitOverView']['dates'] = persistentFilters
         ? JSON.parse(persistentFilters).visits.dashBoardVisitOverView.dates
@@ -166,24 +167,14 @@ export const useUpdateVisitMutation = (visitId: string | undefined) => {
   })
 }
 
-export const useVisitsQuery = (params: { date?: Dayjs; query?: { from?: Dayjs; to?: Dayjs } }) => {
+export const useVisitsQuery = (params: VisitsByDateQueryParams) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesWithProceduresWithStockAllowances[]>({
-    queryKey: params?.query
-      ? [
-          'visits',
-          dayjs(params.query?.from).format('YYYY-MM-DD') ?? null,
-          dayjs(params.query?.to).format('YYYY-MM-DD') ?? null,
-        ]
-      : params?.date
-        ? ['visits', dayjs(params.date).format('YYYY-MM-DD')]
-        : ['visits'],
+    queryKey: getVisitsByDateQueryKey(params),
     queryFn: () => {
       return getVisits(axios, params.query, params.date)
     },
-    refetchOnMount: false,
-
     staleTime: 20 * 60 * 1000,
   })
 }

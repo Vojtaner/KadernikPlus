@@ -132,3 +132,12 @@ export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: D
 }
 
 export const getIsVisitInPast = (date: Date) => new Date(date).getTime() < Date.now()
+
+export type VisitsByDateQueryParams = { date?: Dayjs; query?: { from?: Dayjs; to?: Dayjs } }
+
+export const getVisitsByDateQueryKey = (params: VisitsByDateQueryParams) =>
+  params?.query
+    ? ['visits', dayjs(params.query?.from).format('YYYY-MM-DD'), dayjs(params.query?.to).format('YYYY-MM-DD')]
+    : params?.date
+      ? ['visits', dayjs(params.date).format('YYYY-MM-DD')]
+      : ['visits']
