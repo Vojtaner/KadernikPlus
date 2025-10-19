@@ -5,12 +5,14 @@ import { DepositStatus, type VisitWithServices } from '../entity'
 import { formatNameShort } from '../../../entity'
 import type { CreateProcedure, Procedure } from '../../../entities/procedure'
 import { getDateTimeFromUtcToLocal } from './VisitsList'
+import { useIntl, type IntlShape } from 'react-intl'
 
 type VisitDetailGridProps = {
   visitData: VisitWithServices | undefined
 }
 const VisitDetailGrid = (props: VisitDetailGridProps) => {
   const { visitData } = props
+  const intl = useIntl()
 
   if (!visitData) {
     return <Loader />
@@ -19,23 +21,44 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
   return (
     <Grid container rowSpacing={2}>
       <Grid size={4}>
-        <DetailColumn label="Kadeřnice" input={formatNameShort(`${visitData.user.name}`)} />
+        <DetailColumn
+          label={intl.formatMessage({
+            defaultMessage: 'Kadeřnice',
+            id: 'visitDetailGrid.hairdresser',
+          })}
+          input={formatNameShort(`${visitData.user.name}`)}
+        />
       </Grid>
       <Grid size={4}>
         <DetailColumn
-          label={`${visitData.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}
+          label={intl.formatMessage(
+            {
+              defaultMessage: 'status cena',
+              id: 'visitDetailGrid.depositStatus',
+            },
+            { status: visitData.visitStatus ? 'Zaplacená' : 'Požadovaná' }
+          )}
           input={formatToCZK(visitData.paidPrice)}
           helperText={formatToCZK(visitData.visitServices[0].service.basePrice)}
         />
       </Grid>
       <Grid size={4}>
-        <DetailColumn label="Datum" input={getDateTimeFromUtcToLocal(visitData.date)} />
+        <DetailColumn
+          label={intl.formatMessage({
+            defaultMessage: 'Datum',
+            id: 'visitDetailGrid.date',
+          })}
+          input={getDateTimeFromUtcToLocal(visitData.date)}
+        />
       </Grid>
       {visitData.client.deposit ? (
         <>
           <Grid size={4}>
             <DetailColumn
-              label="Stav zálohy"
+              label={intl.formatMessage({
+                defaultMessage: 'Stav zálohy',
+                id: 'visitDetailGrid.depositState',
+              })}
               input={
                 <Typography textTransform="uppercase" fontSize="0.9rem" color="info.main" fontWeight={600}>
                   {visitData.depositStatus}
@@ -44,7 +67,13 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
             />
           </Grid>
           <Grid size={4}>
-            <DetailColumn label="Výše zálohy" input={formatToCZK(visitData.deposit)} />
+            <DetailColumn
+              label={intl.formatMessage({
+                defaultMessage: 'Výše zálohy',
+                id: 'visitDetailGrid.depositAmount',
+              })}
+              input={formatToCZK(visitData.deposit)}
+            />
           </Grid>
         </>
       ) : (
@@ -106,22 +135,39 @@ export const getVisitFinishErrors = (
     paidPrice: number | undefined
     deposit: number | undefined
     depositStatus: DepositStatus | null | undefined
-  }
+  },
+  intl: IntlShape
 ): string[] => {
   const { paidPrice, deposit, depositStatus } = watchFormVisitData
   const isDepositRequired = clientDeposit
   const errors: string[] = []
 
   if (!paidPrice || paidPrice <= 0) {
-    errors.push('Je nutné zadat zaplacenou částku. "Požadovaná cena"')
+    errors.push(
+      intl.formatMessage({
+        defaultMessage: 'Je nutné zadat zaplacenou částku. "Požadovaná cena"',
+        id: 'visitDetailGrid.paidPriceWarning',
+      })
+    )
   }
 
   if (isDepositRequired) {
     if (!deposit || deposit <= 0) {
-      errors.push('Je nutné zadat zálohu,případně v profilu zákazníka zaškrnout, že ji nepožadujete. "Výše zálohy"')
+      errors.push(
+        intl.formatMessage({
+          defaultMessage:
+            'Je nutné zadat zálohu,případně v profilu zákazníka zaškrnout, že ji nepožadujete. "Výše zálohy"',
+          id: 'visitDetailGrid.depositStatusWarning',
+        })
+      )
     }
     if (depositStatus !== DepositStatus.ZAPLACENO) {
-      errors.push('Záloha musí být ve stavu zaplacena. "Stav zálohy"')
+      errors.push(
+        intl.formatMessage({
+          defaultMessage: 'Záloha musí být ve stavu zaplacena. "Stav zálohy"',
+          id: 'visitDetailGrid.depositWarning',
+        })
+      )
     }
   }
 
@@ -136,9 +182,15 @@ export const hasAnyStockAllowance = (procedures?: (Procedure | CreateProcedure)[
   return procedures.some((p) => p.stockAllowances && p.stockAllowances.length > 0)
 }
 
-export const getMissingStockAllowanceError = (procedures?: (Procedure | CreateProcedure)[]): string | undefined => {
+export const getMissingStockAllowanceError = (
+  intl: IntlShape,
+  procedures?: (Procedure | CreateProcedure)[]
+): string | undefined => {
   if (!hasAnyStockAllowance(procedures)) {
-    return 'Musí být spotřebován alespoň jeden materiál, bez toho neuvidíte náklady. (nepovinné)'
+    return intl.formatMessage({
+      defaultMessage: 'Musí být spotřebován alespoň jeden materiál, bez toho neuvidíte náklady. (nepovinné)',
+      id: 'visitDetailGrid.stockAllowanceWarning',
+    })
   }
 }
 
@@ -149,7 +201,8 @@ export const isVisitFinished = (
     deposit: number | undefined
     depositStatus: DepositStatus | null | undefined
     procedures: undefined | Procedure[]
-  }
+  },
+  intl: IntlShape
 ): boolean => {
-  return getVisitFinishErrors(clientDeposit, watchFormVisitData).length === 0
+  return getVisitFinishErrors(clientDeposit, watchFormVisitData, intl).length === 0
 }

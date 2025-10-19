@@ -1,5 +1,5 @@
 import type { FieldValues, Path, Control } from 'react-hook-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import AutoComplete from '../../../app/components/AutoComplete'
 import Loader from '../../Loader'
 import { useTeamMembersQuery } from '../queries'
@@ -14,13 +14,14 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
   control,
 }: TeamMemberAutoCompleteProps<TFieldValues>) {
   const { data: teamMembers, isLoading, isError } = useTeamMembersQuery()
+  const intl = useIntl()
 
   if (isLoading) {
     return <Loader />
   }
 
   if (!teamMembers || isError) {
-    return <FormattedMessage defaultMessage={'Žádní členové týmu nebyli nalezeni.'} id="teamMembers.notFound" />
+    return <FormattedMessage defaultMessage="Žádní členové týmu nebyli nalezeni." id="teamMembers.notFound" />
   }
 
   if (teamMembers.length === 0) {
@@ -34,13 +35,19 @@ export default function TeamMemberAutoComplete<TFieldValues extends FieldValues>
 
   return (
     <AutoComplete
-      placeholder="Hledejte..."
+      placeholder={intl.formatMessage({
+        id: 'teamAutoComplete.search',
+        defaultMessage: 'Hledejte...',
+      })}
       options={teamMemberOptions}
       getOptionLabel={(o) => o.name}
       getOptionValue={(o) => o.id}
       control={control}
       fieldPath={fieldPath}
-      label="Vyberte člena týmu"
+      label={intl.formatMessage({
+        id: 'teamAutoComplete.chooseMember',
+        defaultMessage: 'Vyberte člena týmu',
+      })}
     />
   )
 }

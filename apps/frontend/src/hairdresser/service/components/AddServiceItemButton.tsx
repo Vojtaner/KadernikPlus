@@ -66,7 +66,10 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
         </>
       }
       onOpenButton={openDialogButton}
-      title="Přidat službu"
+      title={intl.formatMessage({
+        id: 'addServiceButton.addService',
+        defaultMessage: 'Přidat službu',
+      })}
       dialogHelperText={intl.formatMessage({
         id: 'addServiceButton.helperText',
         defaultMessage: 'Zde přidáte službu do ceníku.',

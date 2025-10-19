@@ -60,7 +60,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
         rules={{
           validate: (value) => {
             if (!value) {
-              return intl.formatMessage({ defaultMessage: 'Musíte vybrat datum a čas', id: 'addVisit.chooseDateTime' })
+              return intl.formatMessage({ defaultMessage: 'Musíte vybrat datum a čas', id: 'addVisitForm.chooseDateTime' })
             }
 
             const isTaken = visitsOnSelectedDate?.some(
@@ -70,7 +70,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             return isTaken
               ? intl.formatMessage({
                   defaultMessage: 'Na tento čas máte již objednanou návštěvu.',
-                  id: 'addVisit.visitTimeAlreadyBooked',
+                  id: 'addVisitForm.visitTimeAlreadyBooked',
                 })
               : true
           },
@@ -92,7 +92,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
               setIsNewClient((prev) => !prev)
               resetField('clientId')
             }}>
-            <FormattedMessage id="addVisit.newClientButton" defaultMessage="Nový klient" />
+            <FormattedMessage id="addVisitForm.newClientButton" defaultMessage="Nový klient" />
           </Button>
         </Box>
       </Stack>
@@ -101,7 +101,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
           <TextField
             fieldPath="firstName"
             control={control}
-            label="Jméno"
+            label={intl.formatMessage({
+              defaultMessage: 'Jméno',
+              id: 'addVisitForm.firstName',
+            })}
             type="text"
             fullWidth
             rules={firstNameValidationrule}
@@ -109,7 +112,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
           <TextField
             fieldPath="lastName"
             control={control}
-            label="Přijmení"
+            label={intl.formatMessage({
+              defaultMessage: 'Přijmení',
+              id: 'addVisitForm.lastName',
+            })}
             type="text"
             fullWidth
             rules={firstNameValidationrule}
@@ -117,7 +123,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
           <TextField
             fieldPath="phone"
             control={control}
-            label="Telefon"
+            label={intl.formatMessage({
+              defaultMessage: 'Telefon',
+              id: 'addVisitForm.phone',
+            })}
             type="tel"
             fullWidth
             rules={phoneValidationRule}
@@ -125,7 +134,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
           <TextField
             fieldPath="clientNote"
             control={control}
-            label="Informace o klientovi"
+            label={intl.formatMessage({
+              defaultMessage: 'Informace o klientovi',
+              id: 'addVisitForm.clientInfo',
+            })}
             type="text"
             multiline
             minRows={2}
@@ -140,12 +152,22 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             borderRadius="10px"
             boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
             <Typography fontWeight={600} color="secondary.main">
-              <FormattedMessage id="addVisit.depositRequiredSwitch" defaultMessage="Chci zálohu" />
+              <FormattedMessage id="addVisitForm.depositRequiredSwitch" defaultMessage="Chci zálohu" />
             </Typography>
             <Switch control={control} fieldPath="depositRequired" />
           </Stack>
           {depositRequired && (
-            <TextField fieldPath="deposit" label="Výše zálohy" type="number" fullWidth control={control} required />
+            <TextField
+              fieldPath="deposit"
+              label={intl.formatMessage({
+                defaultMessage: 'Výše zálohy',
+                id: 'addVisitForm.depositAmount',
+              })}
+              type="number"
+              fullWidth
+              control={control}
+              required
+            />
           )}
         </Stack>
       )}

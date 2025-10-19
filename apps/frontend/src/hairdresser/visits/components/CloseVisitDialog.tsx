@@ -1,6 +1,6 @@
 import { Button, List } from '@mui/material'
 import FormDialog from '../../../app/components/FormDialog'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import CloseIcon from '@mui/icons-material/Close'
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
 import { IconListItem } from '../../../app/components/IconListItem'
@@ -15,6 +15,7 @@ type CloseVisitDialogProps = {
 
 const CloseVisitDialog = (props: CloseVisitDialogProps) => {
   const { errors, missingStockAllowanceError, onConfirm, onClose, openDialog = false } = props
+  const intl = useIntl()
 
   const handleClose = () => {
     onClose()
@@ -60,8 +61,14 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
           )}
         </>
       }
-      title="Nelze uzavřít návštěvu"
-      dialogHelperText="Ve formuláři nemáte vyplněné následující údaje."
+      title={intl.formatMessage({
+        defaultMessage: 'Nelze uzavřít návštěvu',
+        id: 'closeVisitDialog.closeWarningTitle',
+      })}
+      dialogHelperText={intl.formatMessage({
+        defaultMessage: 'Ve formuláři nemáte vyplněné následující údaje.',
+        id: 'closeVisitDialog.closeWarningText',
+      })}
     />
   )
 }

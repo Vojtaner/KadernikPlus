@@ -2,7 +2,7 @@ import { type Control, type FieldPath, type FieldPathValue, type FieldValues, ty
 import Loader from '../../Loader'
 import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import AutoComplete from '../../../app/components/AutoComplete'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useStockItemsQuery } from '../queries'
 import { mapStocksStockItemsToFlatStockItems } from '../entity'
 
@@ -14,6 +14,7 @@ type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
 
 const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockItemsAutoCompleteProps<TFieldValues>) => {
   const { control, fieldPath, defaultValue } = props
+  const intl = useIntl()
   const { data: stocksWithStockItems, isLoading, isError } = useStockItemsQuery(undefined)
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
 
@@ -22,7 +23,7 @@ const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockIt
   }
 
   if (!stockItems || isError) {
-    return <FormattedMessage defaultMessage={'Skladové položky nebyly nalezeny.'} id="stockItem.notFound" />
+    return <FormattedMessage defaultMessage="Skladové položky nebyly nalezeny." id="stockItem.notFound" />
   }
 
   const stockItemsOptions = stockItems.map((stockItem) => ({
@@ -38,8 +39,14 @@ const StockItemsAutoComplete = <TFieldValues extends FieldValues>(props: StockIt
       getOptionLabel={(o) => o.name}
       getOptionValue={(o) => o.id}
       fieldPath={fieldPath}
-      label="Vyberte položku"
-      placeholder="Hledejte..."
+      label={intl.formatMessage({
+        id: 'stockItem.chooseItem',
+        defaultMessage: 'Vyberte položku',
+      })}
+      placeholder={intl.formatMessage({
+        id: 'stockItem.search',
+        defaultMessage: 'Hledejte...',
+      })}
       onChange={() => {
         queryClient.invalidateQueries({ queryKey: ['procedures'] })
       }}

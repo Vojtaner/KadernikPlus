@@ -4,12 +4,13 @@ import FormDialog from '../../../app/components/FormDialog'
 import AddVisitForm, { useAddVisitForm } from './AddVisitForm'
 import { useState, type ReactElement } from 'react'
 import type { CreateVisitType } from '../entity'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { addPropsToReactElement } from '../../entity'
 
 export const AddVisitFormDialog = (props: { openButton: ReactElement }) => {
   const [open, setOpen] = useState(false)
   const { setIsNewClient, handleSubmit, createVisitMutation, ...formProps } = useAddVisitForm()
+  const intl = useIntl()
 
   const handleClickOpen = () => {
     setOpen(true)
@@ -42,7 +43,10 @@ export const AddVisitFormDialog = (props: { openButton: ReactElement }) => {
       formFields={<AddVisitForm {...formProps} setIsNewClient={setIsNewClient} />}
       handleSubmit={() => handleSubmit(onSubmit)}
       onOpenButton={addPropsToReactElement(props.openButton, { onClick: handleClickOpen })}
-      title="Objednat"
+      title={intl.formatMessage({
+        defaultMessage: 'Objednat',
+        id: 'addVisitFormDialog.order',
+      })}
     />
   )
 }

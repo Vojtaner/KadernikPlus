@@ -59,7 +59,7 @@ const VisitsList = (props: VisitListProps) => {
   const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus && getIsVisitInPast(visit.date))
 
   const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
-    (visit) => visit.visitStatus && getMissingStockAllowanceError(visit.procedures)
+    (visit) => visit.visitStatus && getMissingStockAllowanceError(intl, visit.procedures)
   )
 
   const filteredData =
@@ -98,7 +98,10 @@ const VisitsList = (props: VisitListProps) => {
         {!onlyOpenVisits && (
           <Stack direction="row" spacing={2}>
             <BasicDatePicker
-              label="Datum od"
+              label={intl.formatMessage({
+                defaultMessage: 'Datum od',
+                id: 'visitsList.dateFrom',
+              })}
               control={control}
               fieldPath="from"
               onChange={(date) => {
@@ -108,7 +111,10 @@ const VisitsList = (props: VisitListProps) => {
               }}
             />
             <BasicDatePicker
-              label="Datum od"
+              label={intl.formatMessage({
+                defaultMessage: 'Datum do',
+                id: 'visitsList.dateTo',
+              })}
               control={control}
               fieldPath="to"
               onChange={(date) => {

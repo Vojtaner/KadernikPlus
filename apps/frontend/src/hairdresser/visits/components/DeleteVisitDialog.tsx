@@ -2,7 +2,7 @@ import { Button } from '@mui/material'
 import { useState } from 'react'
 import FormDialog from '../../../app/components/FormDialog'
 import React from 'react'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import { useAppNavigate } from '../../../hooks'
 import { addPropsToReactElement } from '../../entity'
 
@@ -13,8 +13,9 @@ type DeleteVisitDialogProps = {
 
 const DeleteVisitDialog = (props: DeleteVisitDialogProps) => {
   const { openButton, onConfirm } = props
-  const [open, setOpen] = useState(false)
+  const intl = useIntl()
   const navigate = useAppNavigate()
+  const [open, setOpen] = useState(false)
 
   return (
     <FormDialog
@@ -41,8 +42,14 @@ const DeleteVisitDialog = (props: DeleteVisitDialogProps) => {
         onClick: () => setOpen(true),
         color: 'error',
       })}
-      title="Opravdu chcete smazat návštěvu?"
-      dialogHelperText="Smaže se návštěva i související tržby."
+      title={intl.formatMessage({
+        defaultMessage: 'Opravdu chcete smazat návštěvu?',
+        id: 'deleteVisitDialog.closeWarningTitle',
+      })}
+      dialogHelperText={intl.formatMessage({
+        defaultMessage: 'Opravdu chcete smazat návštěvu?',
+        id: 'deleteVisitDialog.closeWarningText',
+      })}
     />
   )
 }

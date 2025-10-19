@@ -10,7 +10,7 @@ import Loader from '../../Loader'
 import { useForm, useWatch } from 'react-hook-form'
 import React from 'react'
 import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import CloseVisitDialog from './CloseVisitDialog'
 import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
 import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries'
@@ -21,6 +21,7 @@ const EditVisitDetailDialog = (props: {
 }) => {
   const { openButton } = props
   const [open, setOpen] = useState(false)
+  const intl = useIntl()
   const [errorDialogOpen, setErrorDialogOpen] = useState(false)
   const { visitId } = useParams()
   const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId)
@@ -52,7 +53,11 @@ const EditVisitDetailDialog = (props: {
   }
 
   if (!visit || isError) {
-    return <Typography>Detail návštěvy nebyl nalezen.</Typography>
+    return (
+      <Typography>
+        <FormattedMessage id="editVisitDetailDialog.noData" defaultMessage="Detail návštěvy nebyl nalezen." />
+      </Typography>
+    )
   }
 
   const handleClickOpen = () => {
@@ -91,11 +96,11 @@ const EditVisitDetailDialog = (props: {
     const { deposit, visitClosed, paidPrice, depositStatus } = getValues()
 
     if (!visitClosed) {
-      const errors = getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })
-      const missingStockAllowanceError = procedures && getMissingStockAllowanceError(procedures)
+      const errors = getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl)
+      const missingStockAllowanceError = procedures && getMissingStockAllowanceError(intl, procedures)
       const canSkipDialog =
-        getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }).length === 0 &&
-        !getMissingStockAllowanceError(procedures)
+        getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl).length === 0 &&
+        !getMissingStockAllowanceError(intl, procedures)
 
       if (canSkipDialog) {
         return true
@@ -119,7 +124,7 @@ const EditVisitDetailDialog = (props: {
             <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }
@@ -129,7 +134,10 @@ const EditVisitDetailDialog = (props: {
             <>
               <SelectField
                 disabled={visitClosed}
-                label="Stav zálohy"
+                label={intl.formatMessage({
+                  defaultMessage: 'Stav zálohy',
+                  id: 'editVisitDetailDialog.depositStatus',
+                })}
                 items={depositStatusOptions}
                 control={control}
                 keyExtractor={(status) => status.id}
@@ -140,7 +148,10 @@ const EditVisitDetailDialog = (props: {
               <TextField
                 fieldPath="deposit"
                 disabled={visitClosed}
-                label="Výše zálohy"
+                label={intl.formatMessage({
+                  defaultMessage: 'Výše zálohy',
+                  id: 'editVisitDetailDialog.depositAmount',
+                })}
                 type="number"
                 fullWidth
                 control={control}
@@ -156,7 +167,13 @@ const EditVisitDetailDialog = (props: {
           <TextField
             disabled={visitClosed}
             fieldPath="paidPrice"
-            label={`${visit.visitStatus ? 'Zaplacená' : 'Požadovaná'} cena`}
+            label={intl.formatMessage(
+              {
+                defaultMessage: 'status cena',
+                id: 'editVisitDetailDialog.depositStatus',
+              },
+              { status: visit.visitStatus ? 'Zaplacená' : 'Požadovaná' }
+            )}
             type="number"
             fullWidth
             control={control}
@@ -164,7 +181,10 @@ const EditVisitDetailDialog = (props: {
           <TextField
             disabled={visitClosed}
             fieldPath="note"
-            label="Informace k návštěvě"
+            label={intl.formatMessage({
+              defaultMessage: 'Informace k návštěvě',
+              id: 'editVisitDetailDialog.visitInfo',
+            })}
             type="text"
             fullWidth
             multiline
@@ -202,15 +222,18 @@ const EditVisitDetailDialog = (props: {
               }}
               onClose={() => setErrorDialogOpen(false)}
               openDialog={errorDialogOpen}
-              errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus })}
-              missingStockAllowanceError={procedures && getMissingStockAllowanceError(procedures)}
+              errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl)}
+              missingStockAllowanceError={procedures && getMissingStockAllowanceError(intl, procedures)}
             />
           </Stack>
         </>
       }
       handleSubmit={() => handleSubmit(onSubmit)}
       onOpenButton={openDialogButton}
-      title="Detail návštěvy"
+      title={intl.formatMessage({
+        defaultMessage: 'Detail návštěvy',
+        id: 'editVisitDetailDialog.visitDetail',
+      })}
     />
   )
 }

@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 import FormDialog from '../../../app/components/FormDialog'
 import TextField from '../../../app/components/TextField'
 import { useAddTeamMemberMutation } from '../queries'
@@ -16,6 +16,7 @@ type TeamMemberForm = {
 
 const AddTeamMemberButton = () => {
   const [open, setOpen] = useState(false)
+  const intl = useIntl()
   const { teamId } = useParams()
   const { control, handleSubmit } = useForm<TeamMemberForm>()
   const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation()
@@ -45,26 +46,51 @@ const AddTeamMemberButton = () => {
       actions={
         <>
           <Button onClick={handleClose}>
-            <FormattedMessage id="formDialog.close" defaultMessage={'Zavřít'} />
+            <FormattedMessage id="formDialog.close" defaultMessage="Zavřít" />
           </Button>
           <Button type="submit">
-            <FormattedMessage id="formDialog.save" defaultMessage={'Uložit'} />
+            <FormattedMessage id="formDialog.save" defaultMessage="Uložit" />
           </Button>
         </>
       }
       formFields={
         <>
-          <TextField fieldPath="email" label="E-mail" type="email" control={control} required fullWidth />
+          <TextField
+            fieldPath="email"
+            label={intl.formatMessage({
+              id: 'teamMember.email',
+              defaultMessage: 'E-mail',
+            })}
+            type="email"
+            control={control}
+            required
+            fullWidth
+          />
           <TextField
             fieldPath="consentId"
-            label="Souhlasné ID"
+            label={intl.formatMessage({
+              id: 'teamMember.consentId',
+              defaultMessage: 'Souhlasné ID',
+            })}
             type="text"
             control={control}
             required
             fullWidth
             rules={{
-              minLength: { message: 'Majitel týmu uvidí ID na svém profilu', value: 4 },
-              maxLength: { message: 'Majitel týmu uvidí ID na svém profilu', value: 4 },
+              minLength: {
+                message: intl.formatMessage({
+                  id: 'teamMember.validationRule',
+                  defaultMessage: 'Majitel týmu uvidí ID na svém profilu',
+                }),
+                value: 4,
+              },
+              maxLength: {
+                message: intl.formatMessage({
+                  id: 'teamMember.validationRule',
+                  defaultMessage: 'Majitel týmu uvidí ID na svém profilu',
+                }),
+                value: 4,
+              },
             }}
           />
         </>

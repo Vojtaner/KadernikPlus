@@ -132,7 +132,6 @@ export const StockItemForm = (props: StockItemFormProps) => {
                 control={control}
               />
             </Stack>
-
             <TextField
               fieldPath="totalPrice"
               label={<FormattedMessage id="stockItem.totalPrice" defaultMessage="Cena za všechna balení v Kč" />}
@@ -140,7 +139,6 @@ export const StockItemForm = (props: StockItemFormProps) => {
               fullWidth
               control={control}
             />
-
             {itemNameWatch && pricePerPackage ? (
               <Stack direction="column" spacing={0.5}>
                 <Typography color="text.secondary" fontSize="0.8rem" paddingLeft="0.2rem">
@@ -160,7 +158,10 @@ export const StockItemForm = (props: StockItemFormProps) => {
             <TextField
               fieldPath="threshold"
               required
-              label="Minimální počet balení"
+              label={intl.formatMessage({
+                id: 'stockItem.minimumPackageCount',
+                defaultMessage: 'Minimální počet balení',
+              })}
               type="number"
               control={control}
               fullWidth
