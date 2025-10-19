@@ -157,7 +157,7 @@ export const createVisitRepositoryDb = (
     const updatedVisit = await prismaRepository.visit.update({
       where: { id: visitData.id },
       data: {
-        paidPrice: visitData.paidPrice,
+        paidPrice: new Prisma.Decimal(visitData.paidPrice || 0),
         date: visitData.date,
         deposit: Number(visitData.deposit),
         note: visitData.note,
