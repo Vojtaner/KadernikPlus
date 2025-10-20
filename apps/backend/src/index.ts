@@ -56,6 +56,11 @@ app.get("/debug/prisma", async (req, res, next) => {
   }
 });
 
+app.post(
+  "/api/payment/callback",
+  makeExpressCallback(paymentController.updatePushNotificationPaymentController)
+);
+
 const jwtCheck = auth({
   audience: getEnvVar("AUDIENCE"),
   issuerBaseURL: getEnvVar("AUTH0_ISSUER_BASE_URL"),
@@ -88,11 +93,6 @@ app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
 app.options("/api/payment/callback", cors());
-
-app.post(
-  "/api/payment/callback",
-  makeExpressCallback(paymentController.updatePushNotificationPaymentController)
-);
 
 app.use(jwtCheck);
 app.use(ensureUserExistsMiddleware(ensureUserExistsUseCase));
