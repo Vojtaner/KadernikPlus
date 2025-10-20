@@ -44,7 +44,7 @@ const anonymizeScheduledUsers = async (dependencies: {
 };
 
 export default cron.schedule(
-  "* 12 * * *",
+  "0 3 * * *",
   async () => {
     console.log("Running scheduled user anonymization:", new Date());
 

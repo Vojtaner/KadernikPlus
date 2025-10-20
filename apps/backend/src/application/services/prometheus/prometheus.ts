@@ -15,6 +15,7 @@ const metricsMiddleware = promBundle({
   },
 });
 const register = new Registry();
+
 const httpRequests = new Counter({
   name: "http_requests_total",
   help: "Počet HTTP requestů",

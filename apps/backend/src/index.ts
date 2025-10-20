@@ -77,12 +77,13 @@ app.get("/cors-origin-test", (req, res) => {
 
 app.use(rateLimiter);
 
-app.use((req, res, next) => {
-  res.on("finish", () => {
-    httpRequests.inc({ method: req.method, status: res.statusCode });
-  });
-  next();
-});
+// app.use((req, res, next) => {
+//   res.on("finish", () => {
+//     httpRequests.inc({ method: req.method, status: res.statusCode });
+//   });
+//   next();
+// });
+
 app.get("/", (req, res) => {
   res.send("Aplikace kadeřník plus je v provozu.");
 });
