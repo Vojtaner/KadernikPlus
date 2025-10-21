@@ -67,7 +67,7 @@ export const useDeleteVisitMutation = () => {
 
 export const getVisitByIdQueryKey = (visitId: string | undefined) => ['visit', visitId]
 
-export const useVisitQuery = (visitId: string | undefined, enabled = true) => {
+export const useVisitQuery = (visitId: string | undefined, enabled = true, refetchOnMount = false) => {
   const axios = useAxios()
 
   return useQuery<VisitWithServicesHotFix>({
@@ -84,8 +84,7 @@ export const useVisitQuery = (visitId: string | undefined, enabled = true) => {
       }))
     },
     enabled,
-    refetchOnMount: false,
-    staleTime: 20 * 60 * 1000,
+    refetchOnMount,
   })
 }
 

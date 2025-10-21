@@ -5,28 +5,16 @@ import { type PropsWithChildren } from 'react'
 import { Box } from '@mui/material'
 import SearchResults from '../hairdresser/pages/SearchResults'
 import SectionHeader from '../app/components/SectionHeader'
-import AddVisitFormDialog from '../hairdresser/visits/components/AddVisitFormDialog'
-import AddEditClientFormDialog from '../hairdresser/client/components/AddEditClientFormDialog'
-import { StockItemDialog } from '../hairdresser/stock/components/StockItemDialog'
-import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined'
-import WarehouseIcon from '@mui/icons-material/Warehouse'
-import ContentCutIcon from '@mui/icons-material/ContentCut'
-import { useIntl } from 'react-intl'
 import { useCurrentRoute } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
 import { useAppSelector } from '../store/store'
 import SideMenu from './SideMenu'
-import AddServiceItemButton from '../hairdresser/service/components/AddServiceItemButton'
 import { APP_LAYOUT_WIDTH } from './entity'
 import { useUserDataQuery } from '../queries'
-import MoreTimeOutlinedIcon from '@mui/icons-material/MoreTimeOutlined'
-import MenuIconButton from '../app/components/MenuBoxIcon'
 
 const Layout = (props: PropsWithChildren) => {
   const { children } = props
   const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
-
-  const intl = useIntl()
   const { data: userData } = useUserDataQuery()
 
   const route = useCurrentRoute()
@@ -48,7 +36,7 @@ const Layout = (props: PropsWithChildren) => {
           width: { md: '100%' },
         }}>
         <TopBar />
-        {!isSearchActive && <SectionHeader onGoBack={() => navigate(-1)} route={route} routeAppendix={routeAppendix} />}
+        <SectionHeader onGoBack={() => navigate(-1)} route={route} routeAppendix={routeAppendix} />
       </Stack>
       <Box
         paddingX="10px"
@@ -59,44 +47,10 @@ const Layout = (props: PropsWithChildren) => {
         sx={{ bgcolor: '#f6f6f6', height: '100%', minHeight: '100vh' }}>
         <>
           {!isSearchActive && children}
-          {isSearchActive && <SearchResults />}
+          <SearchResults />
         </>
       </Box>
-      <BottomBar>
-        <AddServiceItemButton
-          openButton={
-            <MenuIconButton
-              icon={<ContentCutIcon fontSize="large" />}
-              title={intl.formatMessage({ defaultMessage: 'Přidat službu', id: 'serviceDialog.addService' })}
-            />
-          }
-        />
-        <AddEditClientFormDialog
-          openButton={
-            <MenuIconButton
-              icon={<PersonAddAlt1OutlinedIcon fontSize="large" />}
-              title={intl.formatMessage({ defaultMessage: 'Přidat klienta', id: 'clientDialog.addClient' })}
-            />
-          }
-        />
-        <AddVisitFormDialog
-          openButton={
-            <MenuIconButton
-              icon={<MoreTimeOutlinedIcon fontSize="large" />}
-              title={intl.formatMessage({ defaultMessage: 'Objednat', id: 'addVisit.order' })}
-            />
-          }
-        />
-        <StockItemDialog
-          formUsagePurpose="purchaseAndNewStockItem"
-          openButton={
-            <MenuIconButton
-              icon={<WarehouseIcon fontSize="large" />}
-              title={intl.formatMessage({ defaultMessage: 'Přidat materiál', id: 'stock.addStockItem' })}
-            />
-          }
-        />
-      </BottomBar>
+      <BottomBar />
       <SideMenu />
     </Stack>
   )

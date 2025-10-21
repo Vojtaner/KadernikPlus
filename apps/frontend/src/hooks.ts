@@ -21,6 +21,7 @@ export const useAppNavigate = () => {
   function appNavigate(delta: number): void
   function appNavigate(toOrDelta: To | number, options?: NavigateOptions): void {
     dispatch(setCurrentLocationAppendix(''))
+
     if (typeof toOrDelta === 'number') {
       navigate(toOrDelta)
     } else {

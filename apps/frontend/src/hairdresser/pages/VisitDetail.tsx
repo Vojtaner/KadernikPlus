@@ -23,7 +23,7 @@ import { FormattedMessage, useIntl } from 'react-intl'
 const VisitDetail = () => {
   const { visitId, clientId } = useParams()
   const intl = useIntl()
-  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId)
+  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId, true, true)
   const { data: clientVisits } = useClientVisitsQuery(clientId)
   const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
   const dispatch = useAppDispatch()

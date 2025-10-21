@@ -4,6 +4,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import { Box, IconButton } from '@mui/material'
 import { type CurrentRoute } from '../../routes/AppRoutes'
 import { useUserDataQuery } from '../../queries'
+import { useAppSelector } from '../../store/store'
 
 const SectionHeader = (props: {
   onGoBack: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
@@ -12,6 +13,11 @@ const SectionHeader = (props: {
 }) => {
   const { onGoBack, routeAppendix, route } = props
   const { data: userData } = useUserDataQuery()
+  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
+
+  if (isSearchActive) {
+    return null
+  }
 
   if (!route) {
     onGoBack()

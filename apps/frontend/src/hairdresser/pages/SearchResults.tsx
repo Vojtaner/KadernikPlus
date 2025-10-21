@@ -7,6 +7,10 @@ const SearchResults = () => {
   const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
   const searchResults = useAppSelector((state) => state.searchResults)
 
+  if (!isSearchActive) {
+    return null
+  }
+
   if (isSearchActive && !searchResults.searchResults.length) {
     return (
       <Typography>
