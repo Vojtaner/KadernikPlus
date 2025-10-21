@@ -95,6 +95,7 @@ const createStockItemRepositoryDb = (
             totalPrice: new Prisma.Decimal(totalPrice),
             avgUnitPrice: new Prisma.Decimal(avgPrice),
             threshold: new Prisma.Decimal(threshold),
+            activeName: itemName,
             packageCount: new Prisma.Decimal(packageCount),
             lastPackageQuantity: new Prisma.Decimal(quantity),
             unit,
@@ -175,6 +176,7 @@ const createStockItemRepositoryDb = (
       if (!isOwnStock && !isTeamStock) {
         throw new Error("Nemáte oprávnění k odstranění této položky skladu.");
       }
+
       await prismaStockRepository.stockItem.update({
         where: { id },
         data: { isActive: false, activeName: null },
