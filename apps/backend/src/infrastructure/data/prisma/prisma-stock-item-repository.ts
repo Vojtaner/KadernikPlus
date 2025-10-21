@@ -7,9 +7,7 @@ import {
 } from "../../../application/ports/stock-item-repository";
 import prisma from "./prisma";
 import { isPurchaseStockItem } from "../../../infrastructure/controllers/stock-item-controller";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { DEFAULT_USERS_TEAM } from "../../../entities/team-member";
-import StockItemAlreadyExistsError from "../../../domain/errors/stock-item-errors";
 import { httpError } from "../../../adapters/express/httpError";
 
 const createStockItemRepositoryDb = (
