@@ -16,21 +16,21 @@ export const LogLine = (props: LogLineProps) => {
       paddingLeft={1}>
       <Stack height="100%">
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography fontWeight={600} color="text.primary" fontSize={'0.8rem'}>
+          <Typography fontWeight={600} color="text.primary" fontSize="0.8rem">
             {userName}
           </Typography>
           {/* <Typography variant="caption" color="text.secondary" fontSize={'0.6rem'}>
             {actionType.toUpperCase()}
           </Typography> */}
-          <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
+          <Typography variant="h6" color="info.main" fontSize="0.7rem">
             -
           </Typography>
-          <Typography variant="caption" color={'#ff6221'} alignItems="center">
+          <Typography variant="caption" color="#ff6221" alignItems="center">
             {dateTime.format('DD.MM.YYYY - HH:mm')}
           </Typography>
         </Stack>
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography variant="h6" color={'info.main'} fontSize={'0.7rem'}>
+          <Typography variant="h6" color="info.main" fontSize="0.7rem">
             {description.toUpperCase()}
           </Typography>
         </Stack>
