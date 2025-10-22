@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material'
 import { useAppSelector } from '../../store/store'
-import SearchResult from '../SearchResult'
+import SearchResult from '../../components/SearchResult'
 import { FormattedMessage } from 'react-intl'
 
 const SearchResults = () => {

@@ -9,7 +9,7 @@ import { useCurrentRoute } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
 import { useAppSelector } from '../store/store'
 import SideMenu from './SideMenu'
-import { APP_LAYOUT_WIDTH } from './entity'
+import { APP_LAYOUT_WIDTH } from '../hairdresser/entity'
 import { useUserDataQuery } from '../queries'
 
 const Layout = (props: PropsWithChildren) => {

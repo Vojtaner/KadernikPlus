@@ -99,6 +99,33 @@ export const DepositStatus = {
 
 export type DepositStatus = keyof typeof DepositStatus
 
+export type VisitRow =
+  | {
+      isHeader: true
+      label: string
+      id: string
+      date?: never
+      client?: never
+      serviceName?: never
+      visitState?: never
+      clientId?: never
+      visitDepositPayed?: never
+      clientDeposit?: never
+    }
+  | {
+      id: string
+      date: string
+      dateTo: string
+      client: string
+      serviceName: string
+      visitState: boolean
+      visitDepositPayed: boolean
+      clientDeposit: boolean
+      clientId: string
+      isHeader?: false
+      label?: never
+    }
+
 export const depositStatusOptions = Object.entries(DepositStatus).map(([key, value]) => ({
   id: key,
   name: value,
@@ -141,3 +168,50 @@ export const getVisitsByDateQueryKey = (params: VisitsByDateQueryParams) =>
     : params?.date
       ? ['visits', dayjs(params.date).format('YYYY-MM-DD')]
       : ['visits']
+
+export const getTimeFromUtcToLocal = (date: Date) => {
+  return dayjs(date).format('HH:mm')
+}
+export const getDateTimeFromUtcToLocal = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY - HH:mm')
+}
+export const getDate = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY')
+}
+export const getDateShort = (date: Date) => {
+  return dayjs(date).format('DD.MM.')
+}
+export const getDateWithDay = (date: Date) => {
+  return dayjs(date).format('DD.MM.YYYY - dddd')
+}
+
+export const formatPhoneNumber = (digits: string | null): string | undefined => {
+  if (!digits) {
+    return undefined
+  }
+
+  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
+}
+
+export const getRowsWithHeaders = (visits: VisitWithServicesWithProceduresWithStockAllowances[]) => {
+  const rows: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[] =
+    []
+
+  let lastDate: Date | null = null
+
+  for (const visit of visits) {
+    const visitDay = getDate(visit.date)
+    const lastDay = lastDate ? getDate(lastDate) : null
+
+    if (visitDay !== lastDay) {
+      rows.push({
+        id: `header-${visit.date}`,
+        isHeader: true,
+        label: 'Den - ' + getDateWithDay(visit.date),
+      })
+      lastDate = visit.date
+    }
+    rows.push(visit)
+  }
+  return rows
+}

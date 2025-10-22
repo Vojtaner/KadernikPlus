@@ -8,7 +8,7 @@ import {
   type StockViewKey,
 } from '../../entity'
 import { useForm } from 'react-hook-form'
-import Loader from '../Loader'
+import Loader from '../../components/Loader'
 import ErrorBoundary from './ErrorBoundary'
 
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'

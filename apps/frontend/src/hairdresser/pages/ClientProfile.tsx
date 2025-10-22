@@ -1,6 +1,6 @@
 import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material'
 import { useParams } from 'react-router-dom'
-import Loader from '../Loader'
+import Loader from '../../components/Loader'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhoneInTalkOutlinedIcon from '@mui/icons-material/PhoneInTalkOutlined'

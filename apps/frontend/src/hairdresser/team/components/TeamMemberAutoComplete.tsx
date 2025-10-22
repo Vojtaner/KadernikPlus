@@ -1,7 +1,7 @@
 import type { FieldValues, Path, Control } from 'react-hook-form'
 import { FormattedMessage, useIntl } from 'react-intl'
 import AutoComplete from '../../../app/components/AutoComplete'
-import Loader from '../../Loader'
+import Loader from '../../../components/Loader'
 import { useTeamMembersQuery } from '../queries'
 
 type TeamMemberAutoCompleteProps<TFieldValues extends FieldValues> = {

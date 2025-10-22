@@ -12,9 +12,9 @@ import { SnackbarMessages } from './app/components/SnackBarMessages'
 import AuthGuard from './app/components/AuthGuard'
 import { ROUTES } from './routes/AppRoutes'
 import { SubscriptionPage } from './hairdresser/pages/SubscriptionPage'
-import SubscriptionGuard from './hairdresser/SubscriptionGuard'
-import Layout from './hairdresser/Layout'
-import ImportContactsPage from './hairdresser/ImportContactsPage'
+import SubscriptionGuard from './components/SubscriptionGuard'
+import Layout from './components/Layout'
+import ImportContactsPage from './components/ImportContactsPage'
 
 function App() {
   const methods = useAppForm()

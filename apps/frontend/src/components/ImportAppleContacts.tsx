@@ -1,13 +1,14 @@
 import { useForm, useFieldArray } from 'react-hook-form'
-import { useImportClientMutation } from './client/queries'
+import { useImportClientMutation } from '../hairdresser/client/queries'
 import { Button, Grid, IconButton, Stack } from '@mui/material'
 import TextField from '../app/components/TextField'
-import InputFileUpload from './InputFileUpload'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import { capitalizeFirstLetter } from './SmsTabs'
-import { getParsedFullName } from './entity'
+import { getParsedFullName } from '../hairdresser/entity'
 import { useEffect, useState } from 'react'
+import InputFileUpload from './InputFileUpload'
 import Loader from './Loader'
+import { capitalizeFirstLetter } from './SmsTabs'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 type Contact = {
   firstName: string
@@ -23,6 +24,7 @@ export const ImportAppleContacts = () => {
   const { control, handleSubmit, setValue } = useForm<FormValues>({
     defaultValues: { contacts: [] },
   })
+  const intl = useIntl()
   const [loading, setLoading] = useState(false)
   const { fields, append, remove } = useFieldArray({
     control,
@@ -94,12 +96,26 @@ export const ImportAppleContacts = () => {
   }, [fields])
 
   if (loading) {
-    return <Loader direction="row" title="Nahrávání spousty kontaktů...(ideální množství je 200 kontaktů)" />
+    return (
+      <Loader
+        direction="row"
+        title={intl.formatMessage({
+          id: 'appleImport.contactsRecommendation',
+          defaultMessage: 'Nahrávání spousty kontaktů...(ideální množství je 200 kontaktů)',
+        })}
+      />
+    )
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <InputFileUpload onChange={handleFileUpload} label="Nahrát soubor s kontakty (.vcf)" />
+      <InputFileUpload
+        onChange={handleFileUpload}
+        label={intl.formatMessage({
+          id: 'appleImport.button',
+          defaultMessage: 'Nahrát soubor s kontakty (.vcf)',
+        })}
+      />
       {fields.map((field, index) => (
         <Stack key={field.id} spacing={0.1} padding={1}>
           <Grid container spacing={1} alignItems="center">
@@ -120,7 +136,11 @@ export const ImportAppleContacts = () => {
           </Grid>
         </Stack>
       ))}
-      {fields.length ? <Button type="submit">Uložit</Button> : null}
+      {fields.length ? (
+        <Button type="submit">
+          <FormattedMessage id="appleImport.save" defaultMessage="Uložit" />
+        </Button>
+      ) : null}
     </form>
   )
 }

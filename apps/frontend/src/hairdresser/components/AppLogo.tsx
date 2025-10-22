@@ -1,8 +1,8 @@
 import type { Theme } from '@emotion/react'
 import { type SxProps, Stack, Box } from '@mui/material'
-import { useAppNavigate } from '../hooks'
-import { useUserDataQuery } from '../queries'
-import { ROUTES } from '../routes/AppRoutes'
+import { useAppNavigate } from '../../hooks'
+import { useUserDataQuery } from '../../queries'
+import { ROUTES } from '../../routes/AppRoutes'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import logo from '../../public/logo.png'
 

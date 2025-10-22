@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack'
 import { useLogsQuery } from '../../queries.ts'
 import ErrorBoundary from './ErrorBoundary.tsx'
 import dayjs from 'dayjs'
-import { LogLine } from '../LogLine.tsx'
+import { LogLine } from '../../components/LogLine.tsx'
 
 const Logs = () => {
   const { data: logs } = useLogsQuery()

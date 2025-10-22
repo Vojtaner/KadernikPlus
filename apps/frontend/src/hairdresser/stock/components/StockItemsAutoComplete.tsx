@@ -1,5 +1,5 @@
 import { type Control, type FieldPath, type FieldPathValue, type FieldValues, type Path } from 'react-hook-form'
-import Loader from '../../Loader'
+import Loader from '../../../components/Loader'
 import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
 import AutoComplete from '../../../app/components/AutoComplete'
 import { FormattedMessage, useIntl } from 'react-intl'

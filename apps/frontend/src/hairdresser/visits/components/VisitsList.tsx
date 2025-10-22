@@ -2,22 +2,29 @@ import { Stack, Box, Typography } from '@mui/material'
 import type { GridColDef } from '@mui/x-data-grid'
 import dayjs from 'dayjs'
 import { useForm } from 'react-hook-form'
-import { useIntl } from 'react-intl'
+import { useIntl, type IntlShape } from 'react-intl'
 import { BasicDatePicker } from '../../../app/components/BasicDatePicker'
 import AppDataGrid from '../../../app/components/DataGrid'
 import { formatNameShort } from '../../../entity'
 import { type VisitListApplyFilter, useAppNavigate, useVisitListFilters } from '../../../hooks'
 import { FilterTableButton } from '../../pages/Consumption'
-import Loader from '../../Loader'
+import Loader from '../../../components/Loader'
 import { Paths } from '../../../routes/AppRoutes'
 import { getMissingStockAllowanceError } from './VisitDetailGrid'
-import { DepositStatus, getIsVisitInPast, type VisitWithServicesWithProceduresWithStockAllowances } from '../entity'
+import {
+  DepositStatus,
+  getIsVisitInPast,
+  getRowsWithHeaders,
+  getTimeFromUtcToLocal,
+  type VisitRow,
+  type VisitWithServicesWithProceduresWithStockAllowances,
+} from '../entity'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
 import { useVisitsQuery } from '../queries'
 import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
 import CreditScoreIcon from '@mui/icons-material/CreditScore'
 import { getButtonStyle } from '../../entity'
-import SmsSendDialog from '../../SmsSendDialog'
+import SmsSendDialog from '../../../components/SmsSendDialog'
 import SendIcon from '@mui/icons-material/Send'
 import AppTheme from '../../../AppTheme'
 import BoxIcon from '../../../app/components/BoxIcon'
@@ -131,7 +138,7 @@ const VisitsList = (props: VisitListProps) => {
               visitListApplyFilter === 'dashBoardVisitOverView' || visitListApplyFilter === 'onlyOpenVisits'
             }
             rows={rows}
-            columns={createColumns(navigate)}
+            columns={createColumns(navigate, intl)}
             columnHeaderHeight={columnHeaderHeight}
             hideFooter={hideFooter}
             getRowClassName={(params) => {
@@ -154,7 +161,7 @@ const VisitsList = (props: VisitListProps) => {
           <AppDataGrid
             rows={rows}
             disableColumnMenu={true}
-            columns={createColumns(navigate)}
+            columns={createColumns(navigate, intl)}
             columnHeaderHeight={columnHeaderHeight}
             hideFooter={hideFooter}
             getRowClassName={(params) => {
@@ -179,37 +186,10 @@ const VisitsList = (props: VisitListProps) => {
 }
 export default VisitsList
 
-type VisitRow =
-  | {
-      isHeader: true
-      label: string
-      id: string
-      date?: never
-      client?: never
-      serviceName?: never
-      visitState?: never
-      clientId?: never
-      visitDepositPayed?: never
-      clientDeposit?: never
-    }
-  | {
-      id: string
-      date: string
-      dateTo: string
-      client: string
-      serviceName: string
-      visitState: boolean
-      visitDepositPayed: boolean
-      clientDeposit: boolean
-      clientId: string
-      isHeader?: false
-      label?: never
-    }
-
-export const createColumns = (navigate: (path: string) => void): GridColDef<VisitRow[][number]>[] => [
+export const createColumns = (navigate: (path: string) => void, intl: IntlShape): GridColDef<VisitRow[][number]>[] => [
   {
     field: 'date',
-    headerName: 'Čas',
+    headerName: `${intl.formatMessage({ id: 'stock.time', defaultMessage: 'Čas' })}`,
     width: 45,
     hideSortIcons: false,
     display: 'flex',
@@ -239,7 +219,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
 
   {
     field: 'client',
-    headerName: 'Zákazník',
+    headerName: `${intl.formatMessage({ id: 'stock.customer', defaultMessage: 'Zákazník' })}`,
     display: 'flex',
     flex: 3.5,
     minWidth: 55,
@@ -259,14 +239,14 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
   },
   {
     field: 'serviceName',
-    headerName: 'Účes',
+    headerName: `${intl.formatMessage({ id: 'stock.servicename', defaultMessage: 'Účes' })}`,
     minWidth: 70,
     flex: 2.5,
     width: 150,
   },
   {
     field: 'visitState',
-    headerName: 'Stav',
+    headerName: `${intl.formatMessage({ id: 'stock.visitState', defaultMessage: 'Stav' })}`,
     width: 70,
     flex: 1.5,
     display: 'flex',
@@ -279,7 +259,9 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
             fontSize="0.9rem"
             onClick={() => (params.row.clientId ? navigate(Paths.visitDetail(params.row.clientId, params.row.id)) : {})}
             color={isVisitOpen ? 'success' : 'error'}>
-            {isVisitOpen ? 'Zavř.' : 'Nezavř.'}
+            {isVisitOpen
+              ? intl.formatMessage({ id: 'stock.closedVisit', defaultMessage: 'Zavř.' })
+              : intl.formatMessage({ id: 'stock.notClosedVisit', defaultMessage: 'Nezavř.' })}
           </Typography>
         )
       )
@@ -287,7 +269,7 @@ export const createColumns = (navigate: (path: string) => void): GridColDef<Visi
   },
   {
     field: 'visitDetailButton',
-    headerName: 'Detail',
+    headerName: `${intl.formatMessage({ id: 'stock.visitDetailButton', defaultMessage: 'Detail' })}`,
     width: 10,
     flex: 3,
     display: 'flex',
@@ -365,51 +347,4 @@ const createVisitsTable = (
   })
 
   return visitsList.filter((visit) => visit !== undefined)
-}
-
-export const getTimeFromUtcToLocal = (date: Date) => {
-  return dayjs(date).format('HH:mm')
-}
-export const getDateTimeFromUtcToLocal = (date: Date) => {
-  return dayjs(date).format('DD.MM.YYYY - HH:mm')
-}
-export const getDate = (date: Date) => {
-  return dayjs(date).format('DD.MM.YYYY')
-}
-export const getDateShort = (date: Date) => {
-  return dayjs(date).format('DD.MM.')
-}
-export const getDateWithDay = (date: Date) => {
-  return dayjs(date).format('DD.MM.YYYY - dddd')
-}
-
-export const formatPhoneNumber = (digits: string | null): string | undefined => {
-  if (!digits) {
-    return undefined
-  }
-
-  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`
-}
-
-const getRowsWithHeaders = (visits: VisitWithServicesWithProceduresWithStockAllowances[]) => {
-  const rows: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[] =
-    []
-
-  let lastDate: Date | null = null
-
-  for (const visit of visits) {
-    const visitDay = getDate(visit.date)
-    const lastDay = lastDate ? getDate(lastDate) : null
-
-    if (visitDay !== lastDay) {
-      rows.push({
-        id: `header-${visit.date}`,
-        isHeader: true,
-        label: 'Den - ' + getDateWithDay(visit.date),
-      })
-      lastDate = visit.date
-    }
-    rows.push(visit)
-  }
-  return rows
 }

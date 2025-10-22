@@ -1,8 +1,8 @@
 import { Grid, Button, Stack, Divider, Typography } from '@mui/material'
 import DetailColumn from '../../app/components/DetailColumn'
 import { useAuth0 } from '@auth0/auth0-react'
-import Loader from '../Loader'
-import { UserProfilDialog } from '../UserFormDialog'
+import Loader from '../../components/Loader'
+import { UserProfilDialog } from '../../components/UserFormDialog'
 import { FormattedMessage, useIntl } from 'react-intl'
 import {
   useCancelSubscriptionMutation,
@@ -12,11 +12,11 @@ import {
   useSubscriptionQuery,
   useUserDataQuery,
 } from '../../queries'
-import { ContactPicker } from '../ContactPicker'
-import { ImportAppleContacts } from '../ImportAppleContacts'
-import { downloadInvoice } from '../InvoicePdf'
+import { ContactPicker } from '../components/ContactPicker'
+import { ImportAppleContacts } from '../../components/ImportAppleContacts'
+import { downloadInvoice } from '../../components/InvoicePdf'
 import { getDate } from '../visits/components/VisitsList'
-import MuiColorPicker from '../MuiColorPicker'
+import MuiColorPicker from '../../components/MuiColorPicker'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()

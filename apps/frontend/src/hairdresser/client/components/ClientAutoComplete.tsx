@@ -1,4 +1,4 @@
-import Loader from '../../Loader'
+import Loader from '../../../components/Loader'
 import { type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
 import AutoComplete from '../../../app/components/AutoComplete'
 import { useClientsQuery } from '../queries'

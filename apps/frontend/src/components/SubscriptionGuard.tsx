@@ -4,8 +4,8 @@ import { Navigate } from 'react-router-dom'
 import { ROUTES } from '../routes/AppRoutes'
 import Loader from './Loader'
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar'
-import ErrorBoundary from './pages/ErrorBoundary'
-import { getQueryErrorMessage } from './entity'
+import ErrorBoundary from '../hairdresser/pages/ErrorBoundary'
+import { getQueryErrorMessage } from '../hairdresser/entity'
 
 const SubscriptionGuard = (props: PropsWithChildren) => {
   const { children } = props

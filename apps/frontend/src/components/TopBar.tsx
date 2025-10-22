@@ -5,7 +5,7 @@ import { useUserDataQuery } from '../queries'
 import { toggleDrawer } from '../store/appUiSlice'
 import { useAppSelector } from '../store/store'
 import SearchBar from '../app/components/SearchBar'
-import { AppLogo } from './AppLogo'
+import { AppLogo } from '../hairdresser/components/AppLogo'
 
 const TopBar = () => {
   const dispatch = useDispatch()

@@ -6,7 +6,7 @@ import DashBoardCard from '../../app/components/DashBoardCard'
 import ShoppingList from './ShoppingList'
 import NewReleasesIcon from '@mui/icons-material/NewReleases'
 import VisitsList from '../visits/components/VisitsList'
-import RevenuChart from '../RevenueChart'
+import RevenuChart from '../../components/RevenueChart'
 import { useIntl } from 'react-intl'
 
 export const Dashboard = () => {

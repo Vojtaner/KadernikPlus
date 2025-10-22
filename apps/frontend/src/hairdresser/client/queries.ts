@@ -17,7 +17,7 @@ import {
   getSearchClients,
   deleteClient,
 } from './api'
-import type { Contact } from '../ContactPicker'
+import type { Contact } from '../components/ContactPicker'
 import { useAppNavigate } from '../../hooks'
 import { ROUTES } from '../../routes/AppRoutes'
 

@@ -6,7 +6,7 @@ import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '
 import StockItemForm, { useStockItemForm } from './StockItemForm'
 import { addPropsToReactElement } from '../../entity'
 import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
-import FullScreenImage from '../../FullscreenImage'
+import FullScreenImage from '../../../components/FullscreenImage'
 
 type StockItemDialogProps = {
   defaultValues?: Partial<StockItemDefaultValuesType>

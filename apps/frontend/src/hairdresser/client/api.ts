@@ -6,7 +6,7 @@ import type {
   ClientWithVisitsWithVisitServices,
 } from '../../entities/client'
 import type { VisitWithServicesWithProceduresWithStockAllowances } from '../visits/entity'
-import type { Contact } from '../ContactPicker'
+import type { Contact } from '../components/ContactPicker'
 import { apiCall } from '../entity'
 
 export const clientApi = {

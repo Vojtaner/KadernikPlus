@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
-import TextField from '../app/components/TextField'
+import TextField from '../../app/components/TextField'
 import { Button, Grid, IconButton, Stack, Typography } from '@mui/material'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import { useImportClientMutation } from './client/queries'
+import { useImportClientMutation } from '../client/queries'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import PersonSearchIcon from '@mui/icons-material/PersonSearch'
-import { useIntl } from 'react-intl'
+import { FormattedMessage, useIntl } from 'react-intl'
 
 export type Contact = {
   firstName?: string
@@ -49,7 +49,13 @@ export const ContactPicker: React.FC = () => {
         console.error(error)
       }
     } else {
-      setError('Tento prohlížeč nebo Apple iOS nepodporují Contacts Picker API použijte Google Chrome v androidu.')
+      setError(
+        intl.formatMessage({
+          id: 'contactPicker.unSupportedBrowser',
+          defaultMessage:
+            'Tento prohlížeč nebo Apple iOS nepodporují Contacts Picker API použijte Google Chrome v androidu.',
+        })
+      )
     }
   }
 
@@ -72,7 +78,7 @@ export const ContactPicker: React.FC = () => {
     <>
       {error && <Typography style={{ color: 'red' }}>{error}</Typography>}
       <Button onClick={pickContacts} startIcon={<PersonSearchIcon />}>
-        Vybrat kontakty
+        <FormattedMessage id="contactPicker.chooseContacts" defaultMessage="Vybrat kontakty (pouze Android)" />
       </Button>
       <Stack spacing={2}>
         {fields.map((field, index) => {
@@ -104,7 +110,7 @@ export const ContactPicker: React.FC = () => {
           onClick={() => {
             importClients({ contacts: fields })
           }}>
-          Uložit kontakty
+          <FormattedMessage id="contactPicker.saveContacts" defaultMessage="Uložit kontakty" />
         </Button>
       ) : null}
     </>

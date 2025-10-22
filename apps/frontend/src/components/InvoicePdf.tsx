@@ -1,5 +1,5 @@
 import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
-import type { Invoice } from './entity'
+import type { Invoice } from '../hairdresser/entity'
 import saveAs from 'file-saver'
 import { useIntl } from 'react-intl'
 

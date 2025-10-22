@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import AppDataGrid from '../../app/components/DataGrid'
 import { type GridColDef } from '@mui/x-data-grid'
-import Loader from '../Loader'
+import Loader from '../../components/Loader'
 import BoxIcon from '../../app/components/BoxIcon'
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 import { StockItemDialog } from '../stock/components/StockItemDialog'
