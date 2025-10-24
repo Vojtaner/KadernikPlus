@@ -15,8 +15,8 @@ import {
 import { ContactPicker } from '../components/ContactPicker'
 import { ImportAppleContacts } from '../../components/ImportAppleContacts'
 import { downloadInvoice } from '../../components/InvoicePdf'
-import { getDate } from '../visits/components/VisitsList'
 import MuiColorPicker from '../../components/MuiColorPicker'
+import { getDate } from '../visits/entity'
 
 const MyProfile = () => {
   const { user, isAuthenticated, isLoading } = useAuth0()

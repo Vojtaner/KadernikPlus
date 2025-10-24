@@ -2,8 +2,7 @@ import { Stack, Box, Button, Typography } from '@mui/material'
 import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
-import type { CreateVisitType } from '../entity'
-import { getDateTimeFromUtcToLocal } from './VisitsList'
+import { getDateTimeFromUtcToLocal, type CreateVisitType } from '../entity'
 import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
 import TextField from '../../../app/components/TextField'
 import Switch from '../../../app/components/Switch/SwitchButton'
@@ -60,7 +59,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
         rules={{
           validate: (value) => {
             if (!value) {
-              return intl.formatMessage({ defaultMessage: 'Musíte vybrat datum a čas', id: 'addVisitForm.chooseDateTime' })
+              return intl.formatMessage({
+                defaultMessage: 'Musíte vybrat datum a čas',
+                id: 'addVisitForm.chooseDateTime',
+              })
             }
 
             const isTaken = visitsOnSelectedDate?.some(

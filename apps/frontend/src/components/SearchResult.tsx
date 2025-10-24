@@ -1,12 +1,12 @@
 import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
 import PermIdentityIcon from '@mui/icons-material/PermIdentity'
 import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
-import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
 import { Paths } from '../routes/AppRoutes'
 import { useAppNavigate } from '../hooks'
 import { useIntl } from 'react-intl'
 import { useAppDispatch } from '../store/store'
 import { setSearchState } from '../store/appUiSlice'
+import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/entity'
 
 type SearchResultProps = {
   clientData: ClientWithVisitsWithVisitServices

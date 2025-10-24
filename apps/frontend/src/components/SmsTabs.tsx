@@ -2,10 +2,10 @@ import { IconButton, Stack, Typography } from '@mui/material'
 import SmsCard from '../app/components/SmsCard'
 
 import { type ReactElement } from 'react'
-import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/components/VisitsList'
 import { isWoman, vocative } from 'czech-vocative'
 import {
   DepositStatus,
+  getDateTimeFromUtcToLocal,
   type VisitService,
   type VisitWithServices,
   type VisitWithServicesHotFix,

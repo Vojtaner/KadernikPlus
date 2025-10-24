@@ -11,13 +11,13 @@ import ClientProfileGrid from '../client/components/ClientProfileGrid'
 import { useClientQuery, useDeleteClientMutation } from '../client/queries'
 import VisitDetailCard from '../visits/components/VisitDetailCard'
 import { formatToCZK } from '../visits/components/VisitDetailGrid'
-import { getDateTimeFromUtcToLocal } from '../visits/components/VisitsList'
 import AddVisitFormDialog from '../visits/components/AddVisitFormDialog'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import BoxIcon from '../../app/components/BoxIcon'
 import DeleteDialog from '../visits/components/DeleteDialog'
 import { useIntl } from 'react-intl'
+import { getDateTimeFromUtcToLocal } from '../visits/entity'
 
 const ClientProfile = () => {
   const { clientId } = useParams()

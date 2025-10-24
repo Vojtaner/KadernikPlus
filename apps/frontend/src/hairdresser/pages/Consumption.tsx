@@ -25,8 +25,8 @@ import {
   createStockAllowancesTableByProductByUser,
 } from '../stock/components/store'
 import { useStockAllowancesQuery } from '../stock/queries'
-import { getDateShort } from '../visits/components/VisitsList'
 import { getButtonStyle } from '../entity'
+import { getDateShort } from '../visits/entity'
 
 const Consumption = () => {
   const navigate = useAppNavigate()

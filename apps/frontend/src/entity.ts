@@ -1,5 +1,5 @@
 import AppTheme from './AppTheme'
-import { getDate } from './hairdresser/visits/components/VisitsList'
+import { getDate } from './hairdresser/visits/entity'
 
 export type AppPalette = typeof AppTheme.palette
 export type AppPaletteColor = keyof AppPalette

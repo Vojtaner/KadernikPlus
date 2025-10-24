@@ -1,10 +1,9 @@
 import { Grid, Stack, Typography } from '@mui/material'
 import DetailColumn from '../../../app/components/DetailColumn'
 import Loader from '../../../components/Loader'
-import { DepositStatus, type VisitWithServices } from '../entity'
+import { DepositStatus, getDateTimeFromUtcToLocal, type VisitWithServices } from '../entity'
 import { formatNameShort } from '../../../entity'
 import type { CreateProcedure, Procedure } from '../../../entities/procedure'
-import { getDateTimeFromUtcToLocal } from './VisitsList'
 import { useIntl, type IntlShape } from 'react-intl'
 
 type VisitDetailGridProps = {
