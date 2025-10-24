@@ -14,6 +14,11 @@ export const SubscriptionPage = () => {
   const { user, logout } = useAuth0()
   const intl = useIntl()
 
+  //subscription guard sjednotit
+  const today = new Date()
+  const endDate = subscription && subscription?.endDate ? new Date(subscription.endDate) : null
+  const isExpired = endDate ? today > endDate : false
+
   return (
     <Stack spacing={2} alignItems="center" justifyContent="center">
       <Typography variant="h4" fontWeight="bold" align="center">
@@ -84,7 +89,7 @@ export const SubscriptionPage = () => {
             <FormattedMessage id="subscriptionPage.yourSubscription" defaultMessage="Vaše předplatné " />
             <strong>{getSubscriptionText(new Date(subscription.endDate), subscription.status)}</strong>
           </Typography>
-          {subscription.status === 'ACTIVE' && (
+          {(subscription.status === 'ACTIVE' || (subscription.status === 'CANCELLED' && !isExpired)) && (
             <Button href={window.location.origin}>
               <FormattedMessage id="subscriptionPage.enterApp" defaultMessage="Přejít do aplikace" />
             </Button>
