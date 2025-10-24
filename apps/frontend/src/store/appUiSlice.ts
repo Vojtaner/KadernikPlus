@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
-export type AppLanguage = 'cs' | 'en';
+export type AppLanguage = 'cs' | 'en' | 'uk' | 'de' | 'sk';
 
 type AppUiState = {
   isDrawerOpen: boolean;
@@ -30,7 +30,6 @@ const appUiSlice = createSlice({
     setDrawerOpen: (state, action: PayloadAction<boolean>) => {
       state.isDrawerOpen = action.payload;
     },
-
     setSearchText: (state, action: PayloadAction<string>) => {
       state.searchText = action.payload;
     },

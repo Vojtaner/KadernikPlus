@@ -162,7 +162,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
         defaultMessage: 'Přidat postup',
       })}
       dialogHelperText={intl.formatMessage({
-        id: 'formDialogAddProcedure.workflowDescription',
+        id: 'formDialogAddProcedure.helperText',
         defaultMessage: 'Zde zadejte popis úkonu, časy, komplikace, kompromisy.',
       })}
     />

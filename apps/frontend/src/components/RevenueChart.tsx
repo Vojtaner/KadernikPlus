@@ -6,9 +6,11 @@ import AppBarChart from '../hairdresser/components/BarChart';
 import { usePersistentFilters } from '../hooks';
 import { BasicDatePicker } from '../app/components/BasicDatePicker';
 import { useVisitsQuery } from '../hairdresser/visits/queries';
+import { useIntl } from 'react-intl';
 
 const RevenuChart = () => {
   const [filters, updateFilter] = usePersistentFilters();
+  const intl = useIntl();
   const {
     revenue: {
       dates: { from, to },
@@ -35,7 +37,7 @@ const RevenuChart = () => {
     <Stack spacing={3}>
       <Stack direction="row" spacing={2}>
         <BasicDatePicker
-          label="Datum od"
+          label={intl.formatMessage({ id: 'revenueChart.dateFrom', defaultMessage: 'Datum od' })}
           control={control}
           fieldPath="from"
           onChange={date => {
@@ -45,7 +47,7 @@ const RevenuChart = () => {
           }}
         />
         <BasicDatePicker
-          label="Datum do"
+          label={intl.formatMessage({ id: 'revenueChart.dateTo', defaultMessage: 'Datum do' })}
           control={control}
           fieldPath="to"
           onChange={date => {

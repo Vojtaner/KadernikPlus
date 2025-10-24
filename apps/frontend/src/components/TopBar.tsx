@@ -6,6 +6,7 @@ import { toggleDrawer } from '../store/appUiSlice';
 import { useAppSelector } from '../store/store';
 import SearchBar from '../app/components/SearchBar';
 import { AppLogo } from '../hairdresser/components/AppLogo';
+import { FormattedMessage } from 'react-intl';
 
 const TopBar = () => {
   const dispatch = useDispatch();
@@ -37,11 +38,11 @@ const TopBar = () => {
         />
         {!isSearchActive && (
           <Button
-            href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
+            href="https://www.youtube.com/watch?v=kEGXuRPulwE&list=PLbnbhM6ivxUNctZUVouxU1DZTAZZt95uR"
             variant="contained"
             color="info"
           >
-            Video návody
+            <FormattedMessage id="topBar.videoTutorial" defaultMessage="Video návody" />
           </Button>
         )}
       </Stack>

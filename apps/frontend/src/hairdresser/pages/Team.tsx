@@ -79,7 +79,13 @@ const createColumns = (
   allRows: (TeamSettings & { userId: string })[],
   intl: IntlShape,
 ): GridColDef<(TeamSettings & { userId: string })[][number]>[] => [
-  { field: 'name', headerName: 'Uživatel', flex: 6, minWidth: 110, disableColumnMenu: true },
+  {
+    field: 'name',
+    headerName: `${intl.formatMessage({ id: 'team.user', defaultMessage: 'Uživatel' })}`,
+    flex: 6,
+    minWidth: 110,
+    disableColumnMenu: true,
+  },
   {
     field: 'canAccessStocks',
     headerName: `${intl.formatMessage({ id: 'team.stock', defaultMessage: 'Sklad' })}`,

@@ -3,6 +3,7 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import EventIcon from '@mui/icons-material/Event';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import { FormattedMessage } from 'react-intl';
 
 type RevenuCardProps = {
   selectedDay: RevenueStatistic;
@@ -41,7 +42,10 @@ const RevenuCard = (props: RevenuCardProps) => {
             <Stack direction="row" spacing={1} alignItems="center">
               <TrendingUpIcon fontSize="small" color="success" />
               <Typography variant="body2" fontWeight="bold">
-                Zisk: {selectedDay.profit} Kč
+                <FormattedMessage
+                  id="procedureCard.profit"
+                  defaultMessage={`Zisk: ${selectedDay.profit} Kč`}
+                />
               </Typography>
             </Stack>
           </Stack>
@@ -49,11 +53,21 @@ const RevenuCard = (props: RevenuCardProps) => {
           <Stack direction="row" spacing={3} justifyContent="space-between">
             <Stack direction="row" spacing={1} alignItems="center">
               <RemoveCircleOutlineIcon fontSize="small" color="error" />
-              <Typography variant="body2">Náklady: {selectedDay.costs} Kč</Typography>
+              <Typography variant="body2">
+                <FormattedMessage
+                  id="procedureCard.costs"
+                  defaultMessage={`Náklady: ${selectedDay.costs} Kč`}
+                />
+              </Typography>
             </Stack>
             <Stack direction="row" spacing={1} alignItems="center">
               <ControlPointIcon fontSize="small" color="success" />
-              <Typography variant="body2">Tržba: {selectedDay.revenue} Kč</Typography>
+              <Typography variant="body2">
+                <FormattedMessage
+                  id="procedureCard.revenue"
+                  defaultMessage={`Tržba: ${selectedDay.revenue} Kč`}
+                />
+              </Typography>
             </Stack>
           </Stack>
         </Stack>

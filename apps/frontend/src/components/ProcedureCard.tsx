@@ -11,8 +11,8 @@ import { useProceduresMutation } from '../hairdresser/procedure/queries';
 import { useStocksQuery } from '../hairdresser/stock/queries';
 import { getProcedureInvalidation } from '../hairdresser/procedure/entity';
 import StockAllowance from '../hairdresser/stock/components/StockAllowance';
+import { FormattedMessage } from 'react-intl';
 
-//zde pokračovat
 type ProcedureCardProps = {
   description: string;
   stockAllowances: AddProcedureStockAllowanceType;
@@ -57,7 +57,9 @@ const ProcedureCard = (props: ProcedureCardProps) => {
           }}
         >
           {isPreviousCopy ? (
-            <Typography>Poslední spotřeba</Typography>
+            <Typography>
+              <FormattedMessage id="procedureCard.consumption" defaultMessage="Poslední spotřeba" />
+            </Typography>
           ) : (
             <Typography variant="h6" sx={{ padding: 1 }} color="primary">
               {`${orderNumber}.`}
@@ -121,7 +123,7 @@ const ProcedureCard = (props: ProcedureCardProps) => {
               } as unknown as PostNewProcedure)
             }
           >
-            Opakovat
+            <FormattedMessage id="procedureCard.repeat" defaultMessage="Opakovat" />
           </Button>
         ) : (
           <AddProcedureButton

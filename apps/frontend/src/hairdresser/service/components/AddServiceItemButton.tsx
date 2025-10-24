@@ -64,7 +64,10 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
           <TextField
             control={control}
             fieldPath="serviceName"
-            label="Název služby"
+            label={intl.formatMessage({
+              defaultMessage: 'Název služby',
+              id: 'addServiceItemButton.serviceName',
+            })}
             type="text"
             fullWidth
             required
@@ -72,7 +75,10 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
           <TextField
             control={control}
             fieldPath="basePrice"
-            label="Cena za službu"
+            label={intl.formatMessage({
+              defaultMessage: 'Cena za službu',
+              id: 'addServiceItemButton.pricePerService',
+            })}
             type="number"
             fullWidth
             required

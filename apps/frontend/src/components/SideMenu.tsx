@@ -1,6 +1,6 @@
 import { Box, IconButton, Drawer, Stack } from '@mui/material';
 import { useAppDispatch, useAppSelector, type RootState } from '../store/store';
-import { toggleDrawer } from '../store/appUiSlice';
+import { AppLanguage, toggleDrawer } from '../store/appUiSlice';
 import CloseIcon from '@mui/icons-material/Close';
 import { useIntl } from 'react-intl';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -26,7 +26,9 @@ const SideMenu = () => {
 
   const toggleLanguage = () => {
     updateFilters(draft => {
-      draft.language = filters.language === 'cs' ? 'en' : 'cs';
+      const languages: AppLanguage[] = ['cs', 'en', 'uk', 'de', 'sk'];
+      const currentIndex = languages.indexOf(filters.language);
+      draft.language = languages[(currentIndex + 1) % languages.length];
     });
     dispatch(toggleDrawer());
   };

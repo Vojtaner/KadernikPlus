@@ -6,6 +6,7 @@ import Loader from './Loader';
 import { useAddSnackbarMessage } from '../hooks/useAddSnackBar';
 import ErrorBoundary from '../hairdresser/pages/ErrorBoundary';
 import { getQueryErrorMessage } from '../hairdresser/entity';
+import { useIntl } from 'react-intl';
 
 const SubscriptionGuard = (props: PropsWithChildren) => {
   const { children } = props;
@@ -16,6 +17,7 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   const isExpired = endDate ? today > endDate : false;
   const addSnackBarMessage = useAddSnackbarMessage();
   const alreadyExtended = useRef<Set<string>>(new Set());
+  const intl = useIntl();
 
   useEffect(() => {
     if (subscription && subscription?.status === 'EXPIRED' && subscription.id) {
@@ -35,7 +37,14 @@ const SubscriptionGuard = (props: PropsWithChildren) => {
   }
 
   if (isLoading && !subscription) {
-    return <Loader title="Ověřování předplatného..." />;
+    return (
+      <Loader
+        title={intl.formatMessage({
+          id: 'subscriptionGuard.checking',
+          defaultMessage: 'Ověřování předplatného...',
+        })}
+      />
+    );
   }
 
   if (error) {

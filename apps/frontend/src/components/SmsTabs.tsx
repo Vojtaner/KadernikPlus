@@ -10,7 +10,7 @@ import {
   type VisitWithServices,
   type VisitWithServicesHotFix,
 } from '../hairdresser/visits/entity';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, IntlShape, useIntl } from 'react-intl';
 
 // const SmsTabs = () => {
 //   const [value, setValue] = useState('1')
@@ -136,28 +136,66 @@ export function formatVisitInvitationToSms(
   visit: { date: Date },
 ): string {
   const { date } = visit;
-  const serviceNames =
-    services
-      ?.map(visitService => visitService.service?.serviceName?.trim())
-      .filter(Boolean)
-      .join(', ') || 'službu';
+  const intl = useIntl();
+
+  const serviceNames = intl.formatMessage(
+    {
+      id: 'smsSendDialog.invitationServiceNames',
+      defaultMessage: '{service_name}',
+    },
+    {
+      service_name:
+        services
+          ?.map(visitService => visitService.service?.serviceName?.trim())
+          .filter(Boolean)
+          .join(', ') || 'službu',
+    },
+  );
 
   const localDate = getDateTimeFromUtcToLocal(date);
-  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${localDate}. Těšíme se na Vás!`;
+
+  const invitationMessage = intl.formatMessage(
+    {
+      id: 'smsSendDialog.invitationMessage',
+      defaultMessage:
+        'Dobrý den, {pre_name} {last_name}, potvrzujeme Váš termín na službu {serviceNames} v termín {local_date}. Těšíme se na Vás!',
+    },
+    {
+      pre_name: isWoman(lastName) ? 'paní' : 'pane',
+      last_name: capitalizeFirstLetter(vocative(lastName)),
+      service_names: serviceNames,
+      local_date: localDate,
+    },
+  );
+
+  return invitationMessage;
 }
 
 export function formatVisitReviewRequestSms(
   lastName: string,
   reviewUrl: string | undefined,
+  intl: IntlShape,
 ): string {
-  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: ${reviewUrl} Děkujeme!`;
+  const reviewMessage = intl.formatMessage(
+    {
+      id: 'smsSendDialog.reviewMessage',
+      defaultMessage:
+        'Dobrý den, {pre_name} {last_name}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: {review_url} Děkujeme!',
+    },
+    {
+      pre_name: isWoman(lastName) ? 'paní' : 'pane',
+      last_name: capitalizeFirstLetter(vocative(lastName)),
+      review_url: reviewUrl,
+    },
+  );
+
+  return reviewMessage;
 }
 
 export function formatVisitPartialPaymentReminderSms(
   lastName: string,
   services: VisitService[],
   bankAccount: string | undefined,
-
   visit: {
     date: Date;
     depositRequired?: boolean | undefined;
@@ -166,19 +204,46 @@ export function formatVisitPartialPaymentReminderSms(
   },
 ): string {
   const { date, depositRequired, depositStatus, depositAmount } = visit;
+  const intl = useIntl();
 
-  const serviceNames =
-    services
-      ?.map(visitService => visitService.service?.serviceName?.trim())
-      .filter(Boolean)
-      .join(', ') || 'službu';
+  const serviceNames = intl.formatMessage(
+    {
+      id: 'smsSendDialog.paymentServices',
+      defaultMessage: '{service_name}',
+    },
+    {
+      service_name:
+        services
+          ?.map(visitService => visitService.service?.serviceName?.trim())
+          .filter(Boolean)
+          .join(', ') || 'službu',
+    },
+  );
 
   const localDate = getDateTimeFromUtcToLocal(date);
+
   const shouldPay = depositStatus === DepositStatus.NEZAPLACENO || depositRequired === false;
 
   if (shouldPay) {
-    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} na číslo účtu ${bankAccount} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`;
+    const partialPayment = intl.formatMessage(
+      {
+        id: 'smsSendDialog.paymentMessage',
+        defaultMessage:
+          'Dobrý den, {pre_name} {last_name}, připomínáme částečnou platbu ve výši {deposit_amount} na číslo účtu {bank_account} za službu {service_names}, která je naplánována na {local_date}. Prosíme o její uhrazení. Děkujeme!',
+      },
+      {
+        pre_name: isWoman(lastName) ? 'paní' : 'pane',
+        last_name: capitalizeFirstLetter(vocative(lastName)),
+        deposit_amount: depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY',
+        bank_account: bankAccount,
+        service_names: serviceNames,
+        local_date: localDate,
+      },
+    );
+
+    return partialPayment;
   }
+
   return '';
 }
 

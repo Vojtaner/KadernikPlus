@@ -14,6 +14,7 @@ import AddAlertIcon from '@mui/icons-material/AddAlert';
 import RateReviewIcon from '@mui/icons-material/RateReview';
 import { useVisitQuery } from '../hairdresser/visits/queries';
 import { useUserDataQuery } from '../queries';
+import { useIntl } from 'react-intl';
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{
@@ -27,6 +28,7 @@ const SmsSendDialog = (props: {
   const [open, setOpen] = useState(false);
   const { data: visitData } = useVisitQuery(visitId, open);
   const { data: userData } = useUserDataQuery();
+  const intl = useIntl();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -61,7 +63,10 @@ const SmsSendDialog = (props: {
               {groupedVisits.invitations.length ? (
                 <SmsList
                   visits={groupedVisits.invitations}
-                  title="Pozvánka"
+                  title={intl.formatMessage({
+                    id: 'smsSendDialog.invitation',
+                    defaultMessage: 'Pozvánka',
+                  })}
                   icon={<AddAlertIcon />}
                   getText={invitationVisit =>
                     formatVisitInvitationToSms(
@@ -77,7 +82,10 @@ const SmsSendDialog = (props: {
               {groupedVisits.payments.length ? (
                 <SmsList
                   visits={groupedVisits.payments}
-                  title="Záloha"
+                  title={intl.formatMessage({
+                    id: 'smsSendDialog.deposit',
+                    defaultMessage: 'Záloha',
+                  })}
                   icon={<QrCodeIcon />}
                   getText={payment =>
                     formatVisitPartialPaymentReminderSms(
@@ -96,11 +104,14 @@ const SmsSendDialog = (props: {
               ) : null}
               {groupedVisits.reviews.length ? (
                 <SmsList
-                  title="Recenze"
+                  title={intl.formatMessage({
+                    id: 'smsSendDialog.review',
+                    defaultMessage: 'Recenze',
+                  })}
                   icon={<RateReviewIcon />}
                   visits={groupedVisits.reviews}
                   getText={review =>
-                    formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)
+                    formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl, intl)
                   }
                 />
               ) : null}
@@ -109,7 +120,10 @@ const SmsSendDialog = (props: {
         </>
       }
       onOpenButton={openDialogButton}
-      title="Poslat zprávu"
+      title={intl.formatMessage({
+        id: 'smsSendDialog.sendMessage',
+        defaultMessage: 'Poslat zprávu',
+      })}
     />
   );
 };

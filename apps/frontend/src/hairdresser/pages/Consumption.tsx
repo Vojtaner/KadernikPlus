@@ -165,7 +165,10 @@ const createColumnsByProduct = (
 ): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   {
     field: 'stockItemName',
-    headerName: 'Položka',
+    headerName: `${intl.formatMessage({
+      defaultMessage: 'Položka',
+      id: 'consumption.item',
+    })}`,
     flex: 4,
     disableColumnMenu: true,
     minWidth: 100,

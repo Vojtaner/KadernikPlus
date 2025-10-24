@@ -183,7 +183,7 @@ const EditVisitDetailDialog = (props: {
             label={intl.formatMessage(
               {
                 defaultMessage: 'status cena',
-                id: 'editVisitDetailDialog.depositStatus',
+                id: 'editVisitDetailDialog.depositStatus2',
               },
               { status: visit.visitStatus ? 'Zaplacená' : 'Požadovaná' },
             )}

@@ -11,7 +11,7 @@ import Face4Icon from '@mui/icons-material/Face4';
 // import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { type ReactNode } from 'react';
+import { Fragment, type ReactNode } from 'react';
 import type { Location } from 'react-router-dom';
 import SideMenuButton from './SideMenuButton';
 import { Divider } from '@mui/material';
@@ -27,7 +27,7 @@ export const SideMenuList = (props: {
     <>
       {menuItems.map((menuItem, index) => {
         return !menuItem.condition || menuItem.condition() ? (
-          <>
+          <Fragment key={menuItem.key}>
             {[2, 10].includes(index) ? (
               <Divider sx={{ border: '1px solid rgba(1,1,1,0.2)' }} />
             ) : null}
@@ -42,7 +42,7 @@ export const SideMenuList = (props: {
                 menuItem.onClick?.();
               }}
             />
-          </>
+          </Fragment>
         ) : null;
       })}
     </>
