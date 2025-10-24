@@ -4,7 +4,8 @@ import { useAppNavigate } from '../../hooks';
 import { useUserDataQuery } from '../../queries';
 import { ROUTES } from '../../routes/AppRoutes';
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined';
-import logo from '../../public/logo.png';
+import logo from '../../../public/logo.png';
+
 type AppLogoProps = { sx?: SxProps<Theme> };
 
 export const AppLogo = (props: AppLogoProps) => {
