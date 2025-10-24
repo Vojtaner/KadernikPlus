@@ -175,12 +175,17 @@ export function formatVisitPartialPaymentReminderSms(
 }
 
 export const capitalizeFirstLetter = (name: string) => {
-  const isFirstCharLetter = /^[a-zA-Z]/.test(name)
-  if (isFirstCharLetter && name) {
-    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase()
-  } else {
+  if (!name) {
     return name
   }
+
+  const isFirstCharLetter = /^[\p{L}]/u.test(name)
+
+  if (isFirstCharLetter) {
+    return name.charAt(0).toLocaleUpperCase('cs-CZ') + name.slice(1).toLocaleLowerCase('cs-CZ')
+  }
+
+  return name
 }
 
 type VisitGroups = {
