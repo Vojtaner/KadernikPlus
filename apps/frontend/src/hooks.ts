@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { produce } from 'immer';
 import { useAppLocation } from './routes/reactRouter';
+import { MapReturnVisitFilter } from 'hairdresser/visits/entity';
 
 export const useAppNavigate = () => {
   const navigate = useNavigate();
@@ -112,13 +113,7 @@ export function usePersistentFilters() {
 
 export const useVisitListFilters = (
   type: VisitListApplyFilter,
-): [
-  {
-    dates: DatesFilter;
-    view?: VisitViewKey;
-  },
-  (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
-] => {
+): MapReturnVisitFilter<VisitListApplyFilter> => {
   const [filters, updateFilter] = usePersistentFilters();
 
   const scopedUpdater = useCallback(
@@ -137,6 +132,7 @@ export const useVisitListFilters = (
   if (type === 'dashBoardVisitOverView') {
     return [filters.visits.dashBoardVisitOverView, scopedUpdater];
   }
+
   if (type === 'allVisitsPage') {
     return [filters.visits.allVisitsPage, scopedUpdater];
   }
@@ -149,7 +145,6 @@ export const useVisitListFilters = (
       },
       view: 'byAll',
     },
-    () => {},
   ];
 };
 

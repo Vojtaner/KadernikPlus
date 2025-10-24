@@ -94,7 +94,7 @@ const VisitsList = (props: VisitListProps) => {
         <Stack direction="row" spacing={2} justifyContent="flex-start">
           <FilterTableButton
             variant={getButtonStyle(visitListFilters.view, 'byAll')}
-            setTableView={() => updateVisitFilters(draft => (draft.view = 'byAll'))}
+            setTableView={() => updateVisitFilters?.(draft => (draft.view = 'byAll'))}
             text={intl.formatMessage({
               defaultMessage: 'Všechny',
               id: 'visits.visitViewKey.byAll',
@@ -103,7 +103,7 @@ const VisitsList = (props: VisitListProps) => {
           <FilterTableButton
             variant={getButtonStyle(visitListFilters.view, 'byClosedNoStockAllowances')}
             setTableView={() =>
-              updateVisitFilters(draft => (draft.view = 'byClosedNoStockAllowances'))
+              updateVisitFilters?.(draft => (draft.view = 'byClosedNoStockAllowances'))
             }
             text={intl.formatMessage({
               defaultMessage: 'Uzavřené bez spotřeby',
@@ -123,7 +123,7 @@ const VisitsList = (props: VisitListProps) => {
               control={control}
               fieldPath="from"
               onChange={date => {
-                updateVisitFilters(draft => {
+                updateVisitFilters?.(draft => {
                   draft.dates.from = date?.toISOString();
                 });
               }}
@@ -136,7 +136,7 @@ const VisitsList = (props: VisitListProps) => {
               control={control}
               fieldPath="to"
               onChange={date => {
-                updateVisitFilters(draft => {
+                updateVisitFilters?.(draft => {
                   draft.dates.to = date?.toISOString();
                 });
               }}

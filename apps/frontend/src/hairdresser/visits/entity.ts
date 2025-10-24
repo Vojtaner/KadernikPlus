@@ -5,6 +5,8 @@ import { type Service } from '../../entities/service';
 import { type User, type WithUserId } from '../../entities/user';
 import type { AddProcedureStockAllowanceType } from '../procedure/components/AddProcedureButton';
 import dayjs from 'dayjs';
+import { VisitViewKey } from 'entity';
+import { VisitListApplyFilter, DatesFilter } from 'hooks';
 
 export type Visit = {
   id?: string;
@@ -161,6 +163,30 @@ export const getVisitUrlComposed = (date?: Dayjs, query?: { from?: Dayjs; to?: D
 export const getIsVisitInPast = (date: Date) => new Date(date).getTime() < Date.now();
 
 export type VisitsByDateQueryParams = { date?: Dayjs; query?: { from?: Dayjs; to?: Dayjs } };
+
+export type MapReturnVisitFilter<T extends VisitListApplyFilter> =
+  T extends 'dashBoardVisitOverView'
+    ? [
+        {
+          dates: DatesFilter;
+          view?: VisitViewKey;
+        },
+        (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
+      ]
+    : T extends 'allVisitsPage'
+      ? [
+          {
+            dates: DatesFilter;
+            view?: VisitViewKey;
+          },
+          (updater: (draft: { dates: DatesFilter; view?: VisitViewKey }) => void) => void,
+        ]
+      : [
+          {
+            dates: DatesFilter;
+            view?: VisitViewKey;
+          },
+        ];
 
 export const getVisitsByDateQueryKey = (params: VisitsByDateQueryParams) =>
   params?.query
