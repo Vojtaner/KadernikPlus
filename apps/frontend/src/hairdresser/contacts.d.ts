@@ -1,16 +1,19 @@
 interface ContactPickerOptions {
-  multiple?: boolean
+  multiple?: boolean;
 }
 interface ContactPicker {
-  name?: string[]
-  email?: string[]
-  tel?: string[]
-  address?: string[]
-  icon?: Blob[]
+  name?: string[];
+  email?: string[];
+  tel?: string[];
+  address?: string[];
+  icon?: Blob[];
 }
 
 interface Navigator {
   contacts: {
-    select(properties: (keyof ContactPicker)[], options?: ContactPickerOptions): Promise<ContactPicker[]>
-  }
+    select(
+      properties: (keyof ContactPicker)[],
+      options?: ContactPickerOptions
+    ): Promise<ContactPicker[]>;
+  };
 }

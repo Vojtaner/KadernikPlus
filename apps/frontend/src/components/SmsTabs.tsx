@@ -1,16 +1,16 @@
-import { IconButton, Stack, Typography } from '@mui/material'
-import SmsCard from '../app/components/SmsCard'
+import { IconButton, Stack, Typography } from '@mui/material';
+import SmsCard from '../app/components/SmsCard';
 
-import { type ReactElement } from 'react'
-import { isWoman, vocative } from 'czech-vocative'
+import { type ReactElement } from 'react';
+import { isWoman, vocative } from 'czech-vocative';
 import {
   DepositStatus,
   getDateTimeFromUtcToLocal,
   type VisitService,
   type VisitWithServices,
   type VisitWithServicesHotFix,
-} from '../hairdresser/visits/entity'
-import { FormattedMessage } from 'react-intl'
+} from '../hairdresser/visits/entity';
+import { FormattedMessage } from 'react-intl';
 
 // const SmsTabs = () => {
 //   const [value, setValue] = useState('1')
@@ -92,10 +92,10 @@ export const SmsList = <T extends VisitWithServices>({
   icon,
   title,
 }: {
-  visits: T[]
-  getText: (visit: T) => string
-  title?: string
-  icon?: ReactElement
+  visits: T[];
+  getText: (visit: T) => string;
+  title?: string;
+  icon?: ReactElement;
 }) => {
   return (
     <Stack spacing={2}>
@@ -106,11 +106,12 @@ export const SmsList = <T extends VisitWithServices>({
           sx={{
             fontSize: '15px',
             fontWeight: 600,
-          }}>
+          }}
+        >
           {title}
         </Typography>
       </Stack>
-      {visits.map((visit) => (
+      {visits.map(visit => (
         <SmsCard
           dataColumnNames={{
             name: <FormattedMessage defaultMessage="Jméno" id="firstNameLabel" />,
@@ -121,28 +122,35 @@ export const SmsList = <T extends VisitWithServices>({
           phoneContact={visit.client.phone}
           message={getText(visit)}
           customerName={`${visit.client.firstName} ${visit.client.lastName}`}
-          service={visit.visitServices.map((s) => s.service.serviceName).join(', ')}
+          service={visit.visitServices.map(s => s.service.serviceName).join(', ')}
           daysDelta={getVisitDistanceLabel(visit.date)}
         />
       ))}
     </Stack>
-  )
-}
+  );
+};
 
-export function formatVisitInvitationToSms(lastName: string, services: VisitService[], visit: { date: Date }): string {
-  const { date } = visit
+export function formatVisitInvitationToSms(
+  lastName: string,
+  services: VisitService[],
+  visit: { date: Date }
+): string {
+  const { date } = visit;
   const serviceNames =
     services
-      ?.map((visitService) => visitService.service?.serviceName?.trim())
+      ?.map(visitService => visitService.service?.serviceName?.trim())
       .filter(Boolean)
-      .join(', ') || 'službu'
+      .join(', ') || 'službu';
 
-  const localDate = getDateTimeFromUtcToLocal(date)
-  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${localDate}. Těšíme se na Vás!`
+  const localDate = getDateTimeFromUtcToLocal(date);
+  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, potvrzujeme Váš termín na službu ${serviceNames} v termín ${localDate}. Těšíme se na Vás!`;
 }
 
-export function formatVisitReviewRequestSms(lastName: string, reviewUrl: string | undefined): string {
-  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: ${reviewUrl} Děkujeme!`
+export function formatVisitReviewRequestSms(
+  lastName: string,
+  reviewUrl: string | undefined
+): string {
+  return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: ${reviewUrl} Děkujeme!`;
 }
 
 export function formatVisitPartialPaymentReminderSms(
@@ -151,107 +159,108 @@ export function formatVisitPartialPaymentReminderSms(
   bankAccount: string | undefined,
 
   visit: {
-    date: Date
-    depositRequired?: boolean | undefined
-    depositStatus: DepositStatus | null | undefined
-    depositAmount?: number | undefined
+    date: Date;
+    depositRequired?: boolean | undefined;
+    depositStatus: DepositStatus | null | undefined;
+    depositAmount?: number | undefined;
   }
 ): string {
-  const { date, depositRequired, depositStatus, depositAmount } = visit
+  const { date, depositRequired, depositStatus, depositAmount } = visit;
 
   const serviceNames =
     services
-      ?.map((visitService) => visitService.service?.serviceName?.trim())
+      ?.map(visitService => visitService.service?.serviceName?.trim())
       .filter(Boolean)
-      .join(', ') || 'službu'
+      .join(', ') || 'službu';
 
-  const localDate = getDateTimeFromUtcToLocal(date)
-  const shouldPay = depositStatus === DepositStatus.NEZAPLACENO || depositRequired === false
+  const localDate = getDateTimeFromUtcToLocal(date);
+  const shouldPay = depositStatus === DepositStatus.NEZAPLACENO || depositRequired === false;
 
   if (shouldPay) {
-    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} na číslo účtu ${bankAccount} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`
+    return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, připomínáme částečnou platbu ve výši ${depositAmount ? `${depositAmount} Kč` : 'CHYBÍ VÝŠE ZÁLOHY'} na číslo účtu ${bankAccount} za službu ${serviceNames}, která je naplánována na ${localDate}. Prosíme o její uhrazení. Děkujeme!`;
   }
-  return ''
+  return '';
 }
 
 export const capitalizeFirstLetter = (name: string) => {
   if (!name) {
-    return name
+    return name;
   }
 
-  const isFirstCharLetter = /^[\p{L}]/u.test(name)
+  const isFirstCharLetter = /^[\p{L}]/u.test(name);
 
   if (isFirstCharLetter) {
-    return name.charAt(0).toLocaleUpperCase('cs-CZ') + name.slice(1).toLocaleLowerCase('cs-CZ')
+    return name.charAt(0).toLocaleUpperCase('cs-CZ') + name.slice(1).toLocaleLowerCase('cs-CZ');
   }
 
-  return name
-}
+  return name;
+};
 
 type VisitGroups = {
-  invitations: VisitWithServices[]
-  payments: VisitWithServices[]
-  reviews: VisitWithServices[]
-}
+  invitations: VisitWithServices[];
+  payments: VisitWithServices[];
+  reviews: VisitWithServices[];
+};
 
 export function sortAutoSms(visit: VisitWithServicesHotFix | undefined): VisitGroups | undefined {
   if (!visit) {
-    return undefined
+    return undefined;
   }
 
-  const now = new Date()
+  const now = new Date();
 
-  const invitations: VisitWithServices[] = []
-  const payments: VisitWithServices[] = []
-  const reviews: VisitWithServices[] = []
+  const invitations: VisitWithServices[] = [];
+  const payments: VisitWithServices[] = [];
+  const reviews: VisitWithServices[] = [];
 
-  const visitDate = new Date(visit.date)
-  const isFuture = visitDate > now
-  const isPast = visitDate < now
-  const daysSinceVisit = (now.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24)
+  const visitDate = new Date(visit.date);
+  const isFuture = visitDate > now;
+  const isPast = visitDate < now;
+  const daysSinceVisit = (now.getTime() - visitDate.getTime()) / (1000 * 60 * 60 * 24);
 
-  const unpaidDeposit = visit.depositStatus === DepositStatus.NEZAPLACENO && visit.client.deposit === true
+  const unpaidDeposit =
+    visit.depositStatus === DepositStatus.NEZAPLACENO && visit.client.deposit === true;
 
   if (isFuture) {
-    invitations.push(visit)
+    invitations.push(visit);
   }
 
   if (unpaidDeposit && isFuture) {
-    payments.push(visit)
+    payments.push(visit);
   }
 
   if (isPast && daysSinceVisit <= 14) {
-    reviews.push(visit)
+    reviews.push(visit);
   }
 
-  return { invitations, payments, reviews }
+  return { invitations, payments, reviews };
 }
 
 const getVisitDistanceLabel = (visitDate: string | Date): string => {
-  const today = new Date()
-  const visit = new Date(visitDate)
+  const today = new Date();
+  const visit = new Date(visitDate);
 
-  today.setHours(0, 0, 0, 0)
-  visit.setHours(0, 0, 0, 0)
+  today.setHours(0, 0, 0, 0);
+  visit.setHours(0, 0, 0, 0);
 
-  const diffMs = visit.getTime() - today.getTime()
-  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24))
+  const diffMs = visit.getTime() - today.getTime();
+  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
   if (diffDays === 0) {
-    return 'dnes'
+    return 'dnes';
   }
   if (diffDays > 0) {
-    return `za ${diffDays} ${pluralizeDays(diffDays)}`
+    return `za ${diffDays} ${pluralizeDays(diffDays)}`;
   }
-  return `před ${Math.abs(diffDays)} ${pluralizeDays(Math.abs(diffDays))}`
-}
+  return `před ${Math.abs(diffDays)} ${pluralizeDays(Math.abs(diffDays))}`;
+};
 
 const pluralizeDays = (count: number) => {
   if (count === 1) {
-    return 'den'
+    return 'den';
   }
   if (count >= 2 && count <= 4) {
-    return 'dny'
+    return 'dny';
   }
-  return 'dní'
-}
+  return 'dní';
+};

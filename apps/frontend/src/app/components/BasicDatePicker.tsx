@@ -1,10 +1,10 @@
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers'
-import dayjs from 'dayjs'
-import 'dayjs/locale/cs'
-import { Controller, type FieldValues } from 'react-hook-form'
-import type { DatePickerProps } from './BasicDateTimePicker'
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
+import 'dayjs/locale/cs';
+import { Controller, type FieldValues } from 'react-hook-form';
+import type { DatePickerProps } from './BasicDateTimePicker';
 
 export function BasicDatePicker<TFieldValues extends FieldValues>({
   fieldPath,
@@ -25,8 +25,8 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
             label={label ?? 'Datum'}
             value={field.value ? dayjs(field.value) : defaultValue ? dayjs(defaultValue) : null}
             onChange={(date, context) => {
-              field.onChange(date)
-              onChange?.(date, context)
+              field.onChange(date);
+              onChange?.(date, context);
             }}
             slotProps={{ textField: { fullWidth: true, sx: { zIndex: '0' } } }}
             minDate={minDate}
@@ -35,5 +35,5 @@ export function BasicDatePicker<TFieldValues extends FieldValues>({
         )}
       />
     </LocalizationProvider>
-  )
+  );
 }

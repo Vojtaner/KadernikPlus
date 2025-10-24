@@ -1,42 +1,42 @@
-import { Button } from '@mui/material'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { FormattedMessage, useIntl } from 'react-intl'
-import FormDialog from '../../../app/components/FormDialog'
-import TextField from '../../../app/components/TextField'
-import { useAddTeamMemberMutation } from '../queries'
-import { useAppNavigate } from '../../../hooks'
-import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup'
-import { useParams } from 'react-router-dom'
+import { Button } from '@mui/material';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormattedMessage, useIntl } from 'react-intl';
+import FormDialog from '../../../app/components/FormDialog';
+import TextField from '../../../app/components/TextField';
+import { useAddTeamMemberMutation } from '../queries';
+import { useAppNavigate } from '../../../hooks';
+import { queryClient } from '../../../reactQuery/reactTanstackQuerySetup';
+import { useParams } from 'react-router-dom';
 
 type TeamMemberForm = {
-  email: string
-  consentId: string
-}
+  email: string;
+  consentId: string;
+};
 
 const AddTeamMemberButton = () => {
-  const [open, setOpen] = useState(false)
-  const intl = useIntl()
-  const { teamId } = useParams()
-  const { control, handleSubmit } = useForm<TeamMemberForm>()
-  const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation()
-  const navigate = useAppNavigate()
+  const [open, setOpen] = useState(false);
+  const intl = useIntl();
+  const { teamId } = useParams();
+  const { control, handleSubmit } = useForm<TeamMemberForm>();
+  const { mutate: addTeamMemberMutation } = useAddTeamMemberMutation();
+  const navigate = useAppNavigate();
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const onSubmit = (data: TeamMemberForm) => {
-    addTeamMemberMutation({ email: data.email, consentId: data.consentId })
-    handleClose()
-    navigate(-1)
-    queryClient.invalidateQueries({ queryKey: ['teamMember'] })
-    queryClient.invalidateQueries({ queryKey: ['teamMembers', teamId] })
-  }
+    addTeamMemberMutation({ email: data.email, consentId: data.consentId });
+    handleClose();
+    navigate(-1);
+    queryClient.invalidateQueries({ queryKey: ['teamMember'] });
+    queryClient.invalidateQueries({ queryKey: ['teamMembers', teamId] });
+  };
 
   return (
     <FormDialog
@@ -99,7 +99,7 @@ const AddTeamMemberButton = () => {
       title="Zadejte email"
       dialogHelperText="Takto se stanete součástí jiného týmu. Smaže se Vám Váš sklad a budete sklad sdílet s majitelem týmu. Veškeré spotřeby i náklady u návštěv Vám zůstanou."
     />
-  )
-}
+  );
+};
 
-export default AddTeamMemberButton
+export default AddTeamMemberButton;

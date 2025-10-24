@@ -1,20 +1,20 @@
-import { Button } from '@mui/material'
-import { useState } from 'react'
-import FormDialog from '../../../app/components/FormDialog'
-import React from 'react'
-import { FormattedMessage } from 'react-intl'
-import { addPropsToReactElement } from '../../entity'
+import { Button } from '@mui/material';
+import { useState } from 'react';
+import FormDialog from '../../../app/components/FormDialog';
+import React from 'react';
+import { FormattedMessage } from 'react-intl';
+import { addPropsToReactElement } from '../../entity';
 
 type DeleteDialogProps = {
-  onConfirm: () => void
-  openButton: React.ReactElement
-  dialogHelperText?: string
-  title?: string
-}
+  onConfirm: () => void;
+  openButton: React.ReactElement;
+  dialogHelperText?: string;
+  title?: string;
+};
 
 const DeleteDialog = (props: DeleteDialogProps) => {
-  const { openButton, onConfirm, dialogHelperText, title } = props
-  const [open, setOpen] = useState(false)
+  const { openButton, onConfirm, dialogHelperText, title } = props;
+  const [open, setOpen] = useState(false);
 
   return (
     <FormDialog
@@ -27,9 +27,10 @@ const DeleteDialog = (props: DeleteDialogProps) => {
           </Button>
           <Button
             onClick={() => {
-              onConfirm()
-              setOpen(false)
-            }}>
+              onConfirm();
+              setOpen(false);
+            }}
+          >
             <FormattedMessage id="formDialog.confirm" defaultMessage="Potvrdit" />
           </Button>
         </>
@@ -42,7 +43,7 @@ const DeleteDialog = (props: DeleteDialogProps) => {
       title={title ?? ''}
       dialogHelperText={dialogHelperText}
     />
-  )
-}
+  );
+};
 
-export default DeleteDialog
+export default DeleteDialog;

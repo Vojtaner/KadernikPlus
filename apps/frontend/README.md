@@ -1,7 +1,8 @@
 #Project setup
 
-Project has two dockerfiles. The one that is meant to be hosted is not with .dev extension.
-Before upload you may test build by building image within /frontend folder via:
+Project has two dockerfiles. The one that is meant to be hosted is not with .dev
+extension. Before upload you may test build by building image within /frontend
+folder via:
 
 ```
 docker build -t test-fe .
@@ -15,7 +16,8 @@ docker run -p 8083:8083 test-fe
 
 The localhost:8083 should appear FE app running with no deep funcitonality.
 
-ENV INJECTIONS GOES IN THE FOLLOWING WAY: https://dev.to/dutchskull/setting-up-dynamic-environment-variables-with-vite-and-docker-5cmj
+ENV INJECTIONS GOES IN THE FOLLOWING WAY:
+https://dev.to/dutchskull/setting-up-dynamic-environment-variables-with-vite-and-docker-5cmj
 
 RUN CONTAINER
 
@@ -48,4 +50,8 @@ tree -I 'node_modules|.git' > directory-structure.txt
 
 ## Import proměnných VITE a ENV
 
-Ve frontendu importuje VITE env proměnné pomocí `import.meta.env.VITE_IS_DEVELOPMENT` v .env musí proměnná začínat `VITE_` následně skript env.sh nahrazuje tyto proměnné na jiné `PREFIX_` a ty servíruje v runtime Railway...vite v buildtime, railway v runtime -> nutný runtime replacement
+Ve frontendu importuje VITE env proměnné pomocí
+`import.meta.env.VITE_IS_DEVELOPMENT` v .env musí proměnná začínat `VITE_`
+následně skript env.sh nahrazuje tyto proměnné na jiné `PREFIX_` a ty servíruje
+v runtime Railway...vite v buildtime, railway v runtime -> nutný runtime
+replacement

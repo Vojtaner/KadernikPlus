@@ -1,25 +1,25 @@
-import { Button, List } from '@mui/material'
-import FormDialog from '../../../app/components/FormDialog'
-import { FormattedMessage, useIntl } from 'react-intl'
-import CloseIcon from '@mui/icons-material/Close'
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark'
-import { IconListItem } from '../../../app/components/IconListItem'
+import { Button, List } from '@mui/material';
+import FormDialog from '../../../app/components/FormDialog';
+import { FormattedMessage, useIntl } from 'react-intl';
+import CloseIcon from '@mui/icons-material/Close';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import { IconListItem } from '../../../app/components/IconListItem';
 
 type CloseVisitDialogProps = {
-  onConfirm: () => void
-  errors?: string[]
-  missingStockAllowanceError: string | undefined
-  openDialog: boolean
-  onClose: () => void
-}
+  onConfirm: () => void;
+  errors?: string[];
+  missingStockAllowanceError: string | undefined;
+  openDialog: boolean;
+  onClose: () => void;
+};
 
 const CloseVisitDialog = (props: CloseVisitDialogProps) => {
-  const { errors, missingStockAllowanceError, onConfirm, onClose, openDialog = false } = props
-  const intl = useIntl()
+  const { errors, missingStockAllowanceError, onConfirm, onClose, openDialog = false } = props;
+  const intl = useIntl();
 
   const handleClose = () => {
-    onClose()
-  }
+    onClose();
+  };
 
   return (
     <FormDialog
@@ -35,10 +35,14 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
               disabled={errors?.length !== 0}
               type="button"
               onClick={() => {
-                onConfirm()
-                handleClose()
-              }}>
-              <FormattedMessage id="formDialog.confirmWithoutStockAllowances" defaultMessage="Potvrdit bez procedury" />
+                onConfirm();
+                handleClose();
+              }}
+            >
+              <FormattedMessage
+                id="formDialog.confirmWithoutStockAllowances"
+                defaultMessage="Potvrdit bez procedury"
+              />
             </Button>
           ) : null}
         </>
@@ -47,8 +51,12 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
         <>
           {errors && (
             <List dense>
-              {errors.map((error) => (
-                <IconListItem key={error} icon={<CloseIcon fontSize="small" color="primary" />} message={error} />
+              {errors.map(error => (
+                <IconListItem
+                  key={error}
+                  icon={<CloseIcon fontSize="small" color="primary" />}
+                  message={error}
+                />
               ))}
               {missingStockAllowanceError && (
                 <IconListItem
@@ -70,7 +78,7 @@ const CloseVisitDialog = (props: CloseVisitDialogProps) => {
         id: 'closeVisitDialog.closeWarningText',
       })}
     />
-  )
-}
+  );
+};
 
-export default CloseVisitDialog
+export default CloseVisitDialog;

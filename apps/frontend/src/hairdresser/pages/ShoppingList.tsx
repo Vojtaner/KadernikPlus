@@ -1,32 +1,32 @@
-import { Box } from '@mui/material'
-import AppDataGrid from '../../app/components/DataGrid'
-import { type GridColDef } from '@mui/x-data-grid'
-import Loader from '../../components/Loader'
-import BoxIcon from '../../app/components/BoxIcon'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import { StockItemDialog } from '../stock/components/StockItemDialog'
-import { mapStocksStockItemsToFlatStockItems, type StockItem } from '../stock/entity'
-import { useStockItemsQuery } from '../stock/queries'
-import { formatToCZK } from '../visits/components/VisitDetailGrid'
-import { useIntl, type IntlShape } from 'react-intl'
+import { Box } from '@mui/material';
+import AppDataGrid from '../../app/components/DataGrid';
+import { type GridColDef } from '@mui/x-data-grid';
+import Loader from '../../components/Loader';
+import BoxIcon from '../../app/components/BoxIcon';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { StockItemDialog } from '../stock/components/StockItemDialog';
+import { mapStocksStockItemsToFlatStockItems, type StockItem } from '../stock/entity';
+import { useStockItemsQuery } from '../stock/queries';
+import { formatToCZK } from '../visits/components/VisitDetailGrid';
+import { useIntl, type IntlShape } from 'react-intl';
 
 type ShoppingListProps = {
-  columnHeaderHeight?: 0
-  hideFooter?: boolean
-}
+  columnHeaderHeight?: 0;
+  hideFooter?: boolean;
+};
 
 const ShoppingList = (props: ShoppingListProps) => {
-  const { columnHeaderHeight, hideFooter = false } = props
-  const { data: stocksStockItems } = useStockItemsQuery(undefined)
-  const stockItems = mapStocksStockItemsToFlatStockItems(stocksStockItems)
-  const intl = useIntl()
+  const { columnHeaderHeight, hideFooter = false } = props;
+  const { data: stocksStockItems } = useStockItemsQuery(undefined);
+  const stockItems = mapStocksStockItemsToFlatStockItems(stocksStockItems);
+  const intl = useIntl();
 
   if (!stockItems) {
-    return <Loader />
+    return <Loader />;
   }
 
-  const shoppingList = createShoppingList(stockItems, intl)
-  const shoppingListColumns = createColumns(intl)
+  const shoppingList = createShoppingList(stockItems, intl);
+  const shoppingListColumns = createColumns(intl);
 
   return (
     <Box sx={{ height: '100%' }}>
@@ -37,29 +37,29 @@ const ShoppingList = (props: ShoppingListProps) => {
         hideFooter={hideFooter}
       />
     </Box>
-  )
-}
+  );
+};
 
-export default ShoppingList
+export default ShoppingList;
 
 const createShoppingList = (stockItems: StockItem[], intl: IntlShape): ShoppingListItemType[] => {
   return stockItems.flatMap((item): ShoppingListItemType[] => {
-    const threshold = Number(item.threshold)
-    const avgPrice = Number(item.avgUnitPrice)
-    const lastPackageQuantity = Number(item.lastPackageQuantity)
-    const packageCount = Number(item.packageCount)
+    const threshold = Number(item.threshold);
+    const avgPrice = Number(item.avgUnitPrice);
+    const lastPackageQuantity = Number(item.lastPackageQuantity);
+    const packageCount = Number(item.packageCount);
 
-    const requiredPackages = threshold === 0 ? 0 : threshold + 1
+    const requiredPackages = threshold === 0 ? 0 : threshold + 1;
 
     if (!item.id) {
       throw new Error(
         `${intl.formatMessage({ id: '', defaultMessage: 'Položka item_name nemá ID.' }, { item_name: item.itemName })}`
-      )
+      );
     }
 
     if (packageCount < requiredPackages) {
-      const missingPackages = Math.round((requiredPackages - packageCount) * 100) / 100
-      const missingUnits = Math.round(missingPackages * lastPackageQuantity * 100) / 100
+      const missingPackages = Math.round((requiredPackages - packageCount) * 100) / 100;
+      const missingUnits = Math.round(missingPackages * lastPackageQuantity * 100) / 100;
 
       return [
         {
@@ -69,13 +69,19 @@ const createShoppingList = (stockItems: StockItem[], intl: IntlShape): ShoppingL
           amount: missingPackages,
           unit: item.unit,
         },
-      ]
+      ];
     }
-    return []
-  })
-}
+    return [];
+  });
+};
 
-type ShoppingListItemType = { id: string; item: string; price: number; amount: number; unit: string }
+type ShoppingListItemType = {
+  id: string;
+  item: string;
+  price: number;
+  amount: number;
+  unit: string;
+};
 
 const createColumns = (intl: IntlShape): GridColDef<ShoppingListItemType[][number]>[] => {
   return [
@@ -87,7 +93,7 @@ const createColumns = (intl: IntlShape): GridColDef<ShoppingListItemType[][numbe
       flex: 3,
       display: 'flex',
       minWidth: 80,
-      renderCell: (params) => formatToCZK(params.row.price),
+      renderCell: params => formatToCZK(params.row.price),
     },
     {
       field: 'amount',
@@ -95,7 +101,7 @@ const createColumns = (intl: IntlShape): GridColDef<ShoppingListItemType[][numbe
       flex: 3,
       minWidth: 90,
       disableColumnMenu: true,
-      renderCell: (params) => `${params.value} ks`,
+      renderCell: params => `${params.value} ks`,
     },
     {
       field: 'edit',
@@ -105,17 +111,21 @@ const createColumns = (intl: IntlShape): GridColDef<ShoppingListItemType[][numbe
       editable: false,
       display: 'flex',
       disableColumnMenu: true,
-      renderCell: (params) => (
+      renderCell: params => (
         <StockItemDialog
           formUsagePurpose="purchase"
           defaultValues={{
             id: params.row.id,
           }}
           openButton={
-            <BoxIcon size="small" boxColor="#61fb0133" icon={<EditOutlinedIcon fontSize="small" color="success" />} />
+            <BoxIcon
+              size="small"
+              boxColor="#61fb0133"
+              icon={<EditOutlinedIcon fontSize="small" color="success" />}
+            />
           }
         />
       ),
     },
-  ]
-}
+  ];
+};

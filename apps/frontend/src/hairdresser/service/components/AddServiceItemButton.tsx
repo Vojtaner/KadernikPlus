@@ -1,48 +1,48 @@
-import { Button } from '@mui/material'
-import React, { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { FormattedMessage, useIntl } from 'react-intl'
-import FormDialog from '../../../app/components/FormDialog'
-import TextField from '../../../app/components/TextField'
-import type { ServiceCreateOrUpdateData } from '../../../entities/service'
-import { useCreateNewOrUpdateServiceMutation } from '../queries'
+import { Button } from '@mui/material';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { FormattedMessage, useIntl } from 'react-intl';
+import FormDialog from '../../../app/components/FormDialog';
+import TextField from '../../../app/components/TextField';
+import type { ServiceCreateOrUpdateData } from '../../../entities/service';
+import { useCreateNewOrUpdateServiceMutation } from '../queries';
 
 type AddServiceItemButtonProps = {
-  defaultValues?: Partial<ServiceCreateOrUpdateData>
-  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
-}
+  defaultValues?: Partial<ServiceCreateOrUpdateData>;
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>;
+};
 
 const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
-  const { openButton, defaultValues } = props
-  const [open, setOpen] = useState(false)
-  const intl = useIntl()
-  const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues })
-  const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation()
+  const { openButton, defaultValues } = props;
+  const [open, setOpen] = useState(false);
+  const intl = useIntl();
+  const { control, handleSubmit, reset } = useForm<ServiceCreateOrUpdateData>({ defaultValues });
+  const { mutate: createServicemMutation } = useCreateNewOrUpdateServiceMutation();
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
-      openButton.props.onClick?.(e)
-      handleClickOpen()
+      openButton.props.onClick?.(e);
+      handleClickOpen();
     },
-  })
+  });
 
   const handleClickOpen = () => {
     if (!defaultValues) {
-      reset({ serviceName: undefined, basePrice: undefined })
+      reset({ serviceName: undefined, basePrice: undefined });
     }
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-    scroll()
-  }
+    setOpen(false);
+    scroll();
+  };
 
   const onSubmit = (data: ServiceCreateOrUpdateData) => {
-    createServicemMutation(data)
-    handleClose()
-    scroll()
-  }
+    createServicemMutation(data);
+    handleClose();
+    scroll();
+  };
 
   return (
     <FormDialog
@@ -61,8 +61,22 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
       }
       formFields={
         <>
-          <TextField control={control} fieldPath="serviceName" label="Název služby" type="text" fullWidth required />
-          <TextField control={control} fieldPath="basePrice" label="Cena za službu" type="number" fullWidth required />
+          <TextField
+            control={control}
+            fieldPath="serviceName"
+            label="Název služby"
+            type="text"
+            fullWidth
+            required
+          />
+          <TextField
+            control={control}
+            fieldPath="basePrice"
+            label="Cena za službu"
+            type="number"
+            fullWidth
+            required
+          />
         </>
       }
       onOpenButton={openDialogButton}
@@ -75,7 +89,7 @@ const AddServiceItemButton = (props: AddServiceItemButtonProps) => {
         defaultMessage: 'Zde přidáte službu do ceníku.',
       })}
     />
-  )
-}
+  );
+};
 
-export default AddServiceItemButton
+export default AddServiceItemButton;

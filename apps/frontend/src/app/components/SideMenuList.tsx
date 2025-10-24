@@ -1,30 +1,36 @@
-import { Paths, ROUTES, type AppRoutePath } from '../../routes/AppRoutes'
-import LanguageIcon from '@mui/icons-material/Language'
-import { type IntlShape } from 'react-intl'
-import WarehouseIcon from '@mui/icons-material/Warehouse'
-import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import ContentCutIcon from '@mui/icons-material/ContentCut'
-import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits'
-import DashboardIcon from '@mui/icons-material/Dashboard'
-import Face4Icon from '@mui/icons-material/Face4'
+import { Paths, ROUTES, type AppRoutePath } from '../../routes/AppRoutes';
+import LanguageIcon from '@mui/icons-material/Language';
+import { type IntlShape } from 'react-intl';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
+import LightbulbOutlineIcon from '@mui/icons-material/LightbulbOutline';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ProductionQuantityLimitsIcon from '@mui/icons-material/ProductionQuantityLimits';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import Face4Icon from '@mui/icons-material/Face4';
 // import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined'
-import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import LogoutIcon from '@mui/icons-material/Logout'
-import { type ReactNode } from 'react'
-import type { Location } from 'react-router-dom'
-import SideMenuButton from './SideMenuButton'
-import { Divider } from '@mui/material'
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { type ReactNode } from 'react';
+import type { Location } from 'react-router-dom';
+import SideMenuButton from './SideMenuButton';
+import { Divider } from '@mui/material';
 
-export const SideMenuList = (props: { items: MenuItem[]; onClose: () => void; location: Location }) => {
-  const { items: menuItems, onClose, location } = props
+export const SideMenuList = (props: {
+  items: MenuItem[];
+  onClose: () => void;
+  location: Location;
+}) => {
+  const { items: menuItems, onClose, location } = props;
 
   return (
     <>
       {menuItems.map((menuItem, index) => {
         return !menuItem.condition || menuItem.condition() ? (
           <>
-            {[2, 10].includes(index) ? <Divider sx={{ border: '1px solid rgba(1,1,1,0.2)' }} /> : null}
+            {[2, 10].includes(index) ? (
+              <Divider sx={{ border: '1px solid rgba(1,1,1,0.2)' }} />
+            ) : null}
             <SideMenuButton
               key={menuItem.key}
               isActive={location.pathname === menuItem.path}
@@ -32,25 +38,25 @@ export const SideMenuList = (props: { items: MenuItem[]; onClose: () => void; lo
               title={menuItem.title}
               icon={menuItem.icon}
               onClick={() => {
-                onClose()
-                menuItem.onClick?.()
+                onClose();
+                menuItem.onClick?.();
               }}
             />
           </>
-        ) : null
+        ) : null;
       })}
     </>
-  )
-}
+  );
+};
 
 export type MenuItem = {
-  key: string
-  title: string
-  path: AppRoutePath | undefined
-  icon: ReactNode
-  condition?: () => boolean
-  onClick?: () => void
-}
+  key: string;
+  title: string;
+  path: AppRoutePath | undefined;
+  icon: ReactNode;
+  condition?: () => boolean;
+  onClick?: () => void;
+};
 
 export const getMenuItems = (
   intl: IntlShape,
@@ -146,4 +152,4 @@ export const getMenuItems = (
     icon: <LogoutIcon />,
     onClick: logout,
   },
-]
+];

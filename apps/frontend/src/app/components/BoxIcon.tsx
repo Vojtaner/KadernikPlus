@@ -1,18 +1,18 @@
-import { IconButton } from '@mui/material'
-import type { AppPaletteColorString } from '../../entity'
+import { IconButton } from '@mui/material';
+import type { AppPaletteColorString } from '../../entity';
 
 export type BoxIconProps = {
-  icon: React.ReactNode
-  boxColor?: AppPaletteColorString | `#${string}`
-  sx?: object
-  size?: 'small' | 'large' | 'medium'
-  key?: string | number
-  onClick?: () => void
-  href?: string
-}
+  icon: React.ReactNode;
+  boxColor?: AppPaletteColorString | `#${string}`;
+  sx?: object;
+  size?: 'small' | 'large' | 'medium';
+  key?: string | number;
+  onClick?: () => void;
+  href?: string;
+};
 
 const BoxIcon = (props: BoxIconProps) => {
-  const { boxColor = 'primary.light', sx, icon, size = 'small', onClick, key, href } = props
+  const { boxColor = 'primary.light', sx, icon, size = 'small', onClick, key, href } = props;
 
   return (
     <IconButton
@@ -28,10 +28,11 @@ const BoxIcon = (props: BoxIconProps) => {
       }}
       size={size}
       {...(href ? { href } : {})}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {icon}
     </IconButton>
-  )
-}
+  );
+};
 
-export default BoxIcon
+export default BoxIcon;

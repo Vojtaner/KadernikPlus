@@ -1,16 +1,16 @@
-import { Stack } from '@mui/material'
-import TextField from '../../../app/components/TextField'
-import { useIntl } from 'react-intl'
-import { useForm, type Control } from 'react-hook-form'
-import type { EditClient, NewClient } from '../../../entities/client'
-import { useCreateNewOrUpdateClientMutation } from '../queries'
-import { firstNameValidationrule, phoneValidationRule } from '../../entity'
+import { Stack } from '@mui/material';
+import TextField from '../../../app/components/TextField';
+import { useIntl } from 'react-intl';
+import { useForm, type Control } from 'react-hook-form';
+import type { EditClient, NewClient } from '../../../entities/client';
+import { useCreateNewOrUpdateClientMutation } from '../queries';
+import { firstNameValidationrule, phoneValidationRule } from '../../entity';
 
-type ClientFormProps = { control: Control<NewClient | EditClient> }
+type ClientFormProps = { control: Control<NewClient | EditClient> };
 
 const ClientForm = (props: ClientFormProps) => {
-  const intl = useIntl()
-  const { control } = props
+  const intl = useIntl();
+  const { control } = props;
 
   return (
     <Stack spacing={1} padding={1}>
@@ -49,21 +49,24 @@ const ClientForm = (props: ClientFormProps) => {
         fullWidth
       />
     </Stack>
-  )
-}
+  );
+};
 
-export default ClientForm
+export default ClientForm;
 
 export const useClientForm = (defaultValues?: NewClient | EditClient) => {
-  const { mutate: createOrUpdateClientMutation } = useCreateNewOrUpdateClientMutation()
-  const { control, reset, handleSubmit } = useForm<NewClient | EditClient>({ defaultValues: { ...defaultValues } })
+  const { mutate: createOrUpdateClientMutation } = useCreateNewOrUpdateClientMutation();
+  const { control, reset, handleSubmit } = useForm<NewClient | EditClient>({
+    defaultValues: { ...defaultValues },
+  });
 
-  const resetClientForm = () => reset({ firstName: undefined, lastName: undefined, note: undefined, phone: undefined })
+  const resetClientForm = () =>
+    reset({ firstName: undefined, lastName: undefined, note: undefined, phone: undefined });
 
   return {
     resetClientForm,
     control,
     createOrUpdateClientMutation,
     handleSubmit,
-  }
-}
+  };
+};

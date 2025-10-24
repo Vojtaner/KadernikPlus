@@ -1,10 +1,10 @@
-import { Stack, Typography } from '@mui/material'
-import type { UserLog } from '../api/entity'
+import { Stack, Typography } from '@mui/material';
+import type { UserLog } from '../api/entity';
 
-type LogLineProps = Omit<UserLog, 'id' | 'actionType'>
+type LogLineProps = Omit<UserLog, 'id' | 'actionType'>;
 
 export const LogLine = (props: LogLineProps) => {
-  const { dateTime, description, userName } = props
+  const { dateTime, description, userName } = props;
 
   return (
     <Stack
@@ -13,7 +13,8 @@ export const LogLine = (props: LogLineProps) => {
       alignItems="center"
       borderLeft="1px solid red"
       justifyContent="flex-start"
-      paddingLeft={1}>
+      paddingLeft={1}
+    >
       <Stack height="100%">
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography fontWeight={600} color="text.primary" fontSize="0.8rem">
@@ -36,5 +37,5 @@ export const LogLine = (props: LogLineProps) => {
         </Stack>
       </Stack>
     </Stack>
-  )
-}
+  );
+};

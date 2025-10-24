@@ -1,28 +1,36 @@
-import { Box, Button, Switch as MuiSwitch, Tooltip, type SwitchProps as MuiSwitchProps } from '@mui/material'
-import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form'
+import {
+  Box,
+  Button,
+  Switch as MuiSwitch,
+  Tooltip,
+  type SwitchProps as MuiSwitchProps,
+} from '@mui/material';
+import { Controller, type Control, type FieldPath, type FieldValues } from 'react-hook-form';
 
 export type SwitchProps<TFieldValues extends FieldValues = FieldValues> = MuiSwitchProps & {
-  tooltip?: string
-  onSubmitEndpoint?: (checked: boolean) => void
-  control?: Control<TFieldValues>
-  fieldPath?: FieldPath<TFieldValues>
-  checked?: boolean
-}
+  tooltip?: string;
+  onSubmitEndpoint?: (checked: boolean) => void;
+  control?: Control<TFieldValues>;
+  fieldPath?: FieldPath<TFieldValues>;
+  checked?: boolean;
+};
 
-const Switch = <TFieldValues extends FieldValues = FieldValues>(props: SwitchProps<TFieldValues>) => {
-  const { onSubmitEndpoint, onChange, tooltip, control, fieldPath, checked, ...muiProps } = props
+const Switch = <TFieldValues extends FieldValues = FieldValues>(
+  props: SwitchProps<TFieldValues>
+) => {
+  const { onSubmitEndpoint, onChange, tooltip, control, fieldPath, checked, ...muiProps } = props;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean,
     rhfOnChange?: (value: unknown) => void
   ) => {
-    onSubmitEndpoint?.(checked)
+    onSubmitEndpoint?.(checked);
 
-    rhfOnChange?.(checked)
+    rhfOnChange?.(checked);
 
-    onChange?.(event, checked)
-  }
+    onChange?.(event, checked);
+  };
 
   if (control && fieldPath) {
     return (
@@ -42,7 +50,7 @@ const Switch = <TFieldValues extends FieldValues = FieldValues>(props: SwitchPro
           </Tooltip>
         )}
       />
-    )
+    );
   }
 
   return (
@@ -51,7 +59,7 @@ const Switch = <TFieldValues extends FieldValues = FieldValues>(props: SwitchPro
         <MuiSwitch {...muiProps} onChange={handleChange} checked={checked} />
       </Button>
     </Tooltip>
-  )
-}
+  );
+};
 
-export default Switch
+export default Switch;

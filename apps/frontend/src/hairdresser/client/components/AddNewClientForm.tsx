@@ -1,23 +1,23 @@
-import Stack from '@mui/material/Stack'
-import TextField from '../../../app/components/TextField'
-import type { Control } from 'react-hook-form'
-import { firstNameValidationrule, phoneValidationRule } from '../../entity'
-import { useIntl } from 'react-intl'
+import Stack from '@mui/material/Stack';
+import TextField from '../../../app/components/TextField';
+import type { Control } from 'react-hook-form';
+import { firstNameValidationrule, phoneValidationRule } from '../../entity';
+import { useIntl } from 'react-intl';
 
 type AddNewClientFormProps = {
-  control: Control<AddNewClientFields>
-}
+  control: Control<AddNewClientFields>;
+};
 
 type AddNewClientFields = {
-  firstName: string
-  lastName: string
-  phone: string
-  note?: string
-}
+  firstName: string;
+  lastName: string;
+  phone: string;
+  note?: string;
+};
 
 function AddNewClientForm(props: AddNewClientFormProps) {
-  const { control } = props
-  const intl = useIntl()
+  const { control } = props;
+  const intl = useIntl();
 
   return (
     <Stack spacing={1} padding={1}>
@@ -37,11 +37,21 @@ function AddNewClientForm(props: AddNewClientFormProps) {
         fullWidth
         rules={firstNameValidationrule}
       />
-      <TextField fieldPath="phone" control={control} label="Telefon" type="tel" fullWidth rules={phoneValidationRule} />
+      <TextField
+        fieldPath="phone"
+        control={control}
+        label="Telefon"
+        type="tel"
+        fullWidth
+        rules={phoneValidationRule}
+      />
       <TextField
         fieldPath="note"
         control={control}
-        label={intl.formatMessage({ defaultMessage: 'Informace o klientovi', id: 'clienForm.clientInfo' })}
+        label={intl.formatMessage({
+          defaultMessage: 'Informace o klientovi',
+          id: 'clienForm.clientInfo',
+        })}
         type="text"
         multiline
         minRows={2}
@@ -49,7 +59,7 @@ function AddNewClientForm(props: AddNewClientFormProps) {
         fullWidth
       />
     </Stack>
-  )
+  );
 }
 
-export default AddNewClientForm
+export default AddNewClientForm;

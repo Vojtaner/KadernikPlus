@@ -1,49 +1,49 @@
-import { Button, type BoxProps, type SxProps } from '@mui/material'
-import FormDialog from '../app/components/FormDialog'
-import { useState } from 'react'
-import React from 'react'
+import { Button, type BoxProps, type SxProps } from '@mui/material';
+import FormDialog from '../app/components/FormDialog';
+import { useState } from 'react';
+import React from 'react';
 import {
   formatVisitInvitationToSms,
   formatVisitPartialPaymentReminderSms,
   formatVisitReviewRequestSms,
   SmsList,
   sortAutoSms,
-} from './SmsTabs'
-import QrCodeIcon from '@mui/icons-material/QrCode'
-import AddAlertIcon from '@mui/icons-material/AddAlert'
-import RateReviewIcon from '@mui/icons-material/RateReview'
-import { useVisitQuery } from '../hairdresser/visits/queries'
-import { useUserDataQuery } from '../queries'
+} from './SmsTabs';
+import QrCodeIcon from '@mui/icons-material/QrCode';
+import AddAlertIcon from '@mui/icons-material/AddAlert';
+import RateReviewIcon from '@mui/icons-material/RateReview';
+import { useVisitQuery } from '../hairdresser/visits/queries';
+import { useUserDataQuery } from '../queries';
 
 const SmsSendDialog = (props: {
   openButton: React.ReactElement<{
-    onClick: (e: React.MouseEvent) => void
-    icon?: React.ReactNode
-    sx?: SxProps<BoxProps>
-  }>
-  visitId: string
+    onClick: (e: React.MouseEvent) => void;
+    icon?: React.ReactNode;
+    sx?: SxProps<BoxProps>;
+  }>;
+  visitId: string;
 }) => {
-  const { openButton, visitId } = props
-  const [open, setOpen] = useState(false)
-  const { data: visitData } = useVisitQuery(visitId, open)
-  const { data: userData } = useUserDataQuery()
+  const { openButton, visitId } = props;
+  const [open, setOpen] = useState(false);
+  const { data: visitData } = useVisitQuery(visitId, open);
+  const { data: userData } = useUserDataQuery();
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
-      openButton.props.onClick?.(e)
-      handleClickOpen()
+      openButton.props.onClick?.(e);
+      handleClickOpen();
     },
-  })
+  });
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
-  const groupedVisits = sortAutoSms(visitData)
+  const groupedVisits = sortAutoSms(visitData);
 
   return (
     <FormDialog
@@ -63,10 +63,14 @@ const SmsSendDialog = (props: {
                   visits={groupedVisits.invitations}
                   title="Pozvánka"
                   icon={<AddAlertIcon />}
-                  getText={(invitationVisit) =>
-                    formatVisitInvitationToSms(invitationVisit.client.lastName, invitationVisit.visitServices, {
-                      date: invitationVisit.date,
-                    })
+                  getText={invitationVisit =>
+                    formatVisitInvitationToSms(
+                      invitationVisit.client.lastName,
+                      invitationVisit.visitServices,
+                      {
+                        date: invitationVisit.date,
+                      }
+                    )
                   }
                 />
               ) : null}
@@ -75,7 +79,7 @@ const SmsSendDialog = (props: {
                   visits={groupedVisits.payments}
                   title="Záloha"
                   icon={<QrCodeIcon />}
-                  getText={(payment) =>
+                  getText={payment =>
                     formatVisitPartialPaymentReminderSms(
                       payment.client.lastName,
                       payment.visitServices,
@@ -95,7 +99,9 @@ const SmsSendDialog = (props: {
                   title="Recenze"
                   icon={<RateReviewIcon />}
                   visits={groupedVisits.reviews}
-                  getText={(review) => formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)}
+                  getText={review =>
+                    formatVisitReviewRequestSms(review.client.lastName, userData?.reviewUrl)
+                  }
                 />
               ) : null}
             </>
@@ -105,7 +111,7 @@ const SmsSendDialog = (props: {
       onOpenButton={openDialogButton}
       title="Poslat zprávu"
     />
-  )
-}
+  );
+};
 
-export default SmsSendDialog
+export default SmsSendDialog;

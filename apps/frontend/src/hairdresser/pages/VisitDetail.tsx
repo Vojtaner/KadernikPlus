@@ -1,74 +1,85 @@
-import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material'
-import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import Note from '../../app/components/Note'
-import EditVisitDetailDialog from '../visits/components/EditVisitDetailDialog'
-import { useParams } from 'react-router-dom'
-import Loader from '../../components/Loader'
-import { useAppDispatch } from '../../store/store'
-import { setCurrentLocationAppendix } from '../../store/appUiSlice'
-import AppTheme from '../../AppTheme'
-import { Paths } from '../../routes/AppRoutes'
-import { useAppNavigate } from '../../hooks'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import DeleteDialog from '../visits/components/DeleteDialog'
-import AddProcedureButton from '../procedure/components/AddProcedureButton'
-import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/VisitDetailGrid'
-import { useProceduresQuery } from '../procedure/queries'
-import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries'
-import ProcedureCard from '../../components/ProcedureCard'
-import { useEffect } from 'react'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { Button, Divider, Stack, Tooltip, Typography } from '@mui/material';
+import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import Note from '../../app/components/Note';
+import EditVisitDetailDialog from '../visits/components/EditVisitDetailDialog';
+import { useParams } from 'react-router-dom';
+import Loader from '../../components/Loader';
+import { useAppDispatch } from '../../store/store';
+import { setCurrentLocationAppendix } from '../../store/appUiSlice';
+import AppTheme from '../../AppTheme';
+import { Paths } from '../../routes/AppRoutes';
+import { useAppNavigate } from '../../hooks';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import DeleteDialog from '../visits/components/DeleteDialog';
+import AddProcedureButton from '../procedure/components/AddProcedureButton';
+import VisitDetailGrid, { hasAnyStockAllowance } from '../visits/components/VisitDetailGrid';
+import { useProceduresQuery } from '../procedure/queries';
+import { useVisitQuery, useClientVisitsQuery, useDeleteVisitMutation } from '../visits/queries';
+import ProcedureCard from '../../components/ProcedureCard';
+import { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 const VisitDetail = () => {
-  const { visitId, clientId } = useParams()
-  const intl = useIntl()
-  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId, true, true)
-  const { data: clientVisits } = useClientVisitsQuery(clientId)
-  const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId)
-  const dispatch = useAppDispatch()
-  const navigate = useAppNavigate()
-  const { mutate: deleteVisitMutation } = useDeleteVisitMutation()
+  const { visitId, clientId } = useParams();
+  const intl = useIntl();
+  const { data: visitData, isLoading: isLoadingVisit } = useVisitQuery(visitId, true, true);
+  const { data: clientVisits } = useClientVisitsQuery(clientId);
+  const { data: proceduresData, isLoading: isLoadingProcedure } = useProceduresQuery(visitId);
+  const dispatch = useAppDispatch();
+  const navigate = useAppNavigate();
+  const { mutate: deleteVisitMutation } = useDeleteVisitMutation();
 
   const lastVisitWithProcedure =
-    clientVisits && clientVisits.filter((visit) => visit.procedures.length && visitData?.id !== visit.id)
+    clientVisits &&
+    clientVisits.filter(visit => visit.procedures.length && visitData?.id !== visit.id);
 
-  const previusVisitProcedure = lastVisitWithProcedure && lastVisitWithProcedure[0]
+  const previusVisitProcedure = lastVisitWithProcedure && lastVisitWithProcedure[0];
 
   useEffect(() => {
     if (visitData) {
-      const name = `${visitData.client.firstName} ${visitData.client.lastName}`.toUpperCase()
-      const serviceName = visitData.visitServices[0].service.serviceName
-      dispatch(setCurrentLocationAppendix(`${name} - ${serviceName}`))
+      const name = `${visitData.client.firstName} ${visitData.client.lastName}`.toUpperCase();
+      const serviceName = visitData.visitServices[0].service.serviceName;
+      dispatch(setCurrentLocationAppendix(`${name} - ${serviceName}`));
     }
-  }, [visitData, dispatch])
+  }, [visitData, dispatch]);
 
   if (isLoadingVisit || isLoadingProcedure) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (!proceduresData || !visitData) {
     return (
       <Typography>
-        <FormattedMessage defaultMessage="Požadovaná data nejsou dostupná." id="visitDetail.failedToLoadData" />
+        <FormattedMessage
+          defaultMessage="Požadovaná data nejsou dostupná."
+          id="visitDetail.failedToLoadData"
+        />
       </Typography>
-    )
+    );
   }
 
-  const hasZeroProcedures = proceduresData.length === 0
+  const hasZeroProcedures = proceduresData.length === 0;
 
-  const isVisitDeletable = !hasAnyStockAllowance(proceduresData)
+  const isVisitDeletable = !hasAnyStockAllowance(proceduresData);
 
   return (
     <>
       <VisitDetailGrid visitData={visitData} />
-      <Stack spacing={2} direction="row" alignItems="center" justifyContent="flex-start" paddingY={2}>
+      <Stack
+        spacing={2}
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-start"
+        paddingY={2}
+      >
         <EditVisitDetailDialog
           openButton={
             <Button
               size="medium"
               sx={{ background: `${AppTheme.palette.primary.light}` }}
-              startIcon={<EditOutlinedIcon fontSize="small" color="primary" />}>
+              startIcon={<EditOutlinedIcon fontSize="small" color="primary" />}
+            >
               <FormattedMessage defaultMessage="Dokončit" id="visitDetail.finalize" />
             </Button>
           }
@@ -78,7 +89,8 @@ const VisitDetail = () => {
             size="medium"
             startIcon={<ManageAccountsOutlinedIcon fontSize="small" color="primary" />}
             sx={{ background: `${AppTheme.palette.primary.light}` }}
-            onClick={() => navigate(Paths.clientDetail(visitData.clientId))}>
+            onClick={() => navigate(Paths.clientDetail(visitData.clientId))}
+          >
             <FormattedMessage defaultMessage="Profil zákazníka" id="visitDetail.customerProfile" />
           </Button>
         )}
@@ -89,12 +101,19 @@ const VisitDetail = () => {
                 title={intl.formatMessage({
                   id: 'visitDetail.tooltipDelete',
                   defaultMessage: 'Nelze smazat návštěva, pokud máte vytvořenou spotřebu.',
-                })}>
+                })}
+              >
                 <Button
                   disabled={!isVisitDeletable}
                   size="medium"
-                  startIcon={<DeleteOutlineIcon fontSize="small" color={!isVisitDeletable ? 'disabled' : 'primary'} />}
-                  sx={{ background: `${AppTheme.palette.primary.light}` }}>
+                  startIcon={
+                    <DeleteOutlineIcon
+                      fontSize="small"
+                      color={!isVisitDeletable ? 'disabled' : 'primary'}
+                    />
+                  }
+                  sx={{ background: `${AppTheme.palette.primary.light}` }}
+                >
                   <FormattedMessage defaultMessage="Smazat" id="visitDetail.delete" />
                 </Button>
               </Tooltip>
@@ -108,8 +127,8 @@ const VisitDetail = () => {
               defaultMessage: 'Návštěva bude smazána z vašeho seznamu.',
             })}
             onConfirm={() => {
-              deleteVisitMutation(visitId)
-              navigate(Paths.clientDetail(visitData.clientId))
+              deleteVisitMutation(visitId);
+              navigate(Paths.clientDetail(visitData.clientId));
             }}
           />
         )}
@@ -132,12 +151,13 @@ const VisitDetail = () => {
             color: 'primary.main',
             paddingY: 1,
           },
-        }}>
+        }}
+      >
         <FormattedMessage defaultMessage="Postup" id="visitDetail.procedure" />
       </Divider>
 
       <Stack spacing={4}>
-        {proceduresData.map((procedure) => (
+        {proceduresData.map(procedure => (
           <ProcedureCard
             disabled={visitData.visitStatus}
             procedureId={procedure.id}
@@ -154,8 +174,12 @@ const VisitDetail = () => {
               <Button
                 variant="outlined"
                 disabled={visitData.visitStatus}
-                sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}>
-                <FormattedMessage defaultMessage="+ Přidat proceduru" id="visitDetail.addProcedureButton" />
+                sx={{ boxShadow: '0px 0px 6px 2px rgba(0,0,0,0.15)' }}
+              >
+                <FormattedMessage
+                  defaultMessage="+ Přidat proceduru"
+                  id="visitDetail.addProcedureButton"
+                />
               </Button>
             }
           />
@@ -171,7 +195,7 @@ const VisitDetail = () => {
         )}
         {previusVisitProcedure &&
           hasZeroProcedures &&
-          previusVisitProcedure.procedures.map((procedure) => (
+          previusVisitProcedure.procedures.map(procedure => (
             <ProcedureCard
               isPreviousCopy={true}
               procedureId={procedure.id}
@@ -183,7 +207,7 @@ const VisitDetail = () => {
           ))}
       </Stack>
     </>
-  )
-}
+  );
+};
 
-export default VisitDetail
+export default VisitDetail;

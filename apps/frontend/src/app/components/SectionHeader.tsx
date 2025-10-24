@@ -1,27 +1,27 @@
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack'
-import { Box, IconButton } from '@mui/material'
-import { type CurrentRoute } from '../../routes/AppRoutes'
-import { useUserDataQuery } from '../../queries'
-import { useAppSelector } from '../../store/store'
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, IconButton } from '@mui/material';
+import { type CurrentRoute } from '../../routes/AppRoutes';
+import { useUserDataQuery } from '../../queries';
+import { useAppSelector } from '../../store/store';
 
 const SectionHeader = (props: {
-  onGoBack: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
-  routeAppendix: string
-  route: CurrentRoute
+  onGoBack: (e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  routeAppendix: string;
+  route: CurrentRoute;
 }) => {
-  const { onGoBack, routeAppendix, route } = props
-  const { data: userData } = useUserDataQuery()
-  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
+  const { onGoBack, routeAppendix, route } = props;
+  const { data: userData } = useUserDataQuery();
+  const isSearchActive = useAppSelector(state => state.appUi.isSearchActive);
 
   if (isSearchActive) {
-    return null
+    return null;
   }
 
   if (!route) {
-    onGoBack()
-    return
+    onGoBack();
+    return;
   }
 
   return (
@@ -31,8 +31,9 @@ const SectionHeader = (props: {
         bgcolor="#f6f6f6"
         borderRadius="15px 15px 0 0"
         alignItems="center"
-        justifyContent="space-between">
-        <IconButton onClick={(e) => onGoBack(e)} sx={{ flexShrink: 0 }}>
+        justifyContent="space-between"
+      >
+        <IconButton onClick={e => onGoBack(e)} sx={{ flexShrink: 0 }}>
           <ArrowBackIcon fontSize="medium" />
         </IconButton>
 
@@ -41,7 +42,8 @@ const SectionHeader = (props: {
             sx={{
               fontSize: '15px',
               fontWeight: 600,
-            }}>
+            }}
+          >
             {route.breadcrumb}
           </Typography>
           {routeAppendix && (
@@ -51,7 +53,8 @@ const SectionHeader = (props: {
                 fontSize: '15px',
                 fontWeight: 600,
                 paddingLeft: '3px',
-              }}>
+              }}
+            >
               - {routeAppendix}
             </Typography>
           )}
@@ -59,7 +62,7 @@ const SectionHeader = (props: {
         <Box sx={{ width: 40 }} />
       </Stack>
     </Box>
-  )
-}
+  );
+};
 
-export default SectionHeader
+export default SectionHeader;

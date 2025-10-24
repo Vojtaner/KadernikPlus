@@ -1,16 +1,26 @@
-import { Card, CardContent, CardHeader, Typography, List, ListItem, Button, Box, ListItemIcon } from '@mui/material'
-import CheckIcon from '@mui/icons-material/Check'
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Typography,
+  List,
+  ListItem,
+  Button,
+  Box,
+  ListItemIcon,
+} from '@mui/material';
+import CheckIcon from '@mui/icons-material/Check';
 
 type PricingCardProps = {
-  title: string
-  price: string
-  period: string
-  description: string
-  features: string[]
-  ctaText: string
-  active?: boolean
-  onClick: () => void
-}
+  title: string;
+  price: string;
+  period: string;
+  description: string;
+  features: string[];
+  ctaText: string;
+  active?: boolean;
+  onClick: () => void;
+};
 
 const PricingCard = ({
   title,
@@ -33,7 +43,8 @@ const PricingCard = ({
         '&:hover': {
           boxShadow: 8,
         },
-      }}>
+      }}
+    >
       <CardHeader
         sx={{ paddingBottom: '0' }}
         title={
@@ -67,13 +78,18 @@ const PricingCard = ({
         </List>
 
         <Box mt={2} textAlign="center">
-          <Button variant={active ? 'contained' : 'outlined'} color="primary" onClick={onClick} fullWidth>
+          <Button
+            variant={active ? 'contained' : 'outlined'}
+            color="primary"
+            onClick={onClick}
+            fullWidth
+          >
             {ctaText}
           </Button>
         </Box>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default PricingCard
+export default PricingCard;

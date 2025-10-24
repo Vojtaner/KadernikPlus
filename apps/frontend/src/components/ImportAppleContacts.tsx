@@ -1,99 +1,104 @@
-import { useForm, useFieldArray } from 'react-hook-form'
-import { useImportClientMutation } from '../hairdresser/client/queries'
-import { Button, Grid, IconButton, Stack } from '@mui/material'
-import TextField from '../app/components/TextField'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import { getParsedFullName } from '../hairdresser/entity'
-import { useEffect, useState } from 'react'
-import InputFileUpload from './InputFileUpload'
-import Loader from './Loader'
-import { capitalizeFirstLetter } from './SmsTabs'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { useForm, useFieldArray } from 'react-hook-form';
+import { useImportClientMutation } from '../hairdresser/client/queries';
+import { Button, Grid, IconButton, Stack } from '@mui/material';
+import TextField from '../app/components/TextField';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { getParsedFullName } from '../hairdresser/entity';
+import { useEffect, useState } from 'react';
+import InputFileUpload from './InputFileUpload';
+import Loader from './Loader';
+import { capitalizeFirstLetter } from './SmsTabs';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 type Contact = {
-  firstName: string
-  lastName: string
-  phone: string
-}
+  firstName: string;
+  lastName: string;
+  phone: string;
+};
 
 type FormValues = {
-  contacts: Contact[]
-}
+  contacts: Contact[];
+};
 
 export const ImportAppleContacts = () => {
   const { control, handleSubmit, setValue } = useForm<FormValues>({
     defaultValues: { contacts: [] },
-  })
-  const intl = useIntl()
-  const [loading, setLoading] = useState(false)
+  });
+  const intl = useIntl();
+  const [loading, setLoading] = useState(false);
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'contacts',
-  })
+  });
   const { mutate: importClients } = useImportClientMutation({
     onSuccess: () => {
-      setValue('contacts', [])
+      setValue('contacts', []);
     },
-  })
+  });
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (!file) {
-      return
+      return;
     }
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const text = event.target?.result as string
-      parseVcf(text)
-    }
-    reader.readAsText(file)
-  }
+    const reader = new FileReader();
+    reader.onload = event => {
+      const text = event.target?.result as string;
+      parseVcf(text);
+    };
+    reader.readAsText(file);
+  };
 
   const parseVcf = (text: string) => {
-    const cards = text.split(/END:VCARD/i)
-    setLoading(true)
+    const cards = text.split(/END:VCARD/i);
+    setLoading(true);
 
     const parsedContacts: Contact[] = cards
-      .map((card) => {
-        const lines = card.split(/\r?\n/)
-        let fullName = ''
-        let phone = ''
+      .map(card => {
+        const lines = card.split(/\r?\n/);
+        let fullName = '';
+        let phone = '';
 
-        lines.forEach((line) => {
+        lines.forEach(line => {
           if (line.startsWith('FN:')) {
-            fullName = line.replace('FN:', '').trim()
+            fullName = line.replace('FN:', '').trim();
           }
-          if ((line.startsWith('TEL') || line.startsWith('item1.TEL') || line.startsWith('item2.TEL')) && !phone) {
-            phone = line.split(':')[1]?.replace(/\D/g, '').slice(-9)
+          if (
+            (line.startsWith('TEL') ||
+              line.startsWith('item1.TEL') ||
+              line.startsWith('item2.TEL')) &&
+            !phone
+          ) {
+            phone = line.split(':')[1]?.replace(/\D/g, '').slice(-9);
           }
-        })
+        });
 
         if (!fullName && !phone) {
-          return null
+          return null;
         }
 
-        const name = getParsedFullName(fullName)
+        const name = getParsedFullName(fullName);
 
         return {
           firstName: capitalizeFirstLetter(name.firstName),
           lastName: capitalizeFirstLetter(name.lastName),
           phone,
-        }
+        };
       })
-      .filter(Boolean) as Contact[]
-    parsedContacts.forEach((c) => append(c))
-  }
+      .filter(Boolean) as Contact[];
+    parsedContacts.forEach(c => append(c));
+  };
 
   const onSubmit = (data: FormValues) => {
-    importClients(data)
-  }
+    importClients(data);
+  };
 
   useEffect(() => {
     if (fields.length) {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [fields])
+  }, [fields]);
 
   if (loading) {
     return (
@@ -104,7 +109,7 @@ export const ImportAppleContacts = () => {
           defaultMessage: 'Nahrávání spousty kontaktů...(ideální množství je 200 kontaktů)',
         })}
       />
-    )
+    );
   }
 
   return (
@@ -142,5 +147,5 @@ export const ImportAppleContacts = () => {
         </Button>
       ) : null}
     </form>
-  )
-}
+  );
+};

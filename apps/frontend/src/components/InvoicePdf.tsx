@@ -1,12 +1,12 @@
-import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer'
-import type { Invoice } from '../hairdresser/entity'
-import saveAs from 'file-saver'
-import { useIntl } from 'react-intl'
+import { Page, Text, Document, StyleSheet, pdf, View, Image, Font } from '@react-pdf/renderer';
+import type { Invoice } from '../hairdresser/entity';
+import saveAs from 'file-saver';
+import { useIntl } from 'react-intl';
 
 Font.register({
   family: 'Roboto',
   src: '/assets/fonts/Roboto-Regular.ttf',
-})
+});
 
 const styles = StyleSheet.create({
   page: {
@@ -64,17 +64,18 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   text: { fontFamily: 'Roboto', fontSize: 14 },
-})
+});
 
 const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
-  const intl = useIntl()
+  const intl = useIntl();
 
   return (
     <Document>
       <Page style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.title}>
-            {intl.formatMessage({ id: 'invoice.title', defaultMessage: 'Faktura' })} {invoice.invoiceNumber}
+            {intl.formatMessage({ id: 'invoice.title', defaultMessage: 'Faktura' })}{' '}
+            {invoice.invoiceNumber}
           </Text>
           <Image src="/path/to/logo.png" style={styles.logo} />
         </View>
@@ -87,7 +88,9 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
             Vojtěch Laurin
           </Text>
           <Text>
-            <Text style={styles.label}>{intl.formatMessage({ id: 'invoice.ico', defaultMessage: 'IČO:' })} </Text>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'invoice.ico', defaultMessage: 'IČO:' })}{' '}
+            </Text>
             06380298
           </Text>
         </View>
@@ -100,7 +103,9 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
             {invoice.customerName}
           </Text>
           <Text>
-            <Text style={styles.label}>{intl.formatMessage({ id: 'invoice.email', defaultMessage: 'E-mail:' })} </Text>
+            <Text style={styles.label}>
+              {intl.formatMessage({ id: 'invoice.email', defaultMessage: 'E-mail:' })}{' '}
+            </Text>
             {invoice.customerEmail}
           </Text>
         </View>
@@ -181,12 +186,12 @@ const InvoicePdf = ({ invoice }: { invoice: Invoice }) => {
         </View>
       </Page>
     </Document>
-  )
-}
+  );
+};
 
-export default InvoicePdf
+export default InvoicePdf;
 
 export async function downloadInvoice(invoice: Invoice) {
-  const blob = await pdf(<InvoicePdf invoice={invoice} />).toBlob()
-  saveAs(blob, `${invoice.invoiceNumber}.pdf`)
+  const blob = await pdf(<InvoicePdf invoice={invoice} />).toBlob();
+  saveAs(blob, `${invoice.invoiceNumber}.pdf`);
 }

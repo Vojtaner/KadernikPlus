@@ -1,33 +1,33 @@
-import { Button, Stack, Typography } from '@mui/material'
-import FormDialog from '../../../app/components/FormDialog'
-import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
-import SelectField from '../../../app/components/SelectField'
-import TextField from '../../../app/components/TextField'
-import { depositStatusOptions, type VisitDetailFormType } from '../entity'
-import { useParams } from 'react-router-dom'
-import { useCallback, useState } from 'react'
-import Loader from '../../../components/Loader'
-import { useForm, useWatch } from 'react-hook-form'
-import React from 'react'
-import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid'
-import { FormattedMessage, useIntl } from 'react-intl'
-import CloseVisitDialog from './CloseVisitDialog'
-import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
-import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries'
-import RedSwitch from '../../../app/components/Switch/RedSwitch'
+import { Button, Stack, Typography } from '@mui/material';
+import FormDialog from '../../../app/components/FormDialog';
+import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker';
+import SelectField from '../../../app/components/SelectField';
+import TextField from '../../../app/components/TextField';
+import { depositStatusOptions, type VisitDetailFormType } from '../entity';
+import { useParams } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import Loader from '../../../components/Loader';
+import { useForm, useWatch } from 'react-hook-form';
+import React from 'react';
+import { getMissingStockAllowanceError, getVisitFinishErrors } from './VisitDetailGrid';
+import { FormattedMessage, useIntl } from 'react-intl';
+import CloseVisitDialog from './CloseVisitDialog';
+import ServicesAutoComplete from '../../service/components/ServicesAutoComplete';
+import { useUpdateVisitMutation, useVisitQuery, useVisitStatusMutation } from '../queries';
+import RedSwitch from '../../../app/components/Switch/RedSwitch';
 
 const EditVisitDetailDialog = (props: {
-  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>;
 }) => {
-  const { openButton } = props
-  const [open, setOpen] = useState(false)
-  const intl = useIntl()
-  const [errorDialogOpen, setErrorDialogOpen] = useState(false)
-  const { visitId } = useParams()
-  const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId)
-  const { data: visit, isLoading, isError } = useVisitQuery(visitId)
-  const [isSwitchOn, setIsSwitchOn] = useState(visit?.visitStatus)
-  const { mutate: changeVisitStatus } = useVisitStatusMutation()
+  const { openButton } = props;
+  const [open, setOpen] = useState(false);
+  const intl = useIntl();
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const { visitId } = useParams();
+  const { mutate: updateVisitMutation } = useUpdateVisitMutation(visitId);
+  const { data: visit, isLoading, isError } = useVisitQuery(visitId);
+  const [isSwitchOn, setIsSwitchOn] = useState(visit?.visitStatus);
+  const { mutate: changeVisitStatus } = useVisitStatusMutation();
   const { control, handleSubmit, getValues, setValue } = useForm<VisitDetailFormType>({
     defaultValues: {
       date: visit?.date,
@@ -41,78 +41,86 @@ const EditVisitDetailDialog = (props: {
       hairCutId: visit?.visitServices[0].serviceId,
       visitServiceId: visit?.visitServices[0].id,
     },
-  })
-  const paidPrice = useWatch({ control, name: 'paidPrice' })
-  const deposit = useWatch({ control, name: 'deposit' })
-  const depositStatus = useWatch({ control, name: 'depositStatus' })
-  const visitClosed = useWatch({ control, name: 'visitClosed' })
-  const procedures = visit?.procedures
+  });
+  const paidPrice = useWatch({ control, name: 'paidPrice' });
+  const deposit = useWatch({ control, name: 'deposit' });
+  const depositStatus = useWatch({ control, name: 'depositStatus' });
+  const visitClosed = useWatch({ control, name: 'visitClosed' });
+  const procedures = visit?.procedures;
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (!visit || isError) {
     return (
       <Typography>
-        <FormattedMessage id="editVisitDetailDialog.noData" defaultMessage="Detail návštěvy nebyl nalezen." />
+        <FormattedMessage
+          id="editVisitDetailDialog.noData"
+          defaultMessage="Detail návštěvy nebyl nalezen."
+        />
       </Typography>
-    )
+    );
   }
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const openDialogButton = React.cloneElement(openButton, {
     onClick: (e: React.MouseEvent) => {
-      openButton.props.onClick?.(e)
-      handleClickOpen()
+      openButton.props.onClick?.(e);
+      handleClickOpen();
     },
-  })
+  });
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const onSubmit = () => {
-    const formData = getValues()
+    const formData = getValues();
 
     if (formData.visitClosed !== null) {
-      changeVisitStatus({ status: formData.visitClosed, visitId })
+      changeVisitStatus({ status: formData.visitClosed, visitId });
     }
 
     updateVisitMutation(
       { ...formData, visitServiceId: visit.visitServices[0].id },
       {
         onSuccess: () => {
-          handleClose()
+          handleClose();
         },
       }
-    )
-  }
+    );
+  };
 
   const validateVisit = useCallback(() => {
-    const { deposit, visitClosed, paidPrice, depositStatus } = getValues()
+    const { deposit, visitClosed, paidPrice, depositStatus } = getValues();
 
     if (!visitClosed) {
-      const errors = getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl)
-      const missingStockAllowanceError = procedures && getMissingStockAllowanceError(intl, procedures)
+      const errors = getVisitFinishErrors(
+        visit.client.deposit,
+        { paidPrice, deposit, depositStatus },
+        intl
+      );
+      const missingStockAllowanceError =
+        procedures && getMissingStockAllowanceError(intl, procedures);
       const canSkipDialog =
-        getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl).length === 0 &&
-        !getMissingStockAllowanceError(intl, procedures)
+        getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl)
+          .length === 0 && !getMissingStockAllowanceError(intl, procedures);
 
       if (canSkipDialog) {
-        return true
+        return true;
       }
 
       if (errors.length || missingStockAllowanceError) {
-        return false
+        return false;
       }
     } else {
-      return true
+      return true;
     }
-  }, [getValues, getVisitFinishErrors, getMissingStockAllowanceError, procedures, visit])
+  }, [getValues, getVisitFinishErrors, getMissingStockAllowanceError, procedures, visit]);
 
   return (
     <FormDialog
@@ -140,8 +148,8 @@ const EditVisitDetailDialog = (props: {
                 })}
                 items={depositStatusOptions}
                 control={control}
-                keyExtractor={(status) => status.id}
-                labelExtractor={(status) => status.name}
+                keyExtractor={status => status.id}
+                labelExtractor={status => status.name}
                 fieldPath="depositStatus"
               />
 
@@ -162,7 +170,12 @@ const EditVisitDetailDialog = (props: {
           {/* funkcionalita na přeobjednávání zatím aus
           <TeamMemberAutoComplete fieldPath="hairdresserId" control={control} /> */}
           <BasicDateTimePicker fieldPath="date" control={control} disabled={visitClosed} />
-          <BasicDateTimePicker fieldPath="dateTo" control={control} label="Datum do" disabled={visitClosed} />
+          <BasicDateTimePicker
+            fieldPath="dateTo"
+            control={control}
+            label="Datum do"
+            disabled={visitClosed}
+          />
           <ServicesAutoComplete fieldPath="hairCutId" control={control} disabled={visitClosed} />
           <TextField
             disabled={visitClosed}
@@ -199,31 +212,38 @@ const EditVisitDetailDialog = (props: {
             bgcolor="#dddddd"
             paddingX="1rem"
             borderRadius="10px"
-            boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
+            boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)"
+          >
             <Typography fontWeight={600} color="secondary.main">
               <FormattedMessage id="addVisit.visitClosed" defaultMessage="Uzavřít návštěvu" />
             </Typography>
             <RedSwitch
               checked={!!isSwitchOn}
               onChange={(_, state) => {
-                const isFormValid = validateVisit()
+                const isFormValid = validateVisit();
                 if (isFormValid) {
-                  setIsSwitchOn(state)
-                  setValue('visitClosed', state)
+                  setIsSwitchOn(state);
+                  setValue('visitClosed', state);
                 } else {
-                  setErrorDialogOpen(true)
+                  setErrorDialogOpen(true);
                 }
               }}
             />
             <CloseVisitDialog
               onConfirm={() => {
-                setIsSwitchOn(true)
-                setValue('visitClosed', true)
+                setIsSwitchOn(true);
+                setValue('visitClosed', true);
               }}
               onClose={() => setErrorDialogOpen(false)}
               openDialog={errorDialogOpen}
-              errors={getVisitFinishErrors(visit.client.deposit, { paidPrice, deposit, depositStatus }, intl)}
-              missingStockAllowanceError={procedures && getMissingStockAllowanceError(intl, procedures)}
+              errors={getVisitFinishErrors(
+                visit.client.deposit,
+                { paidPrice, deposit, depositStatus },
+                intl
+              )}
+              missingStockAllowanceError={
+                procedures && getMissingStockAllowanceError(intl, procedures)
+              }
             />
           </Stack>
         </>
@@ -235,7 +255,7 @@ const EditVisitDetailDialog = (props: {
         id: 'editVisitDetailDialog.visitDetail',
       })}
     />
-  )
-}
+  );
+};
 
-export default EditVisitDetailDialog
+export default EditVisitDetailDialog;

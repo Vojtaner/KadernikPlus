@@ -1,20 +1,20 @@
-import { Grid, Stack, Typography } from '@mui/material'
-import DetailColumn from '../../../app/components/DetailColumn'
-import Loader from '../../../components/Loader'
-import { DepositStatus, getDateTimeFromUtcToLocal, type VisitWithServices } from '../entity'
-import { formatNameShort } from '../../../entity'
-import type { CreateProcedure, Procedure } from '../../../entities/procedure'
-import { useIntl, type IntlShape } from 'react-intl'
+import { Grid, Stack, Typography } from '@mui/material';
+import DetailColumn from '../../../app/components/DetailColumn';
+import Loader from '../../../components/Loader';
+import { DepositStatus, getDateTimeFromUtcToLocal, type VisitWithServices } from '../entity';
+import { formatNameShort } from '../../../entity';
+import type { CreateProcedure, Procedure } from '../../../entities/procedure';
+import { useIntl, type IntlShape } from 'react-intl';
 
 type VisitDetailGridProps = {
-  visitData: VisitWithServices | undefined
-}
+  visitData: VisitWithServices | undefined;
+};
 const VisitDetailGrid = (props: VisitDetailGridProps) => {
-  const { visitData } = props
-  const intl = useIntl()
+  const { visitData } = props;
+  const intl = useIntl();
 
   if (!visitData) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -59,7 +59,12 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
                 id: 'visitDetailGrid.depositState',
               })}
               input={
-                <Typography textTransform="uppercase" fontSize="0.9rem" color="info.main" fontWeight={600}>
+                <Typography
+                  textTransform="uppercase"
+                  fontSize="0.9rem"
+                  color="info.main"
+                  fontWeight={600}
+                >
                   {visitData.depositStatus}
                 </Typography>
               }
@@ -95,17 +100,18 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
               fontSize="0.9rem"
               textTransform="uppercase"
               color={visitData.visitStatus ? 'success.main' : 'error.main'}
-              fontWeight={600}>
+              fontWeight={600}
+            >
               {visitData.visitStatus ? 'Uzavřeno' : 'Neuzavřeno'}
             </Typography>
           }
         />
       </Grid>
     </Grid>
-  )
-}
+  );
+};
 
-export default VisitDetailGrid
+export default VisitDetailGrid;
 
 export function formatToCZK(
   value: string | number | undefined,
@@ -113,11 +119,11 @@ export function formatToCZK(
   maximumFractionDigits?: number
 ): string {
   if (!value) {
-    return '0,00 Kč'
+    return '0,00 Kč';
   }
-  const numberValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value
+  const numberValue = typeof value === 'string' ? parseFloat(value.replace(',', '.')) : value;
   if (isNaN(numberValue)) {
-    return ''
+    return '';
   }
 
   return numberValue.toLocaleString('cs-CZ', {
@@ -125,21 +131,21 @@ export function formatToCZK(
     currency: 'CZK',
     minimumFractionDigits: minimumFractionDigits ?? 2,
     maximumFractionDigits: maximumFractionDigits ?? 2,
-  })
+  });
 }
 
 export const getVisitFinishErrors = (
   clientDeposit: boolean,
   watchFormVisitData: {
-    paidPrice: number | undefined
-    deposit: number | undefined
-    depositStatus: DepositStatus | null | undefined
+    paidPrice: number | undefined;
+    deposit: number | undefined;
+    depositStatus: DepositStatus | null | undefined;
   },
   intl: IntlShape
 ): string[] => {
-  const { paidPrice, deposit, depositStatus } = watchFormVisitData
-  const isDepositRequired = clientDeposit
-  const errors: string[] = []
+  const { paidPrice, deposit, depositStatus } = watchFormVisitData;
+  const isDepositRequired = clientDeposit;
+  const errors: string[] = [];
 
   if (!paidPrice || paidPrice <= 0) {
     errors.push(
@@ -147,7 +153,7 @@ export const getVisitFinishErrors = (
         defaultMessage: 'Je nutné zadat zaplacenou částku. "Požadovaná cena"',
         id: 'visitDetailGrid.paidPriceWarning',
       })
-    )
+    );
   }
 
   if (isDepositRequired) {
@@ -158,7 +164,7 @@ export const getVisitFinishErrors = (
             'Je nutné zadat zálohu,případně v profilu zákazníka zaškrnout, že ji nepožadujete. "Výše zálohy"',
           id: 'visitDetailGrid.depositStatusWarning',
         })
-      )
+      );
     }
     if (depositStatus !== DepositStatus.ZAPLACENO) {
       errors.push(
@@ -166,20 +172,20 @@ export const getVisitFinishErrors = (
           defaultMessage: 'Záloha musí být ve stavu zaplacena. "Stav zálohy"',
           id: 'visitDetailGrid.depositWarning',
         })
-      )
+      );
     }
   }
 
-  return errors
-}
+  return errors;
+};
 
 export const hasAnyStockAllowance = (procedures?: (Procedure | CreateProcedure)[]): boolean => {
   if (!procedures || procedures.length === 0) {
-    return false
+    return false;
   }
 
-  return procedures.some((p) => p.stockAllowances && p.stockAllowances.length > 0)
-}
+  return procedures.some(p => p.stockAllowances && p.stockAllowances.length > 0);
+};
 
 export const getMissingStockAllowanceError = (
   intl: IntlShape,
@@ -187,21 +193,22 @@ export const getMissingStockAllowanceError = (
 ): string | undefined => {
   if (!hasAnyStockAllowance(procedures)) {
     return intl.formatMessage({
-      defaultMessage: 'Musí být spotřebován alespoň jeden materiál, bez toho neuvidíte náklady. (nepovinné)',
+      defaultMessage:
+        'Musí být spotřebován alespoň jeden materiál, bez toho neuvidíte náklady. (nepovinné)',
       id: 'visitDetailGrid.stockAllowanceWarning',
-    })
+    });
   }
-}
+};
 
 export const isVisitFinished = (
   clientDeposit: boolean,
   watchFormVisitData: {
-    paidPrice: number | undefined
-    deposit: number | undefined
-    depositStatus: DepositStatus | null | undefined
-    procedures: undefined | Procedure[]
+    paidPrice: number | undefined;
+    deposit: number | undefined;
+    depositStatus: DepositStatus | null | undefined;
+    procedures: undefined | Procedure[];
   },
   intl: IntlShape
 ): boolean => {
-  return getVisitFinishErrors(clientDeposit, watchFormVisitData, intl).length === 0
-}
+  return getVisitFinishErrors(clientDeposit, watchFormVisitData, intl).length === 0;
+};

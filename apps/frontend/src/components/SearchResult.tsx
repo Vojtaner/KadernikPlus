@@ -1,25 +1,25 @@
-import { IconButton, Stack, Typography, type SxProps } from '@mui/material'
-import PermIdentityIcon from '@mui/icons-material/PermIdentity'
-import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client'
-import { Paths } from '../routes/AppRoutes'
-import { useAppNavigate } from '../hooks'
-import { useIntl } from 'react-intl'
-import { useAppDispatch } from '../store/store'
-import { setSearchState } from '../store/appUiSlice'
-import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/entity'
+import { IconButton, Stack, Typography, type SxProps } from '@mui/material';
+import PermIdentityIcon from '@mui/icons-material/PermIdentity';
+import type { ClientWithVisitsWithVisitServices, ReturnedClientVisit } from '../entities/client';
+import { Paths } from '../routes/AppRoutes';
+import { useAppNavigate } from '../hooks';
+import { useIntl } from 'react-intl';
+import { useAppDispatch } from '../store/store';
+import { setSearchState } from '../store/appUiSlice';
+import { getDateTimeFromUtcToLocal } from '../hairdresser/visits/entity';
 
 type SearchResultProps = {
-  clientData: ClientWithVisitsWithVisitServices
-  sx?: SxProps
-}
+  clientData: ClientWithVisitsWithVisitServices;
+  sx?: SxProps;
+};
 
 const SearchResult = (props: SearchResultProps) => {
-  const { sx, clientData } = props
-  const dispatch = useAppDispatch()
-  const navigate = useAppNavigate()
-  const intl = useIntl()
+  const { sx, clientData } = props;
+  const dispatch = useAppDispatch();
+  const navigate = useAppNavigate();
+  const intl = useIntl();
 
-  const latestVisit = getLatestVisit(clientData.visits)
+  const latestVisit = getLatestVisit(clientData.visits);
 
   return (
     <Stack
@@ -36,9 +36,10 @@ const SearchResult = (props: SearchResultProps) => {
       }}
       component="a"
       onClick={() => {
-        dispatch(setSearchState(false))
-        navigate(Paths.clientDetail(clientData.id))
-      }}>
+        dispatch(setSearchState(false));
+        navigate(Paths.clientDetail(clientData.id));
+      }}
+    >
       <IconButton>
         <PermIdentityIcon fontSize="large" />
       </IconButton>
@@ -55,7 +56,10 @@ const SearchResult = (props: SearchResultProps) => {
           <Typography variant="h6" color="info.main" fontSize="0.7rem">
             {clientData.deposit
               ? latestVisit?.depositStatus?.toUpperCase()
-              : intl.formatMessage({ defaultMessage: 'NEPLATÍ ZÁLOHY', id: 'searchResult.NoDeposit' })}
+              : intl.formatMessage({
+                  defaultMessage: 'NEPLATÍ ZÁLOHY',
+                  id: 'searchResult.NoDeposit',
+                })}
           </Typography>
           <Typography variant="h6" color="info.main" fontSize="0.7rem">
             -
@@ -66,17 +70,17 @@ const SearchResult = (props: SearchResultProps) => {
         </Stack>
       </Stack>
     </Stack>
-  )
-}
+  );
+};
 
-export default SearchResult
+export default SearchResult;
 
 const getLatestVisit = (visits: ReturnedClientVisit[]): ReturnedClientVisit | undefined => {
   if (!visits.length) {
-    return undefined
+    return undefined;
   }
 
   return visits.reduce((latest, current) => {
-    return new Date(current.date) > new Date(latest.date) ? current : latest
-  })
-}
+    return new Date(current.date) > new Date(latest.date) ? current : latest;
+  });
+};

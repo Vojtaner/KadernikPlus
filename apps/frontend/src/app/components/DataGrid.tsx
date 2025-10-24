@@ -1,29 +1,36 @@
-import { DataGrid, type GridColDef } from '@mui/x-data-grid'
-import React from 'react'
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import React from 'react';
 
-import type { DataGridProps, GridValidRowModel } from '@mui/x-data-grid'
-import { csCZ } from '@mui/x-data-grid/locales'
+import type { DataGridProps, GridValidRowModel } from '@mui/x-data-grid';
+import { csCZ } from '@mui/x-data-grid/locales';
 
 type AppDataGridProps<T extends readonly GridValidRowModel[]> = DataGridProps & {
-  rows: T
-  columns: GridColDef<T[number]>[]
-  sx?: object
-  [key: string]: unknown
-  rowHeight?: number
-  disableColumnMenu?: boolean
-}
+  rows: T;
+  columns: GridColDef<T[number]>[];
+  sx?: object;
+  [key: string]: unknown;
+  rowHeight?: number;
+  disableColumnMenu?: boolean;
+};
 
 function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridProps<T>) {
-  const { rows, columns, columnHeaderHeight, hideFooter, rowHeight, disableColumnMenu = false } = props
+  const {
+    rows,
+    columns,
+    columnHeaderHeight,
+    hideFooter,
+    rowHeight,
+    disableColumnMenu = false,
+  } = props;
 
   const gridColumns: readonly GridColDef[] = React.useMemo(
     () =>
-      columns.map((col) => ({
+      columns.map(col => ({
         ...col,
         field: col.field,
       })),
     [columns, rows]
-  )
+  );
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100px' }}>
@@ -49,7 +56,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         hideFooter={hideFooter}
       />
     </div>
-  )
+  );
 }
 
-export default AppDataGrid
+export default AppDataGrid;

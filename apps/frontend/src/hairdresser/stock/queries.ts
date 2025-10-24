@@ -1,15 +1,21 @@
-import { useQuery, useMutation, type UseMutationOptions } from '@tanstack/react-query'
-import type dayjs from 'dayjs'
-import type { Stock } from '../../api/entity'
-import { useAxios } from '../../axios/axios'
-import type { GetStockAllowance } from '../../entity'
-import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { getStocks, postCreateNewStockItem, deleteStockItem, getStockItems, getStockAllowances } from './api'
-import type { StockItemCreateData, StockWithStockItems } from './entity'
+import { useQuery, useMutation, type UseMutationOptions } from '@tanstack/react-query';
+import type dayjs from 'dayjs';
+import type { Stock } from '../../api/entity';
+import { useAxios } from '../../axios/axios';
+import type { GetStockAllowance } from '../../entity';
+import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar';
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup';
+import {
+  getStocks,
+  postCreateNewStockItem,
+  deleteStockItem,
+  getStockItems,
+  getStockAllowances,
+} from './api';
+import type { StockItemCreateData, StockWithStockItems } from './entity';
 
 export const useStocksQuery = () => {
-  const axios = useAxios()
+  const axios = useAxios();
 
   return useQuery<Stock[]>({
     queryKey: ['stocks'],
@@ -18,80 +24,80 @@ export const useStocksQuery = () => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     refetchOnMount: false,
-  })
-}
+  });
+};
 
 export const useCreateOrUpdateStockItemMutation = (
   options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>
 ) => {
-  const axios = useAxios()
-  const addSnackBarMessage = useAddSnackbarMessage()
+  const axios = useAxios();
+  const addSnackBarMessage = useAddSnackbarMessage();
 
   return useMutation<StockItemCreateData, Error, StockItemCreateData>({
     mutationFn: (stockItem: StockItemCreateData) => postCreateNewStockItem(axios, stockItem),
     onSuccess(data, variables, context) {
-      options?.onSuccess?.(data, variables, context)
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      queryClient.invalidateQueries({ queryKey: ['logs'] })
-      addSnackBarMessage({ text: 'Materiál úspěšně přidán/upraven.', type: 'success' })
+      options?.onSuccess?.(data, variables, context);
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] });
+      queryClient.invalidateQueries({ queryKey: ['logs'] });
+      addSnackBarMessage({ text: 'Materiál úspěšně přidán/upraven.', type: 'success' });
     },
-    onError: (error) => {
-      addSnackBarMessage({ text: error.message, type: 'error' })
+    onError: error => {
+      addSnackBarMessage({ text: error.message, type: 'error' });
     },
-  })
-}
+  });
+};
 export const useDeleteStockItemMutation = (options?: UseMutationOptions<void, unknown, string>) => {
-  const axios = useAxios()
-  const addSnackBarMessage = useAddSnackbarMessage()
+  const axios = useAxios();
+  const addSnackBarMessage = useAddSnackbarMessage();
 
   return useMutation({
     mutationFn: (stockItemId: string) => deleteStockItem(axios, stockItemId),
     onSuccess(data, variables, context) {
-      options?.onSuccess?.(data, variables, context)
-      queryClient.invalidateQueries({ queryKey: ['stockItems'] })
-      addSnackBarMessage({ text: 'Materiál úspěšně smazán.', type: 'success' })
+      options?.onSuccess?.(data, variables, context);
+      queryClient.invalidateQueries({ queryKey: ['stockItems'] });
+      addSnackBarMessage({ text: 'Materiál úspěšně smazán.', type: 'success' });
     },
-    onError: (error) => {
-      addSnackBarMessage({ text: error.message, type: 'error' })
-      console.error(error)
+    onError: error => {
+      addSnackBarMessage({ text: error.message, type: 'error' });
+      console.error(error);
     },
-  })
-}
+  });
+};
 
 export const useStockItemsQuery = (stockId: string | undefined) => {
-  const axios = useAxios()
+  const axios = useAxios();
 
   return useQuery<StockWithStockItems[]>({
     queryKey: ['stockItems', stockId],
     queryFn: () => {
-      return getStockItems(axios, stockId ?? '')
+      return getStockItems(axios, stockId ?? '');
     },
     staleTime: 1000 * 60 * 20,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-  })
-}
+  });
+};
 export const useStockAllowancesQuery = ({
   teamId,
   fromDate,
   toDate,
 }: {
-  teamId: string | undefined
-  fromDate: dayjs.Dayjs
-  toDate: dayjs.Dayjs
+  teamId: string | undefined;
+  fromDate: dayjs.Dayjs;
+  toDate: dayjs.Dayjs;
 }) => {
-  const axios = useAxios()
+  const axios = useAxios();
 
   return useQuery<GetStockAllowance[]>({
     queryKey: ['stockAllowances', teamId, fromDate, toDate],
     queryFn: () => {
       if (!teamId) {
-        throw new Error('Chybí týmové ID.')
+        throw new Error('Chybí týmové ID.');
       }
-      return getStockAllowances(axios, { teamId, fromDate, toDate })
+      return getStockAllowances(axios, { teamId, fromDate, toDate });
     },
     staleTime: 1000 * 60 * 20,
     refetchOnWindowFocus: false,
     refetchOnMount: false,
-  })
-}
+  });
+};

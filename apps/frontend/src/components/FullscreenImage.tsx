@@ -1,15 +1,19 @@
-import { Button, IconButton } from '@mui/material'
-import { useState } from 'react'
-import { FormattedMessage } from 'react-intl'
-import AppTheme from '../AppTheme'
-import CloseIcon from '@mui/icons-material/Close'
+import { Button, IconButton } from '@mui/material';
+import { useState } from 'react';
+import { FormattedMessage } from 'react-intl';
+import AppTheme from '../AppTheme';
+import CloseIcon from '@mui/icons-material/Close';
 
 const FullScreenImage = (props: { src: string }) => {
-  const [showImage, setShowImage] = useState(false)
+  const [showImage, setShowImage] = useState(false);
 
   return (
     <>
-      <Button onClick={() => setShowImage(true)} sx={{ bgcolor: AppTheme.palette.info.main }} variant="contained">
+      <Button
+        onClick={() => setShowImage(true)}
+        sx={{ bgcolor: AppTheme.palette.info.main }}
+        variant="contained"
+      >
         <FormattedMessage id="formDialog.tutorial" defaultMessage="Návod" />
       </Button>
       {showImage && (
@@ -25,7 +29,8 @@ const FullScreenImage = (props: { src: string }) => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 1300,
-          }}>
+          }}
+        >
           <IconButton
             onClick={() => setShowImage(false)}
             sx={{
@@ -33,7 +38,8 @@ const FullScreenImage = (props: { src: string }) => {
               top: 16,
               right: 16,
               color: 'white',
-            }}>
+            }}
+          >
             <CloseIcon />
           </IconButton>
           <img
@@ -48,7 +54,7 @@ const FullScreenImage = (props: { src: string }) => {
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
-export default FullScreenImage
+export default FullScreenImage;

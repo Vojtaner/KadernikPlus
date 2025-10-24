@@ -4,8 +4,8 @@
 // const worker = setupWorker(...handlers)
 
 export async function enableMocking() {
-  console.log({ mock: import.meta.env.VITE_ENABLE_MOCKS })
-  return
+  console.log({ mock: import.meta.env.VITE_ENABLE_MOCKS });
+  return;
   // if (import.meta.env.VITE_ENABLE_MOCKS === 'false' || !import.meta.env.VITE_ENABLE_MOCKS) {
   //   return
   // }

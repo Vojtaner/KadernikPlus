@@ -1,9 +1,9 @@
-import { Grid, Button, Stack, Divider, Typography } from '@mui/material'
-import DetailColumn from '../../app/components/DetailColumn'
-import { useAuth0 } from '@auth0/auth0-react'
-import Loader from '../../components/Loader'
-import { UserProfilDialog } from '../../components/UserFormDialog'
-import { FormattedMessage, useIntl } from 'react-intl'
+import { Grid, Button, Stack, Divider, Typography } from '@mui/material';
+import DetailColumn from '../../app/components/DetailColumn';
+import { useAuth0 } from '@auth0/auth0-react';
+import Loader from '../../components/Loader';
+import { UserProfilDialog } from '../../components/UserFormDialog';
+import { FormattedMessage, useIntl } from 'react-intl';
 import {
   useCancelSubscriptionMutation,
   useDeleteUserMutation,
@@ -11,34 +11,37 @@ import {
   useInvoicesQuery,
   useSubscriptionQuery,
   useUserDataQuery,
-} from '../../queries'
-import { ContactPicker } from '../components/ContactPicker'
-import { ImportAppleContacts } from '../../components/ImportAppleContacts'
-import { downloadInvoice } from '../../components/InvoicePdf'
-import MuiColorPicker from '../../components/MuiColorPicker'
-import { getDate } from '../visits/entity'
+} from '../../queries';
+import { ContactPicker } from '../components/ContactPicker';
+import { ImportAppleContacts } from '../../components/ImportAppleContacts';
+import { downloadInvoice } from '../../components/InvoicePdf';
+import MuiColorPicker from '../../components/MuiColorPicker';
+import { getDate } from '../visits/entity';
 
 const MyProfile = () => {
-  const { user, isAuthenticated, isLoading } = useAuth0()
-  const intl = useIntl()
-  const { data: userData } = useUserDataQuery()
-  const { data: subscription } = useSubscriptionQuery()
-  const { mutate: cancelSubscription } = useCancelSubscriptionMutation()
-  const { mutate: deleteUser } = useDeleteUserMutation()
-  const { data: importPayment } = useImportPaymentQuery()
-  const { data: invoices } = useInvoicesQuery()
-  const subscriptionId = subscription ? subscription.id : undefined
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  const intl = useIntl();
+  const { data: userData } = useUserDataQuery();
+  const { data: subscription } = useSubscriptionQuery();
+  const { mutate: cancelSubscription } = useCancelSubscriptionMutation();
+  const { mutate: deleteUser } = useDeleteUserMutation();
+  const { data: importPayment } = useImportPaymentQuery();
+  const { data: invoices } = useInvoicesQuery();
+  const subscriptionId = subscription ? subscription.id : undefined;
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (!userData) {
     return (
       <Typography>
-        {intl.formatMessage({ id: 'myProfile.missingData', defaultMessage: 'Žádná data nenalezena.' })}
+        {intl.formatMessage({
+          id: 'myProfile.missingData',
+          defaultMessage: 'Žádná data nenalezena.',
+        })}
       </Typography>
-    )
+    );
   }
 
   return (
@@ -72,26 +75,40 @@ const MyProfile = () => {
           </Grid>
           <Grid size={6}>
             <DetailColumn
-              label={intl.formatMessage({ defaultMessage: 'Souhlasné ID', id: 'myProfile.confirmId' })}
+              label={intl.formatMessage({
+                defaultMessage: 'Souhlasné ID',
+                id: 'myProfile.confirmId',
+              })}
               input={user.sub?.slice(-4)}
             />
           </Grid>
           <Grid size={6}>
             <DetailColumn
-              label={intl.formatMessage({ defaultMessage: 'Číslo bankovního účtu', id: 'myProfile.bankAccount' })}
+              label={intl.formatMessage({
+                defaultMessage: 'Číslo bankovního účtu',
+                id: 'myProfile.bankAccount',
+              })}
               input={userData.bankAccount}
             />
           </Grid>
           <Grid size={6}>
             <DetailColumn
-              label={intl.formatMessage({ defaultMessage: 'Odkaz na recenze', id: 'myProfile.reviewUrl' })}
+              label={intl.formatMessage({
+                defaultMessage: 'Odkaz na recenze',
+                id: 'myProfile.reviewUrl',
+              })}
               input={userData.reviewUrl}
             />
           </Grid>
           <Grid size={6}>
             <UserProfilDialog
               openButton={
-                <Button>{intl.formatMessage({ defaultMessage: 'Upravit profil', id: 'myProfile.editProfile' })}</Button>
+                <Button>
+                  {intl.formatMessage({
+                    defaultMessage: 'Upravit profil',
+                    id: 'myProfile.editProfile',
+                  })}
+                </Button>
               }
             />
           </Grid>
@@ -99,7 +116,12 @@ const MyProfile = () => {
         <Divider sx={{ marginY: '30px' }} />
 
         <Stack spacing={1}>
-          <Stack direction="row" spacing={2} sx={{ fontWeight: 'bold' }} borderBottom="1px solid grey">
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{ fontWeight: 'bold' }}
+            borderBottom="1px solid grey"
+          >
             <Typography fontWeight="bold" sx={{ width: 150 }}>
               <FormattedMessage id="myProfile.date" defaultMessage="Datum" />
             </Typography>
@@ -109,7 +131,7 @@ const MyProfile = () => {
             <Typography sx={{ width: 150 }} />
           </Stack>
 
-          {invoices?.map((invoice) => (
+          {invoices?.map(invoice => (
             <Stack direction="row" spacing={2} key={invoice.invoiceNumber} alignItems="center">
               <Typography color="info" sx={{ width: 150 }}>
                 {getDate(new Date(invoice.issuedAt))}
@@ -118,7 +140,10 @@ const MyProfile = () => {
                 {invoice.invoiceNumber}
               </Typography>
               <Button variant="outlined" onClick={() => downloadInvoice(invoice)}>
-                <FormattedMessage id="myProfile.downLoadInvoice" defaultMessage="Stáhnout fakturu" />
+                <FormattedMessage
+                  id="myProfile.downLoadInvoice"
+                  defaultMessage="Stáhnout fakturu"
+                />
               </Button>
             </Stack>
           ))}
@@ -132,7 +157,10 @@ const MyProfile = () => {
             </Button>
             {subscriptionId && (
               <Button onClick={() => cancelSubscription(subscriptionId)}>
-                <FormattedMessage id="myProfile.cancelSubscription" defaultMessage="Ukončit předplatné" />
+                <FormattedMessage
+                  id="myProfile.cancelSubscription"
+                  defaultMessage="Ukončit předplatné"
+                />
               </Button>
             )}
           </Stack>
@@ -167,7 +195,7 @@ const MyProfile = () => {
         )}
       </>
     )
-  )
-}
+  );
+};
 
-export default MyProfile
+export default MyProfile;

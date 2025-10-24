@@ -1,34 +1,34 @@
-import { Stack, Box, Button, Typography } from '@mui/material'
-import dayjs from 'dayjs'
-import { useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import { getDateTimeFromUtcToLocal, type CreateVisitType } from '../entity'
-import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker'
-import TextField from '../../../app/components/TextField'
-import Switch from '../../../app/components/Switch/SwitchButton'
-import { FormattedMessage, useIntl } from 'react-intl'
-import ClientAutoComplete from '../../client/components/ClientAutoComplete'
-import ServicesAutoComplete from '../../service/components/ServicesAutoComplete'
-import { useCreateVisitMutation, useVisitsQuery } from '../queries'
-import { firstNameValidationrule, phoneValidationRule } from '../../entity'
-import { useParams } from 'react-router-dom'
+import { Stack, Box, Button, Typography } from '@mui/material';
+import dayjs from 'dayjs';
+import { useState } from 'react';
+import { useForm, useWatch } from 'react-hook-form';
+import { getDateTimeFromUtcToLocal, type CreateVisitType } from '../entity';
+import BasicDateTimePicker from '../../../app/components/BasicDateTimePicker';
+import TextField from '../../../app/components/TextField';
+import Switch from '../../../app/components/Switch/SwitchButton';
+import { FormattedMessage, useIntl } from 'react-intl';
+import ClientAutoComplete from '../../client/components/ClientAutoComplete';
+import ServicesAutoComplete from '../../service/components/ServicesAutoComplete';
+import { useCreateVisitMutation, useVisitsQuery } from '../queries';
+import { firstNameValidationrule, phoneValidationRule } from '../../entity';
+import { useParams } from 'react-router-dom';
 
 export const useAddVisitForm = () => {
-  const [isNewClient, setIsNewClient] = useState(false)
+  const [isNewClient, setIsNewClient] = useState(false);
   const { control, resetField, handleSubmit, setValue } = useForm<CreateVisitType>({
     defaultValues: { depositRequired: false },
-  })
-  const date = useWatch({ control, name: 'date' })
-  const depositRequired = useWatch({ control, name: 'depositRequired' })
-  const { data: visitsOnSelectedDate } = useVisitsQuery({ date: dayjs(date) })
+  });
+  const date = useWatch({ control, name: 'date' });
+  const depositRequired = useWatch({ control, name: 'depositRequired' });
+  const { data: visitsOnSelectedDate } = useVisitsQuery({ date: dayjs(date) });
 
   const { mutate: createVisitMutation } = useCreateVisitMutation({
     onSuccess: () => {
-      setIsNewClient(false)
-      resetField('clientId')
-      resetField('serviceIds')
+      setIsNewClient(false);
+      resetField('clientId');
+      resetField('serviceIds');
     },
-  })
+  });
 
   return {
     control,
@@ -40,41 +40,53 @@ export const useAddVisitForm = () => {
     visitsOnSelectedDate,
     handleSubmit,
     createVisitMutation,
-  }
-}
+  };
+};
 
-type AddVisitFormProps = Omit<ReturnType<typeof useAddVisitForm>, 'handleSubmit' | 'createVisitMutation' | 'title'>
+type AddVisitFormProps = Omit<
+  ReturnType<typeof useAddVisitForm>,
+  'handleSubmit' | 'createVisitMutation' | 'title'
+>;
 
 const AddVisitForm = (props: AddVisitFormProps) => {
-  const intl = useIntl()
-  const { clientId } = useParams()
-  const { control, isNewClient, setValue, setIsNewClient, resetField, depositRequired, visitsOnSelectedDate } = props
+  const intl = useIntl();
+  const { clientId } = useParams();
+  const {
+    control,
+    isNewClient,
+    setValue,
+    setIsNewClient,
+    resetField,
+    depositRequired,
+    visitsOnSelectedDate,
+  } = props;
 
   return (
     <>
       <BasicDateTimePicker
         fieldPath="date"
         control={control}
-        onAccept={(date) => date && setValue('dateTo', date)}
+        onAccept={date => date && setValue('dateTo', date)}
         rules={{
-          validate: (value) => {
+          validate: value => {
             if (!value) {
               return intl.formatMessage({
                 defaultMessage: 'Musíte vybrat datum a čas',
                 id: 'addVisitForm.chooseDateTime',
-              })
+              });
             }
 
             const isTaken = visitsOnSelectedDate?.some(
-              (visit) => getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date)
-            )
+              visit =>
+                getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date)
+            );
 
             return isTaken
               ? intl.formatMessage({
                   defaultMessage: 'Na tento čas máte již objednanou návštěvu.',
                   id: 'addVisitForm.visitTimeAlreadyBooked',
                 })
-              : true
+              : true;
           },
         }}
       />
@@ -82,7 +94,11 @@ const AddVisitForm = (props: AddVisitFormProps) => {
       <Stack direction="row" spacing={1} alignItems="center">
         {!isNewClient && (
           <Box sx={{ flex: 9 }}>
-            <ClientAutoComplete fieldPath="clientId" control={control} defaultValue={clientId ?? undefined} />
+            <ClientAutoComplete
+              fieldPath="clientId"
+              control={control}
+              defaultValue={clientId ?? undefined}
+            />
           </Box>
         )}
         <Box sx={{ flex: 3 }}>
@@ -91,9 +107,10 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             fullWidth
             sx={{ lineHeight: '18px' }}
             onClick={() => {
-              setIsNewClient((prev) => !prev)
-              resetField('clientId')
-            }}>
+              setIsNewClient(prev => !prev);
+              resetField('clientId');
+            }}
+          >
             <FormattedMessage id="addVisitForm.newClientButton" defaultMessage="Nový klient" />
           </Button>
         </Box>
@@ -152,9 +169,13 @@ const AddVisitForm = (props: AddVisitFormProps) => {
             bgcolor="#dddddd"
             paddingX="1rem"
             borderRadius="10px"
-            boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)">
+            boxShadow="0px 1px 7px 0px rgba(0,0,0,0.12)"
+          >
             <Typography fontWeight={600} color="secondary.main">
-              <FormattedMessage id="addVisitForm.depositRequiredSwitch" defaultMessage="Chci zálohu" />
+              <FormattedMessage
+                id="addVisitForm.depositRequiredSwitch"
+                defaultMessage="Chci zálohu"
+              />
             </Typography>
             <Switch control={control} fieldPath="depositRequired" />
           </Stack>
@@ -175,7 +196,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
       )}
       <ServicesAutoComplete fieldPath="serviceIds" control={control} />
     </>
-  )
-}
+  );
+};
 
-export default AddVisitForm
+export default AddVisitForm;

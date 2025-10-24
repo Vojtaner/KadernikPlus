@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
-import FormDialog from '../../../app/components/FormDialog'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { Button } from '@mui/material'
-import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity'
-import StockItemForm, { useStockItemForm } from './StockItemForm'
-import { addPropsToReactElement } from '../../entity'
-import StockTutorial from '../../../../public/assets/images/stock_tutorial.png'
-import FullScreenImage from '../../../components/FullscreenImage'
+import React, { useState } from 'react';
+import FormDialog from '../../../app/components/FormDialog';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Button } from '@mui/material';
+import type { StockItemDefaultValuesType, StockItemFormUsagePurposeType } from '../entity';
+import StockItemForm, { useStockItemForm } from './StockItemForm';
+import { addPropsToReactElement } from '../../entity';
+import StockTutorial from '../../../../public/assets/images/stock_tutorial.png';
+import FullScreenImage from '../../../components/FullscreenImage';
 
 type StockItemDialogProps = {
-  defaultValues?: Partial<StockItemDefaultValuesType>
-  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
-  formUsagePurpose: StockItemFormUsagePurposeType
-}
+  defaultValues?: Partial<StockItemDefaultValuesType>;
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>;
+  formUsagePurpose: StockItemFormUsagePurposeType;
+};
 
 export const StockItemDialog = (props: StockItemDialogProps) => {
-  const { defaultValues, openButton, formUsagePurpose } = props
-  const [open, setOpen] = useState(false)
-  const intl = useIntl()
+  const { defaultValues, openButton, formUsagePurpose } = props;
+  const [open, setOpen] = useState(false);
+  const intl = useIntl();
 
   const {
     control,
@@ -30,32 +30,35 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
     setIsPurchaseStockItem,
     stockItem: { unit, avgUnitPrice, lastPackageQuantity },
     createOrUpdateStockItemMutation,
-  } = useStockItemForm(defaultValues)
+  } = useStockItemForm(defaultValues);
 
   if (isLoading) {
-    return null
+    return null;
   }
   if (stocks && !stocks.length) {
     throw new Error(
-      intl.formatMessage({ defaultMessage: 'Nepodařilo se načíst sklad.', id: 'stockItem.stockNotFound' })
-    )
+      intl.formatMessage({
+        defaultMessage: 'Nepodařilo se načíst sklad.',
+        id: 'stockItem.stockNotFound',
+      })
+    );
   }
 
   const handleClickOpen = () => {
     if (!defaultValues) {
-      reset({})
+      reset({});
     }
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   const onSubmit = (data: StockItemDefaultValuesType) => {
-    createOrUpdateStockItemMutation({ ...data, stockId: stocks![0].id })
-    handleClose()
-  }
+    createOrUpdateStockItemMutation({ ...data, stockId: stocks![0].id });
+    handleClose();
+  };
 
   return (
     <FormDialog<StockItemDefaultValuesType>
@@ -87,11 +90,14 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
       }
       onOpenButton={addPropsToReactElement(openButton, {
         onClick: (e: React.MouseEvent) => {
-          openButton.props.onClick?.(e)
-          handleClickOpen()
+          openButton.props.onClick?.(e);
+          handleClickOpen();
         },
       })}
-      title={intl.formatMessage({ defaultMessage: 'Upravit skladovou zásobu', id: 'stockItem.editStockItem' })}
+      title={intl.formatMessage({
+        defaultMessage: 'Upravit skladovou zásobu',
+        id: 'stockItem.editStockItem',
+      })}
     />
-  )
-}
+  );
+};

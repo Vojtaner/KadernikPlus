@@ -1,30 +1,30 @@
-import type { AddProcedureStockAllowanceType } from '../hairdresser/procedure/components/AddProcedureButton'
+import type { AddProcedureStockAllowanceType } from '../hairdresser/procedure/components/AddProcedureButton';
 
 export type Procedure = {
-  id: string
-  visitId: string
-  stepOrder: number
-  description: string | null
-  createdAt: Date
-  stockAllowanceId: string | null
-  stockAllowances: AddProcedureStockAllowanceType
-}
+  id: string;
+  visitId: string;
+  stepOrder: number;
+  description: string | null;
+  createdAt: Date;
+  stockAllowanceId: string | null;
+  stockAllowances: AddProcedureStockAllowanceType;
+};
 
 export type CreateProcedure = {
-  id?: string
-  stepOrder: number
-  createdAt: Date
-  description?: string
-  visitId: string
-  stockAllowances: AddProcedureStockAllowanceType
-}
+  id?: string;
+  stepOrder: number;
+  createdAt: Date;
+  description?: string;
+  visitId: string;
+  stockAllowances: AddProcedureStockAllowanceType;
+};
 
 export type PostNewProcedure = {
-  description: string
-  visitId: string
+  description: string;
+  visitId: string;
   stockAllowances: {
-    stockItemId: string
-    quantity: number
-    userId: string
-  }[]
-}
+    stockItemId: string;
+    quantity: number;
+    userId: string;
+  }[];
+};

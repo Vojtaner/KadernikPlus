@@ -1,40 +1,40 @@
-import Box from '@mui/material/Box'
-import { type GridColDef } from '@mui/x-data-grid'
-import BoxIcon from '../../app/components/BoxIcon'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import AppDataGrid from '../../app/components/DataGrid'
-import ErrorBoundary from './ErrorBoundary'
-import Loader from '../../components/Loader'
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
-import Stack from '@mui/material/Stack'
-import { StockItemDialog } from '../stock/components/StockItemDialog'
-import { mapStocksStockItemsToFlatStockItems, type ExistingStockItem } from '../stock/entity'
-import { useStockItemsQuery } from '../stock/queries'
-import { formatToCZK } from '../visits/components/VisitDetailGrid'
-import DeleteStockItemDialog from '../stock/components/DeleteStockItemDialog'
-import { useIntl, type IntlShape } from 'react-intl'
+import Box from '@mui/material/Box';
+import { type GridColDef } from '@mui/x-data-grid';
+import BoxIcon from '../../app/components/BoxIcon';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import AppDataGrid from '../../app/components/DataGrid';
+import ErrorBoundary from './ErrorBoundary';
+import Loader from '../../components/Loader';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Stack from '@mui/material/Stack';
+import { StockItemDialog } from '../stock/components/StockItemDialog';
+import { mapStocksStockItemsToFlatStockItems, type ExistingStockItem } from '../stock/entity';
+import { useStockItemsQuery } from '../stock/queries';
+import { formatToCZK } from '../visits/components/VisitDetailGrid';
+import DeleteStockItemDialog from '../stock/components/DeleteStockItemDialog';
+import { useIntl, type IntlShape } from 'react-intl';
 
 const Stock = () => {
-  const { data: stocksWithStockItems, isError, isLoading } = useStockItemsQuery(undefined)
-  const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems)
-  const intl = useIntl()
+  const { data: stocksWithStockItems, isError, isLoading } = useStockItemsQuery(undefined);
+  const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems);
+  const intl = useIntl();
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (isError || !stockItems) {
-    return <ErrorBoundary />
+    return <ErrorBoundary />;
   }
 
   return (
     <Box sx={{ height: '100%' }}>
       <AppDataGrid rows={stockItems} columns={createColumns(intl)} />
     </Box>
-  )
-}
+  );
+};
 
-export default Stock
+export default Stock;
 
 const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>[] => [
   { field: 'itemName', flex: 3, headerName: 'Položka', disableColumnMenu: true, minWidth: 100 },
@@ -44,8 +44,8 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
     headerName: `${intl.formatMessage({ id: 'stock.price', defaultMessage: 'Cena' })}`,
     disableColumnMenu: true,
     width: 70,
-    renderCell: (params) => {
-      return formatToCZK(params.row.totalPrice, 0, 0)
+    renderCell: params => {
+      return formatToCZK(params.row.totalPrice, 0, 0);
     },
   },
   {
@@ -54,13 +54,13 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
     headerName: `${intl.formatMessage({ id: 'stock.packageAndThreshold', defaultMessage: 'Bal./Min.' })}`,
     disableColumnMenu: true,
     width: 85,
-    renderCell: (params) => {
+    renderCell: params => {
       return (
         <>
           <span style={{ color: '#888', marginLeft: 0 }}>{params.row.packageCount} ks</span> {'/'}
           <span style={{ color: '#888', marginLeft: 0 }}>{params.row.threshold} ks</span>
         </>
-      )
+      );
     },
   },
   {
@@ -69,9 +69,10 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
     flex: 2,
     width: 75,
     disableColumnMenu: true,
-    renderCell: (params) => (
+    renderCell: params => (
       <>
-        {params.row.quantity} <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
+        {params.row.quantity}{' '}
+        <span style={{ color: '#888', marginLeft: 0 }}>{params.row.unit}</span>
       </>
     ),
   },
@@ -83,7 +84,7 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
     editable: false,
     display: 'flex',
     disableColumnMenu: true,
-    renderCell: (params) => (
+    renderCell: params => (
       <Stack direction="row" spacing={1}>
         <StockItemDialog
           formUsagePurpose="stockItem"
@@ -120,4 +121,4 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
       </Stack>
     ),
   },
-]
+];

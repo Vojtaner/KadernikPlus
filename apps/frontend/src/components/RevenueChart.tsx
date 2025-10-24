@@ -1,34 +1,34 @@
-import { Stack } from '@mui/material'
-import dayjs from 'dayjs'
-import Loader from './Loader'
-import { useAppForm } from '../reactHookForm/store'
-import AppBarChart from '../hairdresser/components/BarChart'
-import { usePersistentFilters } from '../hooks'
-import { BasicDatePicker } from '../app/components/BasicDatePicker'
-import { useVisitsQuery } from '../hairdresser/visits/queries'
+import { Stack } from '@mui/material';
+import dayjs from 'dayjs';
+import Loader from './Loader';
+import { useAppForm } from '../reactHookForm/store';
+import AppBarChart from '../hairdresser/components/BarChart';
+import { usePersistentFilters } from '../hooks';
+import { BasicDatePicker } from '../app/components/BasicDatePicker';
+import { useVisitsQuery } from '../hairdresser/visits/queries';
 
 const RevenuChart = () => {
-  const [filters, updateFilter] = usePersistentFilters()
+  const [filters, updateFilter] = usePersistentFilters();
   const {
     revenue: {
       dates: { from, to },
     },
-  } = filters
+  } = filters;
 
-  const dayjsFrom = dayjs(from)
-  const dayjsTo = dayjs(to)
+  const dayjsFrom = dayjs(from);
+  const dayjsTo = dayjs(to);
 
   const { control } = useAppForm({
     defaultValues: {
       from: dayjsFrom,
       to: dayjsTo,
     },
-  })
+  });
 
-  const { data: visitData } = useVisitsQuery({ query: { from: dayjsFrom, to: dayjsTo } })
+  const { data: visitData } = useVisitsQuery({ query: { from: dayjsFrom, to: dayjsTo } });
 
   if (!visitData) {
-    return <Loader />
+    return <Loader />;
   }
 
   return (
@@ -38,26 +38,26 @@ const RevenuChart = () => {
           label="Datum od"
           control={control}
           fieldPath="from"
-          onChange={(date) => {
-            updateFilter((draft) => {
-              draft.revenue.dates.from = date?.toISOString()
-            })
+          onChange={date => {
+            updateFilter(draft => {
+              draft.revenue.dates.from = date?.toISOString();
+            });
           }}
         />
         <BasicDatePicker
           label="Datum do"
           control={control}
           fieldPath="to"
-          onChange={(date) => {
-            updateFilter((draft) => {
-              draft.revenue.dates.to = date?.toISOString()
-            })
+          onChange={date => {
+            updateFilter(draft => {
+              draft.revenue.dates.to = date?.toISOString();
+            });
           }}
         />
       </Stack>
       <AppBarChart visitData={visitData} from={dayjsFrom} to={dayjsTo} />
     </Stack>
-  )
-}
+  );
+};
 
-export default RevenuChart
+export default RevenuChart;

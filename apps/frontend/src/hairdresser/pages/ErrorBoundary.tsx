@@ -1,7 +1,7 @@
-import { useIntl } from 'react-intl'
+import { useIntl } from 'react-intl';
 
 const ErrorBoundary = () => {
-  const intl = useIntl()
+  const intl = useIntl();
 
   return (
     <div>
@@ -10,7 +10,7 @@ const ErrorBoundary = () => {
         id: 'errorBoundary',
       })}
     </div>
-  )
-}
+  );
+};
 
-export default ErrorBoundary
+export default ErrorBoundary;

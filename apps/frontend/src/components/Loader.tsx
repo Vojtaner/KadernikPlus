@@ -1,5 +1,5 @@
-import { Stack, Typography } from '@mui/material'
-import CircularProgress from '@mui/material/CircularProgress'
+import { Stack, Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const Loader = (props: { title?: string; direction?: 'row' | 'column' }) => {
   return (
@@ -10,11 +10,12 @@ const Loader = (props: { title?: string; direction?: 'row' | 'column' }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-      }}>
+      }}
+    >
       <CircularProgress color="secondary" />
       <Typography color="grey">{props.title}</Typography>
     </Stack>
-  )
-}
+  );
+};
 
-export default Loader
+export default Loader;

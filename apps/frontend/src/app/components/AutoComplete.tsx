@@ -1,21 +1,27 @@
-import { Autocomplete, TextField } from '@mui/material'
-import { Controller, type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
-import type { SyntheticEvent } from 'react'
-import type { Identifiable } from './SelectField'
+import { Autocomplete, TextField } from '@mui/material';
+import {
+  Controller,
+  type Control,
+  type FieldPath,
+  type FieldPathValue,
+  type FieldValues,
+} from 'react-hook-form';
+import type { SyntheticEvent } from 'react';
+import type { Identifiable } from './SelectField';
 
 type AutoCompleteProps<TFieldValues extends FieldValues, TOption extends object> = {
-  fieldPath: FieldPath<TFieldValues>
-  control: Control<TFieldValues>
-  options: TOption[]
-  label: string
-  getOptionLabel: (option: TOption) => string
-  getOptionValue: (option: TOption) => string | number
-  onChange?: (event: SyntheticEvent) => void
-  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
-  placeholder?: string
-  disabled?: boolean
-  required?: boolean
-}
+  fieldPath: FieldPath<TFieldValues>;
+  control: Control<TFieldValues>;
+  options: TOption[];
+  label: string;
+  getOptionLabel: (option: TOption) => string;
+  getOptionValue: (option: TOption) => string | number;
+  onChange?: (event: SyntheticEvent) => void;
+  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>;
+  placeholder?: string;
+  disabled?: boolean;
+  required?: boolean;
+};
 
 function AutoComplete<TFieldValues extends FieldValues, TOption extends object>({
   fieldPath,
@@ -30,9 +36,9 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
   disabled,
   required,
 }: AutoCompleteProps<TFieldValues, TOption>) {
-  const labelFn = getOptionLabel ?? ((opt: Identifiable) => opt?.name ?? '')
+  const labelFn = getOptionLabel ?? ((opt: Identifiable) => opt?.name ?? '');
 
-  const valueFn = getOptionValue ?? ((opt: Identifiable) => opt?.id ?? '')
+  const valueFn = getOptionValue ?? ((opt: Identifiable) => opt?.id ?? '');
 
   return (
     <Controller
@@ -41,7 +47,7 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
       defaultValue={defaultValue}
       rules={required ? { required: 'Toto pole je povinné' } : undefined}
       render={({ field, fieldState }) => {
-        const selected = options.find((opt) => valueFn(opt) === field.value) ?? null
+        const selected = options.find(opt => valueFn(opt) === field.value) ?? null;
 
         return (
           <Autocomplete
@@ -57,10 +63,10 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
             getOptionLabel={labelFn}
             isOptionEqualToValue={(opt, val) => valueFn(opt) === valueFn(val)}
             onChange={(e, option) => {
-              onChange?.(e)
-              field.onChange(option ? valueFn(option) : null)
+              onChange?.(e);
+              field.onChange(option ? valueFn(option) : null);
             }}
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField
                 {...params}
                 label={label}
@@ -70,10 +76,10 @@ function AutoComplete<TFieldValues extends FieldValues, TOption extends object>(
               />
             )}
           />
-        )
+        );
       }}
     />
-  )
+  );
 }
 
-export default AutoComplete
+export default AutoComplete;

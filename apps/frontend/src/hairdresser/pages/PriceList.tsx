@@ -1,48 +1,54 @@
-import Box from '@mui/material/Box'
-import { type GridColDef } from '@mui/x-data-grid'
-import BoxIcon from '../../app/components/BoxIcon'
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
-import AppDataGrid from '../../app/components/DataGrid'
-import type { Service } from '../../entities/service'
-import Loader from '../../components/Loader'
-import ErrorBoundary from './ErrorBoundary'
-import { useServicesQuery } from '../service/queries'
-import AddServiceItemButton from '../service/components/AddServiceItemButton'
-import { useIntl, type IntlShape } from 'react-intl'
+import Box from '@mui/material/Box';
+import { type GridColDef } from '@mui/x-data-grid';
+import BoxIcon from '../../app/components/BoxIcon';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import AppDataGrid from '../../app/components/DataGrid';
+import type { Service } from '../../entities/service';
+import Loader from '../../components/Loader';
+import ErrorBoundary from './ErrorBoundary';
+import { useServicesQuery } from '../service/queries';
+import AddServiceItemButton from '../service/components/AddServiceItemButton';
+import { useIntl, type IntlShape } from 'react-intl';
 
 const PriceList = () => {
-  const { data: services, isLoading, isError } = useServicesQuery()
-  const intl = useIntl()
+  const { data: services, isLoading, isError } = useServicesQuery();
+  const intl = useIntl();
 
   if (isLoading) {
-    return <Loader />
+    return <Loader />;
   }
 
   if (isError || !services) {
-    return <ErrorBoundary />
+    return <ErrorBoundary />;
   }
 
-  const columns = createColumns(intl)
+  const columns = createColumns(intl);
 
   return (
     <Box sx={{ height: '100%' }}>
       <AppDataGrid rows={services} columns={columns} />
     </Box>
-  )
-}
+  );
+};
 
-export default PriceList
+export default PriceList;
 
 const createColumns = (intl: IntlShape): GridColDef<Service[][number]>[] => {
   return [
-    { field: 'serviceName', headerName: 'Položka', flex: 3, disableColumnMenu: true, minWidth: 160 },
+    {
+      field: 'serviceName',
+      headerName: 'Položka',
+      flex: 3,
+      disableColumnMenu: true,
+      minWidth: 160,
+    },
     {
       field: 'basePrice',
       headerName: `${intl.formatMessage({ id: 'priceList.price', defaultMessage: 'Cena' })}`,
       flex: 3,
       disableColumnMenu: true,
       width: 120,
-      renderCell: (params) => `${params.value},00 Kč`,
+      renderCell: params => `${params.value},00 Kč`,
     },
     {
       field: 'edit',
@@ -52,8 +58,8 @@ const createColumns = (intl: IntlShape): GridColDef<Service[][number]>[] => {
       editable: false,
       display: 'flex',
       disableColumnMenu: true,
-      renderCell: (params) => {
-        const { id, basePrice, serviceName } = params.row
+      renderCell: params => {
+        const { id, basePrice, serviceName } = params.row;
         return (
           <AddServiceItemButton
             defaultValues={{
@@ -70,8 +76,8 @@ const createColumns = (intl: IntlShape): GridColDef<Service[][number]>[] => {
               />
             }
           />
-        )
+        );
       },
     },
-  ]
-}
+  ];
+};

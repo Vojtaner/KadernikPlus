@@ -1,17 +1,17 @@
-import { Stack, Button } from '@mui/material'
-import { useDispatch } from 'react-redux'
-import MenuBox from '../app/components/MenuBox'
-import { useUserDataQuery } from '../queries'
-import { toggleDrawer } from '../store/appUiSlice'
-import { useAppSelector } from '../store/store'
-import SearchBar from '../app/components/SearchBar'
-import { AppLogo } from '../hairdresser/components/AppLogo'
+import { Stack, Button } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import MenuBox from '../app/components/MenuBox';
+import { useUserDataQuery } from '../queries';
+import { toggleDrawer } from '../store/appUiSlice';
+import { useAppSelector } from '../store/store';
+import SearchBar from '../app/components/SearchBar';
+import { AppLogo } from '../hairdresser/components/AppLogo';
 
 const TopBar = () => {
-  const dispatch = useDispatch()
-  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
-  const { data: userData } = useUserDataQuery()
-  const colorScheme = userData?.colorScheme ?? '#c81f5b'
+  const dispatch = useDispatch();
+  const isSearchActive = useAppSelector(state => state.appUi.isSearchActive);
+  const { data: userData } = useUserDataQuery();
+  const colorScheme = userData?.colorScheme ?? '#c81f5b';
 
   return (
     <Stack
@@ -26,7 +26,8 @@ const TopBar = () => {
         overflow: 'hidden',
         transition: 'padding-bottom 0.7s ease',
         background: colorScheme,
-      }}>
+      }}
+    >
       <Stack direction="row" spacing={2} alignItems="center">
         <AppLogo
           sx={{
@@ -35,7 +36,11 @@ const TopBar = () => {
           }}
         />
         {!isSearchActive && (
-          <Button href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w" variant="contained" color="info">
+          <Button
+            href="https://www.youtube.com/channel/UC5SCrgHyD3G0xJZ9Ad5vJ4w"
+            variant="contained"
+            color="info"
+          >
             Video návody
           </Button>
         )}
@@ -50,7 +55,8 @@ const TopBar = () => {
             transform: isSearchActive ? 'translateY(-70%)' : 'translateY(0)',
             transition: 'transform 0.5s ease-in-out',
             position: 'relative',
-          }}>
+          }}
+        >
           <SearchBar />
           <MenuBox onClick={() => dispatch(toggleDrawer())} />
         </Stack>
@@ -63,7 +69,7 @@ const TopBar = () => {
         /> */}
       </Stack>
     </Stack>
-  )
-}
+  );
+};
 
-export default TopBar
+export default TopBar;

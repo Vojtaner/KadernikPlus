@@ -1,10 +1,10 @@
-import { generatePath, matchPath, useLocation, type Params } from 'react-router-dom'
+import { generatePath, matchPath, useLocation, type Params } from 'react-router-dom';
 
 export type AppRoute = {
-  path: string
-  breadcrumb: string
-}
-export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path'] | string
+  path: string;
+  breadcrumb: string;
+};
+export type AppRoutePath = (typeof ROUTES)[keyof typeof ROUTES]['path'] | string;
 
 export const ROUTES = {
   // clients: { path: '/clients', breadcrumb: 'Klienti' },
@@ -23,10 +23,11 @@ export const ROUTES = {
   sms: { path: '/sms', breadcrumb: 'SMSky' },
   home: { path: '/', breadcrumb: 'Přehled' },
   notFound: { path: '*', breadcrumb: 'Nenalezeno' },
-} as const
+} as const;
 
 export const Paths = {
-  clientDetail: (clientId: string): AppRoutePath => generatePath(ROUTES.clientDetail.path, { clientId }),
+  clientDetail: (clientId: string): AppRoutePath =>
+    generatePath(ROUTES.clientDetail.path, { clientId }),
 
   visitDetail: (clientId: string, visitId: string): AppRoutePath =>
     generatePath(ROUTES.visitDetail.path, { clientId, visitId }),
@@ -36,20 +37,20 @@ export const Paths = {
   stock: (stockId: string): AppRoutePath => generatePath(ROUTES.stock.path, { stockId }),
 
   consumption: (teamId: string): AppRoutePath => generatePath(ROUTES.consumption.path, { teamId }),
-}
+};
 
 export type CurrentRoute = {
-  key: keyof typeof ROUTES
-  path: string
-  breadcrumb: string
-  params: Params<string>
-} | null
+  key: keyof typeof ROUTES;
+  path: string;
+  breadcrumb: string;
+  params: Params<string>;
+} | null;
 
 export const useCurrentRoute = (): CurrentRoute => {
-  const location = useLocation()
+  const location = useLocation();
 
   for (const [key, route] of Object.entries(ROUTES)) {
-    const match = matchPath({ path: route.path, end: route.path !== '*' }, location.pathname)
+    const match = matchPath({ path: route.path, end: route.path !== '*' }, location.pathname);
 
     if (match) {
       return {
@@ -57,9 +58,9 @@ export const useCurrentRoute = (): CurrentRoute => {
         path: route.path,
         breadcrumb: route.breadcrumb,
         params: match.params,
-      }
+      };
     }
   }
 
-  return null
-}
+  return null;
+};

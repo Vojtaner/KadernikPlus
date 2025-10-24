@@ -1,30 +1,30 @@
-import { Button } from '@mui/material'
-import FormDialog from '../../../app/components/FormDialog'
+import { Button } from '@mui/material';
+import FormDialog from '../../../app/components/FormDialog';
 
-import AddVisitForm, { useAddVisitForm } from './AddVisitForm'
-import { useState, type ReactElement } from 'react'
-import type { CreateVisitType } from '../entity'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { addPropsToReactElement } from '../../entity'
+import AddVisitForm, { useAddVisitForm } from './AddVisitForm';
+import { useState, type ReactElement } from 'react';
+import type { CreateVisitType } from '../entity';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { addPropsToReactElement } from '../../entity';
 
 export const AddVisitFormDialog = (props: { openButton: ReactElement }) => {
-  const [open, setOpen] = useState(false)
-  const { setIsNewClient, handleSubmit, createVisitMutation, ...formProps } = useAddVisitForm()
-  const intl = useIntl()
+  const [open, setOpen] = useState(false);
+  const { setIsNewClient, handleSubmit, createVisitMutation, ...formProps } = useAddVisitForm();
+  const intl = useIntl();
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setIsNewClient(false)
-    setOpen(false)
-  }
+    setIsNewClient(false);
+    setOpen(false);
+  };
 
   const onSubmit = (data: CreateVisitType) => {
-    createVisitMutation(data)
-    handleClose()
-  }
+    createVisitMutation(data);
+    handleClose();
+  };
 
   return (
     <FormDialog<CreateVisitType>
@@ -48,7 +48,7 @@ export const AddVisitFormDialog = (props: { openButton: ReactElement }) => {
         id: 'addVisitFormDialog.order',
       })}
     />
-  )
-}
+  );
+};
 
-export default AddVisitFormDialog
+export default AddVisitFormDialog;

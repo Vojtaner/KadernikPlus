@@ -7,40 +7,42 @@ import {
   type FieldPathValue,
   type FieldValues,
   type RegisterOptions,
-} from 'react-hook-form'
-import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material'
+} from 'react-hook-form';
+import { TextField as MuiTextField, type TextFieldProps as MuiTextFieldProps } from '@mui/material';
 
 export type TextFieldProps<TFieldValues extends FieldValues = FieldValues> =
   | ({
-      readonly: true
-      defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
-      disabled?: boolean
+      readonly: true;
+      defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>;
+      disabled?: boolean;
 
-      control?: never
-      rules?: never
+      control?: never;
+      rules?: never;
     } & Omit<MuiTextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'>)
   | ({
-      readonly?: false
-      fieldPath: FieldPath<TFieldValues>
-      control?: Control<TFieldValues>
+      readonly?: false;
+      fieldPath: FieldPath<TFieldValues>;
+      control?: Control<TFieldValues>;
       rules?: Omit<
         RegisterOptions<TFieldValues, FieldPath<TFieldValues>>,
         'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-      >
-      defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
-      disabled?: boolean
-    } & Omit<MuiTextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'>)
+      >;
+      defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>;
+      disabled?: boolean;
+    } & Omit<MuiTextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'>);
 
-function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFieldProps<TFieldValues>) {
-  const { control, rules, disabled, defaultValue, readonly, ...rest } = props
+function TextField<TFieldValues extends FieldValues = FieldValues>(
+  props: TextFieldProps<TFieldValues>
+) {
+  const { control, rules, disabled, defaultValue, readonly, ...rest } = props;
 
   if (readonly) {
-    return <MuiTextField {...rest} value={defaultValue ?? ''} disabled />
+    return <MuiTextField {...rest} value={defaultValue ?? ''} disabled />;
   }
 
-  const { fieldPath, ...restUnControlledInput } = props
-  const { errors } = useFormState({ control, name: fieldPath })
-  const error: string = get(errors, fieldPath)?.message
+  const { fieldPath, ...restUnControlledInput } = props;
+  const { errors } = useFormState({ control, name: fieldPath });
+  const error: string = get(errors, fieldPath)?.message;
 
   return (
     <Controller
@@ -58,25 +60,25 @@ function TextField<TFieldValues extends FieldValues = FieldValues>(props: TextFi
           error={!!error}
           value={value || undefined}
           onBlur={onBlur}
-          onChange={(e) => {
-            const raw = e.target.value
+          onChange={e => {
+            const raw = e.target.value;
 
             if (rest.type === 'number') {
               if (raw === '') {
-                onChange('')
-                return
+                onChange('');
+                return;
               }
 
-              const num = Number(raw)
-              onChange(!isNaN(num) && num >= 0 ? num : 0)
+              const num = Number(raw);
+              onChange(!isNaN(num) && num >= 0 ? num : 0);
             } else {
-              onChange(raw)
+              onChange(raw);
             }
           }}
         />
       )}
     />
-  )
+  );
 }
 
-export default TextField
+export default TextField;

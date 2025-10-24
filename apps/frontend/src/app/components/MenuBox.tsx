@@ -1,13 +1,16 @@
-import Box from '@mui/material/Box'
-import MenuIcon from '@mui/icons-material/Menu'
-import type { SxProps } from '@mui/material'
+import Box from '@mui/material/Box';
+import MenuIcon from '@mui/icons-material/Menu';
+import type { SxProps } from '@mui/material';
 
-const MenuBox = (props: { sx?: SxProps; onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void }) => {
-  const { onClick, sx } = props
+const MenuBox = (props: {
+  sx?: SxProps;
+  onClick: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+}) => {
+  const { onClick, sx } = props;
 
   return (
     <Box
-      onClick={(e) => onClick(e)}
+      onClick={e => onClick(e)}
       sx={{
         width: 48,
         display: 'flex',
@@ -18,10 +21,11 @@ const MenuBox = (props: { sx?: SxProps; onClick: (event: React.MouseEvent<HTMLDi
         justifyContent: 'center',
         cursor: 'pointer',
         ...sx,
-      }}>
+      }}
+    >
       <MenuIcon fontSize="large" sx={{ color: '#f0f0f0' }} />
     </Box>
-  )
-}
+  );
+};
 
-export default MenuBox
+export default MenuBox;

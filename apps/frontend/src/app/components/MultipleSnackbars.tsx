@@ -1,11 +1,11 @@
-import { styled } from '@mui/material/styles'
-import Stack from '@mui/material/Stack'
-import Box from '@mui/material/Box'
-import type { ReactNode } from 'react'
+import { styled } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
+import type { ReactNode } from 'react';
 
 interface MultipleSnackbarsProps {
-  children: ReactNode
-  [key: string]: unknown
+  children: ReactNode;
+  [key: string]: unknown;
 }
 
 const MultipleSnackbarsRoot = styled(Box, {
@@ -33,7 +33,7 @@ const MultipleSnackbarsRoot = styled(Box, {
     borderRadius: '0.5rem',
     boxShadow: theme.shadows[6],
   },
-}))
+}));
 
 const MultipleSnackbars = ({ children, ...other }: MultipleSnackbarsProps) => {
   return (
@@ -42,7 +42,7 @@ const MultipleSnackbars = ({ children, ...other }: MultipleSnackbarsProps) => {
         {children}
       </Stack>
     </MultipleSnackbarsRoot>
-  )
-}
+  );
+};
 
-export default MultipleSnackbars
+export default MultipleSnackbars;

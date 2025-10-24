@@ -1,14 +1,14 @@
-import { Typography } from '@mui/material'
-import { useAppSelector } from '../../store/store'
-import SearchResult from '../../components/SearchResult'
-import { FormattedMessage } from 'react-intl'
+import { Typography } from '@mui/material';
+import { useAppSelector } from '../../store/store';
+import SearchResult from '../../components/SearchResult';
+import { FormattedMessage } from 'react-intl';
 
 const SearchResults = () => {
-  const isSearchActive = useAppSelector((state) => state.appUi.isSearchActive)
-  const searchResults = useAppSelector((state) => state.searchResults)
+  const isSearchActive = useAppSelector(state => state.appUi.isSearchActive);
+  const searchResults = useAppSelector(state => state.searchResults);
 
   if (!isSearchActive) {
-    return null
+    return null;
   }
 
   if (isSearchActive && !searchResults.searchResults.length) {
@@ -16,12 +16,12 @@ const SearchResults = () => {
       <Typography>
         <FormattedMessage id="searchResult.noData" defaultMessage="Data nenalezena" />
       </Typography>
-    )
+    );
   }
 
   return (
     <>
-      {searchResults.searchResults.map((client) => {
+      {searchResults.searchResults.map(client => {
         return (
           <SearchResult
             key={client.id}
@@ -31,10 +31,10 @@ const SearchResults = () => {
             }}
             clientData={client}
           />
-        )
+        );
       })}
     </>
-  )
-}
+  );
+};
 
-export default SearchResults
+export default SearchResults;

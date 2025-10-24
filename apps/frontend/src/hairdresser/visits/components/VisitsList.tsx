@@ -1,16 +1,16 @@
-import { Stack, Box, Typography } from '@mui/material'
-import type { GridColDef } from '@mui/x-data-grid'
-import dayjs from 'dayjs'
-import { useForm } from 'react-hook-form'
-import { useIntl, type IntlShape } from 'react-intl'
-import { BasicDatePicker } from '../../../app/components/BasicDatePicker'
-import AppDataGrid from '../../../app/components/DataGrid'
-import { formatNameShort } from '../../../entity'
-import { type VisitListApplyFilter, useAppNavigate, useVisitListFilters } from '../../../hooks'
-import { FilterTableButton } from '../../pages/Consumption'
-import Loader from '../../../components/Loader'
-import { Paths } from '../../../routes/AppRoutes'
-import { getMissingStockAllowanceError } from './VisitDetailGrid'
+import { Stack, Box, Typography } from '@mui/material';
+import type { GridColDef } from '@mui/x-data-grid';
+import dayjs from 'dayjs';
+import { useForm } from 'react-hook-form';
+import { useIntl, type IntlShape } from 'react-intl';
+import { BasicDatePicker } from '../../../app/components/BasicDatePicker';
+import AppDataGrid from '../../../app/components/DataGrid';
+import { formatNameShort } from '../../../entity';
+import { type VisitListApplyFilter, useAppNavigate, useVisitListFilters } from '../../../hooks';
+import { FilterTableButton } from '../../pages/Consumption';
+import Loader from '../../../components/Loader';
+import { Paths } from '../../../routes/AppRoutes';
+import { getMissingStockAllowanceError } from './VisitDetailGrid';
 import {
   DepositStatus,
   getIsVisitInPast,
@@ -18,66 +18,75 @@ import {
   getTimeFromUtcToLocal,
   type VisitRow,
   type VisitWithServicesWithProceduresWithStockAllowances,
-} from '../entity'
-import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import { useVisitsQuery } from '../queries'
-import CreditCardOffIcon from '@mui/icons-material/CreditCardOff'
-import CreditScoreIcon from '@mui/icons-material/CreditScore'
-import { getButtonStyle } from '../../entity'
-import SmsSendDialog from '../../../components/SmsSendDialog'
-import SendIcon from '@mui/icons-material/Send'
-import AppTheme from '../../../AppTheme'
-import BoxIcon from '../../../app/components/BoxIcon'
+} from '../entity';
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined';
+import { useVisitsQuery } from '../queries';
+import CreditCardOffIcon from '@mui/icons-material/CreditCardOff';
+import CreditScoreIcon from '@mui/icons-material/CreditScore';
+import { getButtonStyle } from '../../entity';
+import SmsSendDialog from '../../../components/SmsSendDialog';
+import SendIcon from '@mui/icons-material/Send';
+import AppTheme from '../../../AppTheme';
+import BoxIcon from '../../../app/components/BoxIcon';
 
 type VisitListProps = {
-  columnHeaderHeight?: 0
-  hideFooter?: boolean
-  onlyOpenVisits?: boolean
-  visitListApplyFilter: VisitListApplyFilter
-  enableFilters?: boolean
-}
+  columnHeaderHeight?: 0;
+  hideFooter?: boolean;
+  onlyOpenVisits?: boolean;
+  visitListApplyFilter: VisitListApplyFilter;
+  enableFilters?: boolean;
+};
 
 const VisitsList = (props: VisitListProps) => {
-  const { columnHeaderHeight, hideFooter = false, visitListApplyFilter, enableFilters = true } = props
-  const intl = useIntl()
-  const navigate = useAppNavigate()
+  const {
+    columnHeaderHeight,
+    hideFooter = false,
+    visitListApplyFilter,
+    enableFilters = true,
+  } = props;
+  const intl = useIntl();
+  const navigate = useAppNavigate();
 
-  const [visitListFilters, updateVisitFilters] = useVisitListFilters(visitListApplyFilter)
+  const [visitListFilters, updateVisitFilters] = useVisitListFilters(visitListApplyFilter);
 
   const { control } = useForm({
     defaultValues: {
       from: visitListFilters.dates.from,
       to: visitListFilters.dates.to,
     },
-  })
+  });
 
-  const onlyOpenVisits = visitListApplyFilter === 'onlyOpenVisits'
+  const onlyOpenVisits = visitListApplyFilter === 'onlyOpenVisits';
 
   const { data: visitData } = useVisitsQuery({
     query: !onlyOpenVisits
       ? { from: dayjs(visitListFilters.dates.from), to: dayjs(visitListFilters.dates.to) }
       : undefined,
-  })
+  });
 
   if (!visitData) {
-    return <Loader />
+    return <Loader />;
   }
 
-  const onlyOpenVisitsData = visitData.filter((visit) => !visit.visitStatus && getIsVisitInPast(visit.date))
+  const onlyOpenVisitsData = visitData.filter(
+    visit => !visit.visitStatus && getIsVisitInPast(visit.date)
+  );
 
   const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
-    (visit) => visit.visitStatus && getMissingStockAllowanceError(intl, visit.procedures)
-  )
+    visit => visit.visitStatus && getMissingStockAllowanceError(intl, visit.procedures)
+  );
 
   const filteredData =
-    visitListFilters.view === 'byClosedNoStockAllowances' ? onlyClosedVisitsWithoutStockAllowances : visitData
+    visitListFilters.view === 'byClosedNoStockAllowances'
+      ? onlyClosedVisitsWithoutStockAllowances
+      : visitData;
 
   const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  )
+  );
 
-  const rowsWithHeaders = getRowsWithHeaders(sortedVisits)
-  const rows = createVisitsTable(rowsWithHeaders)
+  const rowsWithHeaders = getRowsWithHeaders(sortedVisits);
+  const rows = createVisitsTable(rowsWithHeaders);
 
   return (
     <Stack spacing={4}>
@@ -85,7 +94,7 @@ const VisitsList = (props: VisitListProps) => {
         <Stack direction="row" spacing={2} justifyContent="flex-start">
           <FilterTableButton
             variant={getButtonStyle(visitListFilters.view, 'byAll')}
-            setTableView={() => updateVisitFilters((draft) => (draft.view = 'byAll'))}
+            setTableView={() => updateVisitFilters(draft => (draft.view = 'byAll'))}
             text={intl.formatMessage({
               defaultMessage: 'Všechny',
               id: 'visits.visitViewKey.byAll',
@@ -93,7 +102,9 @@ const VisitsList = (props: VisitListProps) => {
           />
           <FilterTableButton
             variant={getButtonStyle(visitListFilters.view, 'byClosedNoStockAllowances')}
-            setTableView={() => updateVisitFilters((draft) => (draft.view = 'byClosedNoStockAllowances'))}
+            setTableView={() =>
+              updateVisitFilters(draft => (draft.view = 'byClosedNoStockAllowances'))
+            }
             text={intl.formatMessage({
               defaultMessage: 'Uzavřené bez spotřeby',
               id: 'visits.visitViewKey.byClosedNoStockAllowances',
@@ -111,10 +122,10 @@ const VisitsList = (props: VisitListProps) => {
               })}
               control={control}
               fieldPath="from"
-              onChange={(date) => {
-                updateVisitFilters((draft) => {
-                  draft.dates.from = date?.toISOString()
-                })
+              onChange={date => {
+                updateVisitFilters(draft => {
+                  draft.dates.from = date?.toISOString();
+                });
               }}
             />
             <BasicDatePicker
@@ -124,10 +135,10 @@ const VisitsList = (props: VisitListProps) => {
               })}
               control={control}
               fieldPath="to"
-              onChange={(date) => {
-                updateVisitFilters((draft) => {
-                  draft.dates.to = date?.toISOString()
-                })
+              onChange={date => {
+                updateVisitFilters(draft => {
+                  draft.dates.to = date?.toISOString();
+                });
               }}
             />
           </Stack>
@@ -135,17 +146,18 @@ const VisitsList = (props: VisitListProps) => {
         {visitListFilters.view === 'byAll' && (
           <AppDataGrid
             disableColumnMenu={
-              visitListApplyFilter === 'dashBoardVisitOverView' || visitListApplyFilter === 'onlyOpenVisits'
+              visitListApplyFilter === 'dashBoardVisitOverView' ||
+              visitListApplyFilter === 'onlyOpenVisits'
             }
             rows={rows}
             columns={createColumns(navigate, intl)}
             columnHeaderHeight={columnHeaderHeight}
             hideFooter={hideFooter}
-            getRowClassName={(params) => {
-              return params.row.isHeader ? 'header-row' : ''
+            getRowClassName={params => {
+              return params.row.isHeader ? 'header-row' : '';
             }}
-            getRowHeight={(params) => {
-              return params.model.isHeader ? 20 : 40
+            getRowHeight={params => {
+              return params.model.isHeader ? 20 : 40;
             }}
             sx={{
               '& .header-row .MuiDataGrid-cell': {
@@ -164,11 +176,11 @@ const VisitsList = (props: VisitListProps) => {
             columns={createColumns(navigate, intl)}
             columnHeaderHeight={columnHeaderHeight}
             hideFooter={hideFooter}
-            getRowClassName={(params) => {
-              return params.row.isHeader ? 'header-row' : ''
+            getRowClassName={params => {
+              return params.row.isHeader ? 'header-row' : '';
             }}
-            getRowHeight={(params) => {
-              return params.model.isHeader ? 20 : 40
+            getRowHeight={params => {
+              return params.model.isHeader ? 20 : 40;
             }}
             sx={{
               '& .header-row .MuiDataGrid-cell': {
@@ -182,11 +194,14 @@ const VisitsList = (props: VisitListProps) => {
         )}
       </Stack>
     </Stack>
-  )
-}
-export default VisitsList
+  );
+};
+export default VisitsList;
 
-export const createColumns = (navigate: (path: string) => void, intl: IntlShape): GridColDef<VisitRow[][number]>[] => [
+export const createColumns = (
+  navigate: (path: string) => void,
+  intl: IntlShape
+): GridColDef<VisitRow[][number]>[] => [
   {
     field: 'date',
     headerName: `${intl.formatMessage({ id: 'stock.time', defaultMessage: 'Čas' })}`,
@@ -195,7 +210,7 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
     display: 'flex',
     flex: 1.5,
     minWidth: 20,
-    renderCell: (params) =>
+    renderCell: params =>
       params.row.isHeader ? (
         <Box
           sx={{
@@ -204,7 +219,8 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
             position: 'absolute',
             display: 'flex',
             left: '10px',
-          }}>
+          }}
+        >
           {params.row.label}
         </Box>
       ) : (
@@ -223,7 +239,7 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
     display: 'flex',
     flex: 3.5,
     minWidth: 55,
-    renderCell: (params) =>
+    renderCell: params =>
       !params.row.isHeader && (
         <Stack direction="row" spacing={0.5} alignItems="center">
           <Typography fontSize="12px">{formatNameShort(params.value)}</Typography>
@@ -251,20 +267,25 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
     flex: 1.5,
     display: 'flex',
     editable: false,
-    renderCell: (params) => {
-      const isVisitOpen = params.row.visitState
+    renderCell: params => {
+      const isVisitOpen = params.row.visitState;
       return (
         !params.row.isHeader && (
           <Typography
             fontSize="0.9rem"
-            onClick={() => (params.row.clientId ? navigate(Paths.visitDetail(params.row.clientId, params.row.id)) : {})}
-            color={isVisitOpen ? 'success' : 'error'}>
+            onClick={() =>
+              params.row.clientId
+                ? navigate(Paths.visitDetail(params.row.clientId, params.row.id))
+                : {}
+            }
+            color={isVisitOpen ? 'success' : 'error'}
+          >
             {isVisitOpen
               ? intl.formatMessage({ id: 'stock.closedVisit', defaultMessage: 'Zavř.' })
               : intl.formatMessage({ id: 'stock.notClosedVisit', defaultMessage: 'Nezavř.' })}
           </Typography>
         )
-      )
+      );
     },
   },
   {
@@ -274,9 +295,9 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
     flex: 3,
     display: 'flex',
     editable: false,
-    renderCell: (params) => {
+    renderCell: params => {
       if (!params.row.isHeader && params.row.clientId) {
-        const clientId = params.row.clientId
+        const clientId = params.row.clientId;
         return (
           <Stack direction="row" spacing={1}>
             <SmsSendDialog
@@ -284,7 +305,10 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
               openButton={
                 <BoxIcon
                   size="small"
-                  sx={{ background: `${AppTheme.palette.common.white}`, color: `${AppTheme.palette.info.main}` }}
+                  sx={{
+                    background: `${AppTheme.palette.common.white}`,
+                    color: `${AppTheme.palette.info.main}`,
+                  }}
                   icon={<SendIcon fontSize="small" color="info" />}
                 />
               }
@@ -294,28 +318,36 @@ export const createColumns = (navigate: (path: string) => void, intl: IntlShape)
               onClick={() => navigate(Paths.visitDetail(clientId, params.row.id))}
               size="small"
               boxColor="#61fb0133"
-              sx={{ background: `${AppTheme.palette.common.white}`, color: `${AppTheme.palette.info.main}` }}
+              sx={{
+                background: `${AppTheme.palette.common.white}`,
+                color: `${AppTheme.palette.info.main}`,
+              }}
               icon={<PhotoCameraFrontOutlinedIcon fontSize="small" color="primary" />}
             />
           </Stack>
-        )
+        );
       }
     },
   },
-]
+];
 
 const isTypeRowHeader = (
-  item: VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string }
+  item:
+    | VisitWithServicesWithProceduresWithStockAllowances
+    | { isHeader: true; label: string; id: string }
 ): item is { isHeader: true; label: string; id: string } => {
-  return 'isHeader' in item
-}
+  return 'isHeader' in item;
+};
 
 const createVisitsTable = (
-  visits: (VisitWithServicesWithProceduresWithStockAllowances | { isHeader: true; label: string; id: string })[]
+  visits: (
+    | VisitWithServicesWithProceduresWithStockAllowances
+    | { isHeader: true; label: string; id: string }
+  )[]
 ): VisitRow[] => {
-  const visitsList = visits.map((visit) => {
+  const visitsList = visits.map(visit => {
     if (!visit.id) {
-      return
+      return;
     }
 
     if (isTypeRowHeader(visit)) {
@@ -329,7 +361,7 @@ const createVisitsTable = (
         visitState: undefined,
         visitDepositPayed: undefined,
         clientId: undefined,
-      } satisfies VisitRow
+      } satisfies VisitRow;
     }
 
     return {
@@ -338,13 +370,13 @@ const createVisitsTable = (
       date: getTimeFromUtcToLocal(visit.date),
       dateTo: getTimeFromUtcToLocal(visit.dateTo),
       client: `${visit.client.firstName} ${visit.client.lastName}`,
-      serviceName: visit.visitServices.map((service) => service.service.serviceName).join(','),
+      serviceName: visit.visitServices.map(service => service.service.serviceName).join(','),
       visitState: visit.visitStatus,
       clientId: visit.client.id,
       visitDepositPayed: visit.depositStatus === DepositStatus.ZAPLACENO,
       clientDeposit: visit.client.deposit,
-    } satisfies VisitRow
-  })
+    } satisfies VisitRow;
+  });
 
-  return visitsList.filter((visit) => visit !== undefined)
-}
+  return visitsList.filter(visit => visit !== undefined);
+};

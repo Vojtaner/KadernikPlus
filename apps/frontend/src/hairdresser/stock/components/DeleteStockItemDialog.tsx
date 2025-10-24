@@ -1,28 +1,28 @@
-import React, { useState } from 'react'
-import FormDialog from '../../../app/components/FormDialog'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { Button, Typography } from '@mui/material'
-import { addPropsToReactElement } from '../../entity'
-import { useDeleteStockItemMutation } from '../queries'
+import React, { useState } from 'react';
+import FormDialog from '../../../app/components/FormDialog';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { Button, Typography } from '@mui/material';
+import { addPropsToReactElement } from '../../entity';
+import { useDeleteStockItemMutation } from '../queries';
 
 type DeleteStockItemDialogProps = {
-  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>
-  stockItemId: string
-}
+  openButton: React.ReactElement<{ onClick: (e: React.MouseEvent) => void }>;
+  stockItemId: string;
+};
 
 const DeleteStockItemDialog = (props: DeleteStockItemDialogProps) => {
-  const { openButton, stockItemId } = props
-  const [open, setOpen] = useState(false)
-  const intl = useIntl()
-  const { mutate: deleteStockItemMutation } = useDeleteStockItemMutation()
+  const { openButton, stockItemId } = props;
+  const [open, setOpen] = useState(false);
+  const intl = useIntl();
+  const { mutate: deleteStockItemMutation } = useDeleteStockItemMutation();
 
   const handleClickOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
   return (
     <FormDialog
@@ -35,9 +35,10 @@ const DeleteStockItemDialog = (props: DeleteStockItemDialogProps) => {
           </Button>
           <Button
             onClick={() => {
-              deleteStockItemMutation(stockItemId)
-              handleClose()
-            }}>
+              deleteStockItemMutation(stockItemId);
+              handleClose();
+            }}
+          >
             <FormattedMessage id="formDialog.delete" defaultMessage="Smazat" />
           </Button>
         </>
@@ -52,8 +53,8 @@ const DeleteStockItemDialog = (props: DeleteStockItemDialogProps) => {
       }
       onOpenButton={addPropsToReactElement(openButton, {
         onClick: (e: React.MouseEvent) => {
-          openButton.props.onClick?.(e)
-          handleClickOpen()
+          openButton.props.onClick?.(e);
+          handleClickOpen();
         },
       })}
       title={intl.formatMessage({
@@ -61,7 +62,7 @@ const DeleteStockItemDialog = (props: DeleteStockItemDialogProps) => {
         id: 'stockItem.deleteStockItem',
       })}
     />
-  )
-}
+  );
+};
 
-export default DeleteStockItemDialog
+export default DeleteStockItemDialog;

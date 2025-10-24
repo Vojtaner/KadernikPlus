@@ -1,22 +1,22 @@
-import { Card, CardContent, Divider, Stack, Typography } from '@mui/material'
-import TrendingUpIcon from '@mui/icons-material/TrendingUp'
-import EventIcon from '@mui/icons-material/Event'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import ControlPointIcon from '@mui/icons-material/ControlPoint'
+import { Card, CardContent, Divider, Stack, Typography } from '@mui/material';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import EventIcon from '@mui/icons-material/Event';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 type RevenuCardProps = {
-  selectedDay: RevenueStatistic
-}
+  selectedDay: RevenueStatistic;
+};
 
 export type RevenueStatistic = {
-  profit: number
-  costs: number
-  revenue: number
-  label: string
-}
+  profit: number;
+  costs: number;
+  revenue: number;
+  label: string;
+};
 
 const RevenuCard = (props: RevenuCardProps) => {
-  const { selectedDay } = props
+  const { selectedDay } = props;
 
   return (
     <Card
@@ -27,7 +27,8 @@ const RevenuCard = (props: RevenuCardProps) => {
         bgcolor: '#f6f4ef',
         px: 2,
         py: 1,
-      }}>
+      }}
+    >
       <CardContent sx={{ p: 1, '&:last-child': { pb: 1 } }}>
         <Stack spacing={1.2}>
           <Stack direction="row" spacing={3} justifyContent="space-between">
@@ -58,7 +59,7 @@ const RevenuCard = (props: RevenuCardProps) => {
         </Stack>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
-export default RevenuCard
+export default RevenuCard;

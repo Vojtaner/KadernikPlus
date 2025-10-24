@@ -1,23 +1,23 @@
-import { Button, Stack, Typography } from '@mui/material'
-import PricingCard from '../../app/components/PricingCard'
-import { useSubscriptionMutation, useSubscriptionQuery } from '../../queries'
-import { getSubscriptionText } from '../../entity'
-import { useAuth0 } from '@auth0/auth0-react'
-import AppTheme from '../../AppTheme'
-import LogoutIcon from '@mui/icons-material/Logout'
-import { FormattedMessage, useIntl } from 'react-intl'
-import { getGreeting } from '../entity'
+import { Button, Stack, Typography } from '@mui/material';
+import PricingCard from '../../app/components/PricingCard';
+import { useSubscriptionMutation, useSubscriptionQuery } from '../../queries';
+import { getSubscriptionText } from '../../entity';
+import { useAuth0 } from '@auth0/auth0-react';
+import AppTheme from '../../AppTheme';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { getGreeting } from '../entity';
 
 export const SubscriptionPage = () => {
-  const { mutate, error } = useSubscriptionMutation()
-  const { data: subscription } = useSubscriptionQuery()
-  const { user, logout } = useAuth0()
-  const intl = useIntl()
+  const { mutate, error } = useSubscriptionMutation();
+  const { data: subscription } = useSubscriptionQuery();
+  const { user, logout } = useAuth0();
+  const intl = useIntl();
 
   //subscription guard sjednotit
-  const today = new Date()
-  const endDate = subscription && subscription?.endDate ? new Date(subscription.endDate) : null
-  const isExpired = endDate ? today > endDate : false
+  const today = new Date();
+  const endDate = subscription && subscription?.endDate ? new Date(subscription.endDate) : null;
+  const isExpired = endDate ? today > endDate : false;
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="center">
@@ -27,7 +27,13 @@ export const SubscriptionPage = () => {
       <Typography variant="h4" fontWeight="bold" color="primary">
         <FormattedMessage id="subscriptionPage.headline" defaultMessage="Kadeřník+" />
       </Typography>
-      <Typography variant="body1" color="text.secondary" textAlign="center" maxWidth={500} width="95vw">
+      <Typography
+        variant="body1"
+        color="text.secondary"
+        textAlign="center"
+        maxWidth={500}
+        width="95vw"
+      >
         <strong style={{ color: AppTheme.palette.primary.main }}>
           {user
             ? `${intl.formatMessage({ id: 'subscriptionPage.greeting', defaultMessage: 'Dobrý den,' })} ${getGreeting(user)} `
@@ -86,12 +92,21 @@ export const SubscriptionPage = () => {
       {subscription && (
         <>
           <Typography variant="body1" color="info" textAlign="center" maxWidth={500}>
-            <FormattedMessage id="subscriptionPage.yourSubscription" defaultMessage="Vaše předplatné " />
-            <strong>{getSubscriptionText(new Date(subscription.endDate), subscription.status)}</strong>
+            <FormattedMessage
+              id="subscriptionPage.yourSubscription"
+              defaultMessage="Vaše předplatné "
+            />
+            <strong>
+              {getSubscriptionText(new Date(subscription.endDate), subscription.status)}
+            </strong>
           </Typography>
-          {(subscription.status === 'ACTIVE' || (subscription.status === 'CANCELLED' && !isExpired)) && (
+          {(subscription.status === 'ACTIVE' ||
+            (subscription.status === 'CANCELLED' && !isExpired)) && (
             <Button href={window.location.origin}>
-              <FormattedMessage id="subscriptionPage.enterApp" defaultMessage="Přejít do aplikace" />
+              <FormattedMessage
+                id="subscriptionPage.enterApp"
+                defaultMessage="Přejít do aplikace"
+              />
             </Button>
           )}
         </>
@@ -118,5 +133,5 @@ export const SubscriptionPage = () => {
         />
       )}
     </Stack>
-  )
-}
+  );
+};

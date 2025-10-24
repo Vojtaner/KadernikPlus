@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react'
+import * as Sentry from '@sentry/react';
 
 const initializeSentry = () => {
   Sentry.init({
@@ -22,9 +22,9 @@ const initializeSentry = () => {
       /^https:\/\/api\.kadernikplus\.cz/,
       /^https:\/\/api-preprod\.kadernikplus\.cz/,
     ],
-  })
+  });
 
-  return Sentry
-}
+  return Sentry;
+};
 
-export default initializeSentry
+export default initializeSentry;

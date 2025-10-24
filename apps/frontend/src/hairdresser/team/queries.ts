@@ -1,91 +1,97 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { useAxios } from '../../axios/axios'
-import { type TeamMember, DEFAULT_USERS_TEAM } from '../../entities/team-member'
-import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar'
-import { queryClient } from '../../reactQuery/reactTanstackQuerySetup'
-import { getTeamMember, postInviteTeamMember, deleteTeamMember, patchTeamMemberSkill, getTeamMembers } from './api'
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useAxios } from '../../axios/axios';
+import { type TeamMember, DEFAULT_USERS_TEAM } from '../../entities/team-member';
+import { useAddSnackbarMessage } from '../../hooks/useAddSnackBar';
+import { queryClient } from '../../reactQuery/reactTanstackQuerySetup';
+import {
+  getTeamMember,
+  postInviteTeamMember,
+  deleteTeamMember,
+  patchTeamMemberSkill,
+  getTeamMembers,
+} from './api';
 
 export const useTeamMemberQuery = () => {
-  const axios = useAxios()
+  const axios = useAxios();
 
   return useQuery<TeamMember>({
     queryKey: ['teamMember'],
     queryFn: () => getTeamMember(axios),
-  })
-}
+  });
+};
 
 export type SkillUpdateInput = {
-  memberId: string
-  canAccessStocks: boolean
-  canAccessClients: boolean
-  canAccessVisits: boolean
-}
+  memberId: string;
+  canAccessStocks: boolean;
+  canAccessClients: boolean;
+  canAccessVisits: boolean;
+};
 
 export const useAddTeamMemberMutation = () => {
-  const axios = useAxios()
-  const addSnackBarMessage = useAddSnackbarMessage()
+  const axios = useAxios();
+  const addSnackBarMessage = useAddSnackbarMessage();
 
   return useMutation({
     mutationFn: (data: { email: string; consentId: string }) => postInviteTeamMember(axios, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
       //
-      addSnackBarMessage({ text: 'Člen týmu byl přidán.', type: 'success' })
+      addSnackBarMessage({ text: 'Člen týmu byl přidán.', type: 'success' });
     },
-    onError: (error) => {
-      addSnackBarMessage({ text: error.message, type: 'error' })
+    onError: error => {
+      addSnackBarMessage({ text: error.message, type: 'error' });
     },
-  })
-}
+  });
+};
 
 export const useDeleteTeamMemberMutation = () => {
-  const axios = useAxios()
-  const addSnackBarMessage = useAddSnackbarMessage()
+  const axios = useAxios();
+  const addSnackBarMessage = useAddSnackbarMessage();
 
   return useMutation({
     mutationFn: (deletedUserId: string) => deleteTeamMember(axios, deletedUserId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
-      queryClient.invalidateQueries({ queryKey: ['stockItems', undefined] })
-      addSnackBarMessage({ text: 'Člen týmu byl odebrán.', type: 'success' })
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+      queryClient.invalidateQueries({ queryKey: ['stockItems', undefined] });
+      addSnackBarMessage({ text: 'Člen týmu byl odebrán.', type: 'success' });
     },
-    onError: (error) => {
-      addSnackBarMessage({ text: error.message, type: 'error' })
-      console.error(error)
+    onError: error => {
+      addSnackBarMessage({ text: error.message, type: 'error' });
+      console.error(error);
     },
-  })
-}
+  });
+};
 
 export const useUpdateTeamMemberSkill = (teamId?: string) => {
-  const axios = useAxios()
-  const addSnackBarMessage = useAddSnackbarMessage()
+  const axios = useAxios();
+  const addSnackBarMessage = useAddSnackbarMessage();
 
   return useMutation({
     mutationFn: (data: SkillUpdateInput) => {
       if (!teamId) {
-        throw new Error('Team ID not found.')
+        throw new Error('Team ID not found.');
       }
-      return patchTeamMemberSkill(axios, data, teamId)
+      return patchTeamMemberSkill(axios, data, teamId);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
-      addSnackBarMessage({ text: 'Oprávnění byla v týmu byla upravena.', type: 'success' })
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+      addSnackBarMessage({ text: 'Oprávnění byla v týmu byla upravena.', type: 'success' });
     },
-    onError: (error) => {
-      queryClient.invalidateQueries({ queryKey: ['teamMembers'] })
-      addSnackBarMessage({ text: error.message, type: 'error' })
-      console.error(error)
+    onError: error => {
+      queryClient.invalidateQueries({ queryKey: ['teamMembers'] });
+      addSnackBarMessage({ text: error.message, type: 'error' });
+      console.error(error);
     },
-  })
-}
+  });
+};
 
 export const useTeamMembersQuery = (teamId?: string) => {
-  const axios = useAxios()
+  const axios = useAxios();
 
-  const resolvedTeamId = teamId || DEFAULT_USERS_TEAM
+  const resolvedTeamId = teamId || DEFAULT_USERS_TEAM;
 
   return useQuery<(TeamMember & { user: { name: string } })[]>({
     queryKey: ['teamMembers'],
     queryFn: () => getTeamMembers(axios, resolvedTeamId),
-  })
-}
+  });
+};

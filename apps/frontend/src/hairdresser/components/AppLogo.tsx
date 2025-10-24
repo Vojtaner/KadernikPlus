@@ -1,16 +1,16 @@
-import type { Theme } from '@emotion/react'
-import { type SxProps, Stack, Box } from '@mui/material'
-import { useAppNavigate } from '../../hooks'
-import { useUserDataQuery } from '../../queries'
-import { ROUTES } from '../../routes/AppRoutes'
-import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
+import type { Theme } from '@emotion/react';
+import { type SxProps, Stack, Box } from '@mui/material';
+import { useAppNavigate } from '../../hooks';
+import { useUserDataQuery } from '../../queries';
+import { ROUTES } from '../../routes/AppRoutes';
+import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined';
 
-type AppLogoProps = { sx?: SxProps<Theme> }
+type AppLogoProps = { sx?: SxProps<Theme> };
 
 export const AppLogo = (props: AppLogoProps) => {
-  const { sx } = props
-  const navigate = useAppNavigate()
-  const { data: userData } = useUserDataQuery()
+  const { sx } = props;
+  const navigate = useAppNavigate();
+  const { data: userData } = useUserDataQuery();
 
   return (
     <Stack direction="row" spacing={1} paddingY={0.2} paddingLeft="5px" alignItems="center" sx={sx}>
@@ -23,14 +23,19 @@ export const AppLogo = (props: AppLogoProps) => {
           alignItems: 'center',
           gap: 1,
           cursor: 'pointer',
-        }}>
+        }}
+      >
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
         <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
           {userData?.colorScheme ? null : (
-            <img width="100px" src={'../../public/logo.png'} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
+            <img
+              width="100px"
+              src={'../../public/logo.png'}
+              style={{ marginTop: '-30px', marginBottom: '-38px' }}
+            />
           )}
         </div>
       </Box>
     </Stack>
-  )
-}
+  );
+};

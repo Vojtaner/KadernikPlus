@@ -1,32 +1,41 @@
-import * as React from 'react'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
-import { Stack } from '@mui/material'
-import type { FieldValues, UseFormHandleSubmit } from 'react-hook-form'
-import { useScrollToTheTop } from '../../entity'
+import * as React from 'react';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Stack } from '@mui/material';
+import type { FieldValues, UseFormHandleSubmit } from 'react-hook-form';
+import { useScrollToTheTop } from '../../entity';
 
 type FormDialogProps<TFieldValues extends FieldValues = FieldValues> = {
-  actions: React.ReactNode
-  formFields: React.ReactNode
-  title: string
-  dialogHelperText?: string
-  onOpenButton?: React.ReactNode
-  isOpen: boolean
-  onClose: () => void
-  handleSubmit?: UseFormHandleSubmit<TFieldValues>
-}
+  actions: React.ReactNode;
+  formFields: React.ReactNode;
+  title: string;
+  dialogHelperText?: string;
+  onOpenButton?: React.ReactNode;
+  isOpen: boolean;
+  onClose: () => void;
+  handleSubmit?: UseFormHandleSubmit<TFieldValues>;
+};
 
 export default function FormDialog<TFieldValues extends FieldValues = FieldValues>(
   props: FormDialogProps<TFieldValues>
 ) {
-  const { actions, formFields, title, dialogHelperText, onOpenButton, isOpen, onClose, handleSubmit } = props
-  const scroll = useScrollToTheTop()
+  const {
+    actions,
+    formFields,
+    title,
+    dialogHelperText,
+    onOpenButton,
+    isOpen,
+    onClose,
+    handleSubmit,
+  } = props;
+  const scroll = useScrollToTheTop();
 
-  const onValidHandle = () => {}
-  const onInvalidHandle = () => {}
+  const onValidHandle = () => {};
+  const onInvalidHandle = () => {};
 
   return (
     <>
@@ -34,20 +43,21 @@ export default function FormDialog<TFieldValues extends FieldValues = FieldValue
       <Dialog
         open={isOpen}
         onClose={() => {
-          onClose()
-          scroll()
+          onClose();
+          scroll();
         }}
         slotProps={{
           paper: {
             component: 'form',
             onSubmit: (e: React.FormEvent<HTMLFormElement>) => {
-              e.preventDefault()
-              handleSubmit?.(onValidHandle, onInvalidHandle)()
-              scroll()
+              e.preventDefault();
+              handleSubmit?.(onValidHandle, onInvalidHandle)();
+              scroll();
             },
             sx: { width: { md: '28vw', xs: '100vw' } },
           },
-        }}>
+        }}
+      >
         <DialogTitle>{title}</DialogTitle>
         <DialogContent>
           {dialogHelperText && <DialogContentText>{dialogHelperText}</DialogContentText>}
@@ -58,5 +68,5 @@ export default function FormDialog<TFieldValues extends FieldValues = FieldValue
         <DialogActions>{actions}</DialogActions>
       </Dialog>
     </>
-  )
+  );
 }

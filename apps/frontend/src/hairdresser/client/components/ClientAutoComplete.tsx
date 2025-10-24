@@ -1,15 +1,20 @@
-import Loader from '../../../components/Loader'
-import { type Control, type FieldPath, type FieldPathValue, type FieldValues } from 'react-hook-form'
-import AutoComplete from '../../../app/components/AutoComplete'
-import { useClientsQuery } from '../queries'
-import { useIntl } from 'react-intl'
+import Loader from '../../../components/Loader';
+import {
+  type Control,
+  type FieldPath,
+  type FieldPathValue,
+  type FieldValues,
+} from 'react-hook-form';
+import AutoComplete from '../../../app/components/AutoComplete';
+import { useClientsQuery } from '../queries';
+import { useIntl } from 'react-intl';
 
 type ClientsAutoCompleteProps<TFieldValues extends FieldValues> = {
-  fieldPath: FieldPath<TFieldValues>
-  control: Control<TFieldValues>
-  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>
-  required?: boolean
-}
+  fieldPath: FieldPath<TFieldValues>;
+  control: Control<TFieldValues>;
+  defaultValue?: FieldPathValue<TFieldValues, FieldPath<TFieldValues>>;
+  required?: boolean;
+};
 
 const ClientAutoComplete = <TFieldValues extends FieldValues>({
   control,
@@ -17,19 +22,19 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>({
   defaultValue,
   required,
 }: ClientsAutoCompleteProps<TFieldValues>) => {
-  const { data: clients } = useClientsQuery()
-  const intl = useIntl()
+  const { data: clients } = useClientsQuery();
+  const intl = useIntl();
 
   if (!clients) {
-    return <Loader />
+    return <Loader />;
   }
 
-  const options = clients.map((c) => ({
+  const options = clients.map(c => ({
     id: c.id,
     firstName: c.firstName,
     lastName: c.lastName,
     name: `${c.firstName && c.firstName !== '-' ? c.firstName : ''} ${c.lastName}`.trim(),
-  }))
+  }));
 
   return (
     <AutoComplete
@@ -38,8 +43,8 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>({
       fieldPath={fieldPath}
       defaultValue={defaultValue}
       required={required}
-      getOptionLabel={(o) => o.name}
-      getOptionValue={(o) => o.id}
+      getOptionLabel={o => o.name}
+      getOptionValue={o => o.id}
       label={intl.formatMessage({
         id: 'clientAutoComplete.selectClient',
         defaultMessage: 'Vyberte klienta',
@@ -49,7 +54,7 @@ const ClientAutoComplete = <TFieldValues extends FieldValues>({
         defaultMessage: 'Hledejte...',
       })}
     />
-  )
-}
+  );
+};
 
-export default ClientAutoComplete
+export default ClientAutoComplete;

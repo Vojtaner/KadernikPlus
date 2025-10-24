@@ -1,10 +1,15 @@
-import { IconButton, Typography } from '@mui/material'
-import type { AppPaletteColor } from '../../entity'
+import { IconButton, Typography } from '@mui/material';
+import type { AppPaletteColor } from '../../entity';
 
-type MenuIconButtonProps = { title: string; icon: React.ReactNode; color?: AppPaletteColor; onClick?: () => void }
+type MenuIconButtonProps = {
+  title: string;
+  icon: React.ReactNode;
+  color?: AppPaletteColor;
+  onClick?: () => void;
+};
 
 const MenuIconButton = (props: MenuIconButtonProps) => {
-  const { title, icon, color = 'common.white', onClick } = props
+  const { title, icon, color = 'common.white', onClick } = props;
 
   return (
     <IconButton
@@ -18,13 +23,14 @@ const MenuIconButton = (props: MenuIconButtonProps) => {
         padding: 1,
         gap: 0.5,
         color: `${color}`,
-      }}>
+      }}
+    >
       {icon}
       <Typography fontWeight={400} fontSize={'0.7rem'} color={color}>
         {title}
       </Typography>
     </IconButton>
-  )
-}
+  );
+};
 
-export default MenuIconButton
+export default MenuIconButton;
