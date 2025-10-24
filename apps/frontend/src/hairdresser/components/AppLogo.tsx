@@ -4,7 +4,6 @@ import { useAppNavigate } from '../../hooks'
 import { useUserDataQuery } from '../../queries'
 import { ROUTES } from '../../routes/AppRoutes'
 import PhotoCameraFrontOutlinedIcon from '@mui/icons-material/PhotoCameraFrontOutlined'
-import logo from '../../public/logo.png'
 
 type AppLogoProps = { sx?: SxProps<Theme> }
 
@@ -28,7 +27,7 @@ export const AppLogo = (props: AppLogoProps) => {
         <PhotoCameraFrontOutlinedIcon sx={{ color: '#f0f0f0' }} fontSize="large" />
         <div style={{ height: 'calc(100% - 40px)', overflow: 'hidden' }}>
           {userData?.colorScheme ? null : (
-            <img width="100px" src={logo} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
+            <img width="100px" src={'../../public/logo.png'} style={{ marginTop: '-30px', marginBottom: '-38px' }} />
           )}
         </div>
       </Box>
