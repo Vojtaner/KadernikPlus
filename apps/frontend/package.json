@@ -7,7 +7,7 @@
     "dev": "vite --mode dev",
     "build:staging": "vite build --mode staging",
     "build:prod": "vite build --mode production",
-    "build": "tsc -b && eslint . && vite build",
+    "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
     "formatjs": "npx formatjs extract './src/**/*.{ts,tsx}' --format simple --ignore '**/*.d.ts' --out-file './src/locales/cs.json'",
