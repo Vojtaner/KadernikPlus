@@ -74,9 +74,9 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
                     label={intl.formatMessage(
                       {
                         id: 'formDialogAddProcedure.workflowDescription',
-                        defaultMessage: `Množství (unit)`,
+                        defaultMessage: 'Množství (unit)',
                       },
-                      { unit: stockItem?.unit ? stockItem?.unit : '' }
+                      { unit: stockItem?.unit ? stockItem?.unit : '' },
                     )}
                     fieldPath={`stockAllowances.${index}.quantity`}
                     control={control}
@@ -116,7 +116,7 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
               <TextField
                 label={intl.formatMessage({
                   id: 'formDialogAddProcedure.item',
-                  defaultMessage: `Položka`,
+                  defaultMessage: 'Položka',
                 })}
                 readonly
                 defaultValue={stockAllowance.stockItemName}
@@ -127,14 +127,14 @@ const AddStockAllowanceForm = (props: AddStockAllowanceFormProps<StockAllowanceF
               <TextField
                 label={intl.formatMessage({
                   id: 'formDialogAddProcedure.quantity',
-                  defaultMessage: `Množství`,
+                  defaultMessage: 'Množství',
                 })}
                 readonly
                 defaultValue={stockAllowance.quantity}
               />
             </Grid>
             <Grid size={2}>
-              <IconButton onClick={() => {}} color="error" disabled>
+              <IconButton color="error" disabled>
                 <DeleteOutlineIcon />
               </IconButton>
             </Grid>

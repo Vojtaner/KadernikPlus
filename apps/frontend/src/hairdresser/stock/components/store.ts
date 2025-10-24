@@ -6,7 +6,7 @@ import type {
 
 export function createStockAllowancesTableByProductByUser(
   stockAllowances: GetStockAllowance[],
-  keyExtractor: (item: GetStockAllowance) => string
+  keyExtractor: (item: GetStockAllowance) => string,
 ): UserStockItemAllowanceSummary[] {
   const summaryMap: Record<string, UserStockItemAllowanceSummary> = {};
 
@@ -34,7 +34,7 @@ export function createStockAllowancesTableByProductByUser(
 }
 
 export const createStockAllowancesTableAllRecords = (
-  stockAllowances: GetStockAllowance[]
+  stockAllowances: GetStockAllowance[],
 ): ConsumptionTableAllRecordType[] =>
   stockAllowances.map(stockAllowance => ({
     id: stockAllowance.id,

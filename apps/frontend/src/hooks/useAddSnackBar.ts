@@ -13,19 +13,19 @@ export const useAddSnackbarMessage = () => {
 
   return (
     message: Omit<SnackbarMessage, 'unique'> & Partial<Pick<SnackbarMessage, 'unique'>>,
-    timeout = 2500
+    timeout = 2500,
   ) => {
     const newMessage = { ...(message ?? 'Neznámá chyba'), unique: message.unique || uuidv4() };
 
     dispatch(addedSnackbarMessage(newMessage));
     setTimeout(
       () => dispatch(removedSnackbarMessage({ messageUnique: newMessage.unique })),
-      timeout
+      timeout,
     );
   };
 };
 
 export const selectSnackbarMessages = createSelector(
   [(state: RootState) => state.snackbarMessage.messages],
-  messages => messages
+  messages => messages,
 );

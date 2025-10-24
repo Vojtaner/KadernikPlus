@@ -3,7 +3,7 @@ import { queryClient } from '../../reactQuery/reactTanstackQuerySetup';
 import type { AddProcedureStockAllowanceType } from './components/AddProcedureButton';
 
 export const mapDefaultStockAlowances = (
-  defaultStockAllowances?: AddProcedureStockAllowanceType
+  defaultStockAllowances?: AddProcedureStockAllowanceType,
 ): { stockItemId: string; quantity: number | null; stockAllowanceId: string }[] => {
   if (!defaultStockAllowances) {
     return [];
@@ -18,7 +18,7 @@ export const mapDefaultStockAlowances = (
 
 export const getProcedureInvalidation = (
   stocks: Stock[] | undefined,
-  visitId: string | undefined
+  visitId: string | undefined,
 ) => {
   queryClient.invalidateQueries({ queryKey: ['stockItems'] });
   queryClient.invalidateQueries({ queryKey: ['procedures', visitId] });

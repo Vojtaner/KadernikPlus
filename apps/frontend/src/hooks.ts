@@ -111,7 +111,7 @@ export function usePersistentFilters() {
 }
 
 export const useVisitListFilters = (
-  type: VisitListApplyFilter
+  type: VisitListApplyFilter,
 ): [
   {
     dates: DatesFilter;
@@ -131,7 +131,7 @@ export const useVisitListFilters = (
         }
       });
     },
-    [type, updateFilter]
+    [type, updateFilter],
   );
 
   if (type === 'dashBoardVisitOverView') {

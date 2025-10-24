@@ -198,7 +198,7 @@ export const formatPhoneNumber = (digits: string | null): string | undefined => 
 };
 
 export const getRowsWithHeaders = (
-  visits: VisitWithServicesWithProceduresWithStockAllowances[]
+  visits: VisitWithServicesWithProceduresWithStockAllowances[],
 ) => {
   const rows: (
     | VisitWithServicesWithProceduresWithStockAllowances

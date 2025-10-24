@@ -23,7 +23,7 @@ export const snackbarMessageSlice = createSlice({
     },
     removedSnackbarMessage: (state, action: PayloadAction<{ messageUnique: string }>) => {
       state.messages = state.messages.filter(
-        filterMessage => filterMessage.unique !== action.payload.messageUnique
+        filterMessage => filterMessage.unique !== action.payload.messageUnique,
       );
     },
   },

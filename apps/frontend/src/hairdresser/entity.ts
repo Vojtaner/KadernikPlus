@@ -12,7 +12,7 @@ import type { VisitWithServicesWithProceduresWithStockAllowances } from './visit
 
 export const addPropsToReactElement = (
   element: ReactElement,
-  props: ButtonProps & CommonProps & { color?: AppPaletteColor }
+  props: ButtonProps & CommonProps & { color?: AppPaletteColor },
 ) => {
   return cloneElement(element, { ...props });
 };
@@ -114,7 +114,7 @@ type Result = { costs: number[]; revenue: number[]; profit: number[]; labels: st
 
 export const getCostsProfitRevenue = (
   visits: VisitWithServicesWithProceduresWithStockAllowances[],
-  range?: DateRange
+  range?: DateRange,
 ): Result => {
   const visitMap = aggregateVisitsByDate(visits, range);
   const allLabels = getDateLabelsInRange(visitMap, range);
@@ -161,7 +161,7 @@ export const getCostsProfitRevenue = (
 
 const aggregateVisitsByDate = (
   visits: VisitWithServicesWithProceduresWithStockAllowances[],
-  range?: DateRange
+  range?: DateRange,
 ): VisitMap => {
   const map: VisitMap = new Map();
 

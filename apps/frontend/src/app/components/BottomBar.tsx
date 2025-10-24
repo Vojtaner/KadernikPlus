@@ -26,7 +26,7 @@ const BottomBar = () => {
       spacing={1}
       alignItems="center"
       justifyContent="space-between"
-      boxShadow={'0px -4px 19px 10px rgba(0,0,0,0.15)'}
+      boxShadow="0px -4px 19px 10px rgba(0,0,0,0.15)"
       sx={{
         borderTop: theme => `1px solid ${theme.palette.text.disabled}`,
         bgcolor: `${colorScheme}`,

@@ -11,10 +11,10 @@ import { apiCall } from '../entity';
 
 export const clientApi = {
   getById: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
-  getAll: () => `/api/clients/`,
+  getAll: () => '/api/clients/',
   delete: (clientId: string) => `/api/clients/${encodeURIComponent(clientId)}`,
-  create: () => `/api/clients`,
-  import: () => `/api/clients/import`,
+  create: () => '/api/clients',
+  import: () => '/api/clients/import',
   getVisits: (clientId: string) => `/api/visits/client/${encodeURIComponent(clientId)}`,
   search: (clientIds?: string[]) => {
     const params = new URLSearchParams();
@@ -29,11 +29,11 @@ export const clientApi = {
 
 export const getClientById = async (
   axios: AxiosInstance,
-  clientId: string
+  clientId: string,
 ): Promise<ClientWithVisits> =>
   apiCall(
     async () => await axios.get(clientApi.getById(clientId)),
-    'Zákazníka se nepovedlo najít.'
+    'Zákazníka se nepovedlo najít.',
   );
 
 export const getClients = async (axios: AxiosInstance): Promise<Client[]> =>
@@ -41,39 +41,39 @@ export const getClients = async (axios: AxiosInstance): Promise<Client[]> =>
 
 export const getClientVisits = async (
   axios: AxiosInstance,
-  clientId: string
+  clientId: string,
 ): Promise<VisitWithServicesWithProceduresWithStockAllowances[]> =>
   apiCall(
     async () => await axios.get(clientApi.getVisits(clientId)),
-    'Návštěvy se nepovedlo najít.'
+    'Návštěvy se nepovedlo najít.',
   );
 
 export const postCreateNewClient = async (
   axios: AxiosInstance,
-  clientData: ClientOrUpdateCreateData
+  clientData: ClientOrUpdateCreateData,
 ): Promise<ClientOrUpdateCreateData> =>
   apiCall(
     async () => await axios.post(clientApi.create(), clientData),
-    'Klineta se nepodařilo vytvořit.'
+    'Klineta se nepodařilo vytvořit.',
   );
 
 export const postImportContacts = async (
   axios: AxiosInstance,
-  data: { contacts: Contact[] }
+  data: { contacts: Contact[] },
 ): Promise<boolean> =>
   apiCall(
     async () => await axios.post(clientApi.import(), data),
-    'Klienty se nepodařilo importovat.'
+    'Klienty se nepodařilo importovat.',
   );
 
 export const deleteClient = async (axios: AxiosInstance, clientId: string): Promise<Client> =>
   apiCall(
     async () => await axios.delete(clientApi.delete(clientId)),
-    'Klienta se nepodařilo smazat.'
+    'Klienta se nepodařilo smazat.',
   );
 
 export const getSearchClients = async (
   axios: AxiosInstance,
-  payload: string[]
+  payload: string[],
 ): Promise<ClientWithVisitsWithVisitServices[]> =>
   apiCall(async () => await axios.get(clientApi.search(payload)), 'Klienty se nepovedlo najít.');

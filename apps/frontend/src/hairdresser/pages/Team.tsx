@@ -46,7 +46,7 @@ const Team = () => {
     deleteTeamMember,
     navigate,
     teamMembersRows,
-    intl
+    intl,
   );
 
   return (
@@ -58,7 +58,7 @@ const Team = () => {
 };
 
 const createTeamMemberSettingsRows = (
-  teamMembers: (TeamMember & { user: { name: string } })[]
+  teamMembers: (TeamMember & { user: { name: string } })[],
 ): (TeamSettings & { userId: string })[] => {
   return teamMembers.map(member => ({
     id: member.id,
@@ -77,7 +77,7 @@ const createColumns = (
   deleteFn: (id: string) => void,
   navigate: (path: string) => void,
   allRows: (TeamSettings & { userId: string })[],
-  intl: IntlShape
+  intl: IntlShape,
 ): GridColDef<(TeamSettings & { userId: string })[][number]>[] => [
   { field: 'name', headerName: 'Uživatel', flex: 6, minWidth: 110, disableColumnMenu: true },
   {

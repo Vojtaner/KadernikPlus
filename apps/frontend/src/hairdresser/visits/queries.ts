@@ -70,7 +70,7 @@ export const getVisitByIdQueryKey = (visitId: string | undefined) => ['visit', v
 export const useVisitQuery = (
   visitId: string | undefined,
   enabled = true,
-  refetchOnMount = false
+  refetchOnMount = false,
 ) => {
   const axios = useAxios();
 
@@ -93,7 +93,7 @@ export const useVisitQuery = (
 };
 
 export const useCreateVisitMutation = (
-  options?: UseMutationOptions<CreateVisitType, Error, CreateVisitType>
+  options?: UseMutationOptions<CreateVisitType, Error, CreateVisitType>,
 ) => {
   const axios = useAxios();
   const addSnackBarMessage = useAddSnackbarMessage();

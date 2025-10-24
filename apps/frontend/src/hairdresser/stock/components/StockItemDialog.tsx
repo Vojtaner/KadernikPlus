@@ -40,7 +40,7 @@ export const StockItemDialog = (props: StockItemDialogProps) => {
       intl.formatMessage({
         defaultMessage: 'Nepodařilo se načíst sklad.',
         id: 'stockItem.stockNotFound',
-      })
+      }),
     );
   }
 

@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* tslint:disable */
 
 /**
@@ -153,7 +152,7 @@ async function handleRequest(event, requestId) {
           },
         },
       },
-      responseClone.body ? [serializedRequest.body, responseClone.body] : []
+      responseClone.body ? [serializedRequest.body, responseClone.body] : [],
     );
   }
 
@@ -253,7 +252,7 @@ async function getResponse(event, client, requestId) {
         ...serializedRequest,
       },
     },
-    [serializedRequest.body]
+    [serializedRequest.body],
   );
 
   switch (clientMessage.type) {

@@ -14,7 +14,7 @@ const ClientProfileGrid = (props: ClientProfileGridProps) => {
   const { clientData } = props;
   const earnedMoneyPerClient = clientData.visits.reduce(
     (prev, curr) => prev + Number(curr.paidPrice),
-    0
+    0,
   );
   const visitCount = clientData.visits.length;
   const { mutate: changeClientDepositStatus } = useCreateNewOrUpdateClientMutation();

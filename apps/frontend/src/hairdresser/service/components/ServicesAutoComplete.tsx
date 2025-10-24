@@ -14,7 +14,7 @@ type ServicesAutoCompleteProps<TFieldValues extends FieldValues> = {
 };
 
 const ServicesAutoComplete = <TFieldValues extends FieldValues>(
-  props: ServicesAutoCompleteProps<TFieldValues>
+  props: ServicesAutoCompleteProps<TFieldValues>,
 ) => {
   const { control, fieldPath, disabled } = props;
   const { data: services, isLoading } = useServicesQuery();

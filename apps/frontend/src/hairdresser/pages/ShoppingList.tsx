@@ -53,7 +53,7 @@ const createShoppingList = (stockItems: StockItem[], intl: IntlShape): ShoppingL
 
     if (!item.id) {
       throw new Error(
-        `${intl.formatMessage({ id: '', defaultMessage: 'Položka item_name nemá ID.' }, { item_name: item.itemName })}`
+        `${intl.formatMessage({ id: '', defaultMessage: 'Položka item_name nemá ID.' }, { item_name: item.itemName })}`,
       );
     }
 

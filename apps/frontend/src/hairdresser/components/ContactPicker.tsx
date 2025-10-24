@@ -47,7 +47,7 @@ export const ContactPicker: React.FC = () => {
           intl.formatMessage({
             id: 'contactPicker.error',
             defaultMessage: 'Výběr kontaktů byl zrušen nebo selhal.',
-          })
+          }),
         );
         console.error(error);
       }
@@ -57,7 +57,7 @@ export const ContactPicker: React.FC = () => {
           id: 'contactPicker.unSupportedBrowser',
           defaultMessage:
             'Tento prohlížeč nebo Apple iOS nepodporují Contacts Picker API použijte Google Chrome v androidu.',
-        })
+        }),
       );
     }
   };
@@ -74,7 +74,7 @@ export const ContactPicker: React.FC = () => {
         });
       }
     },
-    [setValue]
+    [setValue],
   );
 
   return (

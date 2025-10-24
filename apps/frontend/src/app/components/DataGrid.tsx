@@ -29,7 +29,7 @@ function AppDataGrid<T extends readonly GridValidRowModel[]>(props: AppDataGridP
         ...col,
         field: col.field,
       })),
-    [columns, rows]
+    [columns, rows],
   );
 
   return (

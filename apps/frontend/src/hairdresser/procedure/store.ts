@@ -3,7 +3,7 @@ import { useStockItemsQuery } from '../stock/queries';
 import type { AddProcedureStockAllowanceType } from './components/AddProcedureButton';
 
 export const useEditableAndReadonlyStockAllowances = (
-  stockAllowances: AddProcedureStockAllowanceType | undefined
+  stockAllowances: AddProcedureStockAllowanceType | undefined,
 ) => {
   const { data: stocksWithStockItems } = useStockItemsQuery(undefined);
   const stockItems = mapStocksStockItemsToFlatStockItems(stocksWithStockItems);

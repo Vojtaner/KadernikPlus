@@ -28,7 +28,7 @@ export const useStocksQuery = () => {
 };
 
 export const useCreateOrUpdateStockItemMutation = (
-  options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>
+  options?: UseMutationOptions<StockItemCreateData, unknown, StockItemCreateData>,
 ) => {
   const axios = useAxios();
   const addSnackBarMessage = useAddSnackbarMessage();

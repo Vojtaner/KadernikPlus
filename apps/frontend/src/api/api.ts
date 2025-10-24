@@ -10,26 +10,26 @@ import type { UserForm } from '../entities/user';
 import { apiCall, type Invoice } from '../hairdresser/entity';
 
 export const userApi = {
-  get: () => `/api/users`,
+  get: () => '/api/users',
   getLogs: (userId: string) => `/api/logs?userId=${encodeURIComponent(userId)}`,
-  getAllLogs: () => `/api/logs/`,
-  deleteUser: () => `/api/users`,
+  getAllLogs: () => '/api/logs/',
+  deleteUser: () => '/api/users',
 };
 
 export const subscriptionApi = {
-  get: () => `api/subscription`,
-  create: () => `/api/subscription/`,
+  get: () => 'api/subscription',
+  create: () => '/api/subscription/',
   extend: (subscriptionId: string) =>
     `/api/subscription/extend/${encodeURIComponent(subscriptionId)}`,
   cancel: (subscriptionId: string) => `/api/subscription/${encodeURIComponent(subscriptionId)}`,
 };
 export const importPaymentApi = {
-  get: () => `api/payment`,
-  create: () => `api/payment/import`,
+  get: () => 'api/payment',
+  create: () => 'api/payment/import',
 };
 
 export const invoiceApi = {
-  getAll: () => `api/invoices`,
+  getAll: () => 'api/invoices',
 };
 
 //---- User ----
@@ -51,7 +51,7 @@ export const getLogs = async (axios: AxiosInstance): Promise<LogData[]> =>
 
 export const postCreateSubscription = async (
   axios: AxiosInstance,
-  params: SubscriptionCreateData
+  params: SubscriptionCreateData,
 ): Promise<{
   code: number;
   message: string;
@@ -60,16 +60,16 @@ export const postCreateSubscription = async (
 }> =>
   apiCall(
     async () => await axios.post(subscriptionApi.create(), params),
-    'Platbu se nepovedlo vytvořit.'
+    'Platbu se nepovedlo vytvořit.',
   );
 
 export const postCancelSubscription = async (
   axios: AxiosInstance,
-  subscriptionId: string
+  subscriptionId: string,
 ): Promise<boolean> =>
   apiCall(
     async () => await axios.post(subscriptionApi.cancel(subscriptionId)),
-    'Předplatné se nepovedlo ukončit.'
+    'Předplatné se nepovedlo ukončit.',
   );
 
 export const getSubscription = async (axios: AxiosInstance): Promise<Subscription> =>
@@ -77,11 +77,11 @@ export const getSubscription = async (axios: AxiosInstance): Promise<Subscriptio
 
 export const postExtendSubscription = async (
   axios: AxiosInstance,
-  subscriptionId: string
+  subscriptionId: string,
 ): Promise<Subscription> =>
   apiCall(
     async () => await axios.post(subscriptionApi.extend(subscriptionId)),
-    'Nepovedlo se prodloužit předplatné.'
+    'Nepovedlo se prodloužit předplatné.',
   );
 
 //---- Invoices ----
@@ -93,7 +93,7 @@ export const getInvoices = async (axios: AxiosInstance): Promise<Invoice[]> =>
 
 export const postCreateImportPayment = async (
   axios: AxiosInstance,
-  params: CreateImportPayment
+  params: CreateImportPayment,
 ): Promise<{
   code: number;
   message: string;
@@ -102,11 +102,11 @@ export const postCreateImportPayment = async (
 }> =>
   apiCall(
     async () => await axios.post(importPaymentApi.create(), params),
-    'Platbu se nepovedlo vytvořit.'
+    'Platbu se nepovedlo vytvořit.',
   );
 
 export const getPayment = async (axios: AxiosInstance): Promise<Payment> =>
   apiCall(
     async () => await axios.get(importPaymentApi.get()),
-    'Nepovedlo získat podrobnosti o platbě.'
+    'Nepovedlo získat podrobnosti o platbě.',
   );

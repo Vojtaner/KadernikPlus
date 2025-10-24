@@ -16,14 +16,14 @@ export type SwitchProps<TFieldValues extends FieldValues = FieldValues> = MuiSwi
 };
 
 const Switch = <TFieldValues extends FieldValues = FieldValues>(
-  props: SwitchProps<TFieldValues>
+  props: SwitchProps<TFieldValues>,
 ) => {
   const { onSubmitEndpoint, onChange, tooltip, control, fieldPath, checked, ...muiProps } = props;
 
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean,
-    rhfOnChange?: (value: unknown) => void
+    rhfOnChange?: (value: unknown) => void,
   ) => {
     onSubmitEndpoint?.(checked);
 

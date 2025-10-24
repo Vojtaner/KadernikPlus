@@ -30,7 +30,7 @@ export type DatePickerProps<TFieldValues extends FieldValues> = {
   onAccept?:
     | ((
         value: Date | undefined,
-        context: PickerChangeHandlerContext<DateTimeValidationError>
+        context: PickerChangeHandlerContext<DateTimeValidationError>,
       ) => void)
     | undefined;
   onChange?:
@@ -39,7 +39,7 @@ export type DatePickerProps<TFieldValues extends FieldValues> = {
 };
 
 export default function BasicDateTimePicker<TFieldValues extends FieldValues>(
-  props: DatePickerProps<TFieldValues>
+  props: DatePickerProps<TFieldValues>,
 ) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="cs">

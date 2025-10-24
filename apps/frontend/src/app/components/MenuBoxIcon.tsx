@@ -26,7 +26,7 @@ const MenuIconButton = (props: MenuIconButtonProps) => {
       }}
     >
       {icon}
-      <Typography fontWeight={400} fontSize={'0.7rem'} color={color}>
+      <Typography fontWeight={400} fontSize="0.7rem" color={color}>
         {title}
       </Typography>
     </IconButton>

@@ -42,7 +42,7 @@ const AddProcedureButton = (props: AddProcedureButtonProps) => {
   const intl = useIntl();
   const { openButton, defaultValues, procedureId } = props;
   const { editableAllowances, readonlyAllowances } = useEditableAndReadonlyStockAllowances(
-    defaultValues?.stockAllowances
+    defaultValues?.stockAllowances,
   );
   const { visitId } = useParams();
   const { data: stocks } = useStocksQuery();

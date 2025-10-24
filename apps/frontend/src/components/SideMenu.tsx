@@ -32,7 +32,7 @@ const SideMenu = () => {
   };
 
   const menuItems = getMenuItems(intl, teamMember, stocks, filters, toggleLanguage, () =>
-    logout({ logoutParams: { returnTo: window.location.origin } })
+    logout({ logoutParams: { returnTo: window.location.origin } }),
   );
 
   return (

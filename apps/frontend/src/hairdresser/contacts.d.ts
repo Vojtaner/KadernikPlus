@@ -13,7 +13,7 @@ interface Navigator {
   contacts: {
     select(
       properties: (keyof ContactPicker)[],
-      options?: ContactPickerOptions
+      options?: ContactPickerOptions,
     ): Promise<ContactPicker[]>;
   };
 }

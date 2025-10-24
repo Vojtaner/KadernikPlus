@@ -178,7 +178,7 @@ export const useDeleteUserMutation = () => {
       const formattedDate = dayjs(data.deletionScheduledAt).format('DD.MM.YYYY');
       addSnackBarMessage(
         { text: `Uživatel smazán (naplánováno na ${formattedDate})`, type: 'success' },
-        10000
+        10000,
       );
     },
     onError: error => {

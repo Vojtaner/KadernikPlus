@@ -19,10 +19,10 @@ const DetailColumn = (props: DetailColumnProps) => {
       <Typography variant="caption" color="text.secondary" fontSize={labelFontSize}>
         {label}
       </Typography>
-      <Typography variant="h6" color={'text.primary'} fontSize={valueFontSize}>
+      <Typography variant="h6" color="text.primary" fontSize={valueFontSize}>
         {input}
       </Typography>
-      <Typography variant="body2" color={'text.secondary'} fontSize={helperTextFontSize}>
+      <Typography variant="body2" color="text.secondary" fontSize={helperTextFontSize}>
         {helperText}
       </Typography>
     </Stack>

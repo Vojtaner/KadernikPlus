@@ -57,7 +57,7 @@ const createColumns = (intl: IntlShape): GridColDef<ExistingStockItem[][number]>
     renderCell: params => {
       return (
         <>
-          <span style={{ color: '#888', marginLeft: 0 }}>{params.row.packageCount} ks</span> {'/'}
+          <span style={{ color: '#888', marginLeft: 0 }}>{params.row.packageCount} ks</span> /
           <span style={{ color: '#888', marginLeft: 0 }}>{params.row.threshold} ks</span>
         </>
       );

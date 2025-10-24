@@ -20,7 +20,7 @@ type FormDialogProps<TFieldValues extends FieldValues = FieldValues> = {
 };
 
 export default function FormDialog<TFieldValues extends FieldValues = FieldValues>(
-  props: FormDialogProps<TFieldValues>
+  props: FormDialogProps<TFieldValues>,
 ) {
   const {
     actions,

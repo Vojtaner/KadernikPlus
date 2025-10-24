@@ -61,11 +61,11 @@ const Consumption = () => {
   const stockAllowancesTableAllRecords = createStockAllowancesTableAllRecords(stockAllowances);
   const stockAllowancesTableByProduct = createStockAllowancesTableByProductByUser(
     stockAllowances,
-    stockAllowance => `${stockAllowance.user.name}-${stockAllowance.stockItemName}`
+    stockAllowance => `${stockAllowance.user.name}-${stockAllowance.stockItemName}`,
   );
   const stockAllowancesTableByUser = createStockAllowancesTableByProductByUser(
     stockAllowances,
-    stockAllowance => stockAllowance.user.name
+    stockAllowance => stockAllowance.user.name,
   );
 
   const handleApplyFilter = (filter: StockViewKey) => {
@@ -103,7 +103,7 @@ const Consumption = () => {
           })}
         />
       </Stack>
-      <Stack spacing={1} height={'100%'}>
+      <Stack spacing={1} height="100%">
         <Stack direction="row" spacing={2}>
           <BasicDatePicker
             label="Datum od"
@@ -161,7 +161,7 @@ export const FilterTableButton = (props: {
 };
 
 const createColumnsByProduct = (
-  intl: IntlShape
+  intl: IntlShape,
 ): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   {
     field: 'stockItemName',
@@ -184,7 +184,7 @@ const createColumnsByProduct = (
         {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
         {' / '}
         {Math.round(params.row.totalPrice)}
-        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
+        <span style={{ color: '#888', marginLeft: 0 }}>{' Kč'}</span>
       </>
     ),
   },
@@ -202,7 +202,7 @@ const createColumnsByProduct = (
 ];
 
 const createColumnsByUser = (
-  intl: IntlShape
+  intl: IntlShape,
 ): GridColDef<ConsumptionTableByProductByUserType[][number]>[] => [
   {
     field: 'user',
@@ -227,7 +227,7 @@ const createColumnsByUser = (
     renderCell: params => (
       <>
         {Math.round(params.row.totalPrice)}
-        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
+        <span style={{ color: '#888', marginLeft: 0 }}>{' Kč'}</span>
       </>
     ),
   },
@@ -235,7 +235,7 @@ const createColumnsByUser = (
 
 const createColumnsAllRecords = (
   navigate: (path: string) => void,
-  intl: IntlShape
+  intl: IntlShape,
 ): GridColDef<ConsumptionTableAllRecordType[][number]>[] => [
   {
     field: 'date',
@@ -280,7 +280,7 @@ const createColumnsAllRecords = (
         {params.value} <span style={{ color: '#888', marginLeft: 0 }}>{`${params.row.unit}`}</span>
         {' / '}
         {Math.round(params.row.totalPrice)}
-        <span style={{ color: '#888', marginLeft: 0 }}>{` Kč`}</span>
+        <span style={{ color: '#888', marginLeft: 0 }}>{' Kč'}</span>
       </>
     ),
   },

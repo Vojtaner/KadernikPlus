@@ -69,11 +69,11 @@ const VisitsList = (props: VisitListProps) => {
   }
 
   const onlyOpenVisitsData = visitData.filter(
-    visit => !visit.visitStatus && getIsVisitInPast(visit.date)
+    visit => !visit.visitStatus && getIsVisitInPast(visit.date),
   );
 
   const onlyClosedVisitsWithoutStockAllowances = visitData.filter(
-    visit => visit.visitStatus && getMissingStockAllowanceError(intl, visit.procedures)
+    visit => visit.visitStatus && getMissingStockAllowanceError(intl, visit.procedures),
   );
 
   const filteredData =
@@ -82,7 +82,7 @@ const VisitsList = (props: VisitListProps) => {
       : visitData;
 
   const sortedVisits = [...(onlyOpenVisits ? onlyOpenVisitsData : filteredData)].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
   );
 
   const rowsWithHeaders = getRowsWithHeaders(sortedVisits);
@@ -200,7 +200,7 @@ export default VisitsList;
 
 export const createColumns = (
   navigate: (path: string) => void,
-  intl: IntlShape
+  intl: IntlShape,
 ): GridColDef<VisitRow[][number]>[] => [
   {
     field: 'date',
@@ -334,7 +334,7 @@ export const createColumns = (
 const isTypeRowHeader = (
   item:
     | VisitWithServicesWithProceduresWithStockAllowances
-    | { isHeader: true; label: string; id: string }
+    | { isHeader: true; label: string; id: string },
 ): item is { isHeader: true; label: string; id: string } => {
   return 'isHeader' in item;
 };
@@ -343,7 +343,7 @@ const createVisitsTable = (
   visits: (
     | VisitWithServicesWithProceduresWithStockAllowances
     | { isHeader: true; label: string; id: string }
-  )[]
+  )[],
 ): VisitRow[] => {
   const visitsList = visits.map(visit => {
     if (!visit.id) {

@@ -30,7 +30,7 @@ const Layout = (props: PropsWithChildren) => {
         minWidth: { md: `${APP_LAYOUT_WIDTH}vw` },
         bgcolor: userData?.colorScheme ?? '#c81f5b',
       }}
-      boxShadow={'0px 0px 100px 0px rgba(0, 0, 0, 0.42)'}
+      boxShadow="0px 0px 100px 0px rgba(0, 0, 0, 0.42)"
     >
       <Stack
         sx={{

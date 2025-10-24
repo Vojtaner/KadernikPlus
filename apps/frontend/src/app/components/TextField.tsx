@@ -32,7 +32,7 @@ export type TextFieldProps<TFieldValues extends FieldValues = FieldValues> =
     } & Omit<MuiTextFieldProps, 'name' | 'value' | 'onChange' | 'onBlur'>);
 
 function TextField<TFieldValues extends FieldValues = FieldValues>(
-  props: TextFieldProps<TFieldValues>
+  props: TextFieldProps<TFieldValues>,
 ) {
   const { control, rules, disabled, defaultValue, readonly, ...rest } = props;
 

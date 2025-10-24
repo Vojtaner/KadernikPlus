@@ -91,7 +91,7 @@ const EditVisitDetailDialog = (props: {
         onSuccess: () => {
           handleClose();
         },
-      }
+      },
     );
   };
 
@@ -102,7 +102,7 @@ const EditVisitDetailDialog = (props: {
       const errors = getVisitFinishErrors(
         visit.client.deposit,
         { paidPrice, deposit, depositStatus },
-        intl
+        intl,
       );
       const missingStockAllowanceError =
         procedures && getMissingStockAllowanceError(intl, procedures);
@@ -185,7 +185,7 @@ const EditVisitDetailDialog = (props: {
                 defaultMessage: 'status cena',
                 id: 'editVisitDetailDialog.depositStatus',
               },
-              { status: visit.visitStatus ? 'Zaplacená' : 'Požadovaná' }
+              { status: visit.visitStatus ? 'Zaplacená' : 'Požadovaná' },
             )}
             type="number"
             fullWidth
@@ -239,7 +239,7 @@ const EditVisitDetailDialog = (props: {
               errors={getVisitFinishErrors(
                 visit.client.deposit,
                 { paidPrice, deposit, depositStatus },
-                intl
+                intl,
               )}
               missingStockAllowanceError={
                 procedures && getMissingStockAllowanceError(intl, procedures)

@@ -87,7 +87,7 @@ export type Unit = (typeof UnitsObject)[keyof typeof UnitsObject];
 export type StockWithStockItems = Stock & { stockItems: ExistingStockItem[] };
 
 export const mapStocksStockItemsToFlatStockItems = (
-  stockWithstockItems?: StockWithStockItems[]
+  stockWithstockItems?: StockWithStockItems[],
 ): ExistingStockItem[] | undefined => {
   if (!stockWithstockItems) {
     return;

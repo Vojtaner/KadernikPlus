@@ -35,7 +35,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
               defaultMessage: 'status cena',
               id: 'visitDetailGrid.depositStatus',
             },
-            { status: visitData.visitStatus ? 'Zaplacená' : 'Požadovaná' }
+            { status: visitData.visitStatus ? 'Zaplacená' : 'Požadovaná' },
           )}
           input={formatToCZK(visitData.paidPrice)}
           helperText={formatToCZK(visitData.visitServices[0].service.basePrice)}
@@ -86,7 +86,7 @@ const VisitDetailGrid = (props: VisitDetailGridProps) => {
             <Typography variant="body1" fontSize="1.2rem" color="secondary.main" fontWeight="800">
               Klient neplatí zálohy.
             </Typography>
-            <Typography variant="body2" color={'text.secondary'} fontSize="0.8rem">
+            <Typography variant="body2" color="text.secondary" fontSize="0.8rem">
               Změníte na klientově profilu
             </Typography>
           </Stack>
@@ -116,7 +116,7 @@ export default VisitDetailGrid;
 export function formatToCZK(
   value: string | number | undefined,
   minimumFractionDigits?: number,
-  maximumFractionDigits?: number
+  maximumFractionDigits?: number,
 ): string {
   if (!value) {
     return '0,00 Kč';
@@ -141,7 +141,7 @@ export const getVisitFinishErrors = (
     deposit: number | undefined;
     depositStatus: DepositStatus | null | undefined;
   },
-  intl: IntlShape
+  intl: IntlShape,
 ): string[] => {
   const { paidPrice, deposit, depositStatus } = watchFormVisitData;
   const isDepositRequired = clientDeposit;
@@ -152,7 +152,7 @@ export const getVisitFinishErrors = (
       intl.formatMessage({
         defaultMessage: 'Je nutné zadat zaplacenou částku. "Požadovaná cena"',
         id: 'visitDetailGrid.paidPriceWarning',
-      })
+      }),
     );
   }
 
@@ -163,7 +163,7 @@ export const getVisitFinishErrors = (
           defaultMessage:
             'Je nutné zadat zálohu,případně v profilu zákazníka zaškrnout, že ji nepožadujete. "Výše zálohy"',
           id: 'visitDetailGrid.depositStatusWarning',
-        })
+        }),
       );
     }
     if (depositStatus !== DepositStatus.ZAPLACENO) {
@@ -171,7 +171,7 @@ export const getVisitFinishErrors = (
         intl.formatMessage({
           defaultMessage: 'Záloha musí být ve stavu zaplacena. "Stav zálohy"',
           id: 'visitDetailGrid.depositWarning',
-        })
+        }),
       );
     }
   }
@@ -189,7 +189,7 @@ export const hasAnyStockAllowance = (procedures?: (Procedure | CreateProcedure)[
 
 export const getMissingStockAllowanceError = (
   intl: IntlShape,
-  procedures?: (Procedure | CreateProcedure)[]
+  procedures?: (Procedure | CreateProcedure)[],
 ): string | undefined => {
   if (!hasAnyStockAllowance(procedures)) {
     return intl.formatMessage({
@@ -208,7 +208,7 @@ export const isVisitFinished = (
     depositStatus: DepositStatus | null | undefined;
     procedures: undefined | Procedure[];
   },
-  intl: IntlShape
+  intl: IntlShape,
 ): boolean => {
   return getVisitFinishErrors(clientDeposit, watchFormVisitData, intl).length === 0;
 };

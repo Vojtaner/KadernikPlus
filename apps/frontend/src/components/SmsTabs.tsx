@@ -133,7 +133,7 @@ export const SmsList = <T extends VisitWithServices>({
 export function formatVisitInvitationToSms(
   lastName: string,
   services: VisitService[],
-  visit: { date: Date }
+  visit: { date: Date },
 ): string {
   const { date } = visit;
   const serviceNames =
@@ -148,7 +148,7 @@ export function formatVisitInvitationToSms(
 
 export function formatVisitReviewRequestSms(
   lastName: string,
-  reviewUrl: string | undefined
+  reviewUrl: string | undefined,
 ): string {
   return `Dobrý den, ${isWoman(lastName) ? 'paní' : 'pane'} ${capitalizeFirstLetter(vocative(lastName))}, děkujeme za Vaši návštěvu. Budeme rádi za Vaše hodnocení a zpětnou vazbu. Zde odkaz: ${reviewUrl} Děkujeme!`;
 }
@@ -163,7 +163,7 @@ export function formatVisitPartialPaymentReminderSms(
     depositRequired?: boolean | undefined;
     depositStatus: DepositStatus | null | undefined;
     depositAmount?: number | undefined;
-  }
+  },
 ): string {
   const { date, depositRequired, depositStatus, depositAmount } = visit;
 

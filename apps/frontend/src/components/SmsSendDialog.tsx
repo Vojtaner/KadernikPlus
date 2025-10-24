@@ -69,7 +69,7 @@ const SmsSendDialog = (props: {
                       invitationVisit.visitServices,
                       {
                         date: invitationVisit.date,
-                      }
+                      },
                     )
                   }
                 />
@@ -89,7 +89,7 @@ const SmsSendDialog = (props: {
                         depositAmount: payment.deposit,
                         depositStatus: payment.depositStatus,
                         depositRequired: payment.client.deposit,
-                      }
+                      },
                     )
                   }
                 />

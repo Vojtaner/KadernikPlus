@@ -23,7 +23,7 @@ export const useProceduresQuery = (visitId: string | undefined) => {
 };
 
 export const useProceduresMutation = (
-  options?: UseMutationOptions<CreateProcedure, unknown, PostNewProcedure>
+  options?: UseMutationOptions<CreateProcedure, unknown, PostNewProcedure>,
 ) => {
   const axios = useAxios();
   const addSnackBarMessage = useAddSnackbarMessage();
@@ -47,7 +47,7 @@ export const useProceduresMutation = (
 };
 
 export const useDeleteProcedureMutation = (
-  options?: UseMutationOptions<string, unknown, string>
+  options?: UseMutationOptions<string, unknown, string>,
 ) => {
   const axios = useAxios();
   const addSnackBarMessage = useAddSnackbarMessage();

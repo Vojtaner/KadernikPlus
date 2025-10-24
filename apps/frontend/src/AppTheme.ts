@@ -111,7 +111,7 @@ const AppTheme = createTheme(
       },
     },
   },
-  csCZ
+  csCZ,
 );
 
 export default AppTheme;

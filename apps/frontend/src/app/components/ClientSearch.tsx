@@ -24,7 +24,7 @@ const ClientSearch = () => {
         keys: ['firstName', 'lastName', 'phone'],
         threshold: 0.3,
       }),
-    [clients]
+    [clients],
   );
 
   const defaultClients = useMemo(() => clients?.slice(0, 20).map(client => client.id), []);

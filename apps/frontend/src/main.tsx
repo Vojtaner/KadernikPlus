@@ -47,6 +47,6 @@ enableMocking().then(() => {
           <AppWithIntl />
         </Provider>
       </StrictMode>
-    </Auth0Provider>
+    </Auth0Provider>,
   );
 });

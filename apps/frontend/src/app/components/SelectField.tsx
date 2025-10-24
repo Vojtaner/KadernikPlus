@@ -25,7 +25,7 @@ type SelectFieldProps<T extends Identifiable, TFieldValues extends FieldValues> 
 };
 
 const SelectField = <T extends Identifiable, TFieldValues extends FieldValues>(
-  props: SelectFieldProps<T, TFieldValues>
+  props: SelectFieldProps<T, TFieldValues>,
 ) => {
   return (
     <Controller

@@ -62,7 +62,7 @@ export const useDeleteClientMutation = () => {
 };
 
 export const useImportClientMutation = (
-  options?: UseMutationOptions<boolean, unknown, { contacts: Contact[] }>
+  options?: UseMutationOptions<boolean, unknown, { contacts: Contact[] }>,
 ) => {
   const axios = useAxios();
   const addSnackBarMessage = useAddSnackbarMessage();

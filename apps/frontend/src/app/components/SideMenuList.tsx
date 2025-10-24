@@ -64,7 +64,7 @@ export const getMenuItems = (
   stocks?: { id: string }[],
   filters?: { language: string },
   toggleLanguage?: () => void,
-  logout?: () => void
+  logout?: () => void,
 ): MenuItem[] => [
   {
     key: 'profile',
@@ -139,7 +139,7 @@ export const getMenuItems = (
     key: 'language',
     title: intl.formatMessage(
       { id: 'currentLanguage', defaultMessage: 'Language: {lang}' },
-      { lang: filters?.language.toUpperCase() ?? 'CS' }
+      { lang: filters?.language.toUpperCase() ?? 'CS' },
     ),
     path: undefined,
     icon: <LanguageIcon />,

@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios';
 
 export function extractErrorMessage(
   error: AxiosError<{ message?: string; error?: string }>,
-  fallback = 'Došlo k neznámé chybě.'
+  fallback = 'Došlo k neznámé chybě.',
 ) {
   if (
     typeof error === 'object' &&

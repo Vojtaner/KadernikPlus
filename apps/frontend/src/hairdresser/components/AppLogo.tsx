@@ -30,7 +30,7 @@ export const AppLogo = (props: AppLogoProps) => {
           {userData?.colorScheme ? null : (
             <img
               width="100px"
-              src={'../../public/logo.png'}
+              src="../../public/logo.png"
               style={{ marginTop: '-30px', marginBottom: '-38px' }}
             />
           )}

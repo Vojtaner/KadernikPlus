@@ -78,7 +78,7 @@ const AddVisitForm = (props: AddVisitFormProps) => {
 
             const isTaken = visitsOnSelectedDate?.some(
               visit =>
-                getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date)
+                getDateTimeFromUtcToLocal(visit.date) === getDateTimeFromUtcToLocal(value as Date),
             );
 
             return isTaken

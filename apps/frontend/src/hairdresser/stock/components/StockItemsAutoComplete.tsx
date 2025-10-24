@@ -19,7 +19,7 @@ type StockItemsAutoCompleteProps<TFieldValues extends FieldValues> = {
 };
 
 const StockItemsAutoComplete = <TFieldValues extends FieldValues>(
-  props: StockItemsAutoCompleteProps<TFieldValues>
+  props: StockItemsAutoCompleteProps<TFieldValues>,
 ) => {
   const { control, fieldPath, defaultValue } = props;
   const intl = useIntl();
